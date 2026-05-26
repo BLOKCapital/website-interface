@@ -109,7 +109,7 @@ export function Nav() {
 
         <div className="hidden items-center gap-3 md:flex">
           <Button
-            variant="primary"
+            variant="discord"
             size="sm"
             href="https://discord.com/invite/blokc"
           >
@@ -223,7 +223,7 @@ export function Nav() {
           })}
           <li className="mt-5">
             <Button
-              variant="primary"
+              variant="discord"
               size="md"
               href="https://discord.com/invite/blokc"
               className="w-full"

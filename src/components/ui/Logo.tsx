@@ -15,7 +15,7 @@ export function Logo({ className }: { className?: string }) {
         height={75}
         priority
         unoptimized
-        className="h-[26px] w-auto select-none"
+        className="h-[34px] w-auto select-none"
         draggable={false}
       />
     </span>

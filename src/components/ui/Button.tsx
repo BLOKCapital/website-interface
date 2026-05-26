@@ -2,7 +2,7 @@ import * as React from "react";
 import Link from "next/link";
 import { cn } from "@/lib/utils";
 
-type Variant = "primary" | "outline" | "ghost" | "secondary";
+type Variant = "primary" | "outline" | "ghost" | "secondary" | "discord";
 type Size = "sm" | "md" | "lg";
 
 const base =
@@ -19,6 +19,9 @@ const variants: Record<Variant, string> = {
   outline:
     "border border-ink/15 bg-paper text-ink hover:border-ink/40 hover:bg-paper-warm",
   ghost: "text-ink-muted hover:text-ink",
+  // Brand-blue gradient lifted from the BLOK mark (cyan → indigo).
+  discord:
+    "bg-gradient-to-br from-[#16c2ff] via-[#2f6bff] to-[#1b1af0] text-white shadow-[0_1px_0_rgba(255,255,255,0.22)_inset,0_10px_24px_-12px_rgba(37,99,255,0.55)] hover:brightness-110",
 };
 
 // 44pt touch target minimum: `sm` keeps a compact visual but an invisible
