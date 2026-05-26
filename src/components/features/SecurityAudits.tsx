@@ -100,12 +100,6 @@ export function SecurityAudits() {
               <p className="mt-3 flex-1 text-[12.5px] leading-relaxed text-ink-muted">
                 {a.scope}
               </p>
-
-              <div className="mt-5">
-                <Button href={a.url ?? "#"} variant="outline" size="sm">
-                  Read report
-                </Button>
-              </div>
             </article>
           </m.li>
         ))}

@@ -187,23 +187,27 @@ function SocialTile({ social }: { social: Social }) {
       target="_blank"
       rel="noreferrer"
       aria-label={`${social.title}, ${social.desc}`}
-      className="paper-card group/s relative flex h-full flex-col p-5 transition-[transform,border-color,box-shadow] duration-400 ease-in-soft hover:-translate-y-1 hover:border-moss/35 hover:shadow-[0_22px_44px_-26px_rgba(31,26,20,0.20)] sm:p-6"
+      className="group/s relative flex h-full min-h-[208px] flex-col overflow-hidden rounded-2xl p-6 text-white shadow-[0_20px_44px_-28px_rgba(31,26,20,0.5)] transition-transform duration-400 ease-in-soft hover:-translate-y-1"
+      style={{
+        background: `linear-gradient(140deg, ${shade(social.tint, 1.16)}, ${shade(social.tint, 0.72)})`,
+      }}
     >
-      <div className="flex items-center justify-between gap-3">
-        <span
-          className="inline-flex size-11 items-center justify-center rounded-full border transition-transform duration-300 group-hover/s:scale-105"
-          style={{
-            borderColor: `${social.tint} / 0.25`,
-            background: `linear-gradient(135deg, ${withAlpha(social.tint, 0.12)}, ${withAlpha(social.tint, 0.04)})`,
-            color: social.tint,
-          }}
-        >
-          <SocialGlyph id={social.id} />
-        </span>
+      {/* Oversized watermark glyph in the corner */}
+      <span
+        aria-hidden
+        className="pointer-events-none absolute -bottom-5 -right-3 text-white/10 transition-transform duration-500 ease-in-soft group-hover/s:scale-105"
+      >
+        <SocialGlyph id={social.id} size={132} />
+      </span>
 
+      {/* Top row: icon chip + arrow */}
+      <div className="relative flex items-center justify-between">
+        <span className="inline-flex size-11 items-center justify-center rounded-xl bg-white/15 text-white backdrop-blur-sm">
+          <SocialGlyph id={social.id} size={20} />
+        </span>
         <span
           aria-hidden
-          className="inline-flex size-7 shrink-0 items-center justify-center rounded-full border border-ink/10 bg-paper text-ink-subtle transition-all duration-300 group-hover/s:border-clay/45 group-hover/s:bg-clay/[0.08] group-hover/s:text-clay-deep"
+          className="inline-flex size-7 items-center justify-center rounded-full border border-white/25 text-white/80 transition-all duration-300 group-hover/s:translate-x-0.5 group-hover/s:bg-white/15 group-hover/s:text-white"
         >
           <svg width="11" height="11" viewBox="0 0 14 14" aria-hidden>
             <path
@@ -218,15 +222,11 @@ function SocialTile({ social }: { social: Social }) {
         </span>
       </div>
 
-      <p className="display relative mt-5 inline-block text-[20px] leading-tight text-ink sm:text-[22px]">
-        <span>{social.title}</span>
-        <span
-          aria-hidden
-          className="absolute -bottom-1 left-0 h-px w-0 bg-clay transition-[width] duration-500 ease-in-soft group-hover/s:w-full"
-        />
-      </p>
-
-      <p className="mt-2 flex-1 text-[13px] leading-relaxed text-ink-muted sm:text-[13.5px]">
+      {/* Content, pinned to the bottom */}
+      <h3 className="display relative mt-auto pt-10 text-[22px] leading-tight">
+        {social.title}
+      </h3>
+      <p className="relative mt-2 max-w-[15rem] text-[13px] leading-relaxed text-white/75 sm:text-[13.5px]">
         {social.desc}
       </p>
     </a>
@@ -235,41 +235,41 @@ function SocialTile({ social }: { social: Social }) {
 
 /* ---------- glyphs --------------------------------------------------------- */
 
-function SocialGlyph({ id }: { id: string }) {
+function SocialGlyph({ id, size = 18 }: { id: string; size?: number }) {
   switch (id) {
     case "github":
       return (
-        <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor">
+        <svg width={size} height={size} viewBox="0 0 24 24" fill="currentColor">
           <path d="M12 .5C5.65.5.5 5.65.5 12c0 5.08 3.29 9.39 7.86 10.91.58.11.79-.25.79-.56 0-.28-.01-1.02-.02-2-3.2.7-3.88-1.54-3.88-1.54-.52-1.34-1.28-1.69-1.28-1.69-1.05-.72.08-.7.08-.7 1.16.08 1.77 1.19 1.77 1.19 1.03 1.77 2.71 1.26 3.37.96.1-.75.4-1.26.73-1.55-2.55-.29-5.24-1.28-5.24-5.71 0-1.26.45-2.29 1.19-3.1-.12-.3-.52-1.47.11-3.06 0 0 .97-.31 3.18 1.18a11.06 11.06 0 0 1 5.79 0c2.21-1.49 3.18-1.18 3.18-1.18.63 1.59.23 2.76.11 3.06.74.81 1.19 1.84 1.19 3.1 0 4.44-2.7 5.42-5.27 5.7.41.36.78 1.06.78 2.14 0 1.55-.01 2.8-.01 3.18 0 .31.21.68.79.56C20.21 21.39 23.5 17.08 23.5 12 23.5 5.65 18.35.5 12 .5Z" />
         </svg>
       );
     case "telegram":
       return (
-        <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor">
+        <svg width={size} height={size} viewBox="0 0 24 24" fill="currentColor">
           <path d="M21.94 4.31 18.7 19.6c-.24 1.07-.87 1.34-1.77.83l-4.88-3.6-2.36 2.27c-.26.26-.48.48-.99.48l.35-5 9.1-8.22c.4-.35-.09-.55-.61-.2L6.21 13.3 1.4 11.8c-1.05-.33-1.07-1.05.22-1.56L20.6 2.84c.87-.31 1.63.2 1.34 1.47Z" />
         </svg>
       );
     case "x":
       return (
-        <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
+        <svg width={size} height={size} viewBox="0 0 24 24" fill="currentColor">
           <path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z" />
         </svg>
       );
     case "farcaster":
       return (
-        <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor">
+        <svg width={size} height={size} viewBox="0 0 24 24" fill="currentColor">
           <path d="M4 3h16v3.5h-1.6L17 21h-3l-1.6-7.5h-.8L10 21H7L5.6 6.5H4V3z" />
         </svg>
       );
     case "youtube":
       return (
-        <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
+        <svg width={size} height={size} viewBox="0 0 24 24" fill="currentColor">
           <path d="M23.5 6.2a3.02 3.02 0 0 0-2.13-2.14C19.46 3.5 12 3.5 12 3.5s-7.46 0-9.37.56A3.02 3.02 0 0 0 .5 6.2C0 8.13 0 12 0 12s0 3.87.5 5.8c.27 1.05 1.08 1.86 2.13 2.14 1.91.56 9.37.56 9.37.56s7.46 0 9.37-.56a3.02 3.02 0 0 0 2.13-2.14C24 15.87 24 12 24 12s0-3.87-.5-5.8ZM9.6 15.6V8.4l6.24 3.6L9.6 15.6Z" />
         </svg>
       );
     case "discord":
       return (
-        <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
+        <svg width={size} height={size} viewBox="0 0 24 24" fill="currentColor">
           <path d="M20.32 4.37a19.79 19.79 0 0 0-4.89-1.52.07.07 0 0 0-.08.04c-.21.38-.45.87-.61 1.25a18.27 18.27 0 0 0-5.49 0c-.16-.39-.4-.87-.62-1.25a.08.08 0 0 0-.08-.04A19.74 19.74 0 0 0 3.68 4.37a.07.07 0 0 0-.03.03C.53 9.05-.32 13.58.09 18.06a.08.08 0 0 0 .03.05 19.9 19.9 0 0 0 6 3.04.08.08 0 0 0 .09-.03c.46-.63.87-1.3 1.22-2a.08.08 0 0 0-.04-.11 13.1 13.1 0 0 1-1.87-.89.08.08 0 0 1-.01-.13c.13-.1.25-.2.37-.3a.08.08 0 0 1 .08-.01c3.93 1.8 8.18 1.8 12.06 0a.08.08 0 0 1 .08.01l.37.3c.05.04.05.12-.01.13a12.3 12.3 0 0 1-1.87.89.08.08 0 0 0-.04.11c.36.7.78 1.36 1.22 2a.08.08 0 0 0 .09.03 19.84 19.84 0 0 0 6.01-3.04.08.08 0 0 0 .03-.05c.5-5.17-.84-9.66-3.55-13.66a.06.06 0 0 0-.03-.03ZM8.02 15.33c-1.18 0-2.16-1.09-2.16-2.42 0-1.33.96-2.42 2.16-2.42 1.21 0 2.18 1.1 2.16 2.42 0 1.33-.96 2.42-2.16 2.42Zm7.97 0c-1.18 0-2.16-1.09-2.16-2.42 0-1.33.96-2.42 2.16-2.42 1.21 0 2.18 1.1 2.16 2.42 0 1.33-.95 2.42-2.16 2.42Z" />
         </svg>
       );
@@ -296,12 +296,13 @@ function Arrow() {
 /* ---------- helpers -------------------------------------------------------- */
 
 /**
- * Mix a small alpha into an "rgb(r g b)" string so the result is usable as a
- * CSS color. Avoids repeating gradient math at the call site.
+ * Scale the channels of an "rgb(r g b)" string by `factor` (clamped to 0–255)
+ * to lighten (>1) or darken (<1) a brand tint for the panel gradient.
  */
-function withAlpha(rgb: string, alpha: number) {
+function shade(rgb: string, factor: number) {
   return rgb.replace(/^rgb\(([^)]+)\)$/, (_, body: string) => {
-    const parts = body.trim().split(/[\s,]+/).slice(0, 3).join(" ");
-    return `rgb(${parts} / ${alpha})`;
+    const [r, g, b] = body.trim().split(/[\s,]+/).slice(0, 3).map(Number);
+    const clamp = (n: number) => Math.round(Math.max(0, Math.min(255, n * factor)));
+    return `rgb(${clamp(r)} ${clamp(g)} ${clamp(b)})`;
   });
 }

@@ -25,8 +25,7 @@ type Passage = {
 
 const passages: Passage[] = [
   {
-    text: "The first wallet I ever made was on a flight to Lagos in 2017. By the time I landed I understood what was wrong with crypto, but I also understood what was wrong with the alternative.",
-    marginNote: ", scribbled on the flight",
+    text: "The first wallet I ever made showed me what was wrong with crypto, but I also understood what was wrong with the alternative.",
   },
   {
     text: "Custodians don't run away with your money very often. They just quietly tell you no when you ask the wrong question. They charge you 2-and-20 to invest in the same five things. They send you a PDF every quarter and call it transparency.",
@@ -66,10 +65,6 @@ export function Story() {
               <header className="flex flex-wrap items-center gap-x-3 gap-y-1">
                 <SeedIcon size={12} className="text-moss" />
                 <p className="eyebrow text-moss">A letter from BLOK Capital</p>
-                <span className="ml-auto inline-flex items-center gap-2 text-[11.5px] font-medium uppercase tracking-wider text-ink-subtle">
-                  <span aria-hidden className="h-px w-6 bg-ink/20" />
-                  Lagos · 2017
-                </span>
               </header>
 
               {/* "Dear reader," opener in script */}
@@ -116,7 +111,7 @@ export function Story() {
               </div>
 
               <p className="mt-3 text-[12.5px] leading-relaxed text-ink-subtle">
-                Wyoming · Founded 2023 · Read in about two minutes
+                Founded 2023 · Read in about two minutes
               </p>
             </GlassPanel>
           </m.article>
@@ -163,7 +158,7 @@ export function Story() {
                     BLOK Capital
                   </span>
                   <span className="text-[11px] font-medium uppercase tracking-wider text-ink-subtle">
-                    The team
+                    Core contributors
                   </span>
                 </div>
               </GlassPanel>

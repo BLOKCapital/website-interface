@@ -43,7 +43,7 @@ export function WhyItsSafe() {
       eyebrow="Why it's safe"
       title={
         <>
-          Six promises we{" "}
+          Promises we{" "}
           <em className="font-serif italic text-moss">won&apos;t break.</em>
         </>
       }
@@ -75,7 +75,7 @@ export function WhyItsSafe() {
           P.S.
         </span>
         <span>
-          All six are wired into the protocol.{" "}
+          All are wired into the protocol.{" "}
           <Link
             href="/features#audits"
             className="group/r relative font-medium text-ink transition-colors hover:text-clay-deep"

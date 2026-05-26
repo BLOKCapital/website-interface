@@ -11,14 +11,13 @@ const cols = [
     label: "Product",
     items: [
       { href: "/features", label: "Features" },
-      { href: "/preview", label: "Dashboard preview" },
       { href: "https://docs.blokcapital.io", label: "Documentation", external: true },
     ],
   },
   {
     label: "Protocol",
     items: [
-      { href: "/about#token", label: "$BLOKC" },
+      { href: "/features#token", label: "$BLOKC" },
       { href: "/about#dao", label: "DAO governance" },
       { href: "/features#audits", label: "Audits" },
       { href: "https://docsend.com/view/4j6qvvrudyr6izyb", label: "Whitepaper", external: true },

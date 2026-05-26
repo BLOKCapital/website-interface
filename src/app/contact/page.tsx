@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import { ContactHero } from "@/components/contact/ContactHero";
 import { Channels } from "@/components/contact/Channels";
 import { Faq } from "@/components/contact/FAQ";
-import { LegalBlock } from "@/components/contact/LegalBlock";
+// import { LegalBlock } from "@/components/contact/LegalBlock";
 import { Reveal } from "@/components/ui/Reveal";
 import { JsonLd } from "@/components/seo/JsonLd";
 import { faqSchema, breadcrumbSchema } from "@/lib/seo/schema";
@@ -29,7 +29,7 @@ export default function ContactPage() {
       <ContactHero />
       <Reveal><Channels /></Reveal>
       <Reveal><Faq /></Reveal>
-      <Reveal variant="fade-in"><LegalBlock /></Reveal>
+      {/* <Reveal variant="fade-in"><LegalBlock /></Reveal> */}
     </>
   );
 }

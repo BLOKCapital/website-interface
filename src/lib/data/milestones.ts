@@ -35,9 +35,15 @@ export const milestones: Milestone[] = [
     description: "Sector indices added, RWAs, gaming, AI/compute, perpetuals. Each one a community-curated basket." },
   { id: "staking", label: "Staking & Fee Switch", quarter: "Q4 '26", status: "future", pin: "red",
     description: "Stake BLOKC to earn protocol fees. The fee switch flips by DAO vote." },
+  { id: "community", label: "Launch BLOK Capital Community", quarter: "Q1 '26", status: "current", pin: "green",
+    description: "The community opens its gates. Discord, contributors, and the first gardeners take root." },
+  { id: "ambassador", label: "Ambassador & Builder Vesting Program", quarter: "Q2 '26", status: "current", pin: "yellow",
+    description: "Ambassador program opens and builder vesting begins, rewarding the people who grow the garden." },
+  { id: "mainnet", label: "Mainnet Protocol Launch", quarter: "Q3 '26", status: "future", pin: "blue",
+    description: "The protocol goes live on mainnet. Gardens open to everyone on Arbitrum." },
 
   // 2027 — The Bloom
-  { id: "ido", label: "IDO", quarter: "Q1 '27", status: "future", pin: "yellow",
+  { id: "ido", label: "IDO", quarter: "Q2 '27", status: "future", pin: "yellow",
     description: "Initial DEX offering. DAO treasury opens." },
   { id: "gardeners", label: "Introduction of Gardeners", quarter: "Q2 '27", status: "future", pin: "green",
     description: "Verified manager onboarding live. ERC-5484 soulbound reputation badges activated." },

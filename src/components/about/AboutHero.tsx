@@ -203,7 +203,7 @@ export function AboutHero() {
               <p className="mt-2 text-[12.5px] leading-relaxed text-ink-subtle sm:text-center lg:text-right">
                 BLOK Capital DAO
                 <br />
-                Wyoming, USA · Founded 2023
+                Founded 2023
               </p>
             </m.div>
           </div>
