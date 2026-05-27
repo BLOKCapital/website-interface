@@ -51,7 +51,7 @@ export function Channels() {
           <em className="font-serif italic text-clay">Everything starts in Discord.</em>
         </>
       }
-      description="Discord is the front door — community, support, partnerships, press, and security all route through it. Prefer somewhere else? Pick a channel."
+      description="Discord is the front door: community, support, partnerships, press, and security all route through it. Prefer somewhere else? Pick a channel."
     >
       <div className="grid gap-4 lg:grid-cols-12">
         {/* Primary: Discord feature panel */}
@@ -157,7 +157,7 @@ function DiscordPanel() {
           Join our Discord
         </h3>
         <p className="mt-2 max-w-xs text-[13.5px] leading-relaxed text-white/80">
-          The whole community lives here. Ask anything — security reports and
+          The whole community lives here. Ask anything; security reports and
           support get a reply in about an hour, weekends included.
         </p>
 

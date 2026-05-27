@@ -3,6 +3,8 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 import { getAllPolicies, getPolicy, policySlugs } from "@/lib/data/policies";
 import { PolicyTOC, type TocItem } from "@/components/legal/PolicyTOC";
+import { JsonLd } from "@/components/seo/JsonLd";
+import { articleSchema, breadcrumbSchema } from "@/lib/seo/schema";
 
 export function generateStaticParams() {
   return policySlugs.map((slug) => ({ slug }));
@@ -71,6 +73,20 @@ export default async function PolicyPage({
 
   return (
     <section className="paper relative isolate">
+      <JsonLd
+        data={[
+          articleSchema({
+            title: policy.title,
+            description: `${policy.title}, BLOK Capital DAO LLC.`,
+            path: `/legal/${slug}`,
+            datePublished: policy.date,
+          }),
+          breadcrumbSchema([
+            { name: "Home", path: "/" },
+            { name: policy.title, path: `/legal/${slug}` },
+          ]),
+        ]}
+      />
       {/* Warm corner washes */}
       <div
         aria-hidden

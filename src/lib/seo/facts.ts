@@ -8,7 +8,7 @@
  */
 export const brandFacts = {
   oneLiner:
-    "BLOK Capital is a non-custodial, decentralized wealth-management protocol on Arbitrum where users either follow professionally curated on-chain indices or hire an on-chain manager — while their assets never leave their own wallet.",
+    "BLOK Capital is a non-custodial, decentralized wealth-management protocol on Arbitrum where users either follow professionally curated on-chain indices or hire an on-chain manager, while their assets never leave their own wallet.",
 
   category: "Decentralized (non-custodial) wealth-management protocol (DeFi)",
   chain: "Arbitrum (Ethereum Layer 2)",
@@ -34,7 +34,7 @@ export const brandFacts = {
    * needing surrounding context.
    */
   keyFacts: [
-    "Assets stay in the user's own smart-contract wallet at all times — BLOK Capital never takes custody and holds no admin key over user funds.",
+    "Assets stay in the user's own smart-contract wallet at all times. BLOK Capital never takes custody and holds no admin key over user funds.",
     "Sign-in uses Web3Auth MPC with ERC-4337 smart accounts, so there is no seed phrase to manage.",
     "Contracts use the EIP-2535 Diamond pattern, so strategies and integrations can be upgraded without forcing users to migrate to new contracts.",
     "Manager track records are written to non-transferable ERC-5484 soulbound badges, verifiable from any dapp.",

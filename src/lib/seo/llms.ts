@@ -16,7 +16,7 @@ import { milestones } from "@/lib/data/milestones";
 const PAGES: { title: string; path: string; desc: string }[] = [
   { title: "Home", path: "/", desc: "What BLOK Capital is and how non-custodial Gardens work." },
   { title: "Features", path: "/features", desc: "Indices, on-chain managers, soulbound reputation, Diamond architecture, and the $BLOKC token." },
-  { title: "Dashboard Preview", path: "/preview", desc: "Interactive sandbox of the Garden dashboard — try it before connecting a wallet." },
+  { title: "Dashboard Preview", path: "/preview", desc: "Interactive sandbox of the Garden dashboard. Try it before connecting a wallet." },
   { title: "About", path: "/about", desc: "Story, team, governance, and the DAO." },
   { title: "Contact", path: "/contact", desc: "Channels for partnerships, support, press, and security, plus FAQs." },
 ];
@@ -58,7 +58,7 @@ export function buildLlmsTxt(): string {
 export function buildLlmsFullTxt(): string {
   const lines: string[] = [];
 
-  lines.push(`# ${siteConfig.name} — Full Reference for AI Agents`);
+  lines.push(`# ${siteConfig.name}: Full Reference for AI Agents`);
   lines.push("");
   lines.push(`> ${brandFacts.oneLiner}`);
   lines.push("");
@@ -88,7 +88,7 @@ export function buildLlmsFullTxt(): string {
 
   lines.push("## Roadmap");
   for (const m of milestones) {
-    lines.push(`- ${m.quarter} — ${m.label} [${m.status}]: ${m.description}`);
+    lines.push(`- ${m.quarter} · ${m.label} [${m.status}]: ${m.description}`);
   }
   lines.push("");
 

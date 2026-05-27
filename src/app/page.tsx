@@ -9,7 +9,7 @@ import { SocialProof } from "@/components/home/SocialProof";
 import { DaoCommunity } from "@/components/home/DaoCommunity";
 import { Reveal } from "@/components/ui/Reveal";
 import { JsonLd } from "@/components/seo/JsonLd";
-import { serviceSchema } from "@/lib/seo/schema";
+import { serviceSchema, softwareApplicationSchema } from "@/lib/seo/schema";
 import type { Metadata } from "next";
 
 // Title falls back to the layout's default ("BLOK Capital — It's crypto, but
@@ -32,7 +32,7 @@ export const metadata: Metadata = {
 export default function HomePage() {
   return (
     <>
-      <JsonLd data={serviceSchema()} />
+      <JsonLd data={[serviceSchema(), softwareApplicationSchema()]} />
       <Hero />
       <Reveal><ProblemComparison /></Reveal>
       <GardenMetaphor />{/* owns its own scroll-driven motion, don't wrap */}

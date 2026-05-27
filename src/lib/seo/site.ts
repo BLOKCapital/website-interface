@@ -16,6 +16,16 @@ export const siteConfig = {
   locale: "en_US",
   /** Brand wordmark used as the Organization logo in structured data. */
   logo: "https://blokcapital.io/brand/wordmark.png",
+  /** Support inbox surfaced as the Organization contactPoint. */
+  email: "support@blokcapital.io",
+  /** Real-time support channel agents/users are pointed to first. */
+  supportUrl: "https://discord.com/invite/blokc",
+  /** Incorporation details — strengthen E-E-A-T and entity disambiguation. */
+  legal: {
+    /** ISO 3166-1 alpha-2 for the Marshall Islands. */
+    addressCountry: "MH",
+    registration: "10050-23",
+  },
   /** Verified social/profile URLs that prove brand identity to search engines. */
   sameAs: socials.map((s) => s.href),
 } as const;
