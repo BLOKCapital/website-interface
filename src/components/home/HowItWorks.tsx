@@ -319,9 +319,9 @@ function InvestorMock() {
         variants={fadeUp}
         className="mt-5 grid grid-cols-3 gap-3 border-t border-ink/10 pt-4"
       >
-        <Kpi label="Balance" value="$48,210" />
+        <Kpi label="Balance ⚠️ Example" value="$48,210" />
         <Kpi label="This week" value="+2.41%" tone="primary" />
-        <Kpi label="Since planted" value="+18.4%" tone="primary" />
+        <Kpi label="Since planted (illustrative)" value="+18.4%" tone="primary" />
       </m.div>
 
       {/* Activity log, chain-style */}
@@ -412,7 +412,7 @@ function ManagerMock() {
 
       {/* Kpi grid */}
       <m.div variants={fadeUp} className="mt-5 grid grid-cols-2 gap-4">
-        <Kpi label="Plants tended" value="$4.22M" />
+        <Kpi label="Plants tended (example)" value="$4.22M" />
         <Kpi label="Hired you" value="184 gardeners" />
         <Kpi label="This week" value="+1.84%" tone="primary" />
         <Kpi label="Reputation" value="94 / 100" tone="primary" />

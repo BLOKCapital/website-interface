@@ -113,6 +113,14 @@ export function Hero() {
             >
               Whitepaper
             </Button>
+          <Button
+            href="https://app.blokcapital.io"
+            size="lg"
+            variant="primary"
+          >
+            Launch App
+            <Arrow />
+          </Button>
           </m.div>
 
           <m.p
