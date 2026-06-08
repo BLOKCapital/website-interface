@@ -97,7 +97,7 @@ export function TokenTeaser() {
               <p className="eyebrow text-moss">Utilities</p>
               <span className="inline-flex items-center gap-2 rounded-full border border-clay/35 bg-clay/[0.06] px-2.5 py-0.5 text-[11px] font-medium tracking-wide text-clay-deep">
                 <span className="size-1.5 rounded-full bg-clay" />
-                Launches at IDO · Q1 2026
+                Launches at IDO · Q2 2027
               </span>
             </div>
 
@@ -250,7 +250,7 @@ function SeedPacket() {
         variants={fadeUp}
         className="script mt-4 text-[18px] leading-none text-clay"
       >
-        plant after Q1 2026
+        plant after Q2 2027
       </m.p>
     </m.article>
   );

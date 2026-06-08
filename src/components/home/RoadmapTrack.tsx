@@ -77,7 +77,7 @@ export function RoadmapTrack() {
   return (
     <Section
       id="roadmap"
-      eyebrow="The Almanac · Roadmap"
+      eyebrow="The Almanac · Roadmap · 🟢 Beta Live on Arbitrum · Mainnet: Q3 2026"
       title={
         <>
           Five chapters.{" "}
