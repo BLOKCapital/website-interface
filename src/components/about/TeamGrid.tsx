@@ -5,6 +5,7 @@ import Link from "next/link";
 import { useState } from "react";
 import { m, useReducedMotion, type Variants } from "framer-motion";
 import { Section } from "@/components/ui/Section";
+import { TiltCard } from "@/components/ui/TiltCard";
 import { team, type TeamMember } from "@/lib/data/team";
 import { cn } from "@/lib/utils";
 
@@ -102,7 +103,10 @@ export function TeamGrid() {
 /* ---------- single card ---------------------------------------------------- */
 
 function TeamCard({ member }: { member: TeamMember }) {
+  // Polaroids get the strongest tilt on the site — they should feel like
+  // physical photos picked up off the desk.
   const card = (
+    <TiltCard maxTilt={7} className="h-full rounded-[14px]">
     <article className="paper-card group/m relative h-full overflow-hidden p-3 transition-[transform,border-color,box-shadow] duration-400 ease-in-soft hover:-translate-y-1 hover:border-moss/35 hover:shadow-[0_22px_44px_-26px_rgba(31,26,20,0.22)] sm:p-3.5">
       {/* Photo / fallback */}
       <div className="relative aspect-[4/5] w-full overflow-hidden rounded-lg bg-paper-deep">
@@ -129,6 +133,7 @@ function TeamCard({ member }: { member: TeamMember }) {
         </p>
       )}
     </article>
+    </TiltCard>
   );
 
   if (!member.href) return card;

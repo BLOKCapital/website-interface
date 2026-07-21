@@ -1,5 +1,7 @@
 import Link from "next/link";
 import { Button } from "@/components/ui/Button";
+import { Magnetic } from "@/components/ui/Magnetic";
+import { Reveal, RevealItem, Stagger } from "@/components/ui/Reveal";
 
 const DISCORD = "https://discord.com/invite/blokc";
 const TWITTER = "https://x.com/blok_cap";
@@ -10,7 +12,8 @@ const TWITTER = "https://x.com/blok_cap";
  * The contact form is intentionally absent right now — every channel routes
  * through Discord or the founder's X. The right column is a dedicated
  * "Drop into Discord" card with the response-window pledge sitting on the
- * left.
+ * left. Entrance choreography reuses the shared Reveal/Stagger primitives
+ * so this server component stays server-rendered.
  */
 export function ContactHero() {
   return (
@@ -28,50 +31,62 @@ export function ContactHero() {
 
       <div className="relative mx-auto max-w-7xl px-5 pt-28 sm:px-8 sm:pt-36 lg:pt-40">
         {/* Letterhead, dated, quiet */}
-        <div className="flex flex-wrap items-baseline justify-between gap-4 border-b border-ink/10 pb-5">
-          <p className="text-[12px] font-medium tracking-wide text-ink-subtle">
-            BLOK Capital · Correspondence
-          </p>
-          <p className="script text-[20px] leading-none text-clay">
-            April 2026
-          </p>
-        </div>
+        <Reveal variant="fade-in">
+          <div className="flex flex-wrap items-baseline justify-between gap-4 border-b border-ink/10 pb-5">
+            <p className="text-[12px] font-medium tracking-wide text-ink-subtle">
+              BLOK Capital · Correspondence
+            </p>
+            <p className="script text-[20px] leading-none text-clay">
+              April 2026
+            </p>
+          </div>
+        </Reveal>
 
-        <div className="mt-12 grid grid-cols-1 gap-10 pb-16 lg:grid-cols-12 lg:gap-12">
+        <Stagger
+          staggerChildren={0.12}
+          delayChildren={0.1}
+          className="mt-12 grid grid-cols-1 gap-10 pb-16 lg:grid-cols-12 lg:gap-12"
+        >
           {/* Left column, title + response window */}
           <div className="lg:col-span-6">
-            <p className="eyebrow text-moss">Contact</p>
+            <RevealItem>
+              <p className="eyebrow text-moss">Contact</p>
 
-            <h1 className="display mt-5 text-[44px] leading-[1.02] text-ink sm:text-[60px] lg:text-[80px]">
-              <em className="font-serif italic text-moss">Talk</em>
-              <br />
-              <span className="text-ink-muted">to</span> us
-              <span className="text-moss">.</span>
-            </h1>
+              <h1 className="display mt-5 text-[44px] leading-[1.02] text-ink sm:text-[60px] lg:text-[80px]">
+                <em className="font-serif italic text-moss">Talk</em>
+                <br />
+                <span className="text-ink-muted">to</span> us
+                <span className="text-moss">.</span>
+              </h1>
+            </RevealItem>
 
-            <p className="mt-7 max-w-md text-base leading-relaxed text-ink-muted sm:text-[17px]">
-              Partnerships, support, press, security, whatever you need,
-              there&apos;s a human at the other end.
-            </p>
+            <RevealItem>
+              <p className="mt-7 max-w-md text-base leading-relaxed text-ink-muted sm:text-[17px]">
+                Partnerships, support, press, security, whatever you need,
+                there&apos;s a human at the other end.
+              </p>
+            </RevealItem>
 
             {/* Service-level commitment block */}
-            <div className="mt-10 max-w-md space-y-2 border-l-2 border-moss/40 pl-4">
-              <p className="eyebrow text-moss">Response window</p>
-              <p className="text-[13.5px] leading-relaxed text-ink-muted">
-                Most messages get a reply{" "}
-                <span className="font-medium text-ink">inside 24 hours</span>.
-                <br />
-                Security reports get a reply{" "}
-                <span className="font-medium text-ink">inside one</span>.
-              </p>
-            </div>
+            <RevealItem>
+              <div className="mt-10 max-w-md space-y-2 border-l-2 border-moss/40 pl-4">
+                <p className="eyebrow text-moss">Response window</p>
+                <p className="text-[13.5px] leading-relaxed text-ink-muted">
+                  Most messages get a reply{" "}
+                  <span className="font-medium text-ink">inside 24 hours</span>.
+                  <br />
+                  Security reports get a reply{" "}
+                  <span className="font-medium text-ink">inside one</span>.
+                </p>
+              </div>
+            </RevealItem>
           </div>
 
           {/* Right column, Discord-focused card */}
-          <div className="lg:col-span-6">
+          <RevealItem variant="scale-up" className="lg:col-span-6">
             <DiscordPanel />
-          </div>
-        </div>
+          </RevealItem>
+        </Stagger>
       </div>
     </section>
   );
@@ -112,13 +127,17 @@ function DiscordPanel() {
       </p>
 
       <div className="mt-7 flex flex-wrap items-center gap-3">
-        <Button href={DISCORD} size="lg" variant="primary">
-          Open Discord
-          <Arrow />
-        </Button>
-        <Button href={TWITTER} size="lg" variant="outline">
-          Follow us on X
-        </Button>
+        <Magnetic>
+          <Button href={DISCORD} size="lg" variant="primary">
+            Open Discord
+            <Arrow />
+          </Button>
+        </Magnetic>
+        <Magnetic>
+          <Button href={TWITTER} size="lg" variant="outline">
+            Follow us on X
+          </Button>
+        </Magnetic>
       </div>
 
       {/* Hand-drawn rule + footnote */}

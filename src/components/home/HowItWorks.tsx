@@ -9,6 +9,8 @@ import {
 } from "framer-motion";
 import { Section } from "@/components/ui/Section";
 import { GlassCard } from "@/components/ui/GlassCard";
+import { GrowthVine } from "@/components/ui/GrowthVine";
+import { TiltCard } from "@/components/ui/TiltCard";
 import { AnimatedNumber } from "@/components/ui/AnimatedNumber";
 import { Sparkline } from "@/components/ui/Sparkline";
 import { cn } from "@/lib/utils";
@@ -147,7 +149,9 @@ export function HowItWorks() {
       }
       description="Investor, gardener, builder, pick your way in. Each chapter below is written for one of you."
     >
-      <div className="space-y-20 sm:space-y-28">
+      <div className="relative space-y-20 sm:space-y-28">
+        {/* The margin vine grows as you read through the three chapters. */}
+        <GrowthVine className="-left-8 top-2 hidden xl:block" />
         {chapters.map((c, i) => (
           <m.article
             key={c.persona}
@@ -201,7 +205,9 @@ export function HowItWorks() {
             </div>
 
             <m.div variants={fadeIn} className="relative">
-              <GlassCard className="p-5 sm:p-6">{c.mock}</GlassCard>
+              <TiltCard maxTilt={3.5} className="rounded-[14px]">
+                <GlassCard className="p-5 sm:p-6">{c.mock}</GlassCard>
+              </TiltCard>
             </m.div>
 
             {i < chapters.length - 1 && (

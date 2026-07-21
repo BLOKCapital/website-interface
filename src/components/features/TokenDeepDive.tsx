@@ -213,6 +213,9 @@ function TokenomicsDonut({
 }: {
   slices: { label: string; pct: number; color: string }[];
 }) {
+  // Slices sweep open around the ring on scroll-into-view (matching the
+  // DonutMini draw in HowItWorks), instead of the old opacity-only fade.
+  const reduce = useReducedMotion();
   const C = 2 * Math.PI * 40;
   let acc = 0;
   return (
@@ -230,7 +233,7 @@ function TokenomicsDonut({
         const offset = -((acc / 100) * C);
         acc += s.pct;
         return (
-          <circle
+          <m.circle
             key={i}
             cx="55"
             cy="55"
@@ -238,12 +241,14 @@ function TokenomicsDonut({
             fill="none"
             stroke={s.color}
             strokeWidth="11"
-            strokeDasharray={`${dash} ${C - dash}`}
             strokeDashoffset={offset}
             transform="rotate(-90 55 55)"
-            style={{
-              animation: `drawSlice 600ms ease-out ${i * 100}ms both`,
+            initial={reduce ? false : { strokeDasharray: `0 ${C.toFixed(2)}` }}
+            whileInView={{
+              strokeDasharray: `${dash.toFixed(2)} ${(C - dash).toFixed(2)}`,
             }}
+            viewport={{ once: true, amount: 0.4 }}
+            transition={{ duration: 0.9, ease, delay: 0.25 + i * 0.1 }}
           />
         );
       })}
@@ -257,12 +262,6 @@ function TokenomicsDonut({
       >
         10B
       </text>
-      <style>{`
-        @keyframes drawSlice {
-          from { opacity: 0; }
-          to   { opacity: 1; }
-        }
-      `}</style>
     </svg>
   );
 }

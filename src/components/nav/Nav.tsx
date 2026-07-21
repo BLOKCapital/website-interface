@@ -3,6 +3,7 @@
 import { useRef, useState } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
+import { m, useScroll, useSpring } from "framer-motion";
 import { Logo } from "@/components/ui/Logo";
 import { Button } from "@/components/ui/Button";
 import { cn } from "@/lib/utils";
@@ -28,6 +29,15 @@ export function Nav() {
   const scrolled = useScrolled(12);
   const [open, setOpen] = useState(false);
 
+  // Reading progress — a clay hairline that draws across the top of the
+  // page as you read, like a bookmark ribbon sliding along the spine.
+  const { scrollYProgress } = useScroll();
+  const progress = useSpring(scrollYProgress, {
+    stiffness: 140,
+    damping: 30,
+    mass: 0.4,
+  });
+
   // Close the mobile menu on route change by adjusting state during render
   // (the documented alternative to an effect) — also covers back/forward nav.
   // Previous path is tracked in a ref since it only gates the reset, never renders.
@@ -46,6 +56,11 @@ export function Nav() {
           : "border-b border-transparent bg-transparent",
       )}
     >
+      <m.span
+        aria-hidden
+        style={{ scaleX: progress }}
+        className="absolute inset-x-0 top-0 z-10 h-[2px] origin-left bg-gradient-to-r from-moss via-ochre to-clay"
+      />
       <div className="mx-auto flex h-16 max-w-7xl items-center justify-between gap-6 px-5 sm:h-[68px] sm:px-8">
         <Link
           href="/"

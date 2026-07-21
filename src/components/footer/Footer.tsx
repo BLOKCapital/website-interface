@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { Logo } from "@/components/ui/Logo";
 import { FooterBanner } from "@/components/footer/FooterBanner";
+import { Reveal } from "@/components/ui/Reveal";
 
 // Footer is a server component, so this resolves once at build/render time and
 // is baked into the HTML — kept out of JSX so it can't drift at hydration.
@@ -167,6 +168,20 @@ export function Footer() {
             ))}
           </ul>
         </div>
+      </div>
+
+      {/* Blind-embossed wordmark — oversized outlined display type pressed
+          into the paper, baseline sunk below the page edge so the site signs
+          off like the stamped back cover of the journal. Decorative only. */}
+      <div
+        aria-hidden
+        className="pointer-events-none relative z-0 select-none overflow-hidden"
+      >
+        <Reveal variant="fade-up" amount={0.4}>
+          <p className="wordmark-emboss display translate-y-[0.24em] whitespace-nowrap text-center text-[clamp(64px,12.5vw,190px)] font-semibold leading-[0.8] tracking-[-0.02em]">
+            BLOK CAPITAL
+          </p>
+        </Reveal>
       </div>
     </footer>
   );

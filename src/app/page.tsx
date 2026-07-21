@@ -8,6 +8,7 @@ import { RoadmapTrack } from "@/components/home/RoadmapTrack";
 import { SocialProof } from "@/components/home/SocialProof";
 import { DaoCommunity } from "@/components/home/DaoCommunity";
 import { Reveal } from "@/components/ui/Reveal";
+import { Marquee } from "@/components/ui/Marquee";
 import { JsonLd } from "@/components/seo/JsonLd";
 import { serviceSchema, softwareApplicationSchema } from "@/lib/seo/schema";
 import type { Metadata } from "next";
@@ -35,6 +36,7 @@ export default function HomePage() {
       <JsonLd data={[serviceSchema(), softwareApplicationSchema()]} />
       <Hero />
       <Reveal><ProblemComparison /></Reveal>
+      <Marquee />{/* editorial ticker — the protocol's promises on a loop */}
       <GardenMetaphor />{/* owns its own scroll-driven motion, don't wrap */}
       <Reveal><HowItWorks /></Reveal>
       <Reveal><WhyItsSafe /></Reveal>

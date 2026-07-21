@@ -1,7 +1,17 @@
 "use client";
 
-import { m, useReducedMotion, type Variants } from "framer-motion";
+import { useRef } from "react";
+import {
+  m,
+  useMotionValue,
+  useReducedMotion,
+  useScroll,
+  useSpring,
+  useTransform,
+  type Variants,
+} from "framer-motion";
 import { Button } from "@/components/ui/Button";
+import { Magnetic } from "@/components/ui/Magnetic";
 import { ParticleField } from "@/components/ui/ParticleField";
 import { GardenAsset } from "@/components/ui/GardenAsset";
 
@@ -9,14 +19,13 @@ import { GardenAsset } from "@/components/ui/GardenAsset";
  * Home hero — Garden Journal opening page.
  *
  * Two warm columns:
- *   - Left: serif headline, handwritten margin note, plain dated tagline,
- *           two grounded CTAs.
- *   - Right: single garden render, gently swaying, more visible drifting
- *           leaves behind it.
+ *   - Left: serif headline set as kinetic masked lines (each line rises out
+ *           of an overflow-hidden slot), handwritten margin note, two
+ *           grounded CTAs with a magnetic hover.
+ *   - Right: single garden render, gently swaying, drifting leaves behind
+ *           it, and a slow scroll parallax so it sinks as the page turns.
  *
- * Mounted client-side for Framer Motion entrance choreography. Each element
- * fades up in sequence on first paint (greeting → headline → body → CTAs →
- * P.S. on the left; Folio mark → garden → caption on the right). Honors
+ * Mounted client-side for Framer Motion entrance choreography. Honors
  * prefers-reduced-motion via `useReducedMotion`.
  */
 
@@ -32,15 +41,85 @@ const fadeIn: Variants = {
   show: { opacity: 1, transition: { duration: 0.8, ease } },
 };
 
+// Kinetic type — each headline line slides up out of its clipped slot.
+const lineRise: Variants = {
+  hidden: { y: "118%" },
+  show: { y: "0%", transition: { duration: 0.9, ease } },
+};
+
+/**
+ * Overflow-hidden slot for one headline line. The padded window (with the
+ * compensating negative margin) keeps serif descenders from being clipped
+ * once the line settles.
+ */
+function HeadlineLine({ children }: { children: React.ReactNode }) {
+  return (
+    <span className="-mb-[0.18em] block overflow-hidden pb-[0.18em]">
+      <m.span variants={lineRise} className="block will-change-transform">
+        {children}
+      </m.span>
+    </span>
+  );
+}
+
 export function Hero() {
   const reduce = useReducedMotion();
+  const sectionRef = useRef<HTMLElement>(null);
+
+  // Parallax — the garden sinks slightly slower than the page scrolls away,
+  // giving the spread a sense of depth without any WebGL weight.
+  const { scrollYProgress } = useScroll({
+    target: sectionRef,
+    offset: ["start start", "end start"],
+  });
+  const gardenY = useTransform(scrollYProgress, [0, 1], [0, 96]);
+  const leavesY = useTransform(scrollYProgress, [0, 1], [0, 44]);
+
+  // Pointer depth — the garden leans gently toward the cursor while the
+  // leaf layer drifts the opposite way, so the spread reads as layered
+  // paper rather than a flat print. Springs keep it slow and weighty.
+  const depthSpring = { stiffness: 110, damping: 20, mass: 0.8 };
+  const mx = useMotionValue(0); // pointer across the section, -1..1
+  const my = useMotionValue(0);
+  const gardenPX = useSpring(useTransform(mx, [-1, 1], [-16, 16]), depthSpring);
+  const gardenPY = useSpring(useTransform(my, [-1, 1], [-10, 10]), depthSpring);
+  const leavesPX = useSpring(useTransform(mx, [-1, 1], [9, -9]), depthSpring);
+  const leavesPY = useSpring(useTransform(my, [-1, 1], [6, -6]), depthSpring);
+  // Scroll parallax and pointer depth sum into one transform per layer.
+  const gardenYAll = useTransform(
+    [gardenY, gardenPY] as const,
+    ([a, b]: number[]) => a + b,
+  );
+  const leavesYAll = useTransform(
+    [leavesY, leavesPY] as const,
+    ([a, b]: number[]) => a + b,
+  );
+
+  function onPointerMove(e: React.PointerEvent) {
+    if (reduce || e.pointerType !== "mouse") return;
+    const el = sectionRef.current;
+    if (!el) return;
+    const r = el.getBoundingClientRect();
+    mx.set(((e.clientX - r.left) / r.width) * 2 - 1);
+    my.set(((e.clientY - r.top) / r.height) * 2 - 1);
+  }
+
+  function onPointerLeave() {
+    mx.set(0);
+    my.set(0);
+  }
 
   // When reduced motion is on, skip the staggered choreography and paint the
   // final state immediately so the page is readable without animation.
   const initial = reduce ? "show" : "hidden";
 
   return (
-    <section className="paper relative isolate flex min-h-svh items-center overflow-hidden">
+    <section
+      ref={sectionRef}
+      onPointerMove={onPointerMove}
+      onPointerLeave={onPointerLeave}
+      className="paper relative isolate flex min-h-svh items-center overflow-hidden"
+    >
       {/* Soft moss wash bottom-right, faint clay glow top-left, both warm, both subtle. */}
       <div
         aria-hidden
@@ -55,7 +134,13 @@ export function Hero() {
           the whole hero (copy column + visual column + the gaps in between).
           Inside the visual column they used to get squeezed out by the garden
           image on small screens. */}
-      <ParticleField count={16} className="z-0" />
+      <m.div
+        aria-hidden
+        style={reduce ? undefined : { y: leavesYAll, x: leavesPX }}
+        className="pointer-events-none absolute inset-0 z-0"
+      >
+        <ParticleField count={16} />
+      </m.div>
 
       <m.div
         initial={initial}
@@ -78,15 +163,20 @@ export function Hero() {
           </m.div>
 
           <m.h1
-            variants={fadeUp}
+            variants={{
+              hidden: {},
+              show: { transition: { staggerChildren: 0.09 } },
+            }}
             className="display mt-6 text-[36px] leading-[1.05] text-ink sm:mt-7 sm:text-[48px] sm:leading-[1.02] md:text-[56px] lg:text-[72px] xl:text-[80px]"
           >
-            Grow your crypto.
-            <br />
-            <span className="text-ink-muted">Never hand over</span>
-            <br />
-            the <em className="font-serif italic text-moss">keys</em>
-            <span className="text-moss">.</span>
+            <HeadlineLine>Grow your crypto.</HeadlineLine>
+            <HeadlineLine>
+              <span className="text-ink-muted">Never hand over</span>
+            </HeadlineLine>
+            <HeadlineLine>
+              the <em className="font-serif italic text-moss">keys</em>
+              <span className="text-moss">.</span>
+            </HeadlineLine>
           </m.h1>
 
           <m.p
@@ -102,17 +192,21 @@ export function Hero() {
             variants={fadeUp}
             className="mt-9 flex flex-wrap items-center gap-3"
           >
-            <Button href="https://docs.blokcapital.io" size="lg" variant="primary">
-              Read the Docs
-              <Arrow />
-            </Button>
-            <Button
-              href="https://docsend.com/view/4j6qvvrudyr6izyb"
-              size="lg"
-              variant="outline"
-            >
-              Whitepaper
-            </Button>
+            <Magnetic>
+              <Button href="https://docs.blokcapital.io" size="lg" variant="primary">
+                Read the Docs
+                <Arrow />
+              </Button>
+            </Magnetic>
+            <Magnetic>
+              <Button
+                href="https://docsend.com/view/4j6qvvrudyr6izyb"
+                size="lg"
+                variant="outline"
+              >
+                Whitepaper
+              </Button>
+            </Magnetic>
           </m.div>
 
           <m.p
@@ -140,6 +234,7 @@ export function Hero() {
 
           <m.div
             variants={fadeIn}
+            style={reduce ? undefined : { y: gardenYAll, x: gardenPX }}
             className="relative mx-auto h-[360px] w-full max-w-[600px] sm:h-[480px] md:h-[520px] lg:h-[560px]"
           >
             {/* Quiet warm halo, no neon */}

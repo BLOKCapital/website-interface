@@ -1,4 +1,5 @@
 import type { ProposalView } from "@/lib/data/proposals";
+import { DrawBar } from "@/components/ui/DrawBar";
 import { cn } from "@/lib/utils";
 
 /**
@@ -17,7 +18,7 @@ export function ProposalFeed({ proposals }: { proposals: ProposalView[] }) {
 
   return (
     <ul className="mt-5 space-y-4">
-      {proposals.map((p) => (
+      {proposals.map((p, i) => (
         <li key={p.id} className="space-y-2">
           <div className="flex items-start justify-between gap-3">
             <div className="min-w-0">
@@ -38,7 +39,8 @@ export function ProposalFeed({ proposals }: { proposals: ProposalView[] }) {
             </span>
           </div>
           <div className="relative h-1.5 overflow-hidden rounded-full bg-paper-deep">
-            <span
+            <DrawBar
+              delay={i * 0.08}
               className={cn(
                 "absolute inset-y-0 left-0 rounded-full",
                 p.passing ? "bg-moss" : "bg-clay",

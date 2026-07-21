@@ -82,12 +82,19 @@ const config: Config = {
           "0%": { clipPath: "inset(0 100% 0 0)" },
           "100%": { clipPath: "inset(0 0 0 0)" },
         },
+        // Editorial ticker — the track holds two identical copies, so a
+        // -50% translate loops seamlessly.
+        marquee: {
+          "0%": { transform: "translate3d(0,0,0)" },
+          "100%": { transform: "translate3d(-50%,0,0)" },
+        },
       },
       animation: {
         sway: "sway 9s ease-in-out infinite",
         drift: "drift 12s ease-in-out infinite",
         breathe: "breathe 6s ease-in-out infinite",
         "ink-in": "inkIn 900ms cubic-bezier(0.22,1,0.36,1) both",
+        marquee: "marquee 42s linear infinite",
       },
     },
   },

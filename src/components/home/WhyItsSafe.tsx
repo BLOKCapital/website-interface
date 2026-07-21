@@ -3,6 +3,7 @@
 import Link from "next/link";
 import { m, useReducedMotion, type Variants } from "framer-motion";
 import { Section } from "@/components/ui/Section";
+import { TiltCard } from "@/components/ui/TiltCard";
 import { PillarIcon } from "@/components/ui/PillarIcons";
 import { pillars } from "@/lib/data/pillars";
 import { cn } from "@/lib/utils";
@@ -193,8 +194,16 @@ function PromiseCard({ pillar, index }: { pillar: Pillar; index: number }) {
     </m.article>
   );
 
+  // 3D paper tilt — the postcard leans under the cursor, with a soft
+  // window-light sheen. The static alternating rotate keeps its pinned feel.
+  const tilted = (
+    <TiltCard maxTilt={4.5} className="h-full rounded-[14px]">
+      {cardInner}
+    </TiltCard>
+  );
+
   if (!pillar.href) {
-    return <li className="h-full">{cardInner}</li>;
+    return <li className="h-full">{tilted}</li>;
   }
 
   const external = pillar.href.startsWith("http");
@@ -206,7 +215,7 @@ function PromiseCard({ pillar, index }: { pillar: Pillar; index: number }) {
         rel={external ? "noreferrer" : undefined}
         className="block h-full rounded-2xl focus:outline-none"
       >
-        {cardInner}
+        {tilted}
       </Link>
     </li>
   );

@@ -3,6 +3,7 @@
 import { m, useReducedMotion, type Variants } from "framer-motion";
 import { Section } from "@/components/ui/Section";
 import { Button } from "@/components/ui/Button";
+import { TiltCard } from "@/components/ui/TiltCard";
 import { audits } from "@/lib/data/audits";
 const ease = [0.22, 1, 0.36, 1] as const;
 const ROMANS = ["I", "II", "III", "IV", "V", "VI"];
@@ -70,6 +71,7 @@ export function SecurityAudits() {
       >
         {audits.map((a, i) => (
           <m.li key={a.partner} variants={fadeUp}>
+            <TiltCard maxTilt={4.5} className="h-full rounded-[14px]">
             <article className="paper-card group/a relative flex h-full flex-col p-5 transition-[transform,border-color,box-shadow] duration-400 ease-in-soft hover:-translate-y-1 hover:border-moss/35 hover:shadow-[0_22px_44px_-26px_rgba(31,26,20,0.20)]">
               {/* Numeral stamp + date */}
               <div className="flex items-center justify-between gap-3">
@@ -99,6 +101,7 @@ export function SecurityAudits() {
                 {a.scope}
               </p>
             </article>
+            </TiltCard>
           </m.li>
         ))}
       </m.ul>
