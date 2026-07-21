@@ -4,8 +4,6 @@ import { m, useReducedMotion, type Variants } from "framer-motion";
 import { Section } from "@/components/ui/Section";
 import { Button } from "@/components/ui/Button";
 import { audits } from "@/lib/data/audits";
-
-const DISCORD = "https://discord.com/invite/blokc";
 const ease = [0.22, 1, 0.36, 1] as const;
 const ROMANS = ["I", "II", "III", "IV", "V", "VI"];
 
@@ -133,7 +131,9 @@ export function SecurityAudits() {
             against deployed contracts on every release.
           </p>
           <Button
-            href="https://docs.blokcapital.io"
+            href="https://github.com/BLOKCapital/audits"
+            target="_blank"
+            rel="noreferrer"
             variant="outline"
             size="sm"
             className="mt-5"
@@ -143,24 +143,26 @@ export function SecurityAudits() {
         </m.div>
 
         <m.div variants={fadeUp} className="paper-card p-6">
-          <p className="eyebrow text-moss">Security contact</p>
+          <p className="eyebrow text-moss">Report a vulnerability</p>
           <p className="mt-3 text-[14px] leading-relaxed text-ink-muted">
-            Report on{" "}
+            Found a security issue? Email{" "}
+            {/* TODO(blok): confirm the dedicated security address + PGP key. */}
             <a
-              href={DISCORD}
-              target="_blank"
-              rel="noreferrer"
+              href="mailto:security@blokcapital.io"
               className="font-medium text-ink underline decoration-clay decoration-[1.5px] underline-offset-[4px] transition-colors hover:text-clay-deep"
             >
-              our Discord
-            </a>
-            , security reports get a reply{" "}
-            <span className="font-medium text-ink">inside one hour</span>,
-            weekends included.
+              security@blokcapital.io
+            </a>{" "}
+            with steps to reproduce and impact. Please don&apos;t open a public
+            issue or post in Discord. We acknowledge within{" "}
+            <span className="font-medium text-ink">24 hours</span> and agree a fix
+            and disclosure timeline with you.
           </p>
           <div aria-hidden className="rule-hand mt-5" />
           <p className="mt-3 text-[11.5px] leading-relaxed text-ink-subtle">
-            For coordinated disclosure, message the team before posting publicly.
+            In scope: the Garden Diamond, facets, indices and rebalancer
+            contracts, and this site. Give us time to remediate before any
+            public disclosure — we credit reporters who follow this process.
           </p>
         </m.div>
       </m.div>

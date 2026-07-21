@@ -8,7 +8,7 @@ export type Audit = {
 export const audits: Audit[] = [
   {
     partner: "CredShields",
-    scope: "BLOKC v1.0 full protocol audit. 2 High, 12 Major, 5 Minor, 2 Informational issues, all fixed.",
+    scope: "Full protocol audit of BLOKC v1.0 — all findings reviewed and resolved.",
     date: "Dec 2024",
     url: "https://github.com/BLOKCapital/audits/blob/main/audits/Blok%20Capital%20Final%20Report.pdf",
   },

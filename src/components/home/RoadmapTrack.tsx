@@ -3,6 +3,7 @@
 import { useMemo } from "react";
 import { m, useReducedMotion } from "framer-motion";
 import { Section } from "@/components/ui/Section";
+import { ParticleField } from "@/components/ui/ParticleField";
 import { Reveal, Stagger, RevealItem } from "@/components/ui/Reveal";
 import { milestones } from "@/lib/data/milestones";
 import { cn } from "@/lib/utils";
@@ -77,6 +78,7 @@ export function RoadmapTrack() {
   return (
     <Section
       id="roadmap"
+      background={<ParticleField count={7} className="opacity-45" />}
       eyebrow="The Almanac · Roadmap"
       title={
         <>

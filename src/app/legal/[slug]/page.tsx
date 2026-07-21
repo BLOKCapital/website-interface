@@ -182,8 +182,7 @@ export default async function PolicyPage({
           <span className="script mr-1 text-[18px] leading-none text-clay">
             ✻
           </span>
-          BLOK Capital DAO LLC · Marshall Islands · Reg.&nbsp;no. 10050-23 ·
-          Have a question?{" "}
+          BLOK Capital DAO LLC · Have a question?{" "}
           <a
             href="https://discord.com/invite/blokc"
             target="_blank"

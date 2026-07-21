@@ -13,6 +13,8 @@ import { cn } from "@/lib/utils";
  * close doesn't intrude on long-form policy reading. The compact Footer
  * sitemap still renders there.
  */
+const BANNER_ROUTES = ["/", "/about", "/features", "/contact", "/preview"];
+
 export function FooterBanner() {
   const pathname = usePathname();
   const ref = useRef<HTMLDivElement>(null);
@@ -43,8 +45,11 @@ export function FooterBanner() {
     return () => io.disconnect();
   }, []);
 
-  // Suppress the editorial banner on legal pages.
-  if (pathname?.startsWith("/legal/")) return null;
+  // The editorial close only belongs on the main marketing pages. Suppress it
+  // everywhere else — long-form legal docs and, crucially, the 404/unknown
+  // routes, so not-found reads as a clean standalone page rather than the 404
+  // hero followed by this banner.
+  if (!pathname || !BANNER_ROUTES.includes(pathname)) return null;
 
   return (
     <div

@@ -225,9 +225,16 @@ function JournalHeader({ date, mark }: { date: string; mark: string }) {
       <p className="script text-[16px] leading-none text-clay sm:text-[18px]">
         {date}
       </p>
-      <p className="text-[10.5px] font-medium uppercase tracking-wider text-ink-subtle sm:text-[11px]">
-        {mark}
-      </p>
+      <span className="flex items-baseline gap-2">
+        {/* Disclaimer: every mock panel carries this so the figures below are
+            never mistaken for a real user's account or actual returns. */}
+        <span className="rounded-full border border-clay/30 bg-clay/[0.06] px-1.5 py-0.5 text-[9px] font-medium uppercase tracking-wider text-clay-deep">
+          Illustrative
+        </span>
+        <span className="text-[10.5px] font-medium uppercase tracking-wider text-ink-subtle sm:text-[11px]">
+          {mark}
+        </span>
+      </span>
     </div>
   );
 }

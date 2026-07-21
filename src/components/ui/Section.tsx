@@ -13,6 +13,8 @@ type Props = {
   align?: "left" | "center";
   /** Thin sketched rule at the top between sections. */
   vine?: boolean;
+  /** Decorative layer rendered behind the content (e.g. drifting leaves). */
+  background?: React.ReactNode;
 };
 
 /**
@@ -32,9 +34,15 @@ export function Section({
   className,
   align = "left",
   vine = true,
+  background,
 }: Props) {
   return (
     <section id={id} className={cn("paper relative isolate", className)}>
+      {background && (
+        <div aria-hidden className="pointer-events-none absolute inset-0 z-0 overflow-hidden">
+          {background}
+        </div>
+      )}
       {vine && (
         <span
           aria-hidden

@@ -25,7 +25,7 @@ export const milestones: Milestone[] = [
     description: "Smart-wallet UX via ERC-4337 + EIP-7702. Pay gas in any token, sign once for batched actions." },
 
   // 2026 — Opening the Gates (indices launch, DAO live, gardeners open)
-  { id: "first-launch", label: "First Public Launch", quarter: "Q1 '26", status: "current", pin: "green",
+  { id: "first-launch", label: "First Public Launch", quarter: "Q2 '26", status: "current", pin: "green",
     description: "Mainnet open to everyone. First 100 Gardens planted on Arbitrum." },
   { id: "indices", label: "Curated Index Gardens", quarter: "Q2 '26", status: "future", pin: "blue",
     description: "Three curated indices go live, BLOKC2, BLOKC5, and BLOKC10. Auto-rebalancing, on-chain receipts." },
@@ -35,7 +35,7 @@ export const milestones: Milestone[] = [
     description: "Sector indices added, RWAs, gaming, AI/compute, perpetuals. Each one a community-curated basket." },
   { id: "staking", label: "Staking & Fee Switch", quarter: "Q4 '26", status: "future", pin: "red",
     description: "Stake BLOKC to earn protocol fees. The fee switch flips by DAO vote." },
-  { id: "community", label: "Launch BLOK Capital Community", quarter: "Q1 '26", status: "current", pin: "green",
+  { id: "community", label: "Launch BLOK Capital Community", quarter: "Q2 '26", status: "current", pin: "green",
     description: "The community opens its gates. Discord, contributors, and the first gardeners take root." },
   { id: "ambassador", label: "Ambassador & Builder Vesting Program", quarter: "Q2 '26", status: "current", pin: "yellow",
     description: "Ambassador program opens and builder vesting begins, rewarding the people who grow the garden." },

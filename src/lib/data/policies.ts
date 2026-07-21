@@ -60,7 +60,7 @@ const policies: Record<string, Policy> = {
 <p>1.2 These terms of use apply to the following websites: <strong>blokcapital.io</strong> and <strong>private.blokcapital.io</strong></p>
 <h2 id="2-who-we-are-and-how-to-contact-us">2. Who we are and how to contact us</h2>
 <p>The above sites are operated by <strong>BLOK CAPITAL DAO LLC</strong>, a non-profit limited liability company (herein referred to as <strong>"We"</strong>) incorporated, with registration number <strong>10050-23</strong>; and, registered address, <strong>PO Box 852, Long Island Rd, Majuro, Marshall Islands MH 96960</strong>, as per the laws of Republic of the Marshall Islands pursuant to the <strong>Limited Liability Company Act of 1996</strong>, the <strong>Marshall Islands Non-Profit Entities (Amendment) Act of 2021</strong>, and the <strong>Marshall Islands Decentralized Autonomous Organization Act of 2023</strong>.</p>
-<p><strong>Contact us:</strong> <a href="mailto:support@blokcapital.io">support@blokcapital.io</a></p>
+<p><strong>Contact us:</strong> <a href="https://discord.com/invite/blokc">our Discord community</a></p>
 <h2 id="3-by-using-our-sites-you-accept-these-terms">3. By using our sites you accept these terms</h2>
 <p>3.1 By using our sites, you confirm that you accept the terms of this policy and that you agree to comply with them.<br>
 3.2 If you do not agree to these terms, you must not use our sites.<br>

@@ -19,9 +19,10 @@ const variants: Record<Variant, string> = {
   outline:
     "border border-ink/15 bg-paper text-ink hover:border-ink/40 hover:bg-paper-warm",
   ghost: "text-ink-muted hover:text-ink",
-  // Brand-blue gradient lifted from the BLOK mark (cyan → indigo).
+  // Garden gradient — moss → moss-deep, on-theme with the rest of the site
+  // (replaces the off-brand cyan→indigo blue).
   discord:
-    "bg-gradient-to-br from-[#16c2ff] via-[#2f6bff] to-[#1b1af0] text-white shadow-[0_1px_0_rgba(255,255,255,0.22)_inset,0_10px_24px_-12px_rgba(37,99,255,0.55)] hover:brightness-110",
+    "bg-gradient-to-br from-moss to-moss-deep text-paper shadow-[0_1px_0_rgba(255,255,255,0.18)_inset,0_10px_24px_-12px_rgba(31,26,20,0.5)] hover:brightness-105",
 };
 
 // 44pt touch target minimum: `sm` keeps a compact visual but an invisible

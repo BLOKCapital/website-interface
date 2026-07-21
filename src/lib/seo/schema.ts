@@ -24,7 +24,6 @@ export function organizationSchema() {
     description: siteConfig.description,
     slogan: "It's crypto, but different.",
     foundingDate: brandFacts.foundingYear,
-    email: siteConfig.email,
     areaServed: "Worldwide",
     knowsAbout: brandFacts.knowsAbout,
     // Marshall Islands incorporation — disambiguates the entity and feeds the
@@ -42,7 +41,6 @@ export function organizationSchema() {
       {
         "@type": "ContactPoint",
         contactType: "customer support",
-        email: siteConfig.email,
         url: siteConfig.supportUrl,
         availableLanguage: "English",
       },

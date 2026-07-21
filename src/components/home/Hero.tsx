@@ -120,8 +120,7 @@ export function Hero() {
             className="mt-10 max-w-xl text-[13px] leading-relaxed text-ink-subtle"
           >
             <span className="script text-[18px] text-clay">P.S.</span>{" "}
-            Live on Arbitrum since spring 2024. No custody. No KYC at the
-            protocol layer. Withdraw any time.
+            No custody. No KYC at the protocol layer. Withdraw any time.
           </m.p>
         </div>
 

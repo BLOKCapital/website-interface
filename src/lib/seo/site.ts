@@ -16,9 +16,7 @@ export const siteConfig = {
   locale: "en_US",
   /** Brand wordmark used as the Organization logo in structured data. */
   logo: "https://blokcapital.io/brand/wordmark.png",
-  /** Support inbox surfaced as the Organization contactPoint. */
-  email: "support@blokcapital.io",
-  /** Real-time support channel agents/users are pointed to first. */
+  /** Discord is the single support channel — no email inbox is published. */
   supportUrl: "https://discord.com/invite/blokc",
   /** Incorporation details — strengthen E-E-A-T and entity disambiguation. */
   legal: {
