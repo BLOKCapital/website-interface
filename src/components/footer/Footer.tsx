@@ -173,7 +173,7 @@ export function Footer() {
       {/* Blind-embossed wordmark — oversized outlined display type pressed
           into the paper, baseline sunk below the page edge so the site signs
           off like the stamped back cover of the journal. Decorative only. */}
-      <div
+      {/* <div
         aria-hidden
         className="pointer-events-none relative z-0 select-none overflow-hidden"
       >
@@ -182,7 +182,7 @@ export function Footer() {
             BLOK CAPITAL
           </p>
         </Reveal>
-      </div>
+      </div> */}
     </footer>
   );
 }

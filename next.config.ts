@@ -2,6 +2,9 @@ import type { NextConfig } from "next";
 
 const config: NextConfig = {
   reactStrictMode: true,
+  // Hide the floating Next.js dev-tools badge — it sits bottom-left over the
+  // footer wordmark. Dev-only UI either way; this never affected production.
+  devIndicators: false,
   images: {
     formats: ["image/avif", "image/webp"],
     // Allowed next/image quality values. 75 is the implicit default; 94/95 are

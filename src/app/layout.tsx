@@ -5,6 +5,7 @@ import { Nav } from "@/components/nav/Nav";
 import { Footer } from "@/components/footer/Footer";
 import { EasterEggs } from "@/components/easter/EasterEggs";
 import { MotionProvider } from "@/components/system/MotionProvider";
+import { CookieConsent } from "@/components/system/CookieConsent";
 import { JsonLd } from "@/components/seo/JsonLd";
 import { organizationSchema, websiteSchema } from "@/lib/seo/schema";
 import { siteConfig } from "@/lib/seo/site";
@@ -126,6 +127,7 @@ export default function RootLayout({
           <main id="main">{children}</main>
           <Footer />
           <EasterEggs />
+          <CookieConsent />
         </MotionProvider>
       </body>
     </html>

@@ -3,6 +3,7 @@
 import Link from "next/link";
 import { m, useReducedMotion, type Variants } from "framer-motion";
 import { Section } from "@/components/ui/Section";
+import { CookieSettingsButton } from "@/components/system/CookieConsent";
 
 /**
  * Legal block — the colophon at the back of the journal.
@@ -115,6 +116,19 @@ export function LegalBlock() {
                   </Link>
                 </li>
               ))}
+              <li>
+                <CookieSettingsButton className="group/l inline-flex items-center gap-1.5 text-[13px] text-ink-muted duration-200 sm:text-[13.5px]">
+                  <span className="underline decoration-clay/40 decoration-[1.5px] underline-offset-[4px] transition-colors group-hover/l:decoration-clay">
+                    Cookie settings
+                  </span>
+                  <span
+                    aria-hidden
+                    className="inline-block translate-x-0 text-clay opacity-60 transition-transform duration-300 ease-in-soft group-hover/l:translate-x-1 group-hover/l:opacity-100"
+                  >
+                    →
+                  </span>
+                </CookieSettingsButton>
+              </li>
             </ul>
           </m.div>
         </div>
