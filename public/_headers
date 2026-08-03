@@ -1,0 +1,7 @@
+# Cloudflare Pages headers. Copied verbatim from public/ into the export root.
+
+# The social card is exported as an extensionless file (`/opengraph-image`),
+# so Pages cannot infer its type and would serve application/octet-stream.
+# Twitter and Facebook crawlers reject that, which silently kills link previews.
+/opengraph-image
+  Content-Type: image/png

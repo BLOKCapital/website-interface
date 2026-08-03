@@ -1,6 +1,10 @@
 import type { MetadataRoute } from "next";
 import { BASE } from "@/lib/seo/site";
 
+// Required by `output: "export"` — metadata routes must opt in to being
+// rendered once at build time rather than per request.
+export const dynamic = "force-static";
+
 // Major AI / answer-engine crawlers. Listing them with an explicit allow is a
 // clear signal that we *want* to be read and cited by these agents (many sites
 // block them; we opt in). The catch-all "*" rule already permits them, so this

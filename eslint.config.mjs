@@ -14,9 +14,6 @@ const config = [
   {
     ignores: [
       ".next/**",
-      // OpenNext's generated Worker bundle — build output, not source.
-      ".open-next/**",
-      ".wrangler/**",
       "node_modules/**",
       "out/**",
       "dist/**",

@@ -5,6 +5,9 @@ import { ImageResponse } from "next/og";
 // (Node) runtime so the PNG is prerendered at build time rather than on demand.
 // Next.js metadata-route convention requires these named exports alongside the
 // default component, so the "only export components" fast-refresh rule doesn't apply here.
+// Required by `output: "export"` — metadata routes must opt in to being
+// rendered once at build time rather than per request.
+export const dynamic = "force-static";
 export const alt = "BLOK Capital, decentralized wealth management on Arbitrum";
 // react-doctor-disable-next-line react-doctor/only-export-components
 export const size = { width: 1200, height: 630 };

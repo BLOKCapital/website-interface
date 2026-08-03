@@ -1,6 +1,10 @@
 import type { MetadataRoute } from "next";
 import { siteConfig } from "@/lib/seo/site";
 
+// Required by `output: "export"` — metadata routes must opt in to being
+// rendered once at build time rather than per request.
+export const dynamic = "force-static";
+
 /**
  * Web app manifest. Improves mobile/PWA signals and how the site appears when
  * added to a home screen. Icons reference the static metadata files in

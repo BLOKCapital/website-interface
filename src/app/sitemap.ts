@@ -2,6 +2,10 @@ import type { MetadataRoute } from "next";
 import { getAllPolicies } from "@/lib/data/policies";
 import { BASE } from "@/lib/seo/site";
 
+// Required by `output: "export"` — metadata routes must opt in to being
+// rendered once at build time rather than per request.
+export const dynamic = "force-static";
+
 /**
  * Static marketing routes plus the legal pages generated from policy data.
  * Keep this in sync with the App Router segments under src/app.
