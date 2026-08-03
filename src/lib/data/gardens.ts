@@ -1,6 +1,9 @@
 /**
- * The 12 brand Garden renders. Real source: extracted from
- * /public/images/Accents-Elements/*.svg (originals preserved).
+ * The 12 brand Garden renders, served from /public/gardens.
+ *
+ * (The Accents-Elements SVG originals these were extracted from are no longer
+ * in the repo — they were 64MB of unreferenced build weight. Recover from git
+ * history if the renders ever need regenerating.)
  *
  * Each PNG is 2000×2000, photorealistic 3D, black background. We composite
  * them onto bg-paper using `mix-blend-mode: lighten` so the black is

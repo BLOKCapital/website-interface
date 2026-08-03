@@ -4,6 +4,7 @@ import { notFound } from "next/navigation";
 import { getAllPolicies, getPolicy, policySlugs } from "@/lib/data/policies";
 import { PolicyTOC, type TocItem } from "@/components/legal/PolicyTOC";
 import { JsonLd } from "@/components/seo/JsonLd";
+import { CookieSettingsButton } from "@/components/system/CookieConsent";
 import { articleSchema, breadcrumbSchema } from "@/lib/seo/schema";
 
 export function generateStaticParams() {
@@ -144,6 +145,29 @@ export default async function PolicyPage({
             dangerouslySetInnerHTML={{ __html: policy.html }}
           />
         </div>
+
+        {/* Consent has to stay as easy to withdraw as it was to give, so the
+            cookie policy carries a direct control back into the dialog. */}
+        {slug === "cookie-policy" && (
+          <div className="mt-12 grid gap-6 lg:grid-cols-[220px_minmax(0,1fr)] lg:gap-16">
+            <p className="eyebrow text-moss">Your choice</p>
+            <div className="paper-card flex flex-col gap-4 p-5 sm:flex-row sm:items-center sm:justify-between sm:gap-6 sm:p-6">
+              <div>
+                <p className="display text-[17px] leading-[1.3] text-ink">
+                  Change what you{" "}
+                  <em className="font-serif italic text-moss">allow.</em>
+                </p>
+                <p className="mt-1.5 max-w-md text-[13px] leading-relaxed text-ink-muted">
+                  Reopen the preferences dialog to review, change, or withdraw
+                  your consent at any time.
+                </p>
+              </div>
+              <CookieSettingsButton className="inline-flex h-11 shrink-0 items-center justify-center rounded-full border border-ink/15 bg-paper px-5 text-sm font-medium text-ink transition duration-150 ease-in-soft hover:border-ink/40 hover:bg-paper-warm active:scale-[0.98]">
+                Cookie settings
+              </CookieSettingsButton>
+            </div>
+          </div>
+        )}
 
         <div aria-hidden className="rule-hand mt-14" />
 

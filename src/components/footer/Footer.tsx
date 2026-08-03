@@ -1,7 +1,6 @@
 import Link from "next/link";
 import { Logo } from "@/components/ui/Logo";
 import { FooterBanner } from "@/components/footer/FooterBanner";
-import { Reveal } from "@/components/ui/Reveal";
 
 // Footer is a server component, so this resolves once at build/render time and
 // is baked into the HTML — kept out of JSX so it can't drift at hydration.
