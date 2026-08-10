@@ -56,7 +56,8 @@ export function SocialProof() {
       <m.div
         initial={initial}
         whileInView="show"
-        viewport={{ once: true, amount: 0.15 }}
+        // Height-independent trigger — see the note in Reveal's `amount`.
+        viewport={{ once: true, amount: "some", margin: "0px 0px -80px 0px" }}
         variants={{
           show: { transition: { staggerChildren: 0.18 } },
         }}

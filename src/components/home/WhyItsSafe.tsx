@@ -53,7 +53,9 @@ export function WhyItsSafe() {
       <m.ul
         initial={initial}
         whileInView="show"
-        viewport={{ once: true, amount: 0.15 }}
+        // Height-independent trigger: this grid stacks to several viewports
+        // tall on a phone, where a fractional `amount` can be unreachable.
+        viewport={{ once: true, amount: "some", margin: "0px 0px -80px 0px" }}
         variants={{
           show: { transition: { staggerChildren: 0.08, delayChildren: 0.05 } },
         }}

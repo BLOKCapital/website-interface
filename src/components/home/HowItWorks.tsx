@@ -157,7 +157,10 @@ export function HowItWorks() {
             key={c.persona}
             initial={initial}
             whileInView="show"
-            viewport={{ once: true, amount: 0.15 }}
+            // "some" + a bottom margin, never a fraction: a chapter stacks to
+            // well over a phone viewport, so a height-relative threshold is
+            // fragile here (and unreachable on the section wrapper above).
+            viewport={{ once: true, amount: "some", margin: "0px 0px -120px 0px" }}
             variants={{ show: { transition: { staggerChildren: 0.1 } } }}
             className="grid items-start gap-10 lg:grid-cols-[1fr_1.25fr] lg:gap-14"
           >
@@ -251,7 +254,7 @@ function MockStagger({ children }: { children: React.ReactNode }) {
     <m.div
       initial={reduce ? "show" : "hidden"}
       whileInView="show"
-      viewport={{ once: true, amount: 0.2 }}
+      viewport={{ once: true, amount: "some", margin: "0px 0px -80px 0px" }}
       variants={{ show: { transition: { staggerChildren: 0.08 } } }}
     >
       {children}

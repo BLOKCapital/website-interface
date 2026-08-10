@@ -30,13 +30,30 @@ const variants = {
 
 type Variant = keyof typeof variants;
 
+/**
+ * Trigger line: 80px above the viewport bottom. Paired with `amount: "some"`
+ * this makes the reveal fire on the element's *edge* rather than on a
+ * fraction of its own height — see the `amount` prop note below.
+ */
+const triggerMargin = "0px 0px -80px 0px";
+
 interface RevealProps
   extends Omit<HTMLMotionProps<"div">, "variants" | "initial" | "whileInView" | "viewport"> {
   children: ReactNode;
   delay?: number;
   variant?: Variant;
-  /** Viewport intersection threshold to trigger reveal. Default 0.2. */
-  amount?: number;
+  /**
+   * Viewport intersection threshold. Default "some" — fire as soon as the
+   * element's edge crosses the trigger line.
+   *
+   * Do NOT default this to a fraction: `amount` is relative to the *element's
+   * own height*, so the ratio can never exceed viewportHeight/elementHeight.
+   * A full-page section stacked single-column on a phone (~4,000px tall in a
+   * ~660px viewport) tops out around 0.16, so a 0.2 threshold never fired and
+   * the entire section stayed at opacity 0 forever. Only pass a number for
+   * short blocks that comfortably fit on screen.
+   */
+  amount?: number | "some" | "all";
   /** Replay every time it enters the viewport. Default false (single-shot). */
   replay?: boolean;
 }
@@ -50,7 +67,7 @@ export function Reveal({
   children,
   delay = 0,
   variant = "fade-up",
-  amount = 0.2,
+  amount = "some",
   replay = false,
   ...rest
 }: RevealProps) {
@@ -60,7 +77,7 @@ export function Reveal({
     <m.div
       initial="hidden"
       whileInView="show"
-      viewport={{ once: !replay, amount }}
+      viewport={{ once: !replay, amount, margin: triggerMargin }}
       variants={{
         ...v,
         show: { ...(v.show as object), transition: { ...showTransition, delay } },
@@ -79,7 +96,8 @@ interface StaggerProps
   delayChildren?: number;
   /** Time between each child. Default 0.1. */
   staggerChildren?: number;
-  amount?: number;
+  /** See the note on `Reveal`'s `amount` — fractions are height-relative. */
+  amount?: number | "some" | "all";
   replay?: boolean;
 }
 
@@ -94,7 +112,7 @@ export function Stagger({
   children,
   delayChildren = 0,
   staggerChildren = 0.1,
-  amount = 0.2,
+  amount = "some",
   replay = false,
   ...rest
 }: StaggerProps) {
@@ -102,7 +120,7 @@ export function Stagger({
     <m.div
       initial="hidden"
       whileInView="show"
-      viewport={{ once: !replay, amount }}
+      viewport={{ once: !replay, amount, margin: triggerMargin }}
       variants={{
         hidden: {},
         show: { transition: { staggerChildren, delayChildren } },
