@@ -98,7 +98,7 @@ export function EasterEggs() {
           {/* Bonus Garden render, Garden #6 */}
           <div className="relative size-[110px]">
             <Image
-              src="/gardens/garden-06.png"
+              src="/gardens/garden-06.webp"
               alt=""
               fill
               sizes="110px"

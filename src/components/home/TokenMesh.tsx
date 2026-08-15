@@ -24,7 +24,7 @@ export function TokenMesh({ className }: { className?: string }) {
 
       <div className="absolute inset-0 animate-drift">
         <Image
-          src="/brand/token-front.png"
+          src="/brand/token-front.webp"
           alt="BLOKC token"
           fill
           sizes="180px"

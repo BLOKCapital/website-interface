@@ -5,9 +5,14 @@
  * in the repo — they were 64MB of unreferenced build weight. Recover from git
  * history if the renders ever need regenerating.)
  *
- * Each PNG is 2000×2000, photorealistic 3D, black background. We composite
- * them onto bg-paper using `mix-blend-mode: lighten` so the black is
- * dropped and the floral/moss/crystal subject reads cleanly on eggplant.
+ * Each render is a 1440×1440 WebP with a real alpha channel, so it drops onto
+ * bg-paper directly — no `mix-blend-mode` compositing (that was needed only
+ * for the older black-background renders on the dark eggplant theme).
+ *
+ * 1440px is 2× the largest call-site render (720px in the Hero). The 2000×2000
+ * PNG masters were 3.4–4.5MB each — 48MB of images on a 12-image set, with the
+ * home page alone pulling ~19MB — and are recoverable from git history if the
+ * renders ever need regenerating at a different size.
  */
 export const GARDENS_TOTAL = 12;
 
@@ -36,7 +41,7 @@ export function getGarden(n: number): GardenMeta {
   const padded = String(n).padStart(2, "0");
   return {
     n,
-    src: `/gardens/garden-${padded}.png`,
+    src: `/gardens/garden-${padded}.webp`,
     alt: ALTS[n] ?? `Floating Garden, variant ${n}`,
   };
 }

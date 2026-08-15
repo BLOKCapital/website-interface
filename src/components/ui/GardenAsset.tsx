@@ -36,11 +36,15 @@ type Props = {
  * the wrapper class.
  *
  * Performance:
- *   - next/image generates AVIF + WebP at served sizes (the source is 2000²)
+ *   - The sources are pre-compressed 1440×1440 WebP (~210-320KB), which is 2×
+ *     the largest call-site render. This is what the browser gets: `output:
+ *     "export"` means there is no Next optimizer, and the Cloudflare loader is
+ *     off unless NEXT_PUBLIC_CF_IMAGES=1 (see src/lib/image-loader.ts).
  *   - `sizes` should be set per-callsite for accurate responsive bandwidth
- *   - Quality defaults to 92 (vs next/image's default 75) so the renders
- *     keep their depth — these are the brand's hero photographs and the
- *     extra bytes are worth it
+ *   - `quality` only takes effect when the Cloudflare loader is enabled. The
+ *     high values here date from the 2000² PNG masters; re-encoding an
+ *     already-compressed WebP at 92-95 mostly just adds bytes, so revisit
+ *     these if Image Transformations is ever turned on.
  *   - Below-the-fold uses get loading="lazy" automatically; pass priority for above-the-fold
  */
 export function GardenAsset({

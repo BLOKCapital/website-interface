@@ -4,6 +4,7 @@ import { m, useReducedMotion, type Variants } from "framer-motion";
 import { Section } from "@/components/ui/Section";
 import { Button } from "@/components/ui/Button";
 import { TiltCard } from "@/components/ui/TiltCard";
+import { StepFlow } from "@/components/ui/StepFlow";
 import { audits } from "@/lib/data/audits";
 const ease = [0.22, 1, 0.36, 1] as const;
 const ROMANS = ["I", "II", "III", "IV", "V", "VI"];
@@ -58,6 +59,35 @@ export function SecurityAudits() {
         <span className="text-[11.5px] font-medium uppercase tracking-wider text-moss-deep">
           {String(audits.length).padStart(2, "0")} entries · Public record
         </span>
+      </m.div>
+
+      {/* The pipeline behind the claim. The audit cards below say *who*
+          reviewed the contracts; this says where that review sits in the path
+          from a commit to a deployed address. */}
+      <m.div
+        initial={initial}
+        whileInView="show"
+        viewport={{ once: true, amount: "some", margin: "0px 0px -60px 0px" }}
+        variants={fadeUp}
+        className="paper-card mb-8 p-5 sm:p-6"
+      >
+        <div className="mb-5 flex flex-wrap items-baseline justify-between gap-x-4 gap-y-1">
+          <p className="eyebrow text-moss">How a change reaches production</p>
+          <span className="text-[10.5px] font-medium uppercase tracking-wider text-ink-subtle">
+            Every release · no exceptions
+          </span>
+        </div>
+        <StepFlow
+          label="How a change reaches production"
+          steps={[
+            { label: "Write", detail: "Solidity 0.8.26, MIT, in the open" },
+            { label: "Test", detail: "Unit and fork tests on every pull request" },
+            { label: "Audit", detail: "CredShields — V1 complete" },
+            { label: "Scan", detail: "SolidityScan and Octane on each release" },
+            { label: "Deploy", detail: "Timelocked, to Arbitrum" },
+            { label: "Monitor", detail: "Re-scanned against the live contracts" },
+          ]}
+        />
       </m.div>
 
       <m.ul

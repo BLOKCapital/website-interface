@@ -1,4 +1,5 @@
 import { Section } from "@/components/ui/Section";
+import { DiamondCompact } from "@/components/ui/DiamondCompact";
 import { FeatureBlock } from "@/components/features/FeatureBlock";
 
 // Hoisted so these element objects aren't recreated on each render (the mock
@@ -91,9 +92,16 @@ function DiamondDiagram() {
         </span>
       </div>
 
+      {/* Below lg the schematic scales to ~0.6 inside the card, which puts its
+          labels at ~6px. Swap the layout rather than the type size. */}
+      <DiamondCompact
+        facets={["VaultFacet", "IndexFacet", "RepFacet", "FeeFacet"]}
+        className="lg:hidden"
+      />
+
       <svg
         viewBox="0 0 480 240"
-        className="mt-3 h-[210px] w-full"
+        className="mt-3 hidden h-[210px] w-full lg:block"
         aria-hidden
       >
         <polygon
@@ -135,6 +143,7 @@ function DiamondDiagram() {
           { x: 420, y: 190, l: "FeeFacet" },
         ].map((f) => (
           <g key={f.l}>
+            {/* Calls travelling out from the proxy to each facet. */}
             <line
               x1="240"
               y1="120"
@@ -142,6 +151,7 @@ function DiamondDiagram() {
               y2={f.y}
               stroke="rgb(var(--ink) / 0.18)"
               strokeDasharray="3 3"
+              className="animate-flow-dash"
             />
             <rect
               x={f.x - 48}

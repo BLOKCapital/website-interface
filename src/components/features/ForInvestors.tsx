@@ -1,5 +1,6 @@
 import { Section } from "@/components/ui/Section";
 import { FeatureBlock } from "@/components/features/FeatureBlock";
+import { StepFlow } from "@/components/ui/StepFlow";
 import { Sparkline } from "@/components/ui/Sparkline";
 import { Avatar } from "@/components/ui/Avatar";
 import { SoulboundBadge } from "@/components/ui/SoulboundBadge";
@@ -221,9 +222,23 @@ function NonCustodialFlow() {
     <div>
       <p className="eyebrow text-moss">Flow · Your wallet → Diamond</p>
 
+      {/* Below lg the schematic scales to ~0.6 inside the card, putting its
+          labels near 6px. The same flow, told as a rail that reflows instead. */}
+      <StepFlow
+        label="How a transaction moves from your wallet through the Diamond"
+        className="mt-5 lg:hidden"
+        steps={[
+          { label: "Your wallet", detail: "EOA or smart account. The keys stay where you put them." },
+          { label: "Approve", detail: "You sign the allowance. Nothing moves without it." },
+          { label: "Sign action", detail: "Every deposit, rebalance and exit is your signature." },
+          { label: "Garden Diamond", detail: "Executes the call. Never takes custody." },
+          { label: "Withdraw", detail: "Any morning, straight back to your wallet." },
+        ]}
+      />
+
       <svg
         viewBox="0 0 480 220"
-        className="mt-4 h-[210px] w-full"
+        className="mt-4 hidden h-[210px] w-full lg:block"
         aria-hidden
       >
         <defs>
@@ -307,6 +322,8 @@ function NonCustodialFlow() {
             y2="60"
             stroke="rgb(var(--moss-deep))"
             strokeWidth="1.4"
+            strokeDasharray="3 3"
+            className="animate-flow-dash"
             markerEnd="url(#arrow-moss)"
           />
           <line
@@ -316,6 +333,8 @@ function NonCustodialFlow() {
             y2="120"
             stroke="rgb(var(--moss-deep))"
             strokeWidth="1.4"
+            strokeDasharray="3 3"
+            className="animate-flow-dash"
             markerEnd="url(#arrow-moss)"
           />
           <line
@@ -325,6 +344,8 @@ function NonCustodialFlow() {
             y2="180"
             stroke="rgb(var(--moss-deep))"
             strokeWidth="1.4"
+            strokeDasharray="3 3"
+            className="animate-flow-dash"
             markerEnd="url(#arrow-moss)"
           />
         </g>
@@ -368,6 +389,8 @@ function NonCustodialFlow() {
             y2="100"
             stroke="rgb(var(--moss-deep))"
             strokeWidth="1.4"
+            strokeDasharray="3 3"
+            className="animate-flow-dash"
             markerEnd="url(#arrow-moss)"
           />
           <line
@@ -377,6 +400,8 @@ function NonCustodialFlow() {
             y2="120"
             stroke="rgb(var(--moss-deep))"
             strokeWidth="1.4"
+            strokeDasharray="3 3"
+            className="animate-flow-dash"
             markerEnd="url(#arrow-moss)"
           />
         </g>

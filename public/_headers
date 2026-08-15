@@ -5,3 +5,20 @@
 # Twitter and Facebook crawlers reject that, which silently kills link previews.
 /opengraph-image
   Content-Type: image/png
+
+# Content-addressed by the build — safe to cache forever.
+/_next/static/*
+  Cache-Control: public, max-age=31536000, immutable
+
+# Brand art. Not content-hashed, so a change needs a filename change (the
+# renders are versioned by name: garden-01.webp, garden-02.webp, …).
+/gardens/*
+  Cache-Control: public, max-age=31536000, immutable
+/brand/*
+  Cache-Control: public, max-age=31536000, immutable
+/teamgrid/*
+  Cache-Control: public, max-age=31536000, immutable
+/textures/*
+  Cache-Control: public, max-age=31536000, immutable
+/Socialtrust/*
+  Cache-Control: public, max-age=31536000, immutable

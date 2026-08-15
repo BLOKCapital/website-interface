@@ -88,6 +88,12 @@ const config: Config = {
           "0%": { transform: "translate3d(0,0,0)" },
           "100%": { transform: "translate3d(-50%,0,0)" },
         },
+        // Traffic along a schematic connector. Pair with strokeDasharray="3 3":
+        // the 6-unit dash period divides 12, so the loop has no visible seam.
+        flowDash: {
+          "0%": { strokeDashoffset: "12" },
+          "100%": { strokeDashoffset: "0" },
+        },
       },
       animation: {
         sway: "sway 9s ease-in-out infinite",
@@ -95,6 +101,7 @@ const config: Config = {
         breathe: "breathe 6s ease-in-out infinite",
         "ink-in": "inkIn 900ms cubic-bezier(0.22,1,0.36,1) both",
         marquee: "marquee 42s linear infinite",
+        "flow-dash": "flowDash 1.4s linear infinite",
       },
     },
   },

@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import {
   AnimatePresence,
   m,
@@ -13,6 +13,7 @@ import { GrowthVine } from "@/components/ui/GrowthVine";
 import { TiltCard } from "@/components/ui/TiltCard";
 import { AnimatedNumber } from "@/components/ui/AnimatedNumber";
 import { Sparkline } from "@/components/ui/Sparkline";
+import { DiamondCompact } from "@/components/ui/DiamondCompact";
 import { cn } from "@/lib/utils";
 
 const ease = [0.22, 1, 0.36, 1] as const;
@@ -37,17 +38,6 @@ const drawSpark: Variants = {
 const drawBar: Variants = {
   hidden: { scaleX: 0 },
   show: { scaleX: 1, transition: { duration: 0.9, ease, delay: 0.3 } },
-};
-// Roman numeral entrance — pop with rotate, like a stamp landing on the page.
-const popStamp: Variants = {
-  hidden: { opacity: 0, scale: 0.6, rotate: -8, x: -10 },
-  show: {
-    opacity: 1,
-    scale: 1,
-    rotate: 0,
-    x: 0,
-    transition: { duration: 0.9, ease, type: "spring", bounce: 0.35 },
-  },
 };
 // Step number circles — spring-in.
 const popIn: Variants = {
@@ -75,17 +65,30 @@ const badgeReveal: Variants = {
 };
 
 /**
- * HowItWorks — three chapters, one per persona.
+ * HowItWorks — "Three doors. One garden."
  *
- * The right-side mocks are now small but data-real: the Investor sees a
- * portfolio with a drawn-on growth sparkline, an allocation breakdown
- * and a chain-style activity log; the Gardener sees a strategy ledger
- * with a 24-week track record sparkline and a live strategy roster; the
- * Builder sees a diamond proxy diagram, a composability matrix, an
- * actual Solidity facet snippet and a tests/coverage/gas line.
+ * The section reads as a chooser, not a corridor: three gates across the top,
+ * and the one you pick swings open onto its chapter. That is what the heading
+ * and description have always promised ("pick your way in", "written for one
+ * of you"); stacking all three chapters contradicted the copy and made this
+ * the tallest section on the page (~4,000px on a phone) — tall enough that its
+ * own scroll trigger could not fire. See the note on Reveal's `amount`.
+ *
+ * All three panels stay mounted and the inactive ones are hidden, so the full
+ * copy is still in the prerendered HTML — `output: "export"` means what ships
+ * in the static file is what a crawler reads.
+ *
+ * The mocks are small but data-real: the Investor sees a portfolio with a
+ * drawn-on growth sparkline, an allocation breakdown and a chain-style
+ * activity log; the Gardener sees a strategy ledger with a 24-week track
+ * record sparkline and a live strategy roster; the Builder sees a diamond
+ * proxy diagram, a composability matrix, an actual Solidity facet snippet
+ * and a tests/coverage/gas line.
  */
 
 type Chapter = {
+  /** Stable id — used for the tab/panel aria wiring. */
+  id: string;
   roman: string;
   persona: string;
   eyebrow: string;
@@ -96,6 +99,7 @@ type Chapter = {
 
 const chapters: Chapter[] = [
   {
+    id: "investor",
     roman: "I",
     persona: "The Investor",
     eyebrow: "Garden owner",
@@ -108,6 +112,7 @@ const chapters: Chapter[] = [
     mock: <InvestorMock />,
   },
   {
+    id: "gardener",
     roman: "II",
     persona: "The Gardener",
     eyebrow: "Manager",
@@ -120,6 +125,7 @@ const chapters: Chapter[] = [
     mock: <ManagerMock />,
   },
   {
+    id: "builder",
     roman: "III",
     persona: "The Builder",
     eyebrow: "Developer",
@@ -136,6 +142,29 @@ const chapters: Chapter[] = [
 export function HowItWorks() {
   const reduce = useReducedMotion();
   const initial = reduce ? "show" : "hidden";
+  const [openId, setOpenId] = useState(chapters[0].id);
+  const gateRefs = useRef<Record<string, HTMLButtonElement | null>>({});
+
+  // WAI-ARIA tabs keyboard model — arrows walk the gates, Home/End jump to the
+  // ends. Selection follows focus, which is the right call for three cheap
+  // panels: no extra keypress to see what a door opens onto.
+  function onGateKeyDown(e: React.KeyboardEvent<HTMLDivElement>) {
+    const from = chapters.findIndex((c) => c.id === openId);
+    const to =
+      e.key === "ArrowRight"
+        ? (from + 1) % chapters.length
+        : e.key === "ArrowLeft"
+          ? (from - 1 + chapters.length) % chapters.length
+          : e.key === "Home"
+            ? 0
+            : e.key === "End"
+              ? chapters.length - 1
+              : -1;
+    if (to < 0) return;
+    e.preventDefault();
+    setOpenId(chapters[to].id);
+    gateRefs.current[chapters[to].id]?.focus();
+  }
 
   return (
     <Section
@@ -149,80 +178,222 @@ export function HowItWorks() {
       }
       description="Investor, gardener, builder, pick your way in. Each chapter below is written for one of you."
     >
-      <div className="relative space-y-20 sm:space-y-28">
-        {/* The margin vine grows as you read through the three chapters. */}
+      <div className="relative">
         <GrowthVine className="-left-8 top-2 hidden xl:block" />
-        {chapters.map((c, i) => (
-          <m.article
-            key={c.persona}
-            initial={initial}
-            whileInView="show"
-            // "some" + a bottom margin, never a fraction: a chapter stacks to
-            // well over a phone viewport, so a height-relative threshold is
-            // fragile here (and unreachable on the section wrapper above).
-            viewport={{ once: true, amount: "some", margin: "0px 0px -120px 0px" }}
-            variants={{ show: { transition: { staggerChildren: 0.1 } } }}
-            className="grid items-start gap-10 lg:grid-cols-[1fr_1.25fr] lg:gap-14"
-          >
-            <div>
-              <m.div
-                variants={fadeUp}
-                className="flex items-baseline gap-4"
+
+        {/* The three doors. */}
+        <div
+          role="tablist"
+          aria-label="Choose your way in"
+          onKeyDown={onGateKeyDown}
+          className="grid grid-cols-3 gap-2.5 sm:gap-4"
+        >
+          {chapters.map((c) => {
+            const open = c.id === openId;
+            return (
+              <button
+                key={c.id}
+                ref={(el) => {
+                  gateRefs.current[c.id] = el;
+                }}
+                type="button"
+                role="tab"
+                id={`gate-${c.id}`}
+                aria-selected={open}
+                aria-controls={`chapter-${c.id}`}
+                tabIndex={open ? 0 : -1}
+                onClick={() => setOpenId(c.id)}
+                className={cn(
+                  "flex flex-col items-center gap-2 rounded-[12px] border px-2 py-3.5 text-center transition-colors duration-300 sm:gap-2.5 sm:px-4 sm:py-5",
+                  open
+                    ? "border-moss/45 bg-moss/[0.06]"
+                    : "border-ink/10 bg-paper-warm/50 hover:border-moss/35 hover:bg-paper-warm",
+                )}
               >
-                <m.span
-                  variants={popStamp}
-                  className="display inline-block select-none text-[48px] leading-none text-clay/45 sm:text-[64px]"
-                >
-                  {c.roman}
-                </m.span>
-                <div>
-                  <p className="display text-[22px] leading-tight text-ink sm:text-[26px]">
+                <Gate open={open} reduce={!!reduce} />
+                <span className="flex items-baseline gap-1.5">
+                  <span className="display text-[12px] leading-none text-clay/70 sm:text-[13px]">
+                    {c.roman}
+                  </span>
+                  <span
+                    className={cn(
+                      "display text-[13px] leading-tight transition-colors sm:text-[17px]",
+                      open ? "text-ink" : "text-ink-muted",
+                    )}
+                  >
                     {c.persona}
-                  </p>
-                  <p className="eyebrow mt-1.5 text-moss">{c.eyebrow}</p>
-                </div>
-              </m.div>
+                  </span>
+                </span>
+                <span
+                  className={cn(
+                    "eyebrow hidden transition-colors sm:block",
+                    open ? "text-moss" : "text-ink-subtle",
+                  )}
+                >
+                  {c.eyebrow}
+                </span>
+              </button>
+            );
+          })}
+        </div>
 
-              <m.h3
-                variants={fadeUp}
-                className="display mt-8 text-[26px] leading-tight text-ink sm:text-[32px] lg:text-[36px]"
-              >
-                {c.headline}
-              </m.h3>
-
-              <ol className="mt-8 space-y-4">
-                {c.steps.map((s, j) => (
-                  <m.li key={s} variants={fadeUp} className="flex gap-4">
-                    <m.span
-                      variants={popIn}
-                      className="mt-0.5 inline-flex size-6 shrink-0 items-center justify-center rounded-full border border-moss/40 bg-moss/10 text-center text-[12px] font-semibold leading-6 text-moss-deep"
-                    >
-                      {j + 1}
-                    </m.span>
-                    <p className="text-[15px] leading-relaxed text-ink-muted">
-                      {s}
-                    </p>
-                  </m.li>
-                ))}
-              </ol>
-            </div>
-
-            <m.div variants={fadeIn} className="relative">
-              <TiltCard maxTilt={3.5} className="rounded-[14px]">
-                <GlassCard className="p-5 sm:p-6">{c.mock}</GlassCard>
-              </TiltCard>
-            </m.div>
-
-            {i < chapters.length - 1 && (
+        {/* The chapter behind the open door. Every panel stays mounted and the
+            unchosen ones are `hidden`, so all three chapters are still in the
+            prerendered HTML rather than one-third of the copy. */}
+        <div className="mt-10 sm:mt-14">
+          {chapters.map((c) => {
+            const open = c.id === openId;
+            return (
               <div
-                aria-hidden
-                className="rule-hand col-span-full mt-16 sm:mt-20"
-              />
-            )}
-          </m.article>
-        ))}
+                key={c.id}
+                id={`chapter-${c.id}`}
+                role="tabpanel"
+                aria-labelledby={`gate-${c.id}`}
+                hidden={!open}
+              >
+                <m.article
+                  // Re-keying on open replays the entrance each time a door is
+                  // picked. whileInView still drives the very first reveal: a
+                  // freshly mounted element already in view fires immediately.
+                  key={open ? `${c.id}-open` : c.id}
+                  initial={initial}
+                  whileInView="show"
+                  viewport={{
+                    once: true,
+                    amount: "some",
+                    margin: "0px 0px -120px 0px",
+                  }}
+                  variants={{ show: { transition: { staggerChildren: 0.1 } } }}
+                  className="grid items-start gap-10 lg:grid-cols-[1fr_1.25fr] lg:gap-14"
+                >
+                  <div>
+                    <m.h3
+                      variants={fadeUp}
+                      className="display text-[26px] leading-tight text-ink sm:text-[32px] lg:text-[36px]"
+                    >
+                      {c.headline}
+                    </m.h3>
+
+                    <ol className="mt-8 space-y-4">
+                      {c.steps.map((s, j) => (
+                        <m.li key={s} variants={fadeUp} className="flex gap-4">
+                          <m.span
+                            variants={popIn}
+                            className="mt-0.5 inline-flex size-6 shrink-0 items-center justify-center rounded-full border border-moss/40 bg-moss/10 text-center text-[12px] font-semibold leading-6 text-moss-deep"
+                          >
+                            {j + 1}
+                          </m.span>
+                          <p className="text-[15px] leading-relaxed text-ink-muted">
+                            {s}
+                          </p>
+                        </m.li>
+                      ))}
+                    </ol>
+                  </div>
+
+                  <m.div variants={fadeIn} className="relative">
+                    <TiltCard maxTilt={3.5} className="rounded-[14px]">
+                      <GlassCard className="p-5 sm:p-6">{c.mock}</GlassCard>
+                    </TiltCard>
+                  </m.div>
+                </m.article>
+              </div>
+            );
+          })}
+        </div>
       </div>
     </Section>
+  );
+}
+
+/* ---------- the gate on each door ------------------------------------------ */
+
+/**
+ * A garden gate drawn in ink. Picking a door swings both leaves back to a
+ * sliver, so the moss and the path beyond read through the opening — the
+ * selected state is the door being *open*, not a colour swap.
+ */
+function Gate({ open, reduce }: { open: boolean; reduce: boolean }) {
+  const t = reduce ? { duration: 0 } : { duration: 0.5, ease };
+  const leaf = { scaleX: open ? 0.14 : 1 };
+
+  return (
+    <svg
+      viewBox="0 0 44 56"
+      className="h-10 w-8 shrink-0 sm:h-12 sm:w-10"
+      aria-hidden
+    >
+      {/* the garden beyond */}
+      <m.path
+        d="M6 51 V20 A16 16 0 0 1 38 20 V51 Z"
+        fill="rgb(var(--moss))"
+        initial={false}
+        animate={{ opacity: open ? 0.18 : 0.05 }}
+        transition={t}
+      />
+      {/* a path leading in */}
+      <m.path
+        d="M17 51 L20.5 36 H23.5 L27 51 Z"
+        fill="rgb(var(--ochre))"
+        initial={false}
+        animate={{ opacity: open ? 0.55 : 0 }}
+        transition={t}
+      />
+      {/* jambs + arch */}
+      <path
+        d="M6 51 V20 A16 16 0 0 1 38 20 V51"
+        fill="none"
+        stroke="rgb(var(--ink) / 0.38)"
+        strokeWidth="1.7"
+        strokeLinecap="round"
+      />
+      {/* leaves, hinged on the outer jambs */}
+      <m.g
+        initial={false}
+        animate={leaf}
+        transition={t}
+        style={{ transformBox: "view-box", transformOrigin: "6px 34px" }}
+      >
+        <path
+          d="M7 50 V21 A15 15 0 0 1 21.6 6.2 V50 Z"
+          fill="rgb(var(--paper-warm))"
+          stroke="rgb(var(--ink) / 0.3)"
+          strokeWidth="1.2"
+        />
+        <path
+          d="M11.5 44 V25 M16 42.5 V21.5"
+          stroke="rgb(var(--ink) / 0.15)"
+          strokeWidth="1"
+          strokeLinecap="round"
+        />
+      </m.g>
+      <m.g
+        initial={false}
+        animate={leaf}
+        transition={t}
+        style={{ transformBox: "view-box", transformOrigin: "38px 34px" }}
+      >
+        <path
+          d="M37 50 V21 A15 15 0 0 0 22.4 6.2 V50 Z"
+          fill="rgb(var(--paper-warm))"
+          stroke="rgb(var(--ink) / 0.3)"
+          strokeWidth="1.2"
+        />
+        <path
+          d="M32.5 44 V25 M28 42.5 V21.5"
+          stroke="rgb(var(--ink) / 0.15)"
+          strokeWidth="1"
+          strokeLinecap="round"
+        />
+      </m.g>
+      {/* ground */}
+      <path
+        d="M2 51.5 H42"
+        stroke="rgb(var(--ink) / 0.32)"
+        strokeWidth="1.5"
+        strokeLinecap="round"
+      />
+    </svg>
   );
 }
 
@@ -544,7 +715,10 @@ function BuilderMock() {
       {/* Mobile: compact stacked Diamond + facet grid (the SVG schematic is
           too dense at ≤lg viewports, labels render at ~8px). Desktop: the
           full SVG diagram with stagger animations. */}
-      <DiamondCompact className="lg:hidden" />
+      <DiamondCompact
+        facets={diamondFacets.map((f) => f.label)}
+        className="lg:hidden"
+      />
       <div className="hidden lg:block">
         <DiamondDiagram />
       </div>
@@ -667,64 +841,6 @@ function ComposabilityTicker() {
         ))}
       </div>
     </div>
-  );
-}
-
-/* ---------- diamond compact (mobile-only) ---------------------------------- */
-
-function DiamondCompact({ className }: { className?: string }) {
-  const reduce = useReducedMotion();
-  const initial = reduce ? "show" : "hidden";
-
-  return (
-    <m.div
-      initial={initial}
-      whileInView="show"
-      viewport={{ once: true, amount: 0.4 }}
-      variants={{
-        show: { transition: { staggerChildren: 0.07, delayChildren: 0.15 } },
-      }}
-      className={cn("mt-3", className)}
-    >
-      {/* Central Diamond pill */}
-      <m.div
-        variants={badgeReveal}
-        className="mb-3 flex justify-center"
-      >
-        <span className="inline-flex items-center gap-1.5 rounded-full border border-moss/45 bg-moss/[0.06] px-3.5 py-1.5 text-[13px] font-medium text-moss-deep">
-          <svg width="12" height="12" viewBox="0 0 24 24" aria-hidden>
-            <polygon
-              points="12,2 22,12 12,22 2,12"
-              fill="currentColor"
-              opacity="0.9"
-            />
-          </svg>
-          Diamond proxy
-        </span>
-      </m.div>
-
-      {/* Facet grid, 2 columns on phones (chunky readable chips), 3 columns
-          from sm+ where there's more room. */}
-      <div className="grid grid-cols-2 gap-2 sm:grid-cols-3">
-        {diamondFacets.map((f) => (
-          <m.span
-            key={f.label}
-            variants={badgeReveal}
-            className="inline-flex items-center justify-center gap-1.5 rounded-md border border-ink/10 bg-paper-deep p-2 text-[12.5px] font-medium text-ink sm:text-[12px]"
-          >
-            <span aria-hidden className="text-moss-deep/75">
-              <svg width="9" height="9" viewBox="0 0 12 12">
-                <polygon
-                  points="6,1 11,4 11,8 6,11 1,8 1,4"
-                  fill="currentColor"
-                />
-              </svg>
-            </span>
-            {f.label}
-          </m.span>
-        ))}
-      </div>
-    </m.div>
   );
 }
 
