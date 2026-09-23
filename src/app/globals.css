@@ -3,304 +3,176 @@
 @tailwind utilities;
 
 /**
- * Garden Journal theme — warm cream paper, cocoa ink, moss + clay.
- *
- * Tokens are space-separated R G B channels so Tailwind opacity modifiers
- * (`bg-moss/10`, `text-ink/70`) generate `rgb(var(--moss) / 0.1)` correctly.
- * For inline styles wrap with `rgb(var(--moss))` or
- * `rgba(var(--moss) / 0.2)` (CSS Color Level 4 syntax).
+ * Night garden — BLOK Capital's theme. A deep green-black canvas that lets the
+ * photographic Garden renders and the blue mark carry the colour; one leaf
+ * accent; warm sand for emphasis. Tokens are R G B triplets for Tailwind's
+ * alpha modifiers (tailwind.config.ts).
  */
 :root {
-  /* Paper — warm cream stack. Never pure white. */
-  --paper: 250 247 240;        /* #FAF7F0 — page */
-  --paper-warm: 244 238 224;   /* #F4EEE0 — raised sheet (envelope) */
-  --paper-deep: 234 224 204;   /* #EAE0CC — index card / inset */
+  color-scheme: dark;
 
-  /* Ink — cocoa stack. Never pure black. */
-  --ink: 31 26 20;             /* #1F1A14 — primary text */
-  --ink-2: 71 60 48;           /* #473C30 — body muted */
-  --ink-3: 122 108 90;         /* #7A6C5A — captions / subtle */
+  --canvas: 9 13 11;        /* #090D0B page */
+  --surface: 15 21 18;      /* #0F1512 alternate section band */
+  --card: 21 29 25;         /* #151D19 cards */
+  --raised: 27 37 32;       /* #1B2520 inputs, nested cards, hover */
+  --line: 236 241 237;      /* hairlines, always with alpha */
 
-  /* Garden palette — moss + clay + sage + cream. */
-  --moss: 79 111 79;           /* #4F6F4F — primary (Turf, reframed) */
-  --moss-deep: 50 78 56;       /* #324E38 — pressed / link hover */
-  --moss-soft: 138 169 138;    /* #8AA98A — chip / wash */
-  --sage: 168 181 160;         /* #A8B5A0 — supporting */
-  --clay: 198 123 92;          /* #C67B5C — accent / call-out warmth */
-  --clay-deep: 154 91 65;      /* #9A5B41 — pressed */
-  --ochre: 196 156 71;         /* #C49C47 — quiet highlight */
+  --fg: 236 241 237;        /* #ECF1ED 17:1 */
+  --fg-muted: 170 182 175;  /* #AAB6AF 9:1 */
+  --fg-subtle: 138 152 143; /* #8A988F 6.5:1 */
 
-  /* Borders / surfaces */
-  --rule: 31 26 20;            /* used with alpha — e.g. rgb(var(--rule) / 0.10) */
-
-  /* Fonts — Newsreader serif display + Inter body. Mono only for tx data. */
-  --font-display: "Newsreader", "Source Serif 4", "Calistoga", Georgia, serif;
-  --font-body: "Inter", system-ui, -apple-system, "Segoe UI", sans-serif;
-  --font-script: "Caveat", "Reenie Beanie", "Homemade Apple", cursive;
-  --font-mono: "JetBrains Mono", ui-monospace, "SF Mono", Menlo, monospace;
+  --leaf: 143 214 168;      /* #8FD6A8 accent, CTAs, positive */
+  --leaf-deep: 63 138 95;   /* #3F8A5F fills behind leaf */
+  --sand: 230 216 188;      /* #E6D8BC warm emphasis */
+  --bloom: 240 163 180;     /* #F0A3B4 "in progress" state */
+  --cobalt: 125 180 255;    /* #7DB4FF data / info, echoes the logo */
+  --danger: 242 145 127;    /* #F2917F losses, risks */
+  --caution: 227 192 122;   /* #E3C07A warnings */
 }
 
 html {
   scroll-behavior: smooth;
+  scroll-padding-top: 88px; /* anchors land below the sticky header */
 }
 
-html,
 body {
-  background: rgb(var(--paper));
-  color: rgb(var(--ink));
+  background: rgb(var(--canvas));
+  color: rgb(var(--fg));
   font-family: var(--font-body);
   -webkit-font-smoothing: antialiased;
   text-rendering: optimizeLegibility;
 }
 
 ::selection {
-  background: rgb(var(--clay) / 0.35);
-  color: rgb(var(--ink));
+  background: rgb(var(--leaf) / 0.3);
+  color: rgb(var(--fg));
 }
 
-/* Focus ring — clay reads warmly on cream. */
 :focus-visible {
-  outline: 2px solid rgb(var(--clay));
+  outline: 2px solid rgb(var(--leaf));
   outline-offset: 3px;
-  border-radius: 4px;
+  border-radius: 6px;
 }
 
-/* Paper grain — a soft botanical noise instead of synthetic neon noise. */
-.paper {
-  position: relative;
-  isolation: isolate;
-}
-.paper::after {
-  content: "";
-  position: absolute;
-  inset: 0;
-  pointer-events: none;
-  z-index: 0;
-  opacity: 0.06;
-  mix-blend-mode: multiply;
-  background-image: url("/textures/noise.svg");
-  background-size: 220px 220px;
-}
-
-/* Editorial small-caps eyebrow — quieter, no mono. */
-.eyebrow {
-  font-family: var(--font-body);
-  font-size: 11px;
-  line-height: 1;
-  font-weight: 600;
-  letter-spacing: 0.18em;
-  text-transform: uppercase;
-  color: rgb(var(--ink-3));
-}
-
-/* Mono — kept for actual tx hashes, addresses, and code only. */
-.mono {
-  font-family: var(--font-mono);
-  font-variant-numeric: tabular-nums;
+@layer components {
+  /* Small uppercase label above headings. */
+  .eyebrow {
+    @apply font-sans text-eyebrow font-semibold uppercase text-leaf;
+  }
+  /* Serif display type. */
+  .display {
+    font-family: var(--font-display);
+    font-weight: 400;
+    letter-spacing: -0.015em;
+  }
+  /* Tabular numbers for data. */
+  .tabular {
+    font-variant-numeric: tabular-nums;
+  }
+  /* A soft garden glow behind renders; purely decorative. */
+  .glow-leaf {
+    background: radial-gradient(closest-side, rgb(var(--leaf) / 0.18), transparent);
+  }
+  /* Faint grid used behind diagrams and the hero. */
+  .grid-lines {
+    background-image:
+      linear-gradient(rgb(var(--line) / 0.045) 1px, transparent 1px),
+      linear-gradient(90deg, rgb(var(--line) / 0.045) 1px, transparent 1px);
+    background-size: 56px 56px;
+  }
 }
 
-/* Serif display — warm and literary. */
-.display {
+/* ---------- Long-form legal prose ---------------------------------------- */
+.prose-legal {
+  color: rgb(var(--fg-muted));
+  font-size: 15.5px;
+  line-height: 1.75;
+}
+.prose-legal h2 {
   font-family: var(--font-display);
-  font-weight: 500;
-  letter-spacing: -0.012em;
-  line-height: 1.02;
-}
-
-/* Hand-script accents — signatures, margin notes. Use sparingly. */
-.script {
-  font-family: var(--font-script);
-  font-weight: 400;
-  letter-spacing: 0;
-}
-
-/* Drop cap — first paragraph of a letter. */
-.drop-cap::first-letter {
-  font-family: var(--font-display);
-  font-weight: 600;
-  float: left;
-  font-size: 3.4em;
-  line-height: 0.85;
-  padding-right: 0.08em;
-  padding-top: 0.06em;
-  color: rgb(var(--moss));
-}
-
-/* Paper card — replaces glass. Warm cream surface, soft natural shadow. */
-.paper-card {
-  background: rgb(var(--paper-warm));
-  border: 1px solid rgb(var(--rule) / 0.08);
-  border-radius: 14px;
-  box-shadow:
-    0 1px 0 rgb(255 255 255 / 0.5) inset,
-    0 1px 2px rgb(var(--rule) / 0.06),
-    0 18px 36px -28px rgb(var(--rule) / 0.18);
-}
-.paper-card-deep {
-  background: rgb(var(--paper-deep));
-  border-color: rgb(var(--rule) / 0.10);
-}
-
-/* Blind-embossed wordmark — display type pressed into the paper: a faint
-   ink fill with a hairline letterpress highlight along the lower edge.
-   (Not -webkit-text-stroke: stroking variable-font glyphs draws every
-   overlapping inner contour and litters the letters with artifacts.) */
-.wordmark-emboss {
-  color: rgb(var(--ink) / 0.07);
-  text-shadow: 0 1px 0 rgb(255 255 255 / 0.45);
-}
-
-/* Hand-drawn rule — a sketchy hairline divider. */
-.rule-hand {
-  background-image: linear-gradient(
-    to right,
-    transparent 0,
-    rgb(var(--ink) / 0.16) 6%,
-    rgb(var(--ink) / 0.22) 50%,
-    rgb(var(--ink) / 0.16) 94%,
-    transparent 100%
-  );
-  height: 1px;
-}
-
-/* Long-form policy / legal page prose. Styled to read like a printed
-   document on cream paper: serif h2, ink body, clay accents on emphasis
-   and links. Authored HTML may include <h2>, <p>, <ul>, <ol>, <li>,
-   <strong>, <em>, <a>, <br>, <code>, <hr>. */
-.policy-prose {
-  color: rgb(var(--ink-2));
-  font-size: 15px;
-  line-height: 1.7;
-}
-.policy-prose h2 {
-  font-family: var(--font-display);
-  font-weight: 600;
-  font-size: 22px;
+  font-size: 24px;
   line-height: 1.25;
-  letter-spacing: -0.01em;
-  color: rgb(var(--ink));
-  margin-top: 2.5rem;
-  margin-bottom: 0.75rem;
-  scroll-margin-top: 5rem;
+  color: rgb(var(--fg));
+  margin: 2.5rem 0 0.75rem;
 }
-.policy-prose h3 {
-  font-family: var(--font-display);
+.prose-legal h3 {
+  font-size: 17px;
   font-weight: 600;
-  font-size: 18px;
-  line-height: 1.3;
-  color: rgb(var(--ink));
-  margin-top: 1.75rem;
-  margin-bottom: 0.5rem;
+  color: rgb(var(--fg));
+  margin: 1.75rem 0 0.5rem;
 }
-.policy-prose p {
-  margin-top: 0.75rem;
-  margin-bottom: 0.75rem;
-}
-.policy-prose strong {
-  color: rgb(var(--ink));
-  font-weight: 600;
-}
-.policy-prose em {
-  font-family: var(--font-display);
-  font-style: italic;
-  color: rgb(var(--moss-deep));
-}
-.policy-prose a {
-  color: rgb(var(--ink));
-  font-weight: 500;
+.prose-legal p { margin: 0.75rem 0; }
+.prose-legal strong { color: rgb(var(--fg)); font-weight: 600; }
+.prose-legal a {
+  color: rgb(var(--leaf));
   text-decoration: underline;
-  text-decoration-color: rgb(var(--clay) / 0.55);
-  text-decoration-thickness: 1.5px;
-  text-underline-offset: 4px;
-  transition: text-decoration-color 200ms ease, color 200ms ease;
+  text-decoration-color: rgb(var(--leaf) / 0.45);
+  text-underline-offset: 3px;
 }
-.policy-prose a:hover {
-  color: rgb(var(--clay-deep));
-  text-decoration-color: rgb(var(--clay));
-}
-.policy-prose ul,
-.policy-prose ol {
-  margin-top: 0.75rem;
-  margin-bottom: 1rem;
-  padding-left: 1.25rem;
-}
-.policy-prose ul {
-  list-style: none;
-}
-.policy-prose ul li {
-  position: relative;
-  padding-left: 1rem;
-  margin-top: 0.35rem;
-}
-.policy-prose ul li::before {
-  content: "";
-  position: absolute;
-  left: 0;
-  top: 0.7em;
-  width: 6px;
-  height: 6px;
-  border-radius: 9999px;
-  background: rgb(var(--moss));
-  opacity: 0.7;
-}
-.policy-prose ol {
-  list-style: decimal;
-}
-.policy-prose ol li {
-  margin-top: 0.35rem;
-  padding-left: 0.25rem;
-}
-.policy-prose ol li::marker {
-  color: rgb(var(--moss-deep));
-  font-weight: 600;
-}
-.policy-prose code {
+.prose-legal a:hover { text-decoration-color: rgb(var(--leaf)); }
+.prose-legal ul, .prose-legal ol { margin: 0.75rem 0 1rem; padding-left: 1.25rem; }
+.prose-legal ul { list-style: disc; }
+.prose-legal ol { list-style: decimal; }
+.prose-legal li { margin-top: 0.35rem; }
+.prose-legal li::marker { color: rgb(var(--leaf)); }
+.prose-legal code {
   font-family: var(--font-mono);
   font-size: 0.86em;
-  background: rgb(var(--paper-deep));
+  background: rgb(var(--raised));
   padding: 0.1em 0.35em;
   border-radius: 4px;
-  color: rgb(var(--ink));
 }
-.policy-prose hr {
-  border: none;
-  height: 1px;
-  background: rgb(var(--ink) / 0.12);
-  margin: 2rem 0;
-}
-.policy-prose h2:first-child,
-.policy-prose h3:first-child,
-.policy-prose p:first-child {
-  margin-top: 0;
-}
-
-/* "Notice" callout — paragraphs that contain only a <strong> (the
-   all-caps disclosure blocks at the top of legal documents) get a soft
-   clay-tinted card so they read as set-aside notices rather than walls
-   of bold body text. */
-.policy-prose p:has(> strong:only-child) {
-  margin-top: 1.25rem;
-  margin-bottom: 1.25rem;
+.prose-legal hr { border: 0; height: 1px; background: rgb(var(--line) / 0.12); margin: 2rem 0; }
+.prose-legal h2:first-child, .prose-legal p:first-child { margin-top: 0; }
+/* The all-caps disclosure paragraphs read as set-aside notices. */
+.prose-legal p:has(> strong:only-child) {
   padding: 1rem 1.25rem;
-  background: rgb(var(--paper-deep));
-  border-left: 3px solid rgb(var(--clay) / 0.7);
-  border-radius: 0 8px 8px 0;
+  background: rgb(var(--card));
+  border: 1px solid rgb(var(--line) / 0.1);
+  border-left: 3px solid rgb(var(--caution) / 0.8);
+  border-radius: 10px;
   font-size: 13.5px;
   line-height: 1.65;
-  letter-spacing: 0.005em;
 }
-.policy-prose p:has(> strong:only-child) strong {
-  font-weight: 500;
-  color: rgb(var(--ink));
+.prose-legal p:has(> strong:only-child) strong { font-weight: 500; }
+
+/* ---------- Scroll reveals (components/ui/Reveal.tsx + RevealScript) ------
+   Targets are hidden only under html.js (set by the inline script before
+   first paint) and only when motion is allowed. Without JS, before the
+   script runs, or with reduced motion, content is simply visible. */
+[data-reveal],
+[data-reveal-item] {
+  transition:
+    opacity 700ms cubic-bezier(0.22, 1, 0.36, 1),
+    transform 700ms cubic-bezier(0.22, 1, 0.36, 1);
+  transition-delay: var(--reveal-delay, 0s);
+}
+[data-reveal-group] [data-reveal-item] {
+  transition-delay: calc(var(--stagger-delay, 0s) + var(--stagger, 0.07s) * var(--i, 0));
+}
+@media (prefers-reduced-motion: no-preference) {
+  html.js [data-reveal]:not([data-revealed]),
+  html.js [data-reveal-group]:not([data-revealed]) [data-reveal-item] {
+    opacity: 0;
+    transform: translate3d(0, 20px, 0);
+  }
+}
+@media print {
+  html.js [data-reveal],
+  html.js [data-reveal-item] {
+    opacity: 1 !important;
+    transform: none !important;
+  }
 }
 
-/* Reduced-motion — keep static, calm. */
+/* ---------- Reduced motion ----------------------------------------------- */
 @media (prefers-reduced-motion: reduce) {
   *,
   *::before,
   *::after {
     animation-duration: 0.001ms !important;
     animation-iteration-count: 1 !important;
+    animation-delay: 0s !important;
     transition-duration: 0.001ms !important;
     scroll-behavior: auto !important;
   }

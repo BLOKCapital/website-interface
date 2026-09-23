@@ -76,8 +76,8 @@ export function softwareApplicationSchema() {
         "No subscription and no minimum deposit. On-chain gas and protocol fees apply per transaction.",
     },
     featureList: [
-      "Follow professionally curated, auto-rebalancing on-chain indices (BLOKC2, BLOKC5, BLOKC10)",
-      "Hire an on-chain manager with a verifiable soulbound track record",
+      "Curated, auto-rebalancing on-chain indices (BLOKC2, BLOKC5, BLOKC10), in private testing",
+      "Planned for 2027: on-chain managers with a verifiable soulbound track record",
       "Non-custodial smart-contract wallet: assets never leave your address",
       "Fiat on/off-ramp to USDC via regulated partners",
       "On-chain DAO governance via $BLOKC",

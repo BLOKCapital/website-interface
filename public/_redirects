@@ -1,0 +1,5 @@
+# Cloudflare Pages redirects. Old routes from the previous site structure.
+/features /protocol 301
+/features/ /protocol 301
+/preview / 301
+/preview/ / 301

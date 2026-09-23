@@ -3,60 +3,63 @@ export type Faq = {
   answer: string;
 };
 
+/**
+ * Every answer must agree with lib/seo/facts.ts, lib/data/status.ts and the
+ * User Agreement. These also feed the FAQPage JSON-LD and /llms-full.txt.
+ */
 export const faqs: Faq[] = [
   {
     question: "What is BLOK Capital?",
     answer:
-      "BLOK Capital is a pioneering DeFi platform that bridges traditional finance with the crypto ecosystem, providing institutional-grade investment solutions while maintaining accessibility and transparency through blockchain technology.",
+      "A non-custodial wealth-management protocol on Arbitrum. You follow a professionally curated on-chain index or, from 2027, hire an on-chain manager, and your assets never leave your own smart-contract wallet. It's currently in private testing.",
   },
   {
-    question: "Is my money and data secure with BLOK Capital?",
+    question: "Who holds my funds?",
     answer:
-      "With a non-custodial wallet, you have sole control of your private keys, which in turn control your cryptocurrency and proves the funds are yours. No one apart from you can access your funds, even us! The BLOKC smart wallet accounts are easy, safe and smarter. Note: Always select guardians for your wallet, since if you lose your private keys, even we can't access it!",
+      "You do. Your Garden is a smart-contract wallet at your own address. A strategy can rebalance inside it, but only you can move funds out: not BLOK Capital, and not a manager you follow.",
   },
   {
-    question: "Is BLOK Capital secure?",
+    question: "Do I need a seed phrase?",
     answer:
-      "Yes, security is our top priority. We implement industry-leading security measures, smart contract audits, and follow best practices to ensure the safety of user funds and data.",
+      "Not if you sign in with Google: Web3Auth's MPC ties access to your login. You can also use your own wallet, in which case its seed phrase is your responsibility. Add recovery guardians either way; BLOK Capital can't restore an account.",
   },
   {
-    question: "What are Stablecoins?",
+    question: "How do I get started?",
     answer:
-      "Stablecoins are digital assets pegged to a dollar. Meaning that no matter what, your stablecoins will always be redeemable to USD. We use USDC as our primary stablecoin: a trusted and regulated coin.",
+      "BLOK Capital is in private testing, so Gardens aren't open to the public yet. Join the Discord to hear first when they open.",
   },
   {
-    question: "How do I add / withdraw funds to and from my Wallet?",
+    question: "What does it cost?",
     answer:
-      "We have partnered up with the most secure crypto payment processors so you can onramp your fiat into crypto with ease. Our partners, such as Transak, perform a quick KYC check and use your bank account or card to purchase the stablecoin USDC to your account. You can also withdraw the assets you've received or bought back to your bank account through similar channels.",
+      "The protocol is gasless and fee-free at launch; any future protocol fee is set by DAO vote. Gardeners (from 2027) set their own fees within DAO ceilings. Swaps pay the venue's usual costs, and on-ramps like Transak charge their own fees.",
   },
   {
-    question: "How do I get started with BLOK Capital?",
+    question: "Is it audited?",
     answer:
-      "Sign up on the web version with nothing but your email, a Farcaster account, or a web3 wallet. Simply use Social Login with Google and you're ready to explore the world of web3 and crypto.",
+      "The v1.0 contracts were audited by CredShields in December 2024, and SolidityScan and Octane re-scan them on every release. Audits reduce risk; they don't remove it. Only deposit what you can afford to lose.",
   },
   {
-    question: "Is BLOKC available for Android, iOS and Web users?",
+    question: "How do I add or withdraw funds?",
     answer:
-      "Right now you can always launch the web version. In the future we may ship iOS and Android apps.",
+      "Buy USDC by card or bank through an on-ramp partner such as Transak, which runs its own KYC, or send crypto you already hold. Withdraw the same way, any time.",
   },
   {
-    question: "How do I recover my BLOK Capital account if I lose access?",
+    question: "What are stablecoins?",
     answer:
-      "Because BLOK Capital emphasizes self-custody, it's crucial to securely store your wallet's recovery phrases. If you lose access, recovery depends on those credentials. BLOK Capital does not have access to your private information, so follow best practices for securing and backing up your wallet, and set guardians while you can.",
+      "Crypto-assets designed to track a currency, usually the US dollar. BLOK Capital uses USDC, issued by Circle. Stablecoins aim to hold their peg but can lose it in extreme conditions.",
   },
   {
-    question: "What security measures does BLOK Capital have in place?",
-    answer:
-      "Self-custody: investors maintain control over their assets, reducing the risk associated with third-party custody.\nSmart contracts: audited and secure contracts manage transactions and agreements.\nTransparency: all operations are conducted on the blockchain, providing an immutable and transparent record.",
+    question: "Is there a minimum deposit?",
+    answer: "No. You can start a Garden with a small amount.",
   },
   {
-    question: "Is there a minimum deposit required to use BLOK Capital?",
+    question: "Are there geographic restrictions?",
     answer:
-      "There is no minimum deposit. Users can start with a minimal amount in their gardens.",
+      "Yes. The protocol can't be used from sanctioned jurisdictions (including Cuba, Iran, North Korea, Syria and sanctioned regions of Ukraine) or by sanctioned persons. The User Agreement has the full terms, and on-ramp partners set their own country availability.",
   },
   {
-    question: "Are there any geographic restrictions for using BLOK Capital?",
+    question: "How do I report a security issue?",
     answer:
-      "There are no geographic restrictions. We are fully decentralized and welcome users beyond any geographic boundary.",
+      "Open a private ticket in the BLOK Capital Discord with steps to reproduce and impact. Please don't post it in a public channel or a public GitHub issue. We reply within 24 hours.",
   },
 ];

@@ -15,8 +15,8 @@ const stroke = {
 };
 
 const accent = {
-  // Clay highlight reads warmly against the ink outline on cream paper.
-  stroke: "rgb(var(--clay))",
+  // Leaf highlight against the light outline on the dark theme.
+  stroke: "rgb(var(--leaf))",
   strokeWidth: 1.4,
   fill: "none" as const,
   strokeLinecap: "round" as const,
@@ -30,7 +30,7 @@ function Frame({ children, className }: { children: React.ReactNode; className?:
       width="32"
       height="32"
       aria-hidden
-      className={cn("text-ink", className)}
+      className={cn("text-fg", className)}
     >
       {children}
     </svg>

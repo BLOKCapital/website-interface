@@ -28,6 +28,8 @@ type Props = {
   blend?: "lighten" | "screen" | "none";
   /** Subtle hover lift / parallax wrap container. Default false. */
   interactive?: boolean;
+  /** Alt text. Renders are decorative by default (empty alt). */
+  alt?: string;
 };
 
 /**
@@ -55,6 +57,7 @@ export function GardenAsset({
   quality = 92,
   blend = "none",
   interactive = false,
+  alt = "",
 }: Props) {
   const meta = getGarden(((n - 1) % GARDENS_TOTAL + GARDENS_TOTAL) % GARDENS_TOTAL + 1);
   const blendClass =
@@ -74,7 +77,7 @@ export function GardenAsset({
     >
       <Image
         src={meta.src}
-        alt={meta.alt}
+        alt={alt}
         fill
         sizes={sizes}
         priority={priority}

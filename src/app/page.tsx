@@ -1,49 +1,69 @@
+import type { Metadata } from "next";
 import { Hero } from "@/components/home/Hero";
-import { ProblemComparison } from "@/components/home/ProblemComparison";
-import { GardenMetaphor } from "@/components/home/GardenMetaphor";
+import { AtAGlance } from "@/components/home/AtAGlance";
+import { Problem } from "@/components/home/Problem";
 import { HowItWorks } from "@/components/home/HowItWorks";
-import { WhyItsSafe } from "@/components/home/WhyItsSafe";
-import { TokenTeaser } from "@/components/home/TokenTeaser";
-import { RoadmapTrack } from "@/components/home/RoadmapTrack";
-import { SocialProof } from "@/components/home/SocialProof";
-import { DaoCommunity } from "@/components/home/DaoCommunity";
-import { Reveal } from "@/components/ui/Reveal";
-import { Marquee } from "@/components/ui/Marquee";
+import { Products } from "@/components/home/Products";
+import { SecurityPillars } from "@/components/home/SecurityPillars";
+import { GovernanceToken } from "@/components/home/GovernanceToken";
+import { Ecosystem } from "@/components/home/Ecosystem";
+import { Section } from "@/components/ui/Section";
+import { Button } from "@/components/ui/Button";
+import { FaqList } from "@/components/ui/FaqList";
+import { CtaBand } from "@/components/ui/CtaBand";
+import { RoadmapNowNext, roadmapUpdated } from "@/components/roadmap/Roadmap";
 import { JsonLd } from "@/components/seo/JsonLd";
 import { serviceSchema, softwareApplicationSchema } from "@/lib/seo/schema";
-import type { Metadata } from "next";
+import { getGovernance } from "@/lib/data/proposals";
+import { faqs } from "@/lib/data/faqs";
 
-// Title falls back to the layout's default ("BLOK Capital — It's crypto, but
-// different"); we only add a home-specific description + canonical here.
 export const metadata: Metadata = {
   description:
-    "Decentralized wealth management on Arbitrum. Follow pro-curated indices or hire an on-chain manager, your assets never leave your wallet.",
+    "BLOK Capital is a non-custodial wealth-management protocol on Arbitrum: follow curated on-chain indices from a smart wallet only you control.",
   alternates: { canonical: "/" },
 };
 
 /**
- * Home composition. The hero animates on its own (no wrap).
- * Each section below fades up on viewport enter — single-shot reveals
- * give the page a felt rhythm without distracting from scroll.
- *
- * Closing CTA is handled by the global FooterBanner ("Everyone deserves a
- * Garden.") in layout.tsx, so a second "Plant your Garden today" panel here
- * would duplicate the same beat.
+ * Home, in the order a newcomer needs it: what it is → the facts → why it
+ * exists → how it works → what you can do → why it's safe → who governs it →
+ * what it's built on → where it's going → questions → join.
  */
-export default function HomePage() {
+export default async function HomePage() {
+  const governance = await getGovernance();
   return (
     <>
       <JsonLd data={[serviceSchema(), softwareApplicationSchema()]} />
       <Hero />
-      <Reveal><ProblemComparison /></Reveal>
-      <Marquee />{/* editorial ticker — the protocol's promises on a loop */}
-      <GardenMetaphor />{/* owns its own scroll-driven motion, don't wrap */}
-      <Reveal><HowItWorks /></Reveal>
-      <Reveal><WhyItsSafe /></Reveal>
-      <Reveal><TokenTeaser /></Reveal>
-      <RoadmapTrack />{/* owns its own scroll-locked motion */}
-      <Reveal><SocialProof /></Reveal>
-      <Reveal><DaoCommunity /></Reveal>
+      <AtAGlance governance={governance} />
+      <Problem />
+      <HowItWorks />
+      <Products />
+      <SecurityPillars />
+      <GovernanceToken governance={governance} />
+      <Ecosystem />
+      <Section
+        id="roadmap"
+        tone="surface"
+        eyebrow="Roadmap"
+        title={
+          <>
+            Where things <em className="text-sand">stand.</em>
+          </>
+        }
+        description={`Last updated ${roadmapUpdated}.`}
+        actions={<Button href="/about#roadmap" variant="secondary">Full roadmap</Button>}
+      >
+        <RoadmapNowNext />
+      </Section>
+      <Section
+        id="faq"
+        eyebrow="FAQ"
+        title="Questions, answered."
+        actions={<Button href="/contact#faq" variant="secondary">All questions</Button>}
+      >
+        <FaqList items={faqs.slice(0, 5)} />
+      </Section>
+      <CtaBand />
     </>
   );
 }

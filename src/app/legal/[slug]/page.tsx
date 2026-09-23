@@ -3,24 +3,18 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 import { getAllPolicies, getPolicy, policySlugs } from "@/lib/data/policies";
 import { PolicyTOC, type TocItem } from "@/components/legal/PolicyTOC";
-import { JsonLd } from "@/components/seo/JsonLd";
 import { CookieSettingsButton } from "@/components/system/CookieConsent";
+import { JsonLd } from "@/components/seo/JsonLd";
 import { articleSchema, breadcrumbSchema } from "@/lib/seo/schema";
 
 export function generateStaticParams() {
   return policySlugs.map((slug) => ({ slug }));
 }
 
-export async function generateMetadata({
-  params,
-}: {
-  params: Promise<{ slug: string }>;
-}): Promise<Metadata> {
+export async function generateMetadata({ params }: { params: Promise<{ slug: string }> }): Promise<Metadata> {
   const { slug } = await params;
   const policy = getPolicy(slug);
-  if (!policy) {
-    return { title: "Legal" };
-  }
+  if (!policy) return { title: "Legal" };
   return {
     title: policy.title,
     description: `${policy.title}, BLOK Capital DAO LLC.`,
@@ -28,225 +22,98 @@ export async function generateMetadata({
   };
 }
 
-function formatDate(iso: string) {
-  const d = new Date(iso);
-  return d.toLocaleDateString("en-GB", {
-    day: "numeric",
-    month: "long",
-    year: "numeric",
-  });
+/** `<h2 id="…">Label</h2>` anchors from the authored HTML, for the TOC. */
+function headingsOf(html: string): TocItem[] {
+  return [...html.matchAll(/<h2[^>]*id="([^"]+)"[^>]*>([\s\S]*?)<\/h2>/g)].map((m) => ({
+    id: m[1],
+    text: m[2].replace(/<[^>]+>/g, "").trim(),
+  }));
 }
 
-/** Extract `<h2 id="...">Label</h2>` anchors from authored HTML. */
-function extractHeadings(html: string): TocItem[] {
-  const regex = /<h2[^>]*id="([^"]+)"[^>]*>([\s\S]*?)<\/h2>/g;
-  const out: TocItem[] = [];
-  let m: RegExpExecArray | null;
-  while ((m = regex.exec(html)) !== null) {
-    out.push({
-      id: m[1],
-      text: m[2].replace(/<[^>]+>/g, "").trim(),
-    });
-  }
-  return out;
-}
+const readingMinutes = (html: string) => Math.max(1, Math.ceil(html.replace(/<[^>]+>/g, " ").split(/\s+/).filter(Boolean).length / 200));
 
-/** Rough reading time in minutes, 200 wpm. */
-function readingTime(html: string) {
-  const text = html.replace(/<[^>]+>/g, " ");
-  const words = text.split(/\s+/).filter(Boolean).length;
-  return Math.max(1, Math.ceil(words / 200));
-}
-
-export default async function PolicyPage({
-  params,
-}: {
-  params: Promise<{ slug: string }>;
-}) {
+export default async function PolicyPage({ params }: { params: Promise<{ slug: string }> }) {
   const { slug } = await params;
   const policy = getPolicy(slug);
   if (!policy) notFound();
 
-  const headings = extractHeadings(policy.html);
-  const minutes = readingTime(policy.html);
-  const allPolicies = getAllPolicies();
-  const otherPolicies = allPolicies.filter((p) => p.slug !== slug);
+  const headings = headingsOf(policy.html);
+  const updated = new Date(policy.date).toLocaleDateString("en-GB", { day: "numeric", month: "long", year: "numeric", timeZone: "UTC" });
+  const others = getAllPolicies().filter((p) => p.slug !== slug);
 
   return (
-    <section className="paper relative isolate">
+    <article className="mx-auto w-full max-w-page px-5 pb-24 pt-32 sm:px-8 sm:pt-40">
       <JsonLd
         data={[
-          articleSchema({
-            title: policy.title,
-            description: `${policy.title}, BLOK Capital DAO LLC.`,
-            path: `/legal/${slug}`,
-            datePublished: policy.date,
-          }),
-          breadcrumbSchema([
-            { name: "Home", path: "/" },
-            { name: policy.title, path: `/legal/${slug}` },
-          ]),
+          articleSchema({ title: policy.title, description: `${policy.title}, BLOK Capital DAO LLC.`, path: `/legal/${slug}`, datePublished: policy.date }),
+          breadcrumbSchema([{ name: "Home", path: "/" }, { name: policy.title, path: `/legal/${slug}` }]),
         ]}
       />
-      {/* Warm corner washes */}
-      <div
-        aria-hidden
-        className="pointer-events-none absolute inset-0 -z-10"
-        style={{
-          background:
-            "radial-gradient(50% 40% at 50% 0%, rgb(var(--clay) / 0.06), transparent 65%), radial-gradient(40% 30% at 90% 8%, rgb(var(--moss) / 0.05), transparent 70%)",
-        }}
-      />
-
-      <div className="mx-auto max-w-7xl px-5 pb-20 pt-24 sm:px-8 sm:pb-28 sm:pt-32">
-        {/* Header */}
-        <header className="max-w-3xl">
-          <p className="eyebrow text-moss">Legal · {policy.category}</p>
-          <h1 className="display mt-3 text-[36px] leading-[1.04] text-ink sm:text-[48px] lg:text-[56px]">
+      <nav aria-label="Breadcrumb">
+        <ol className="flex items-center gap-2 text-caption text-fg-subtle">
+          <li>
+            <Link href="/" className="hover:text-fg">
+              Home
+            </Link>
+          </li>
+          <li aria-hidden>/</li>
+          <li>Legal</li>
+          <li aria-hidden>/</li>
+          <li aria-current="page" className="text-fg-muted">
             {policy.title}
-          </h1>
-          <div className="mt-5 flex flex-wrap items-baseline gap-x-5 gap-y-2 text-[13px] text-ink-subtle">
-            <span className="inline-flex items-baseline gap-1.5">
-              <span className="script text-[18px] leading-none text-clay">
-                Last updated
-              </span>
-              <span className="text-ink-muted">{formatDate(policy.date)}</span>
-            </span>
-            <span aria-hidden className="text-ink/20">·</span>
-            <span className="inline-flex items-center gap-1.5">
-              <ClockGlyph />
-              <span className="text-ink-muted">
-                {minutes} min{minutes !== 1 ? "s" : ""} read
-              </span>
-            </span>
-            <span aria-hidden className="text-ink/20">·</span>
-            <span className="font-mono uppercase tracking-wider text-ink-subtle">
-              v{policy.date.slice(0, 7).replace("-", ".")}
-            </span>
-          </div>
-        </header>
+          </li>
+        </ol>
+      </nav>
+      <header className="mt-8 max-w-3xl border-b border-line/[0.08] pb-10">
+        <h1 className="display text-h1 text-fg">{policy.title}</h1>
+        <p className="mt-5 text-small text-fg-subtle">
+          Last updated {updated} · {readingMinutes(policy.html)} min read
+        </p>
+      </header>
 
-        <div aria-hidden className="rule-hand my-10" />
-
-        {/* Two-column layout on lg: sticky TOC + content */}
-        <div className="grid gap-10 lg:grid-cols-[220px_minmax(0,1fr)] lg:gap-16">
-          {/* TOC */}
-          <aside className="lg:sticky lg:top-24 lg:self-start">
-            <div className="lg:max-h-[calc(100vh-8rem)] lg:overflow-y-auto lg:pr-2">
+      <div className="mt-10 grid gap-10 lg:grid-cols-[220px_minmax(0,1fr)] lg:gap-16">
+        <aside className="lg:sticky lg:top-28 lg:max-h-[calc(100vh-9rem)] lg:self-start lg:overflow-y-auto">
+          {/* Phones: collapsed so the text isn't pushed below a long list. */}
+          <details className="rounded-xl border border-line/[0.08] bg-card p-4 lg:hidden">
+            <summary className="cursor-pointer text-small text-fg">Contents</summary>
+            <div className="mt-4">
               <PolicyTOC headings={headings} />
             </div>
-          </aside>
-
-          {/* Body, policy.html is static, DAO-authored content from
-              lib/data/policies.ts (no user input), so it's safe to inject. */}
-          {/* react-doctor-disable-next-line react-doctor/no-danger */}
-          <article
-            className="policy-prose max-w-[68ch]"
-            dangerouslySetInnerHTML={{ __html: policy.html }}
-          />
-        </div>
-
-        {/* Consent has to stay as easy to withdraw as it was to give, so the
-            cookie policy carries a direct control back into the dialog. */}
-        {slug === "cookie-policy" && (
-          <div className="mt-12 grid gap-6 lg:grid-cols-[220px_minmax(0,1fr)] lg:gap-16">
-            <p className="eyebrow text-moss">Your choice</p>
-            <div className="paper-card flex flex-col gap-4 p-5 sm:flex-row sm:items-center sm:justify-between sm:gap-6 sm:p-6">
-              <div>
-                <p className="display text-[17px] leading-[1.3] text-ink">
-                  Change what you{" "}
-                  <em className="font-serif italic text-moss">allow.</em>
-                </p>
-                <p className="mt-1.5 max-w-md text-[13px] leading-relaxed text-ink-muted">
-                  Reopen the preferences dialog to review, change, or withdraw
-                  your consent at any time.
-                </p>
-              </div>
-              <CookieSettingsButton className="inline-flex h-11 shrink-0 items-center justify-center rounded-full border border-ink/15 bg-paper px-5 text-sm font-medium text-ink transition duration-150 ease-in-soft hover:border-ink/40 hover:bg-paper-warm active:scale-[0.98]">
-                Cookie settings
-              </CookieSettingsButton>
-            </div>
+          </details>
+          <div className="hidden lg:block">
+            <PolicyTOC headings={headings} />
           </div>
-        )}
+        </aside>
 
-        <div aria-hidden className="rule-hand mt-14" />
+        <div className="min-w-0">
+          {/* Static, DAO-authored HTML from lib/data/policies.ts (no user input). */}
+          {/* react-doctor-disable-next-line react-doctor/no-danger */}
+          <div className="prose-legal max-w-prose" dangerouslySetInnerHTML={{ __html: policy.html }} />
 
-        {/* Other policies */}
-        <div className="mt-10 grid gap-6 lg:grid-cols-[220px_minmax(0,1fr)] lg:gap-16">
-          <p className="eyebrow text-moss">Other policies</p>
-          <ul className="grid gap-2 sm:grid-cols-2">
-            {otherPolicies.map((p) => (
-              <li key={p.slug}>
-                <Link
-                  href={`/legal/${p.slug}`}
-                  className="group/p flex h-full items-center justify-between gap-3 rounded-xl border border-ink/10 bg-paper-warm px-4 py-3 transition-[transform,border-color,background-color] duration-200 hover:-translate-y-0.5 hover:border-moss/30 hover:bg-moss/[0.05]"
-                >
-                  <span>
-                    <span className="block text-[11px] font-medium uppercase tracking-wider text-ink-subtle">
-                      Read next
-                    </span>
-                    <span className="block text-[14.5px] font-medium text-ink">
-                      {p.title}
-                    </span>
-                  </span>
-                  <span
-                    aria-hidden
-                    className="inline-block translate-x-0 text-clay transition-transform duration-200 group-hover/p:translate-x-1"
+          {slug === "cookie-policy" && (
+            <div className="mt-12 flex max-w-prose flex-col gap-4 rounded-2xl border border-line/[0.08] bg-card p-6 sm:flex-row sm:items-center sm:justify-between">
+              <p className="text-small text-fg-muted">Review, change or withdraw your consent at any time.</p>
+              <CookieSettingsButton className="inline-flex h-11 shrink-0 items-center justify-center rounded-full border border-line/15 px-5 text-small text-fg" />
+            </div>
+          )}
+
+          <div className="mt-14 max-w-prose border-t border-line/[0.08] pt-8">
+            <h2 className="text-caption font-semibold uppercase tracking-[0.12em] text-fg-subtle">Other policies</h2>
+            <ul className="mt-4 grid gap-3 sm:grid-cols-2">
+              {others.map((p) => (
+                <li key={p.slug}>
+                  <Link
+                    href={`/legal/${p.slug}`}
+                    className="block rounded-xl border border-line/[0.08] bg-card px-4 py-3 text-[15px] text-fg transition-colors hover:border-leaf/30"
                   >
-                    →
-                  </span>
-                </Link>
-              </li>
-            ))}
-          </ul>
+                    {p.title}
+                  </Link>
+                </li>
+              ))}
+            </ul>
+          </div>
         </div>
-
-        {/* Letter-style attribution */}
-        <p className="mt-10 max-w-3xl text-[12.5px] leading-relaxed text-ink-subtle">
-          <span className="script mr-1 text-[18px] leading-none text-clay">
-            ✻
-          </span>
-          BLOK Capital DAO LLC · Have a question?{" "}
-          <a
-            href="https://discord.com/invite/blokc"
-            target="_blank"
-            rel="noreferrer"
-            className="group/d inline-flex items-baseline gap-0.5 font-medium text-ink transition-colors hover:text-clay-deep"
-          >
-            <span className="underline decoration-clay/55 decoration-[1.5px] underline-offset-[4px] transition-colors group-hover/d:decoration-clay">
-              Drop into our Discord
-            </span>
-            <span
-              aria-hidden
-              className="inline-block translate-x-0.5 transition-transform duration-300 ease-in-soft group-hover/d:translate-x-1.5"
-            >
-              →
-            </span>
-          </a>
-        </p>
       </div>
-    </section>
-  );
-}
-
-function ClockGlyph() {
-  return (
-    <svg width="13" height="13" viewBox="0 0 16 16" aria-hidden>
-      <circle
-        cx="8"
-        cy="8"
-        r="6.2"
-        fill="none"
-        stroke="rgb(var(--moss-deep) / 0.7)"
-        strokeWidth="1.1"
-      />
-      <path
-        d="M8 4.5 V 8 L 10.5 9.5"
-        stroke="rgb(var(--moss-deep))"
-        strokeWidth="1.2"
-        strokeLinecap="round"
-        fill="none"
-      />
-    </svg>
+    </article>
   );
 }

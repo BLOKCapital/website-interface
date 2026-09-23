@@ -28,8 +28,8 @@ export default function OpengraphImage() {
           justifyContent: "space-between",
           padding: "72px 80px",
           background:
-            "radial-gradient(120% 90% at 80% 85%, #E3EAD9, #FAF7F0 55%)",
-          color: "#1F1A14",
+            "radial-gradient(90% 90% at 85% 90%, #1E3A2A, #090D0B 60%)",
+          color: "#ECF1ED",
           fontFamily: "Georgia, serif",
         }}
       >
@@ -39,7 +39,7 @@ export default function OpengraphImage() {
               width: 40,
               height: 40,
               borderRadius: 999,
-              background: "#4F6F4F",
+              background: "#8FD6A8",
             }}
           />
           <span
@@ -47,7 +47,7 @@ export default function OpengraphImage() {
               fontSize: 30,
               letterSpacing: "0.18em",
               textTransform: "uppercase",
-              color: "#473C30",
+              color: "#AAB6AF",
             }}
           >
             BLOK Capital
@@ -55,8 +55,8 @@ export default function OpengraphImage() {
         </div>
 
         <div style={{ display: "flex", flexDirection: "column" }}>
-          <span style={{ fontSize: 34, color: "#C67B5C" }}>
-            It&apos;s crypto, but different.
+          <span style={{ fontSize: 30, color: "#8FD6A8" }}>
+            Non-custodial wealth management
           </span>
           <span
             style={{
@@ -66,11 +66,11 @@ export default function OpengraphImage() {
               maxWidth: 920,
             }}
           >
-            Grow your crypto. Never hand over the keys.
+            Grow your crypto. Keep the keys.
           </span>
         </div>
 
-        <span style={{ fontSize: 26, color: "#7A6C5A" }}>
+        <span style={{ fontSize: 26, color: "#8A988F" }}>
           Non-custodial · On-chain · Arbitrum
         </span>
       </div>

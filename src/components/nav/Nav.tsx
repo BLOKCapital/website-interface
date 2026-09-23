@@ -1,80 +1,74 @@
 "use client";
 
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { m, useScroll, useSpring } from "framer-motion";
 import { Logo } from "@/components/ui/Logo";
 import { Button } from "@/components/ui/Button";
-import { cn } from "@/lib/utils";
+import { SocialLinks } from "@/components/ui/SocialLinks";
+import { CrossIcon, DiscordIcon, ExternalIcon, MenuIcon } from "@/components/ui/icons";
+import { primaryNav } from "@/lib/nav";
+import { social } from "@/lib/data/socials";
 import { useScrolled } from "@/lib/hooks";
+import { cn } from "@/lib/utils";
 
-const links = [
-  { href: "/", label: "Home" },
-  { href: "/about", label: "About" },
-  { href: "/features", label: "Features" },
-  { href: "https://docs.blokcapital.io", label: "Docs", external: true },
-  { href: "https://docsend.com/view/4j6qvvrudyr6izyb", label: "Whitepaper", external: true },
-  { href: "/contact", label: "Contact" },
-] as const;
+const isCurrent = (href: string, path: string | null) =>
+  !!path && (path === href || path.startsWith(`${href}/`));
 
-function isCurrent(href: string, pathname: string | null) {
-  if (!pathname) return false;
-  if (href === "/") return pathname === "/";
-  return pathname === href || pathname.startsWith(`${href}/`);
-}
-
+/**
+ * Sticky header. Transparent over the hero, solid once scrolled. Below lg
+ * the links move into a sheet that is `inert` while closed (so it's out of
+ * the tab order), closes on Escape and on navigation, and locks page scroll.
+ */
 export function Nav() {
   const pathname = usePathname();
-  const scrolled = useScrolled(12);
+  const scrolled = useScrolled(8);
   const [open, setOpen] = useState(false);
+  const buttonRef = useRef<HTMLButtonElement>(null);
 
-  // Reading progress — a clay hairline that draws across the top of the
-  // page as you read, like a bookmark ribbon sliding along the spine.
-  const { scrollYProgress } = useScroll();
-  const progress = useSpring(scrollYProgress, {
-    stiffness: 140,
-    damping: 30,
-    mass: 0.4,
-  });
-
-  // Close the mobile menu on route change by adjusting state during render
-  // (the documented alternative to an effect) — also covers back/forward nav.
-  // Previous path is tracked in a ref since it only gates the reset, never renders.
-  const lastPathRef = useRef(pathname);
-  if (pathname !== lastPathRef.current) {
-    lastPathRef.current = pathname;
+  // Close on navigation (adjusting state during render, not in an effect).
+  const last = useRef(pathname);
+  if (last.current !== pathname) {
+    last.current = pathname;
     setOpen(false);
   }
+
+  useEffect(() => {
+    if (!open) return;
+    const onKey = (e: KeyboardEvent) => {
+      if (e.key === "Escape") {
+        setOpen(false);
+        buttonRef.current?.focus();
+      }
+    };
+    const prev = document.body.style.overflow;
+    document.body.style.overflow = "hidden";
+    window.addEventListener("keydown", onKey);
+    return () => {
+      document.body.style.overflow = prev;
+      window.removeEventListener("keydown", onKey);
+    };
+  }, [open]);
+
+  const solid = scrolled || open;
 
   return (
     <header
       className={cn(
-        "fixed inset-x-0 top-0 z-40 transition-[background-color,backdrop-filter,border-color] duration-400 ease-in-soft",
-        scrolled
-          ? "border-b border-ink/8 bg-paper/85 backdrop-blur-md"
-          : "border-b border-transparent bg-transparent",
+        "fixed inset-x-0 top-0 z-50 border-b transition-[background-color,border-color] duration-300",
+        solid ? "border-line/[0.08] bg-canvas/85 backdrop-blur-xl" : "border-transparent",
       )}
     >
-      <m.span
-        aria-hidden
-        style={{ scaleX: progress }}
-        className="absolute inset-x-0 top-0 z-10 h-[2px] origin-left bg-gradient-to-r from-moss via-ochre to-clay"
-      />
-      <div className="mx-auto flex h-16 max-w-7xl items-center justify-between gap-6 px-5 sm:h-[68px] sm:px-8">
-        <Link
-          href="/"
-          className="-m-1 inline-flex items-center rounded p-1 text-ink transition-opacity duration-200 hover:opacity-85 focus:outline-none"
-          aria-label="BLOK Capital, Home"
-        >
+      <div className="mx-auto flex h-16 w-full max-w-page items-center justify-between gap-6 px-5 sm:h-[72px] sm:px-8">
+        <Link href="/" aria-label="BLOK Capital, home" className="shrink-0 rounded-md">
           <Logo />
         </Link>
 
-        <nav aria-label="Primary" className="hidden md:block">
-          <ul className="flex items-center gap-6 lg:gap-8">
-            {links.map((l) => {
-              const external = "external" in l && l.external;
-              const current = isCurrent(l.href, pathname);
+        <nav aria-label="Primary" className="hidden lg:block">
+          <ul className="flex items-center gap-1">
+            {primaryNav.map((l) => {
+              const external = "external" in l;
+              const current = !external && isCurrent(l.href, pathname);
               return (
                 <li key={l.href}>
                   <Link
@@ -83,38 +77,17 @@ export function Nav() {
                     rel={external ? "noopener noreferrer" : undefined}
                     aria-current={current ? "page" : undefined}
                     className={cn(
-                      "group/n relative inline-flex items-center gap-1.5 py-1 text-[14px] font-medium transition-colors duration-200",
-                      current ? "text-ink" : "text-ink-muted hover:text-ink",
+                      "inline-flex items-center gap-1 rounded-full px-3.5 py-2 text-[14.5px] transition-colors",
+                      current ? "bg-line/[0.07] text-fg" : "text-fg-muted hover:text-fg",
                     )}
                   >
                     {l.label}
                     {external && (
                       <>
-                        <svg
-                          width="10"
-                          height="10"
-                          viewBox="0 0 10 10"
-                          aria-hidden
-                          className="opacity-60 transition-transform duration-200 group-hover/n:-translate-y-0.5"
-                        >
-                          <path
-                            d="M2 8 L8 2 M3.5 2 L8 2 L8 6.5"
-                            stroke="currentColor"
-                            strokeWidth="1.1"
-                            fill="none"
-                          />
-                        </svg>
+                        <ExternalIcon size={11} className="opacity-60" />
                         <span className="sr-only"> (opens in a new tab)</span>
                       </>
                     )}
-                    {/* Active / hover underline, clay hairline that draws in */}
-                    <span
-                      aria-hidden
-                      className={cn(
-                        "absolute -bottom-0.5 left-0 h-px bg-clay transition-[width] duration-300 ease-in-soft",
-                        current ? "w-full" : "w-0 group-hover/n:w-full",
-                      )}
-                    />
                   </Link>
                 </li>
               );
@@ -122,141 +95,69 @@ export function Nav() {
           </ul>
         </nav>
 
-        <div className="hidden items-center gap-3 md:flex">
-          <Button
-            variant="discord"
-            size="sm"
-            href="https://discord.com/invite/blokc"
-          >
-            Join Discord
-            <svg width="12" height="12" viewBox="0 0 14 14" aria-hidden>
-              <path
-                d="M2 7 H11 M7 3 L11 7 L7 11"
-                stroke="currentColor"
-                strokeWidth="1.4"
-                fill="none"
-                strokeLinecap="round"
-                strokeLinejoin="round"
-              />
-            </svg>
+        <div className="flex items-center gap-2">
+          <Button href={social("discord").href} size="sm" className="hidden sm:inline-flex">
+            <DiscordIcon size={15} /> Join Discord
           </Button>
+          <button
+            ref={buttonRef}
+            type="button"
+            aria-expanded={open}
+            aria-controls="mobile-menu"
+            aria-label={open ? "Close menu" : "Open menu"}
+            onClick={() => setOpen((o) => !o)}
+            className="inline-flex size-11 items-center justify-center rounded-full border border-line/12 text-fg lg:hidden"
+          >
+            {open ? <CrossIcon size={18} /> : <MenuIcon />}
+          </button>
         </div>
-
-        <button
-          type="button"
-          aria-label={open ? "Close menu" : "Open menu"}
-          aria-expanded={open}
-          onClick={() => setOpen((v) => !v)}
-          className="inline-flex size-11 items-center justify-center rounded-full border border-ink/15 bg-paper-warm text-ink transition active:scale-[0.97] md:hidden"
-        >
-          <svg width="14" height="14" viewBox="0 0 14 14" aria-hidden>
-            {open ? (
-              <path
-                d="M2 2 L12 12 M12 2 L2 12"
-                stroke="currentColor"
-                strokeWidth="1.3"
-                strokeLinecap="round"
-              />
-            ) : (
-              <path
-                d="M1.5 4 H12.5 M1.5 10 H12.5"
-                stroke="currentColor"
-                strokeWidth="1.3"
-                strokeLinecap="round"
-              />
-            )}
-          </svg>
-        </button>
       </div>
 
-      {/* Mobile menu, slides down with a soft fade */}
+      {/* Mobile sheet */}
       <div
+        id="mobile-menu"
+        inert={!open}
         className={cn(
-          "overflow-hidden border-ink/10 bg-paper/95 backdrop-blur-md transition-[max-height,opacity,border-color] duration-400 ease-in-soft md:hidden",
-          open
-            ? "max-h-[640px] border-t opacity-100"
-            : "max-h-0 border-transparent opacity-0",
+          "grid overflow-hidden border-t border-line/[0.08] bg-canvas transition-[grid-template-rows,opacity] duration-300 lg:hidden",
+          open ? "grid-rows-[1fr] opacity-100" : "grid-rows-[0fr] border-transparent opacity-0",
         )}
-        aria-hidden={!open}
       >
-        <ul className="flex flex-col px-5 pb-5 pt-2">
-          {links.map((l) => {
-            const external = "external" in l && l.external;
-            const current = isCurrent(l.href, pathname);
-            return (
-              <li key={l.href}>
-                <Link
-                  href={l.href}
-                  target={external ? "_blank" : undefined}
-                  rel={external ? "noopener noreferrer" : undefined}
-                  aria-current={current ? "page" : undefined}
-                  onClick={() => setOpen(false)}
-                  className={cn(
-                    "group/m flex items-center justify-between border-b border-ink/8 py-3.5 text-[15px] font-medium transition-colors last:border-b-0",
-                    current ? "text-ink" : "text-ink-muted hover:text-ink",
-                  )}
-                >
-                  <span className="inline-flex items-center gap-2">
-                    {current && (
-                      <span
-                        aria-hidden
-                        className="inline-block size-1.5 rounded-full bg-clay"
-                      />
-                    )}
-                    {l.label}
-                  </span>
-                  {external ? (
-                    <svg width="11" height="11" viewBox="0 0 10 10" aria-hidden>
-                      <path
-                        d="M2 8 L8 2 M3.5 2 L8 2 L8 6.5"
-                        stroke="currentColor"
-                        strokeWidth="1.2"
-                        fill="none"
-                      />
-                    </svg>
-                  ) : (
-                    <svg
-                      width="14"
-                      height="14"
-                      viewBox="0 0 14 14"
-                      aria-hidden
-                      className="opacity-50 transition-transform duration-200 group-hover/m:translate-x-0.5"
+        <div className="min-h-0">
+          <nav aria-label="Mobile" className="mx-auto max-w-page px-5 pb-8 pt-3 sm:px-8">
+            <ul>
+              {primaryNav.map((l) => {
+                const external = "external" in l;
+                const current = !external && isCurrent(l.href, pathname);
+                return (
+                  <li key={l.href} className="border-b border-line/[0.07]">
+                    <Link
+                      href={l.href}
+                      target={external ? "_blank" : undefined}
+                      rel={external ? "noopener noreferrer" : undefined}
+                      aria-current={current ? "page" : undefined}
+                      className={cn(
+                        "flex items-center justify-between py-4 text-[20px] display",
+                        current ? "text-leaf" : "text-fg",
+                      )}
                     >
-                      <path
-                        d="M2 7 H11 M7 3 L11 7 L7 11"
-                        stroke="currentColor"
-                        strokeWidth="1.4"
-                        fill="none"
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                      />
-                    </svg>
-                  )}
+                      {l.label}
+                      {external && <ExternalIcon size={14} className="text-fg-subtle" />}
+                    </Link>
+                  </li>
+                );
+              })}
+              <li className="border-b border-line/[0.07]">
+                <Link href="/contact" className="flex py-4 text-[20px] display text-fg">
+                  Contact
                 </Link>
               </li>
-            );
-          })}
-          <li className="mt-5">
-            <Button
-              variant="discord"
-              size="md"
-              href="https://discord.com/invite/blokc"
-              className="w-full"
-            >
-              Join Discord
-              <svg width="12" height="12" viewBox="0 0 14 14" aria-hidden>
-                <path
-                  d="M2 7 H11 M7 3 L11 7 L7 11"
-                  stroke="currentColor"
-                  strokeWidth="1.4"
-                  fill="none"
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                />
-              </svg>
+            </ul>
+            <Button href={social("discord").href} size="lg" className="mt-7 w-full">
+              <DiscordIcon /> Join the Discord
             </Button>
-          </li>
-        </ul>
+            <SocialLinks only={["x", "telegram", "farcaster", "github", "youtube"]} className="mt-6 justify-center" />
+          </nav>
+        </div>
       </div>
     </header>
   );

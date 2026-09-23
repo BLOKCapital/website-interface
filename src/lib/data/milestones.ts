@@ -7,6 +7,16 @@ export type Milestone = {
   description: string;
 };
 
+/** Bump whenever a milestone's status or quarter changes; shown on the site. */
+export const ROADMAP_UPDATED = "2026-09-23";
+
+/** Sort key for "Q3 '26"-style quarters: 2026.3. */
+export function quarterValue(quarter: string) {
+  const q = Number(quarter.match(/Q(\d)/i)?.[1] ?? 0);
+  const y = Number(quarter.match(/'(\d{2})/)?.[1] ?? 0);
+  return 2000 + y + q / 10;
+}
+
 export const milestones: Milestone[] = [
   // 2023 — The Seed
   { id: "angel", label: "Angel Round", quarter: "Q3 '23", status: "done", pin: "yellow",
@@ -25,10 +35,10 @@ export const milestones: Milestone[] = [
     description: "Smart-wallet UX via ERC-4337 + EIP-7702. Pay gas in any token, sign once for batched actions." },
 
   // 2026 — Opening the Gates (indices launch, DAO live, gardeners open)
-  { id: "first-launch", label: "First Public Launch", quarter: "Q2 '26", status: "current", pin: "green",
-    description: "Mainnet open to everyone. First 100 Gardens planted on Arbitrum." },
-  { id: "indices", label: "Curated Index Gardens", quarter: "Q2 '26", status: "future", pin: "blue",
-    description: "Three curated indices go live, BLOKC2, BLOKC5, and BLOKC10. Auto-rebalancing, on-chain receipts." },
+  { id: "first-launch", label: "Private Testing", quarter: "Q2 '26", status: "current", pin: "green",
+    description: "Gardens running in private testing on Arbitrum ahead of the public launch." },
+  { id: "indices", label: "Curated Index Gardens", quarter: "Q2 '26", status: "current", pin: "blue",
+    description: "Three curated indices, BLOKC2, BLOKC5 and BLOKC10, in private testing. Auto-rebalancing, on-chain receipts." },
   { id: "dao-vote", label: "DAO Voting Live", quarter: "Q3 '26", status: "future", pin: "yellow",
     description: "Aragon OSX module activated. BLOKC holders steer every protocol change, fees, indices, new facets." },
   { id: "index-expansion", label: "Index Expansion", quarter: "Q3 '26", status: "future", pin: "green",
@@ -36,7 +46,7 @@ export const milestones: Milestone[] = [
   { id: "staking", label: "Staking & Fee Switch", quarter: "Q4 '26", status: "future", pin: "red",
     description: "Stake BLOKC to earn protocol fees. The fee switch flips by DAO vote." },
   { id: "community", label: "Launch BLOK Capital Community", quarter: "Q2 '26", status: "current", pin: "green",
-    description: "The community opens its gates. Discord, contributors, and the first gardeners take root." },
+    description: "The community opens its gates. Discord, contributors, and the first Garden owners take root." },
   { id: "ambassador", label: "Ambassador & Builder Vesting Program", quarter: "Q2 '26", status: "current", pin: "yellow",
     description: "Ambassador program opens and builder vesting begins, rewarding the people who grow the garden." },
   { id: "mainnet", label: "Mainnet Protocol Launch", quarter: "Q3 '26", status: "future", pin: "blue",
@@ -52,5 +62,5 @@ export const milestones: Milestone[] = [
   { id: "cross-chain", label: "Cross-chain Gardens", quarter: "Q4 '27", status: "future", pin: "red",
     description: "Gardens span Arbitrum, Base, and beyond. Single-wallet UX, multi-chain yield, one reputation record." },
   { id: "full-bloom", label: "Full Bloom", quarter: "Q4 '27", status: "future", pin: "green",
-    description: "All features mature: AI, indices, DAO, staking. The garden tends itself; the gardeners tend the protocol." },
+    description: "All features mature: AI, indices, DAO, staking. The Garden tends itself; the community tends the protocol." },
 ];

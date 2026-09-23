@@ -2,23 +2,20 @@ import Image from "next/image";
 import { cn } from "@/lib/utils";
 
 /**
- * BLOK Capital wordmark. Renders 34px tall in nav / footer contexts, so the
- * source is a 520×102 WebP (3× that height, 11KB). The old
- * `/brand/blokc-black.svg` was a 1122px PNG wrapped in SVG (28KB).
+ * BLOK Capital wordmark, light lettering for the dark theme. 520×102 WebP
+ * (3× its 34px display height), recoloured from the master logo.
  */
 export function Logo({ className }: { className?: string }) {
   return (
-    <span className={cn("inline-flex items-center", className)}>
-      <Image
-        src="/brand/logo-wordmark.webp"
-        alt="BLOK Capital"
-        width={382}
-        height={75}
-        priority
-        unoptimized
-        className="h-[34px] w-auto select-none"
-        draggable={false}
-      />
-    </span>
+    <Image
+      src="/brand/logo-wordmark-light.webp"
+      alt="BLOK Capital"
+      width={520}
+      height={102}
+      priority
+      unoptimized
+      className={cn("h-8 w-auto select-none sm:h-[34px]", className)}
+      draggable={false}
+    />
   );
 }

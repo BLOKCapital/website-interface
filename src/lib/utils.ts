@@ -1,5 +1,16 @@
 import { clsx, type ClassValue } from "clsx";
-import { twMerge } from "tailwind-merge";
+import { extendTailwindMerge } from "tailwind-merge";
+
+// Teach tailwind-merge the custom type scale (tailwind.config.ts fontSize).
+// Without this it reads `text-small` as a colour, and `cn("text-small",
+// "text-fg-muted")` silently drops the font size.
+const twMerge = extendTailwindMerge({
+  extend: {
+    classGroups: {
+      "font-size": [{ text: ["eyebrow", "caption", "small", "body", "lead", "h4", "h3", "h2", "h1"] }],
+    },
+  },
+});
 
 export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs));

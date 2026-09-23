@@ -92,7 +92,7 @@ export function EasterEggs() {
             className="absolute inset-0 -z-10 blur-xl"
             style={{
               background:
-                "radial-gradient(50% 50% at 50% 50%, rgb(var(--clay) / 0.45), transparent 70%)",
+                "radial-gradient(50% 50% at 50% 50%, rgb(var(--leaf) / 0.35), transparent 70%)",
             }}
           />
           {/* Bonus Garden render, Garden #6 */}
@@ -115,14 +115,14 @@ export function EasterEggs() {
         // react-doctor-disable-next-line react-doctor/prefer-tag-over-role
         <div
           role="status"
-          className="pointer-events-none fixed bottom-6 right-6 z-[60] rotate-[-6deg] rounded-2xl border border-moss/40 bg-moss/15 px-4 py-2 backdrop-blur"
+          className="pointer-events-none fixed bottom-6 right-6 z-[60] rotate-[-6deg] rounded-2xl border border-leaf/40 bg-card/90 px-4 py-2 backdrop-blur"
           style={{
             animation: "stickerIn 300ms cubic-bezier(0.22,1,0.36,1) both",
-            boxShadow: "0 20px 40px -15px rgba(87,167,115,0.55)",
+            boxShadow: "0 20px 40px -15px rgb(143 214 168 / 0.35)",
           }}
         >
-          <p className="display text-[18px] text-moss">we&apos;re all gonna make it.</p>
-          <p className="mono text-[10px] text-ink-subtle">a sticker, just for you</p>
+          <p className="display text-[18px] text-leaf">we&apos;re all gonna make it.</p>
+          <p className="font-mono text-[10px] text-fg-subtle">a sticker, just for you</p>
           <style>{`
             @keyframes stickerIn {
               from { transform: rotate(-12deg) scale(0.5); opacity: 0; }

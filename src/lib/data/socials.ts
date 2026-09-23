@@ -1,60 +1,43 @@
-export type Social = {
-  id: string;
-  title: string;
-  desc: string;
-  href: string;
-  /** Brand tint used for the glyph chip background — soft, not saturated. */
-  tint: string;
-};
+/**
+ * Official community channels — the single source for the header, footer,
+ * contact page and structured data (sameAs). Only verified BLOK Capital URLs.
+ */
+export type SocialId = "discord" | "x" | "telegram" | "farcaster" | "github" | "youtube";
 
-export const contributeCard = {
-  title: "How to contribute",
-  desc: "Find out all the different ways you can roll up your sleeves and help tend BLOK Capital, code, design, writing, governance, the lot.",
-  href: "https://docs.blokcapital.io/resources/create-video",
-  cta: "Read the contributor guide",
+export type Social = {
+  id: SocialId;
+  label: string;
+  href: string;
+  /** What the channel is for, in a few words. */
+  desc: string;
 };
 
 export const socials: Social[] = [
-  {
-    id: "github",
-    title: "GitHub",
-    desc: "Contribute to code, design, articles, issues and PRs welcome.",
-    href: "https://github.com/BLOKCapital",
-    tint: "rgb(31 26 20)",
-  },
-  {
-    id: "telegram",
-    title: "Telegram",
-    desc: "Chat with us, instant support from mods and a global community.",
-    href: "https://t.me/blok_capital",
-    tint: "rgb(40 134 200)",
-  },
-  {
-    id: "x",
-    title: "X",
-    desc: "Updates, announcements, and important news in real time.",
-    href: "https://x.com/blok_cap",
-    tint: "rgb(31 26 20)",
-  },
-  {
-    id: "farcaster",
-    title: "Farcaster",
-    desc: "Join us in the decentralized social future.",
-    href: "https://warpcast.com/blokc",
-    tint: "rgb(132 84 196)",
-  },
-  {
-    id: "youtube",
-    title: "YouTube",
-    desc: "Watch the latest walkthroughs, talks, and tutorials.",
-    href: "https://www.youtube.com/@blokcapital",
-    tint: "rgb(196 60 50)",
-  },
-  {
-    id: "discord",
-    title: "Discord",
-    desc: "Discuss, contribute, and get help. The whole team hangs out here.",
-    href: "https://discord.com/invite/blokc",
-    tint: "rgb(88 101 196)",
-  },
+  { id: "discord", label: "Discord", href: "https://discord.com/invite/blokc", desc: "Community, support and private security reports" },
+  { id: "x", label: "X", href: "https://x.com/blok_cap", desc: "Announcements and updates" },
+  { id: "telegram", label: "Telegram", href: "https://t.me/BLOKCapital", desc: "Community chat" },
+  { id: "farcaster", label: "Farcaster", href: "https://warpcast.com/blokc", desc: "Decentralised social" },
+  { id: "github", label: "GitHub", href: "https://github.com/BLOKCapital", desc: "Contracts, front-end and audits" },
+  { id: "youtube", label: "YouTube", href: "https://www.youtube.com/@blokcapital", desc: "Walkthroughs and talks" },
 ];
+
+export const social = (id: SocialId) => socials.find((s) => s.id === id)!;
+
+/** Other official destinations used across the site. */
+export const links = {
+  docs: "https://docs.blokcapital.io",
+  docsOverview: "https://docs.blokcapital.io/concepts/blok-c-overview",
+  docsArchitecture: "https://docs.blokcapital.io/builders/blok-capital-v1",
+  docsContracts: "https://docs.blokcapital.io/smart-contracts/introduction",
+  docsAddresses: "https://docs.blokcapital.io/resources/smart-contract-address",
+  docsSecurity: "https://docs.blokcapital.io/resources/audits-and-security/audits",
+  docsContribute: "https://docs.blokcapital.io/resources/create-video",
+  whitepaper: "https://docsend.com/view/4j6qvvrudyr6izyb",
+  auditsRepo: "https://github.com/BLOKCapital/audits",
+  aragon:
+    "https://app.aragon.org/dao/arbitrum-mainnet/0x003a7E96B48Ee318DE5200Fcc9504480643237f3/dashboard?members=0xbe40B1D2f9f64163Ab6F0030819E89d07045d3D1-tokenvoting&proposals=0xbe40B1D2f9f64163Ab6F0030819E89d07045d3D1-tokenvoting",
+  aragonMembers:
+    "https://app.aragon.org/dao/arbitrum-mainnet/0x003a7E96B48Ee318DE5200Fcc9504480643237f3/members?members=0xbe40B1D2f9f64163Ab6F0030819E89d07045d3D1-tokenvoting&memberPanel=delegate",
+  brandKit: "https://www.figma.com/slides/zTWeuy4nwdrmNp6K409cja",
+  video: "https://youtu.be/O2xUopTuFWs",
+} as const;

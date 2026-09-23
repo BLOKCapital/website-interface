@@ -1,48 +1,35 @@
 import type { Metadata, Viewport } from "next";
-import { Inter, Newsreader, Caveat, JetBrains_Mono } from "next/font/google";
+import { Inter, Newsreader, JetBrains_Mono } from "next/font/google";
 import "./globals.css";
 import { Nav } from "@/components/nav/Nav";
 import { Footer } from "@/components/footer/Footer";
 import { EasterEggs } from "@/components/easter/EasterEggs";
-import { MotionProvider } from "@/components/system/MotionProvider";
 import { CookieConsent } from "@/components/system/CookieConsent";
+import { RevealScript } from "@/components/system/RevealScript";
 import { JsonLd } from "@/components/seo/JsonLd";
 import { organizationSchema, websiteSchema } from "@/lib/seo/schema";
 import { siteConfig } from "@/lib/seo/site";
 
-const inter = Inter({
-  subsets: ["latin"],
-  display: "swap",
-  variable: "--font-body",
-});
+const inter = Inter({ subsets: ["latin"], display: "swap", variable: "--font-body" });
 
+// Display serif: regular + italic only (headlines are set at 400).
 const newsreader = Newsreader({
   subsets: ["latin"],
-  weight: ["400", "500", "600", "700"],
+  weight: ["400", "500"],
   style: ["normal", "italic"],
   display: "swap",
   variable: "--font-display",
 });
 
-const caveat = Caveat({
-  subsets: ["latin"],
-  weight: ["400", "500", "600"],
-  display: "swap",
-  variable: "--font-script",
-});
+// Mono for addresses and figures; not needed for first paint.
+const mono = JetBrains_Mono({ subsets: ["latin"], weight: ["400"], display: "swap", preload: false, variable: "--font-mono" });
 
-const jetbrains = JetBrains_Mono({
-  subsets: ["latin"],
-  weight: ["400", "500"],
-  display: "swap",
-  variable: "--font-mono",
-});
+const tagline = "Non-custodial wealth management on Arbitrum. Follow curated on-chain indices; your assets never leave your own wallet.";
 
 export const metadata: Metadata = {
   metadataBase: new URL(siteConfig.url),
   title: {
-    default:
-      "BLOK Capital · Decentralized Wealth Management on Arbitrum",
+    default: "BLOK Capital · Non-custodial wealth management on Arbitrum",
     template: "%s · BLOK Capital",
   },
   description: siteConfig.description,
@@ -52,7 +39,6 @@ export const metadata: Metadata = {
     "non-custodial crypto investing",
     "on-chain asset management",
     "DeFi index funds",
-    "crypto portfolio manager",
     "Arbitrum DeFi",
     "BLOK Capital",
   ],
@@ -61,9 +47,8 @@ export const metadata: Metadata = {
   publisher: siteConfig.legalName,
   alternates: { canonical: "/" },
   openGraph: {
-    title: "BLOK Capital · Decentralized Wealth Management on Arbitrum",
-    description:
-      "Decentralized wealth management on Arbitrum. Non-custodial. On-chain. Always yours.",
+    title: "BLOK Capital · Non-custodial wealth management",
+    description: tagline,
     type: "website",
     url: siteConfig.url,
     siteName: siteConfig.name,
@@ -73,62 +58,48 @@ export const metadata: Metadata = {
     card: "summary_large_image",
     site: siteConfig.twitterHandle,
     creator: siteConfig.twitterHandle,
-    title: "BLOK Capital · Decentralized Wealth Management on Arbitrum",
-    description:
-      "Decentralized wealth management on Arbitrum. Non-custodial. On-chain. Always yours.",
+    title: "BLOK Capital · Non-custodial wealth management",
+    description: tagline,
   },
   robots: {
     index: true,
     follow: true,
-    googleBot: {
-      index: true,
-      follow: true,
-      "max-image-preview": "large",
-      "max-snippet": -1,
-      "max-video-preview": -1,
-    },
+    googleBot: { index: true, follow: true, "max-image-preview": "large", "max-snippet": -1, "max-video-preview": -1 },
   },
-  // Set NEXT_PUBLIC_GOOGLE_SITE_VERIFICATION in the environment to emit the
-  // Search Console verification <meta> tag without a code change.
   verification: process.env.NEXT_PUBLIC_GOOGLE_SITE_VERIFICATION
     ? { google: process.env.NEXT_PUBLIC_GOOGLE_SITE_VERIFICATION }
     : undefined,
 };
 
 export const viewport: Viewport = {
-  themeColor: "#FAF7F0",
-  colorScheme: "light",
+  themeColor: "#090D0B",
+  colorScheme: "dark",
 };
 
-export default function RootLayout({
-  children,
-}: {
-  children: React.ReactNode;
-}) {
+export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
     <html
       lang="en"
-      className={`${inter.variable} ${newsreader.variable} ${caveat.variable} ${jetbrains.variable} bg-paper text-ink`}
+      // RevealScript adds the `js` class before hydration.
+      suppressHydrationWarning
+      className={`${inter.variable} ${newsreader.variable} ${mono.variable}`}
     >
-      {/* suppressHydrationWarning: some browser extensions (e.g. ColorZilla
-          adds `cz-shortcut-listen`) inject attributes onto <body> before React
-          hydrates. This scopes the tolerance to <body> only, it does not
-          silence hydration warnings in the rest of the tree. */}
-      <body className="min-h-screen antialiased" suppressHydrationWarning>
+      {/* suppressHydrationWarning also tolerates attributes that browser
+          extensions inject onto <body> before React hydrates. */}
+      <body className="min-h-screen bg-canvas text-fg antialiased" suppressHydrationWarning>
+        <RevealScript />
         <a
           href="#main"
-          className="sr-only focus:not-sr-only focus:fixed focus:left-4 focus:top-4 focus:z-50 focus:rounded focus:bg-paper-deep focus:px-3 focus:py-2 focus:text-sm focus:text-ink"
+          className="sr-only focus:not-sr-only focus:fixed focus:left-4 focus:top-4 focus:z-[70] focus:rounded-full focus:bg-leaf focus:px-4 focus:py-2 focus:text-small focus:font-medium focus:text-canvas"
         >
           Skip to content
         </a>
         <JsonLd data={[organizationSchema(), websiteSchema()]} />
-        <MotionProvider>
-          <Nav />
-          <main id="main">{children}</main>
-          <Footer />
-          <EasterEggs />
-          <CookieConsent />
-        </MotionProvider>
+        <Nav />
+        <main id="main">{children}</main>
+        <Footer />
+        <EasterEggs />
+        <CookieConsent />
       </body>
     </html>
   );

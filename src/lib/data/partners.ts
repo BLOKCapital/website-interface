@@ -43,10 +43,10 @@ export const partnerGroups: PartnerGroup[] = [
     intro: "On-chain venues, oracles, governance and security every Garden routes through.",
     partners: [
       { image: "/Socialtrust/Aave-logo.png",      name: "Aave",       href: "https://aave.com" },
-      { image: "/Socialtrust/gmx-logo.jpeg",      name: "GMX",        href: "https://gmx.io" },
-      { image: "/Socialtrust/quick-logo.png",     name: "QuickSwap",  href: "https://quickswap.exchange", scale: 1.3 },
+      { image: "/Socialtrust/gmx-logo.png",      name: "GMX",        href: "https://gmx.io" },
+      { image: "/Socialtrust/quick-logo-transparent.png", name: "QuickSwap", href: "https://quickswap.exchange" },
       { image: "/Socialtrust/chainlink-logo.svg", name: "Chainlink",  href: "https://chain.link" },
-      { image: "/Socialtrust/aragon-logo.svg",    name: "Aragon",     href: "https://aragon.org",         scale: 1.8 },
+      { image: "/Socialtrust/aragon-logo.svg",    name: "Aragon",     href: "https://aragon.org",         scale: 2.6 },
       { image: "/Socialtrust/chainforce.png",     name: "Chainforce", href: "https://chainforce.tech" },
     ],
   },

@@ -15,9 +15,12 @@ import { milestones } from "@/lib/data/milestones";
 
 const PAGES: { title: string; path: string; desc: string }[] = [
   { title: "Home", path: "/", desc: "What BLOK Capital is and how non-custodial Gardens work." },
-  { title: "Features", path: "/features", desc: "Indices, on-chain managers, soulbound reputation, Diamond architecture, and the $BLOKC token." },
-  { title: "About", path: "/about", desc: "Story, team, governance, and the DAO." },
-  { title: "Contact", path: "/contact", desc: "Channels for partnerships, support, press, and security, plus FAQs." },
+  { title: "Protocol", path: "/protocol", desc: "Gardens, Index and Yield Gardens, Gardeners, the Diamond architecture, fees and risks." },
+  { title: "Security", path: "/security", desc: "Who can change the contracts, audits and scanning, and how to report a vulnerability." },
+  { title: "Token", path: "/token", desc: "$BLOKC utility, allocation of the 10B supply, and launch timing." },
+  { title: "Governance", path: "/governance", desc: "How the DAO decides, the current phase, and on-chain proposals." },
+  { title: "About", path: "/about", desc: "Story, principles, team, roadmap and press kit." },
+  { title: "Contact", path: "/contact", desc: "Community channels, security reports, and FAQs." },
 ];
 
 /** Short index file: H1, summary blockquote, then curated link sections. */

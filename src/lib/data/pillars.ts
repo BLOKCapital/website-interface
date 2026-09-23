@@ -19,7 +19,7 @@ export const pillars: Pillar[] = [
     spec: "Web3Auth · ERC-4337",
     description:
       "Every Garden lives at your address. Sign in with Google via Web3Auth's MPC, no seed phrase, no custody, no admin key.",
-    href: "https://docs.blokcapital.io/educ/blok-c-overview",
+    href: "https://docs.blokcapital.io/concepts/blok-c-overview",
   },
   {
     id: "upgradable",
@@ -27,7 +27,7 @@ export const pillars: Pillar[] = [
     spec: "EIP-2535 Diamond",
     description:
       "Add facets, swap strategies, integrate new DEXs, all without forcing users into new contracts. Storage stays put.",
-    href: "https://docs.blokcapital.io/v1/introduction",
+    href: "https://docs.blokcapital.io/smart-contracts/introduction",
   },
   {
     id: "reputation",
@@ -42,7 +42,7 @@ export const pillars: Pillar[] = [
     label: "Audited in the open",
     spec: "CredShields · SolidityScan · Octane",
     description: "Audited by CredShields, with continuous automated review by SolidityScan and Octane. Every facet ships with receipts.",
-    href: "/features#audits",
+    href: "/security",
   },
   {
     id: "dao",
@@ -50,7 +50,7 @@ export const pillars: Pillar[] = [
     spec: "Aragon OSX",
     description:
       "Every protocol change, fees, indices, new facets, routes through on-chain Aragon votes. BLOKC holders decide.",
-    href: "/about#dao",
+    href: "/governance",
   },
   {
     id: "open-source",

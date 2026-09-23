@@ -19,9 +19,6 @@ const config: NextConfig = {
     // used by the garden art. Next.js 16 requires every value to be declared.
     qualities: [75, 94, 95],
   },
-  experimental: {
-    optimizePackageImports: ["framer-motion", "gsap"],
-  },
 };
 
 export default config;
