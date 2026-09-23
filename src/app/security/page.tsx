@@ -52,13 +52,23 @@ const controls = [
   },
 ];
 
+/** From the CredShields report's summary table (audits repo). */
+const findings = [
+  { k: "Critical", n: 0, c: "bg-negative" },
+  { k: "High", n: 2, c: "bg-negative/80" },
+  { k: "Medium", n: 12, c: "bg-caution" },
+  { k: "Low", n: 5, c: "bg-sand/70" },
+  { k: "Informational", n: 2, c: "bg-cobalt/70" },
+  { k: "Gas", n: 5, c: "bg-fg-subtle/60" },
+];
+
 const pipeline = [
-  { label: "Write", detail: "Solidity 0.8.26, MIT, in the open" },
-  { label: "Test", detail: "Unit and fork tests on every pull request" },
-  { label: "Audit", detail: "CredShields: v1.0 complete" },
+  { label: "Write", detail: "Solidity ^0.8.31, public on GitHub" },
+  { label: "Test", detail: "Foundry unit and end-to-end tests" },
+  { label: "Audit", detail: "CredShields: Garden contracts, Nov 2024" },
   { label: "Scan", detail: "SolidityScan and Octane on each release" },
-  { label: "Deploy", detail: "Timelocked, to Arbitrum" },
-  { label: "Monitor", detail: "Re-scanned against the live contracts" },
+  { label: "Approve", detail: "New facets need a DAO vote" },
+  { label: "Ship", detail: "To Arbitrum One at public launch" },
 ];
 
 export default function SecurityPage() {
@@ -99,7 +109,12 @@ export default function SecurityPage() {
                 <a href={links.auditsRepo} target="_blank" rel="noopener noreferrer" className="text-leaf underline underline-offset-2">
                   audits repository
                 </a>
-                . Until then, treat any address claiming to be BLOK Capital with suspicion.
+                . Until then, treat any address claiming to be a BLOK Capital protocol contract with suspicion. The one
+                published exception is the{" "}
+                <a href="/token#facts" className="text-leaf underline underline-offset-2">
+                  $BLOKC token
+                </a>
+                .
               </p>
             </div>
           </Card>
@@ -123,14 +138,15 @@ export default function SecurityPage() {
         </Stagger>
       </Section>
 
-      <Section id="audits" tone="surface" eyebrow="Audits & scanning" title="Reviewed, and re-reviewed on every release.">
+      <Section id="audits" tone="surface" eyebrow="Audits & scanning" title="One published audit so far. More before launch."
+        description="The Garden contracts were audited in November 2024. The index and rebalancer contracts are newer; they get a published review before anyone's money depends on them.">
         <Stagger as="ul" className="grid gap-5 md:grid-cols-3">
           {audits.map((a) => (
             <RevealItem as="li" key={a.partner} className="h-full">
               <Card className="flex h-full flex-col">
                 <div className="flex items-center justify-between gap-3">
                   <h3 className="display text-h3 text-fg">{a.partner}</h3>
-                  <Badge tone={a.date === "Ongoing" ? "live" : "done"}>{a.date}</Badge>
+                  <Badge tone={a.date === "Ongoing" ? "neutral" : "done"}>{a.date}</Badge>
                 </div>
                 <p className="mt-3 flex-1 text-small text-fg-muted">{a.scope}</p>
                 {a.url && (
@@ -148,7 +164,28 @@ export default function SecurityPage() {
             </RevealItem>
           ))}
         </Stagger>
-        <Reveal className="mt-12">
+        <Reveal className="mt-5">
+          <Card>
+            <div className="flex flex-wrap items-baseline justify-between gap-3">
+              <h3 className="text-h4 font-medium text-fg">CredShields findings, by severity</h3>
+              <p className="text-caption text-fg-subtle">26 total · all fixed and retested 28 Nov 2024</p>
+            </div>
+            <div className="mt-5 flex h-3 overflow-hidden rounded-full bg-line/[0.07]" role="img" aria-label="26 findings: 0 critical, 2 high, 12 medium, 5 low, 2 informational, 5 gas. All fixed.">
+              {findings.filter((f) => f.n).map((f) => (
+                <span key={f.k} className={f.c} style={{ width: `${(f.n / 26) * 100}%` }} />
+              ))}
+            </div>
+            <ul className="mt-4 flex flex-wrap gap-x-6 gap-y-2 text-caption text-fg-muted">
+              {findings.map((f) => (
+                <li key={f.k} className="flex items-center gap-2">
+                  <span aria-hidden className={`size-2 rounded-full ${f.c}`} />
+                  {f.k} <span className="font-mono text-fg tabular">{f.n}</span>
+                </li>
+              ))}
+            </ul>
+          </Card>
+        </Reveal>
+        <Reveal className="mt-5">
           <Card>
             <h3 className="text-h4 font-medium text-fg">How a change reaches production</h3>
             <StepFlow steps={pipeline} label="How a change reaches production" className="mt-8" />
@@ -162,9 +199,8 @@ export default function SecurityPage() {
             <Card className="h-full">
               <p className="text-body text-fg-muted">
                 Open a <strong className="font-medium text-fg">private ticket</strong> in the BLOK Capital Discord with steps to
-                reproduce and the impact. Please don&apos;t post it in a public channel or open a public GitHub issue. We
-                acknowledge within 24 hours and agree a fix and disclosure timeline with you, and we credit reporters who
-                follow this process.
+                reproduce and the impact. Please don&apos;t post it in a public channel or open a public GitHub issue. We&apos;ll
+                work out a fix and a disclosure timeline with you there, privately.
               </p>
               <p className="mt-4 text-small text-fg-subtle">
                 In scope: the Garden Diamond, facets, indices and rebalancer contracts, and this website.

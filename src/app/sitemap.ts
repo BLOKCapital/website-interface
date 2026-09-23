@@ -17,6 +17,13 @@ export default function sitemap(): MetadataRoute.Sitemap {
     { url: `${BASE}/`, priority: 1, changeFrequency: "weekly", lastModified: now },
     { url: `${BASE}/about`, priority: 0.8, changeFrequency: "monthly", lastModified: now },
     { url: `${BASE}/protocol`, priority: 0.9, changeFrequency: "monthly", lastModified: now },
+    { url: `${BASE}/indices`, priority: 0.9, changeFrequency: "weekly", lastModified: now },
+    ...["blokc2", "blokc5", "blokc10"].map((id) => ({
+      url: `${BASE}/indices/${id}`,
+      priority: 0.8,
+      changeFrequency: "weekly" as const,
+      lastModified: now,
+    })),
     { url: `${BASE}/security`, priority: 0.8, changeFrequency: "monthly", lastModified: now },
     { url: `${BASE}/token`, priority: 0.7, changeFrequency: "monthly", lastModified: now },
     { url: `${BASE}/governance`, priority: 0.7, changeFrequency: "weekly", lastModified: now },

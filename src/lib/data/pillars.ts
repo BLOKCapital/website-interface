@@ -41,7 +41,7 @@ export const pillars: Pillar[] = [
     id: "audited",
     label: "Audited in the open",
     spec: "CredShields · SolidityScan · Octane",
-    description: "Audited by CredShields, with continuous automated review by SolidityScan and Octane. Every facet ships with receipts.",
+    description: "CredShields audited the Garden contracts: 26 findings, none critical, all fixed. The newer index code isn't covered yet, and the report says exactly what was.",
     href: "/security",
   },
   {
@@ -49,15 +49,15 @@ export const pillars: Pillar[] = [
     label: "DAO-governed",
     spec: "Aragon OSX",
     description:
-      "Every protocol change, fees, indices, new facets, routes through on-chain Aragon votes. BLOKC holders decide.",
+      "Every protocol change, fees, indices, new facets, routes through on-chain Aragon votes. Core DAO members vote today; $BLOKC holders after launch.",
     href: "/governance",
   },
   {
     id: "open-source",
     label: "Open-source",
-    spec: "GitHub · The Graph",
+    spec: "GitHub · Foundry",
     description:
-      "Read the contracts. Run the front-end yourself. Data comes from a public subgraph, no centralized backend to trust.",
+      "Read the contracts and their test suite. Every Garden, index and vote is on Arbitrum for anyone to verify.",
     href: "https://github.com/BLOKCapital",
   },
 ];

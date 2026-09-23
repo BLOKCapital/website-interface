@@ -10,7 +10,7 @@ export type Audit = {
 export const audits: Audit[] = [
   {
     partner: "CredShields",
-    scope: "Full protocol audit of BLOKC v1.0 — all findings reviewed and resolved.",
+    scope: "Garden smart contracts. 26 findings (0 critical, 2 high, 12 medium, 5 low, 2 informational, 5 gas), all fixed and retested. The index and rebalancer code came later and isn't in this report's scope.",
     date: "Dec 2024",
     url: "https://github.com/BLOKCapital/audits/blob/main/audits/Blok%20Capital%20Final%20Report.pdf",
     kind: "report",

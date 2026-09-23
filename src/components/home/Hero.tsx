@@ -3,7 +3,7 @@ import { Badge } from "@/components/ui/Badge";
 import { GardenAsset } from "@/components/ui/GardenAsset";
 import { CheckIcon } from "@/components/ui/icons";
 import { protocolStatus } from "@/lib/data/status";
-import { links } from "@/lib/data/socials";
+import { HeroLive } from "@/components/live/HeroLive";
 
 const d = (ms: number) => ({ animationDelay: `${ms}ms` });
 
@@ -34,15 +34,16 @@ export function Hero() {
             Grow your crypto. <em className="text-sand">Keep the keys.</em>
           </h1>
           <p className="mt-7 max-w-xl animate-enter-up text-lead text-fg-muted" style={d(180)}>
-            BLOK Capital is a non-custodial wealth-management protocol. Follow a professionally curated on-chain index from
-            a smart wallet only you control, with every move recorded on-chain.
+            An exchange holds your crypto for you. A wallet leaves you doing all the work. BLOK Capital is the third
+            option: a smart wallet at your own address that follows an on-chain index and rebalances itself, with every
+            trade a transaction you can read.
           </p>
           <div className="mt-10 flex animate-enter-up flex-wrap gap-3" style={d(260)}>
-            <Button href="/protocol" size="lg">
-              How it works
+            <Button href="/indices" size="lg">
+              Explore the indices
             </Button>
-            <Button href={links.docs} size="lg" variant="secondary">
-              Read the docs
+            <Button href="#explore" size="lg" variant="secondary">
+              How it works
             </Button>
           </div>
           <ul className="mt-10 flex animate-enter-up flex-col gap-3 text-small text-fg-muted sm:flex-row sm:flex-wrap sm:gap-x-6" style={d(340)}>
@@ -53,6 +54,9 @@ export function Hero() {
               </li>
             ))}
           </ul>
+          <div className="mt-8 animate-enter-up" style={d(420)}>
+            <HeroLive />
+          </div>
         </div>
 
         <div className="relative mx-auto aspect-square w-full max-w-[520px] lg:col-span-5">

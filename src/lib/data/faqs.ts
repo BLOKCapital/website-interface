@@ -36,7 +36,7 @@ export const faqs: Faq[] = [
   {
     question: "Is it audited?",
     answer:
-      "The v1.0 contracts were audited by CredShields in December 2024, and SolidityScan and Octane re-scan them on every release. Audits reduce risk; they don't remove it. Only deposit what you can afford to lose.",
+      "CredShields audited the Garden contracts in November 2024: 26 findings, none critical, all fixed and retested. The newer index and rebalancer contracts haven't had a published audit yet, and SolidityScan and Octane scan the code on release. Audits reduce risk; they don't remove it. Only deposit what you can afford to lose.",
   },
   {
     question: "How do I add or withdraw funds?",

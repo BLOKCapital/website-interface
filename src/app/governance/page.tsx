@@ -26,7 +26,7 @@ const process = [
   { label: "Execute", detail: "Passed proposals execute through Aragon OSx. No admin override." },
 ];
 
-const decides = ["Protocol upgrades and new facets", "Index approvals and rebalance cadence", "Fee parameters and the fee switch", "Treasury allocations"];
+const decides = ["Protocol upgrades and new facets", "New indices and index facets", "Fee parameters", "Treasury allocations"];
 
 export default async function GovernancePage() {
   const governance = await getGovernance();

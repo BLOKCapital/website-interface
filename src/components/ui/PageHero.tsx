@@ -7,6 +7,7 @@ import Link from "next/link";
  */
 export function PageHero({
   crumb,
+  parent,
   eyebrow,
   title,
   description,
@@ -15,6 +16,8 @@ export function PageHero({
 }: {
   /** Current page name in the breadcrumb. */
   crumb: string;
+  /** Optional middle breadcrumb, e.g. Indices on an index page. */
+  parent?: { label: string; href: string };
   eyebrow?: string;
   title: React.ReactNode;
   description: React.ReactNode;
@@ -35,6 +38,16 @@ export function PageHero({
                 </Link>
               </li>
               <li aria-hidden>/</li>
+              {parent && (
+                <>
+                  <li>
+                    <Link href={parent.href} className="transition-colors hover:text-fg">
+                      {parent.label}
+                    </Link>
+                  </li>
+                  <li aria-hidden>/</li>
+                </>
+              )}
               <li aria-current="page" className="text-fg-muted">
                 {crumb}
               </li>

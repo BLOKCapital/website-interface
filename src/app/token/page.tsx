@@ -14,6 +14,7 @@ import { breadcrumbSchema } from "@/lib/seo/schema";
 import { milestones } from "@/lib/data/milestones";
 import { protocolStatus } from "@/lib/data/status";
 import { links } from "@/lib/data/socials";
+import { TokenContract } from "@/components/live/TokenContract";
 
 export const metadata: Metadata = {
   title: "$BLOKC token",
@@ -81,14 +82,13 @@ export default function TokenPage() {
           <dl className="grid grid-cols-2 gap-8 rounded-2xl border border-line/[0.08] bg-card p-7 md:grid-cols-4">
             <Stat label="Symbol" value="BLOKC" />
             <Stat label="Total supply" value="10B" />
-            <Stat label="Network" value="Arbitrum" />
+            <Stat label="Network" value="Arbitrum One" />
             <Stat label="Decimals" value="18" />
           </dl>
         </Reveal>
-        <p className="mt-4 text-caption text-fg-subtle">
-          The contract address will be published at the token-generation event. Treat any earlier claim of a BLOKC contract with
-          suspicion.
-        </p>
+        <Reveal className="mt-5">
+          <TokenContract />
+        </Reveal>
       </Section>
 
       <Section id="utility" tone="surface" eyebrow="Utility" title="What $BLOKC does.">

@@ -11,7 +11,7 @@ import type { CSSProperties, ElementType, ReactNode } from "react";
  * never hidden under prefers-reduced-motion. Server components: no client JS.
  */
 
-type Tag = "div" | "section" | "article" | "ul" | "ol" | "li" | "p" | "aside" | "figure";
+type Tag = "div" | "section" | "article" | "ul" | "ol" | "li" | "p" | "aside" | "figure" | "dl";
 
 export function Reveal({
   children,

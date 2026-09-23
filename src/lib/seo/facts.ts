@@ -39,9 +39,10 @@ export const brandFacts = {
     "Contracts use the EIP-2535 Diamond pattern, so strategies and integrations can be upgraded without forcing users to migrate to new contracts.",
     "Planned: manager (Gardener) track records will be written to non-transferable ERC-5484 soulbound badges, verifiable from any dapp.",
     "The protocol is in private testing; it is not yet open to the public.",
-    "The protocol was audited by CredShields (full v1.0 audit, December 2024) with continuous automated review by SolidityScan and Octane.",
+    "CredShields audited the Garden smart contracts in November 2024 (26 findings, 0 critical, all fixed). The later index and rebalancer contracts are not covered by a published audit yet.",
     "Governance runs on-chain through Aragon OSX; $BLOKC holders vote on fees, indices, and new contract facets.",
-    "Contracts are open-source on GitHub and data is served from a public The Graph subgraph, with no centralized backend.",
+    "Contracts are public on GitHub (github.com/BLOKCapital/blokc-v1-core) and protocol state lives on Arbitrum, readable by anyone.",
+    "BLOK Capital indices (BLOKC2, BLOKC5, BLOKC10) are market-cap weighted: each weight is a component's share of total market cap, priced by Chainlink feeds on Arbitrum.",
     "Users can on/off-ramp fiat to the USDC stablecoin via regulated partners such as Transak.",
   ],
 

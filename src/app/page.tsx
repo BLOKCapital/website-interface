@@ -5,7 +5,10 @@ import { Problem } from "@/components/home/Problem";
 import { HowItWorks } from "@/components/home/HowItWorks";
 import { Products } from "@/components/home/Products";
 import { SecurityPillars } from "@/components/home/SecurityPillars";
-import { GovernanceToken } from "@/components/home/GovernanceToken";
+import { IndicesSection } from "@/components/home/IndicesSection";
+import { HappeningNow } from "@/components/home/HappeningNow";
+import { BuiltInOpen } from "@/components/home/BuiltInOpen";
+import { ExploreSection } from "@/components/explore/ExploreSection";
 import { Ecosystem } from "@/components/home/Ecosystem";
 import { Section } from "@/components/ui/Section";
 import { Button } from "@/components/ui/Button";
@@ -15,21 +18,23 @@ import { RoadmapNowNext, roadmapUpdated } from "@/components/roadmap/Roadmap";
 import { JsonLd } from "@/components/seo/JsonLd";
 import { serviceSchema, softwareApplicationSchema } from "@/lib/seo/schema";
 import { getGovernance } from "@/lib/data/proposals";
+import { getGithub } from "@/lib/data/github";
 import { faqs } from "@/lib/data/faqs";
 
 export const metadata: Metadata = {
   description:
-    "BLOK Capital is a non-custodial wealth-management protocol on Arbitrum: follow curated on-chain indices from a smart wallet only you control.",
+    "Non-custodial wealth management on Arbitrum. Follow BLOKC2, BLOKC5 or BLOKC10, market-cap-weighted on-chain indices, from a smart wallet at your own address.",
   alternates: { canonical: "/" },
 };
 
 /**
- * Home, in the order a newcomer needs it: what it is → the facts → why it
- * exists → how it works → what you can do → why it's safe → who governs it →
- * what it's built on → where it's going → questions → join.
+ * Home, in the order a newcomer asks: what is it → the facts → why does it
+ * exist → how does it work → what can I do → what are the indices → what's
+ * under the hood → what's happening right now → is it safe → what is it built
+ * on → who builds it → where is it going → questions → how do I join.
  */
 export default async function HomePage() {
-  const governance = await getGovernance();
+  const [governance, github] = await Promise.all([getGovernance(), getGithub()]);
   return (
     <>
       <JsonLd data={[serviceSchema(), softwareApplicationSchema()]} />
@@ -38,9 +43,12 @@ export default async function HomePage() {
       <Problem />
       <HowItWorks />
       <Products />
+      <IndicesSection />
+      <ExploreSection />
+      <HappeningNow governance={governance} />
       <SecurityPillars />
-      <GovernanceToken governance={governance} />
       <Ecosystem />
+      <BuiltInOpen github={github} />
       <Section
         id="roadmap"
         tone="surface"

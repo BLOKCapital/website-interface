@@ -8,6 +8,7 @@ import { Button } from "@/components/ui/Button";
 import { SocialLinks } from "@/components/ui/SocialLinks";
 import { CrossIcon, DiscordIcon, ExternalIcon, MenuIcon } from "@/components/ui/icons";
 import { primaryNav } from "@/lib/nav";
+import { CommandMenu } from "./CommandMenu";
 import { social } from "@/lib/data/socials";
 import { useScrolled } from "@/lib/hooks";
 import { cn } from "@/lib/utils";
@@ -96,6 +97,7 @@ export function Nav() {
         </nav>
 
         <div className="flex items-center gap-2">
+          <CommandMenu />
           <Button href={social("discord").href} size="sm" className="hidden sm:inline-flex">
             <DiscordIcon size={15} /> Join Discord
           </Button>

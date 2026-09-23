@@ -3,6 +3,8 @@ import { shortAddress } from "@/lib/utils";
 /** Display-ready proposal, mapped from the on-chain governance API. */
 export type ProposalView = {
   id: string;
+  /** Decimal proposal index, as emitted in the plugin's on-chain events. */
+  index: string;
   title: string;
   /** Yes share of yes + no votes, 0–100. */
   forPct: number;
@@ -24,6 +26,7 @@ export type GovernanceSnapshot = {
 
 type RawProposal = {
   id: string;
+  proposal_index?: string;
   title: string;
   status: string;
   active: boolean;
@@ -62,6 +65,7 @@ function toSnapshot(raw: RawProposal[]): GovernanceSnapshot {
     const end = Date.parse(p.end_date);
     return {
       id: shortAddress(p.id),
+      index: p.proposal_index ?? p.id.split("-").pop() ?? "",
       title: p.title,
       forPct,
       turnoutPct: pct(yes + no + abstain, BigInt(p.total_voting_power || "0")),

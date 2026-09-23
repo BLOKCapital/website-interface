@@ -16,6 +16,10 @@ import { milestones } from "@/lib/data/milestones";
 const PAGES: { title: string; path: string; desc: string }[] = [
   { title: "Home", path: "/", desc: "What BLOK Capital is and how non-custodial Gardens work." },
   { title: "Protocol", path: "/protocol", desc: "Gardens, Index and Yield Gardens, Gardeners, the Diamond architecture, fees and risks." },
+  { title: "Indices", path: "/indices", desc: "BLOKC2, BLOKC5 and BLOKC10: components, market-cap methodology, guardrails and pooled rebalancing." },
+  { title: "BLOKC2", path: "/indices/blokc2", desc: "Bitcoin and Ether, market-cap weighted." },
+  { title: "BLOKC5", path: "/indices/blokc5", desc: "LINK, UNI, AAVE, ARB and PENDLE: five DeFi blue chips, market-cap weighted." },
+  { title: "BLOKC10", path: "/indices/blokc10", desc: "BLOKC5 plus CRV, ZRO, GRT, GMX and DAI; no BTC or ETH." },
   { title: "Security", path: "/security", desc: "Who can change the contracts, audits and scanning, and how to report a vulnerability." },
   { title: "Token", path: "/token", desc: "$BLOKC utility, allocation of the 10B supply, and launch timing." },
   { title: "Governance", path: "/governance", desc: "How the DAO decides, the current phase, and on-chain proposals." },

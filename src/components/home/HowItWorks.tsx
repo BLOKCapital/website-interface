@@ -14,7 +14,7 @@ const steps = [
   },
   {
     title: "Choose a strategy",
-    body: "Follow a curated index that rebalances itself on a DAO-set cadence. From 2027, hire a Gardener: an on-chain manager you can revoke with one signature.",
+    body: "Follow BLOKC2, BLOKC5 or BLOKC10: market-cap-weighted indices that rebalance on-chain when they drift. From 2027, hire a Gardener: an on-chain manager you can revoke with one signature.",
   },
 ];
 

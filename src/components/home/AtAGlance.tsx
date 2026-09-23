@@ -1,12 +1,11 @@
 import Link from "next/link";
 import { audits } from "@/lib/data/audits";
-import { partnerGroups } from "@/lib/data/partners";
+import { indices } from "@/lib/data/indices";
 import { links } from "@/lib/data/socials";
 import type { GovernanceSnapshot } from "@/lib/data/proposals";
 import { ArrowIcon } from "@/components/ui/icons";
 
 const credShields = audits.find((a) => a.partner === "CredShields");
-const integrations = partnerGroups.reduce((n, g) => n + g.partners.length, 0);
 
 /**
  * The protocol at a glance: only figures with a source, each linking to it.
@@ -23,7 +22,7 @@ export function AtAGlance({ governance }: { governance: GovernanceSnapshot }) {
       label: "DAO proposals executed",
       href: links.aragon,
     },
-    { value: String(integrations), label: "Protocol integrations", href: "#ecosystem" },
+    { value: String(indices.length), label: "On-chain indices", href: "/indices" },
     { value: "10B", label: "$BLOKC supply", href: "/token" },
   ];
   return (

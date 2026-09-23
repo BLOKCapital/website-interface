@@ -19,8 +19,8 @@ export const products: {
     summary: "Follow a professionally curated basket that rebalances itself.",
     points: [
       "Three indices: BLOKC2, BLOKC5 and BLOKC10",
-      "Weights calculated on-chain; swaps route through Uniswap V3",
-      "Rebalance cadence set by the DAO",
+      "Market-cap weights, priced by Chainlink",
+      "Pooled rebalancing, only past 2% drift",
     ],
   },
   {

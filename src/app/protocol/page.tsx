@@ -24,10 +24,11 @@ export const metadata: Metadata = {
 };
 
 /** Extra detail per product, beyond the home-page card. */
-const detail: Record<string, { body: string; audience: string }> = {
+const detail: Record<string, { body: string; audience: string; more?: { label: string; href: string } }> = {
   index: {
     audience: "For people who want diversified exposure without managing it.",
-    body: "Connect your Garden to a protocol index. Component weights are calculated on-chain, swaps route through Uniswap V3 with WETH as the base, and the rebalance cadence is set by the DAO. Every rebalance is a transaction you can read.",
+    more: { label: "Explore BLOKC2, BLOKC5 and BLOKC10", href: "/indices" },
+    body: "Connect your Garden to BLOKC2, BLOKC5 or BLOKC10. Weights are each component's share of market cap, priced by Chainlink. A pooled rebalancer trades only assets more than 2% off target, at the best quote across Uniswap and Camelot, at most once a day. Every rebalance is a transaction you can read.",
   },
   yield: {
     audience: "For people who'd rather steer themselves.",
@@ -56,9 +57,9 @@ const architecture = [
     body: "A Gardener's track record is written to a non-transferable badge, verifiable from any dapp and owned by no platform.",
   },
   {
-    title: "Open data",
-    spec: "GitHub · The Graph",
-    body: "Contracts are open source on GitHub and protocol data is served from a public subgraph, with no centralised backend to trust.",
+    title: "Open by default",
+    spec: "GitHub · Foundry · Arbitrum",
+    body: "Contracts and their Foundry test suite are public on GitHub. Every Garden, index and vote is on Arbitrum for anyone to read.",
   },
 ];
 
@@ -90,7 +91,7 @@ export default function ProtocolPage() {
             {[
               ["Network", "Arbitrum One"],
               ["Custody", "Always yours"],
-              ["License", "MIT"],
+              ["Source", "Public on GitHub"],
               ["Status", protocolStatus.label],
             ].map(([k, v]) => (
               <div key={k} className="bg-card p-4">
@@ -114,6 +115,11 @@ export default function ProtocolPage() {
                 </div>
                 <div className="lg:col-span-7">
                   <p className="text-body text-fg-muted">{detail[p.id].body}</p>
+                  {detail[p.id].more && (
+                    <ArrowLink href={detail[p.id].more!.href} className="mt-4">
+                      {detail[p.id].more!.label}
+                    </ArrowLink>
+                  )}
                   <ul className="mt-6 grid gap-3 sm:grid-cols-3">
                     {p.points.map((pt) => (
                       <li key={pt} className="rounded-xl border border-line/[0.08] bg-raised/60 p-4 text-small text-fg">
@@ -163,7 +169,7 @@ export default function ProtocolPage() {
             Read it, fork it, <em className="text-sand">extend it.</em>
           </>
         }
-        description="The contracts are MIT-licensed on GitHub. New strategies and integrations plug in as facets through the DAO-approved Facet Registry."
+        description="The contracts and tests are public on GitHub. New strategies and integrations plug in as facets through the DAO-approved Facet Registry."
       >
         <div className="grid gap-5 lg:grid-cols-3">
           <Reveal className="lg:col-span-2">

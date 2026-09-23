@@ -14,6 +14,7 @@ const columns = [
     title: "Protocol",
     items: [
       { href: "/protocol", label: "How it works" },
+      { href: "/indices", label: "Indices" },
       { href: "/security", label: "Security" },
       { href: "/token", label: "$BLOKC token" },
       { href: "/governance", label: "Governance" },

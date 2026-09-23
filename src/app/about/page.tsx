@@ -52,7 +52,7 @@ export default function AboutPage() {
               ["Founded", "2023"],
               ["Entity", "BLOK Capital DAO LLC"],
               ["Jurisdiction", "Marshall Islands"],
-              ["License", "MIT"],
+              ["Source", "Public on GitHub"],
             ].map(([k, v]) => (
               <div key={k} className="bg-card p-4">
                 <dt className="text-caption text-fg-subtle">{k}</dt>
