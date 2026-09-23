@@ -13,7 +13,7 @@ import { cn } from "@/lib/utils";
  * close doesn't intrude on long-form policy reading. The compact Footer
  * sitemap still renders there.
  */
-const BANNER_ROUTES = ["/", "/about", "/features", "/contact", "/preview"];
+const BANNER_ROUTES = ["/", "/about", "/features", "/contact"];
 
 export function FooterBanner() {
   const pathname = usePathname();

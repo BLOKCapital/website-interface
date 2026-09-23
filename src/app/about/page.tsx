@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import { AboutHero } from "@/components/about/AboutHero";
 import { Story } from "@/components/about/Story";
-import { ProductVideo } from "@/components/preview/ProductVideo";
+import { ProductVideo } from "@/components/about/ProductVideo";
 import { CoreValues } from "@/components/about/CoreValues";
 import { TeamGrid } from "@/components/about/TeamGrid";
 import { GovernanceFlow } from "@/components/about/GovernanceFlow";

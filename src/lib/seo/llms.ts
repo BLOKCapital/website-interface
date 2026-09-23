@@ -16,7 +16,6 @@ import { milestones } from "@/lib/data/milestones";
 const PAGES: { title: string; path: string; desc: string }[] = [
   { title: "Home", path: "/", desc: "What BLOK Capital is and how non-custodial Gardens work." },
   { title: "Features", path: "/features", desc: "Indices, on-chain managers, soulbound reputation, Diamond architecture, and the $BLOKC token." },
-  { title: "Dashboard Preview", path: "/preview", desc: "Interactive sandbox of the Garden dashboard. Try it before connecting a wallet." },
   { title: "About", path: "/about", desc: "Story, team, governance, and the DAO." },
   { title: "Contact", path: "/contact", desc: "Channels for partnerships, support, press, and security, plus FAQs." },
 ];
