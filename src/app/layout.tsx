@@ -5,6 +5,7 @@ import { Nav } from "@/components/nav/Nav";
 import { Footer } from "@/components/footer/Footer";
 import { EasterEggs } from "@/components/easter/EasterEggs";
 import { CookieConsent } from "@/components/system/CookieConsent";
+import { Analytics } from "@/components/system/Analytics";
 import { RevealScript } from "@/components/system/RevealScript";
 import { JsonLd } from "@/components/seo/JsonLd";
 import { organizationSchema, websiteSchema } from "@/lib/seo/schema";
@@ -100,6 +101,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         <Footer />
         <EasterEggs />
         <CookieConsent />
+        <Analytics />
       </body>
     </html>
   );
