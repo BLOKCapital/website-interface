@@ -1,23 +1,31 @@
 import { Section } from "@/components/ui/Section";
-import { Stagger, RevealItem, Reveal } from "@/components/ui/Reveal";
-import { ArrowLink } from "@/components/ui/ArrowLink";
-import { CustodyDiagram } from "@/components/home/CustodyDiagram";
+import { HowItWorksScroller, type ScrollStep } from "@/components/home/HowItWorksScroller";
 
-const steps = [
+const steps: ScrollStep[] = [
   {
     title: "Open a Garden",
+    tag: "Open",
     body: "Sign in with Google (no seed phrase) or your own wallet. You get a smart-contract wallet (ERC-4337) at your own address.",
+    chain: "ERC-4337 account · ownership is an NFT",
+    callout: "The Garden's ownership is an NFT in your wallet.",
   },
   {
     title: "Fund it",
+    tag: "Fund",
     body: "Buy USDC by card or bank through an on-ramp such as Transak, or send crypto you already hold. Funds land in your Garden, not a pooled account.",
+    chain: "USDC by card or bank · or send crypto",
+    callout: "Card or bank through an on-ramp, or send crypto you hold.",
   },
   {
     title: "Choose a strategy",
+    tag: "Strategy",
     body: "Follow BLOKC2, BLOKC5 or BLOKC10: market-cap-weighted indices that rebalance on-chain when they drift. From 2027, hire a Gardener: an on-chain manager you can revoke with one signature.",
+    chain: "BLOKC2 · BLOKC5 · BLOKC10 · Gardeners 2027",
+    callout: "Rebalances only when a holding drifts more than 2% off target.",
   },
 ];
 
+/** Three steps told as a scroll story beside a Garden that changes with them. */
 export function HowItWorks() {
   return (
     <Section
@@ -31,27 +39,7 @@ export function HowItWorks() {
       }
       description="A Garden is a smart wallet only you control. Strategies can rebalance inside it; they can never move funds out."
     >
-      <div className="grid items-center gap-14 lg:grid-cols-12">
-        <Stagger as="ol" className="space-y-8 lg:col-span-5">
-          {steps.map((s, i) => (
-            <RevealItem as="li" key={s.title} className="grid grid-cols-[40px_1fr] gap-4">
-              <span className="inline-flex size-10 items-center justify-center rounded-full border border-leaf/35 bg-leaf/10 font-mono text-[13px] text-leaf">
-                {i + 1}
-              </span>
-              <div>
-                <h3 className="text-h4 font-medium text-fg">{s.title}</h3>
-                <p className="mt-2 text-[15.5px] leading-relaxed text-fg-muted">{s.body}</p>
-              </div>
-            </RevealItem>
-          ))}
-          <RevealItem as="li" className="pl-14">
-            <ArrowLink href="/protocol">The full protocol</ArrowLink>
-          </RevealItem>
-        </Stagger>
-        <Reveal className="hidden rounded-3xl border border-line/[0.08] bg-canvas/60 p-6 sm:block sm:p-8 lg:col-span-7">
-          <CustodyDiagram />
-        </Reveal>
-      </div>
+      <HowItWorksScroller steps={steps} />
     </Section>
   );
 }

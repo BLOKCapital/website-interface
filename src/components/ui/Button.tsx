@@ -5,11 +5,11 @@ type Variant = "primary" | "secondary" | "ghost";
 type Size = "sm" | "md" | "lg";
 
 const base =
-  "inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-full font-medium transition-[background-color,border-color,color,transform] duration-200 ease-out active:scale-[0.98] disabled:pointer-events-none disabled:opacity-45";
+  "inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-full font-medium transition-[background-color,border-color,color,transform] duration-fast ease-out active:scale-[0.98] disabled:pointer-events-none disabled:opacity-45";
 
 const variants: Record<Variant, string> = {
-  // Leaf on canvas: 11.5:1.
-  primary: "bg-leaf text-canvas hover:bg-[rgb(170_226_189)]",
+  // Canvas on leaf: 5.7:1 light, 11.5:1 dark.
+  primary: "bg-leaf text-canvas hover:bg-leaf-hover",
   secondary: "border border-line/15 bg-card text-fg hover:border-line/30 hover:bg-raised",
   ghost: "text-fg-muted hover:text-fg",
 };

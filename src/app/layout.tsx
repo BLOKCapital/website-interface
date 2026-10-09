@@ -73,14 +73,17 @@ export const metadata: Metadata = {
 };
 
 export const viewport: Viewport = {
-  themeColor: "#090D0B",
-  colorScheme: "dark",
+  themeColor: "#F7F8F4",
+  colorScheme: "light",
 };
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
     <html
       lang="en"
+      // Next keeps route changes jumping to the top instantly (not scrolling
+      // through the old page) while in-page anchors still glide.
+      data-scroll-behavior="smooth"
       // RevealScript adds the `js` class before hydration.
       suppressHydrationWarning
       className={`${inter.variable} ${newsreader.variable} ${mono.variable}`}

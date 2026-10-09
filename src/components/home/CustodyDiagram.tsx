@@ -12,16 +12,18 @@ export function CustodyDiagram({ className }: { className?: string }) {
       <svg viewBox="0 0 560 400" className="h-auto w-full" aria-hidden>
         <defs>
           <radialGradient id="gardenGlow" cx="50%" cy="50%" r="50%">
-            <stop offset="0%" stopColor="rgb(143 214 168)" stopOpacity="0.22" />
-            <stop offset="100%" stopColor="rgb(143 214 168)" stopOpacity="0" />
+            <stop offset="0%" stopColor="rgb(var(--glow))" stopOpacity="0.22" />
+            <stop offset="100%" stopColor="rgb(var(--glow))" stopOpacity="0" />
           </radialGradient>
         </defs>
 
         {/* connectors */}
         <g fill="none" strokeWidth="1.5" strokeLinecap="round">
           <path d="M150 200 H210" stroke="rgb(var(--leaf))" strokeDasharray="4 6" className="animate-flow" />
-          <path d="M350 170 C 390 150, 400 110, 430 104" stroke="rgb(var(--leaf))" strokeDasharray="4 6" className="animate-flow" />
-          <path d="M350 230 C 390 250, 400 290, 430 296" stroke="rgb(var(--line) / 0.3)" strokeDasharray="3 6" />
+          <g>
+            <path d="M350 170 C 390 150, 400 110, 430 104" stroke="rgb(var(--leaf))" strokeDasharray="4 6" className="animate-flow" />
+            <path d="M350 230 C 390 250, 400 290, 430 296" stroke="rgb(var(--line) / 0.3)" strokeDasharray="3 6" />
+          </g>
           <path d="M280 262 V318" stroke="rgb(var(--cobalt))" strokeDasharray="4 6" className="animate-flow" />
         </g>
 
@@ -33,15 +35,15 @@ export function CustodyDiagram({ className }: { className?: string }) {
         </g>
 
         {/* garden */}
-        <circle cx="280" cy="200" r="120" fill="url(#gardenGlow)" />
         <g>
+          <circle cx="280" cy="200" r="120" fill="url(#gardenGlow)" />
           <rect x="210" y="138" width="140" height="124" rx="22" fill="rgb(var(--raised))" stroke="rgb(var(--leaf) / 0.55)" strokeWidth="1.5" />
           <text x="280" y="180" textAnchor="middle" className="fill-[rgb(var(--leaf))] text-[11px] font-semibold uppercase tracking-[0.14em]">Your Garden</text>
           <text x="280" y="204" textAnchor="middle" className="fill-[rgb(var(--fg))] text-[14px]">Smart wallet</text>
           <text x="280" y="224" textAnchor="middle" className="fill-[rgb(var(--fg-subtle))] text-[12px]">at your address</text>
           <g transform="translate(252 236)">
-            {["143 214 168", "230 216 188", "125 180 255", "240 163 180"].map((c, i) => (
-              <circle key={c} cx={i * 18 + 1} cy="4" r="4" fill={`rgb(${c})`} />
+            {["--leaf", "--sand", "--cobalt", "--bloom"].map((c, i) => (
+              <circle key={c} cx={i * 18 + 1} cy="4" r="4" fill={`rgb(var(${c}))`} />
             ))}
           </g>
         </g>

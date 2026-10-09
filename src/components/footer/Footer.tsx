@@ -3,6 +3,8 @@ import { Logo } from "@/components/ui/Logo";
 import { Badge } from "@/components/ui/Badge";
 import { SocialLinks } from "@/components/ui/SocialLinks";
 import { CookieSettingsButton } from "@/components/system/CookieConsent";
+import { GlyphField } from "@/components/motion/GlyphField";
+import { CornerMarks } from "@/components/motion/CornerMarks";
 import { protocolStatus } from "@/lib/data/status";
 import { links } from "@/lib/data/socials";
 
@@ -51,6 +53,26 @@ const columns = [
 export function Footer() {
   return (
     <footer className="border-t border-line/[0.07] bg-canvas">
+      {/* Closing line over a field of settling glyphs (kept to the right, clear of the type). */}
+      <div className="relative overflow-hidden border-b border-line/[0.07]">
+        <div aria-hidden className="absolute inset-0 [mask-image:radial-gradient(ellipse_65%_120%_at_88%_50%,black,transparent)]">
+          <GlyphField />
+        </div>
+        <CornerMarks only="bottom" />
+        <div className="relative mx-auto w-full max-w-page px-5 py-16 sm:px-8 sm:py-24">
+          <p className="display max-w-3xl text-[clamp(40px,5.5vw+12px,96px)] leading-[0.98] tracking-[-0.025em] text-fg">
+            It&apos;s crypto, <em className="text-sand">but different.</em>
+          </p>
+          <p className="mt-6 flex flex-wrap gap-x-3 gap-y-1 font-mono text-[11.5px] uppercase tracking-[0.14em] text-fg-subtle">
+            {["Your keys", "Your address", "Every move on-chain"].map((t, i) => (
+              <span key={t} className="whitespace-nowrap">
+                {i > 0 && <span aria-hidden className="mr-3 text-leaf/60">·</span>}
+                {t}
+              </span>
+            ))}
+          </p>
+        </div>
+      </div>
       <div className="mx-auto w-full max-w-page px-5 py-16 sm:px-8">
         <div className="grid gap-12 lg:grid-cols-12">
           <div className="lg:col-span-4">
@@ -97,15 +119,7 @@ export function Footer() {
         </div>
 
         <div className="mt-14 border-t border-line/[0.07] pt-8">
-          <p className="max-w-4xl text-caption text-fg-subtle">
-            BLOK Capital DAO LLC publishes open-source software. It does not custody assets, act as a broker, or provide
-            investment advice. Crypto-assets are volatile and smart contracts carry risk; you can lose money. Read the{" "}
-            <Link href="/legal/user-agreement" className="text-fg-muted underline underline-offset-2 hover:text-fg">
-              User Agreement
-            </Link>{" "}
-            before using the protocol.
-          </p>
-          <p className="mt-4 text-caption text-fg-subtle">© {YEAR} BLOK Capital DAO LLC · Built on Arbitrum One</p>
+          <p className="text-caption text-fg-subtle">© {YEAR} BLOK Capital DAO LLC · Built on Arbitrum One</p>
         </div>
       </div>
     </footer>

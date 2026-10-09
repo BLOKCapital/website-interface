@@ -4,7 +4,7 @@ import { Section } from "@/components/ui/Section";
 import { Button } from "@/components/ui/Button";
 import { Card } from "@/components/ui/Card";
 import { Badge } from "@/components/ui/Badge";
-import { StepFlow } from "@/components/ui/StepFlow";
+import { DecisionPipeline } from "@/components/governance/DecisionPipeline";
 import { CtaBand } from "@/components/ui/CtaBand";
 import { Reveal } from "@/components/ui/Reveal";
 import { ProposalList } from "@/components/governance/ProposalList";
@@ -20,10 +20,10 @@ export const metadata: Metadata = {
 };
 
 const process = [
-  { label: "Propose", detail: "A protocol upgrade, new index, fee parameter or treasury allocation." },
-  { label: "Discuss", detail: "In public on Discord, Telegram and the forum, before any vote." },
-  { label: "Vote", detail: "On-chain via Aragon OSx, weighted by BLOKC. Every vote is public." },
-  { label: "Execute", detail: "Passed proposals execute through Aragon OSx. No admin override." },
+  { label: "Propose", detail: "A protocol upgrade, new index, fee parameter or treasury allocation.", where: "Aragon OSx" },
+  { label: "Discuss", detail: "In public on Discord, Telegram and the forum, before any vote.", where: "In public" },
+  { label: "Vote", detail: "On-chain via Aragon OSx, weighted by BLOKC. Every vote is public.", where: "On-chain" },
+  { label: "Execute", detail: "Passed proposals execute through Aragon OSx. No admin override.", where: "On-chain · no override" },
 ];
 
 const decides = ["Protocol upgrades and new facets", "New indices and index facets", "Fee parameters", "Treasury allocations"];
@@ -54,19 +54,17 @@ export default async function GovernancePage() {
 
       <Section id="process" eyebrow="Process" title="How a decision is made.">
         <Reveal>
-          <Card>
-            <StepFlow steps={process} label="How a governance decision is made" />
-          </Card>
+          <DecisionPipeline stages={process} />
         </Reveal>
         <div className="mt-5 grid gap-5 md:grid-cols-2">
           <Reveal>
             <Card className="h-full">
               <h3 className="text-h4 font-medium text-fg">What the DAO decides</h3>
-              <ul className="mt-5 space-y-3">
-                {decides.map((d) => (
-                  <li key={d} className="flex gap-3 text-[15px] text-fg-muted">
-                    <span aria-hidden className="mt-2.5 size-1 shrink-0 rounded-full bg-leaf" />
-                    {d}
+              <ul className="mt-5 grid gap-2.5 sm:grid-cols-2">
+                {decides.map((d, i) => (
+                  <li key={d} className="flex flex-col gap-3 rounded-2xl border border-line/[0.08] bg-raised/60 p-4">
+                    <span className="font-mono text-[11px] text-leaf">{String(i + 1).padStart(2, "0")}</span>
+                    <span className="text-[15px] text-fg">{d}</span>
                   </li>
                 ))}
               </ul>

@@ -1,3 +1,5 @@
+import { announcement, BAR_KEY } from "@/lib/announce";
+
 /**
  * Drives components/ui/Reveal.tsx. Inline and first in <body>, so it runs
  * while the page parses rather than after React hydrates.
@@ -12,12 +14,17 @@
  *   also reveals anything already at or above the trigger line. It only runs
  *   while unrevealed targets remain.
  * - Groups number their items (--i) so CSS can stagger the delays.
+ * - Split headings ([data-split], components/motion/SplitText.tsx) reveal
+ *   the same way; CSS staggers their words.
+ * - Also hides the announcement bar before first paint if the visitor
+ *   dismissed this announcement (lib/announce.ts).
  */
 const SCRIPT = `(function(){
 var d=document.documentElement;
+try{if(localStorage.getItem("${BAR_KEY}")==="${announcement.id}")d.setAttribute("data-bar","hidden")}catch(e){}
 if(!("IntersectionObserver" in window)||!("MutationObserver" in window))return;
 d.classList.add("js");
-var sel="[data-reveal]:not([data-revealed]),[data-reveal-group]:not([data-revealed])";
+var sel="[data-reveal]:not([data-revealed]),[data-reveal-group]:not([data-revealed]),[data-split]:not([data-revealed])";
 var pending=new Set();
 function reveal(t){
 if(t.hasAttribute("data-reveal-group"))t.querySelectorAll("[data-reveal-item]").forEach(function(el,i){el.style.setProperty("--i",i)});

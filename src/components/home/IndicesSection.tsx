@@ -1,13 +1,14 @@
 import { Section } from "@/components/ui/Section";
 import { Button } from "@/components/ui/Button";
 import { Reveal } from "@/components/ui/Reveal";
-import { IndexExplorer } from "@/components/indices/IndexExplorer";
+import { IndexShowcase } from "@/components/indices/IndexShowcase";
 
-/** Home: what BLOKC2 / BLOKC5 / BLOKC10 are, explorable in place. */
+/** Home: what BLOKC2 / BLOKC5 / BLOKC10 are, explorable in place (the /indices pages keep the full explorer). */
 export function IndicesSection() {
   return (
     <Section
       id="indices"
+      tone="surface"
       eyebrow="The indices"
       title={
         <>
@@ -22,7 +23,7 @@ export function IndicesSection() {
       }
     >
       <Reveal>
-        <IndexExplorer />
+        <IndexShowcase />
       </Reveal>
     </Section>
   );

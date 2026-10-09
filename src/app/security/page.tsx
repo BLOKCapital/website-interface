@@ -6,6 +6,7 @@ import { Badge } from "@/components/ui/Badge";
 import { Card } from "@/components/ui/Card";
 import { StepFlow } from "@/components/ui/StepFlow";
 import { CtaBand } from "@/components/ui/CtaBand";
+import { ControlMap, type Control } from "@/components/security/ControlMap";
 import { Reveal, Stagger, RevealItem } from "@/components/ui/Reveal";
 import { ExternalIcon, DiscordIcon } from "@/components/ui/icons";
 import { JsonLd } from "@/components/seo/JsonLd";
@@ -24,29 +25,34 @@ export const metadata: Metadata = {
  * source). Don't add a control the docs don't describe, and don't list
  * contract addresses until they're published and verified.
  */
-const controls = [
+const controls: Control[] = [
   {
     label: "Your funds",
+    by: "Your keys",
     body: "Each Garden is a smart-contract wallet at your own address. You hold the keys; BLOK Capital doesn't hold your funds.",
     source: links.docsOverview,
   },
   {
     label: "Upgrades",
+    by: "DAO Facet Registry",
     body: "Upgrades go through a dedicated Upgrade facet that checks a hash against what the Facet Registry has approved for that Garden's type. An upgrade can only install something the DAO has already vetted.",
     source: links.docsArchitecture,
   },
   {
     label: "Protocol changes",
+    by: "Security council · ENS",
     body: "State changes are authorised by a security council tracked through ENS domains, not a list of hot wallets.",
     source: links.docsArchitecture,
   },
   {
     label: "Pausing",
+    by: "Garden Factory",
     body: "While the protocol is inactive, the Garden Factory refuses to deploy new Gardens.",
     source: links.docsArchitecture,
   },
   {
     label: "Governance",
+    by: "Aragon OSx vote",
     body: "Facets, indices and fee parameters are approved through on-chain Aragon OSx votes. Before the public token launch, only the core DAO members listed on Aragon can vote.",
     source: links.aragon,
   },
@@ -119,23 +125,7 @@ export default function SecurityPage() {
             </div>
           </Card>
         </Reveal>
-        <Stagger as="ul" className="divide-y divide-line/[0.08] border-y border-line/[0.08]">
-          {controls.map((c) => (
-            <RevealItem as="li" key={c.label} className="grid gap-2 py-6 md:grid-cols-[220px_1fr_auto] md:gap-8">
-              <h3 className="text-h4 font-medium text-fg">{c.label}</h3>
-              <p className="text-[15.5px] leading-relaxed text-fg-muted">{c.body}</p>
-              <a
-                href={c.source}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="inline-flex items-center gap-1 self-start text-small text-leaf hover:text-fg"
-              >
-                Source <ExternalIcon />
-                <span className="sr-only"> for {c.label} (opens in a new tab)</span>
-              </a>
-            </RevealItem>
-          ))}
-        </Stagger>
+        <ControlMap controls={controls} />
       </Section>
 
       <Section id="audits" tone="surface" eyebrow="Audits & scanning" title="One published audit so far. More before launch."

@@ -1,8 +1,13 @@
 import { cn } from "@/lib/utils";
+import { SplitText } from "@/components/motion/SplitText";
+import { CornerMarks } from "@/components/motion/CornerMarks";
 
 /**
  * Page section: full-bleed band (`tone`) around a centred container, with an
- * optional header. Headings are h2; pass `headingLevel` 1 only for heroes.
+ * optional header. Titles are h2s that rise word by word as they scroll into
+ * view; surface bands get "+" registration marks at their corners.
+ * tone="dark" renders the band in the Night garden theme (and flips the
+ * sticky header while it passes under it).
  */
 export function Section({
   id,
@@ -22,19 +27,22 @@ export function Section({
   /** Links/buttons shown beside (desktop) or below (mobile) the header. */
   actions?: React.ReactNode;
   align?: "left" | "center";
-  tone?: "canvas" | "surface";
+  tone?: "canvas" | "surface" | "dark";
   className?: string;
   children?: React.ReactNode;
 }) {
   return (
     <section
       id={id}
+      data-band={tone === "dark" ? "dark" : undefined}
       className={cn(
         "relative py-20 sm:py-24 lg:py-28",
         tone === "surface" && "border-y border-line/[0.07] bg-surface",
+        tone === "dark" && "theme-dark bg-canvas",
         className,
       )}
     >
+      {tone !== "canvas" && <CornerMarks />}
       <div className="mx-auto w-full max-w-page px-5 sm:px-8">
         {(eyebrow || title || description) && (
           <header
@@ -45,7 +53,7 @@ export function Section({
           >
             <div className={cn("max-w-3xl", align === "center" && "mx-auto")}>
               {eyebrow && <p className="eyebrow">{eyebrow}</p>}
-              {title && <h2 className="display mt-4 text-h2 text-balance text-fg">{title}</h2>}
+              {title && <SplitText className="display mt-4 text-h2 text-balance text-fg">{title}</SplitText>}
               {description && <p className="mt-5 max-w-2xl text-lead text-fg-muted">{description}</p>}
             </div>
             {actions && <div className="flex shrink-0 flex-wrap gap-3">{actions}</div>}

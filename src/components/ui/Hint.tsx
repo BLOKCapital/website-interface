@@ -12,7 +12,8 @@ export function Hint({ children, text, className }: { children: React.ReactNode;
     <span className={cn("group/hint relative inline-flex", className)}>
       <button
         type="button"
-        className="cursor-help underline decoration-fg-subtle/60 decoration-dotted underline-offset-4 focus-visible:outline-offset-2"
+        // The ::after pad grows the hit area to a comfortable tap size without moving the text.
+        className="relative cursor-help underline decoration-fg-subtle/60 decoration-dotted underline-offset-4 after:absolute after:-inset-x-1 after:-inset-y-2 after:content-[''] focus-visible:outline-offset-2"
       >
         {children}
         <span className="sr-only">: {text}</span>
@@ -20,7 +21,7 @@ export function Hint({ children, text, className }: { children: React.ReactNode;
       <span
         aria-hidden
         role="presentation"
-        className="pointer-events-none z-30 hidden animate-enter-fade rounded-xl border border-line/12 bg-raised px-3.5 py-2.5 text-left text-caption font-normal normal-case tracking-normal text-fg-muted shadow-[0_16px_40px_-16px_rgb(0_0_0/0.7)] [animation-duration:150ms] group-focus-within/hint:block group-hover/hint:block max-sm:fixed max-sm:inset-x-4 max-sm:bottom-4 sm:absolute sm:bottom-full sm:left-0 sm:mb-2 sm:w-64"
+        className="pointer-events-none z-30 hidden animate-enter-fade rounded-xl border border-line/12 bg-raised px-3.5 py-2.5 text-left text-caption font-normal normal-case tracking-normal text-fg-muted shadow-[0_16px_40px_-16px_rgb(var(--shadow))] [animation-duration:150ms] group-focus-within/hint:block group-hover/hint:block max-sm:fixed max-sm:inset-x-4 max-sm:bottom-4 sm:absolute sm:bottom-full sm:left-0 sm:mb-2 sm:w-64"
       >
         {text}
       </span>

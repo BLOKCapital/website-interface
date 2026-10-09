@@ -3,31 +3,108 @@
 @tailwind utilities;
 
 /**
- * Night garden — BLOK Capital's theme. A deep green-black canvas that lets the
- * photographic Garden renders and the blue mark carry the colour; one leaf
- * accent; warm sand for emphasis. Tokens are R G B triplets for Tailwind's
- * alpha modifiers (tailwind.config.ts).
+ * BLOK Capital's two gardens. Tokens are R G B triplets for Tailwind's alpha
+ * modifiers (tailwind.config.ts), so every utility follows whichever set is
+ * in scope.
+ *
+ * Day garden (default): a warm, faintly green paper that lets the
+ * photographic Garden renders and the blue mark carry the colour; one deep
+ * leaf accent; bronze for the italic payoff. Every foreground token is
+ * >= 4.5:1 on every surface token (measured).
  */
-:root {
+:root,
+.theme-light {
+  color-scheme: light;
+
+  --canvas: 247 248 244;    /* #F7F8F4 page */
+  --surface: 239 242 236;   /* #EFF2EC alternate section band */
+  --card: 255 255 255;      /* #FFFFFF cards */
+  --raised: 236 240 234;    /* #ECF0EA inputs, nested cards, hover, skeletons */
+  --line: 17 26 21;         /* hairlines, always with alpha */
+
+  --fg: 17 26 21;           /* #111A15 16.6:1 */
+  --fg-muted: 67 80 73;     /* #435049 7.9:1 */
+  --fg-subtle: 92 105 98;   /* #5C6962 5.4:1 */
+
+  --leaf: 33 112 70;        /* #217046 accent, CTAs, positive */
+  --leaf-deep: 26 92 57;    /* #1A5C39 fills behind leaf */
+  --leaf-hover: 26 92 57;   /* primary button hover */
+  --sand: 138 103 38;       /* #8A6726 warm emphasis (bronze on paper) */
+  --bloom: 178 58 98;       /* #B23A62 "in progress" state */
+  --cobalt: 37 99 196;      /* #2563C4 data / info, echoes the logo */
+  --danger: 190 62 40;      /* #BE3E28 losses, risks */
+  --caution: 140 98 10;     /* #8C620A warnings */
+
+  --glow: 120 200 150;      /* soft garden glow behind renders */
+  --shadow: 17 26 21 / 0.16;
+  /* Side faces of isometric plates (LayerStack): darker than any surface. */
+  --plate-l: 222 228 220;
+  --plate-r: 208 215 206;
+  /* Effect strengths. On paper a low-alpha accent turns grey, so glows,
+     decorative accent lines and scan sweeps run stronger than on night. */
+  --fx-glow: 0.34;
+  --fx-line: 0.8;
+  --fx-sweep: 0.16;
+  /* Monochrome partner logos: black on paper. */
+  --logo-filter: grayscale(1) brightness(0);
+}
+
+/**
+ * Night garden: the dark theme, kept for the components that read best on
+ * black (the announcement bar, the price tape, consoles, the featured tile,
+ * the closing call to action and the footer). Add .theme-dark to a band or a
+ * component; it re-declares every token, so everything inside, including
+ * canvases (they read colours from their own element), renders dark. Bands
+ * that should also flip the sticky header carry data-band="dark".
+ */
+.theme-dark {
   color-scheme: dark;
 
-  --canvas: 9 13 11;        /* #090D0B page */
-  --surface: 15 21 18;      /* #0F1512 alternate section band */
-  --card: 21 29 25;         /* #151D19 cards */
-  --raised: 27 37 32;       /* #1B2520 inputs, nested cards, hover */
-  --line: 236 241 237;      /* hairlines, always with alpha */
+  --canvas: 9 13 11;        /* #090D0B */
+  --surface: 15 21 18;      /* #0F1512 */
+  --card: 21 29 25;         /* #151D19 */
+  --raised: 27 37 32;       /* #1B2520 */
+  --line: 236 241 237;
 
   --fg: 236 241 237;        /* #ECF1ED 17:1 */
   --fg-muted: 170 182 175;  /* #AAB6AF 9:1 */
   --fg-subtle: 138 152 143; /* #8A988F 6.5:1 */
 
-  --leaf: 143 214 168;      /* #8FD6A8 accent, CTAs, positive */
-  --leaf-deep: 63 138 95;   /* #3F8A5F fills behind leaf */
-  --sand: 230 216 188;      /* #E6D8BC warm emphasis */
-  --bloom: 240 163 180;     /* #F0A3B4 "in progress" state */
-  --cobalt: 125 180 255;    /* #7DB4FF data / info, echoes the logo */
-  --danger: 242 145 127;    /* #F2917F losses, risks */
-  --caution: 227 192 122;   /* #E3C07A warnings */
+  --leaf: 143 214 168;      /* #8FD6A8 */
+  --leaf-deep: 63 138 95;   /* #3F8A5F */
+  --leaf-hover: 170 226 189;
+  --sand: 230 216 188;      /* #E6D8BC */
+  --bloom: 240 163 180;     /* #F0A3B4 */
+  --cobalt: 125 180 255;    /* #7DB4FF */
+  --danger: 242 145 127;    /* #F2917F */
+  --caution: 227 192 122;   /* #E3C07A */
+
+  --glow: 143 214 168;
+  --shadow: 0 0 0 / 0.6;
+  --plate-l: 27 37 32;
+  --plate-r: 15 21 18;
+  --fx-glow: 0.18;
+  --fx-line: 0.5;
+  --fx-sweep: 0.09;
+  --logo-filter: grayscale(1) brightness(0) invert(1);
+}
+
+/* Text inherits as a computed colour, so each scope sets its own. In the
+   base layer, so a text utility on the same element still wins. */
+@layer base {
+  .theme-dark,
+  .theme-light {
+    color: rgb(var(--fg));
+  }
+}
+
+:root {
+  /* Motion tokens (Tailwind: duration-fast/base/slow, ease-expo/inout). */
+  --dur-fast: 150ms;
+  --dur-base: 300ms;
+  --dur-slow: 600ms;
+  --ease-expo: cubic-bezier(0.16, 1, 0.3, 1);
+  --ease-inout: cubic-bezier(0.65, 0, 0.35, 1);
 }
 
 html {
@@ -55,9 +132,16 @@ body {
 }
 
 @layer components {
-  /* Small uppercase label above headings. */
+  /* Small uppercase label above headings, set like a code comment: the
+     protocol is software, and the "//" says so. The slashes are decoration,
+     so screen readers get empty alt text for them. */
   .eyebrow {
-    @apply font-sans text-eyebrow font-semibold uppercase text-leaf;
+    @apply font-mono text-eyebrow font-normal uppercase text-leaf;
+  }
+  .eyebrow::before {
+    content: "// ";
+    content: "// " / "";
+    color: rgb(var(--leaf) / 0.5);
   }
   /* Serif display type. */
   .display {
@@ -71,7 +155,7 @@ body {
   }
   /* A soft garden glow behind renders; purely decorative. */
   .glow-leaf {
-    background: radial-gradient(closest-side, rgb(var(--leaf) / 0.18), transparent);
+    background: radial-gradient(closest-side, rgb(var(--glow) / var(--fx-glow)), transparent);
   }
   /* Faint grid used behind diagrams and the hero. */
   .grid-lines {
@@ -79,6 +163,139 @@ body {
       linear-gradient(rgb(var(--line) / 0.045) 1px, transparent 1px),
       linear-gradient(90deg, rgb(var(--line) / 0.045) 1px, transparent 1px);
     background-size: 56px 56px;
+  }
+  /* A "+" registration mark, like the corners of an engineering drawing
+     (components/motion/CornerMarks.tsx places them). */
+  .corner-mark {
+    width: 11px;
+    height: 11px;
+    color: rgb(var(--line) / 0.32);
+    background:
+      linear-gradient(currentColor, currentColor) center / 1px 100% no-repeat,
+      linear-gradient(currentColor, currentColor) center / 100% 1px no-repeat;
+  }
+  /* Monitor texture: faint horizontal scanlines plus one slow sweep. Put it on
+     an absolutely positioned, aria-hidden layer. */
+  .scanlines {
+    background-image: repeating-linear-gradient(
+      to bottom,
+      rgb(var(--line) / 0.025) 0 1px,
+      transparent 1px 4px
+    );
+  }
+  .scanlines::after {
+    content: "";
+    position: absolute;
+    inset-inline: 0;
+    top: 0;
+    height: 30%;
+    background: linear-gradient(to bottom, transparent, rgb(var(--glow) / calc(var(--fx-sweep) * 0.55)) 85%, rgb(var(--glow) / var(--fx-sweep)));
+    transform: translate3d(0, -100%, 0);
+    animation: scanSweep 7s linear infinite;
+  }
+  /* Diagonal light passing over a featured card on hover. */
+  .sheen {
+    isolation: isolate;
+  }
+  .sheen::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    z-index: -1;
+    border-radius: inherit;
+    background: linear-gradient(115deg, transparent 35%, rgb(var(--leaf) / 0.07) 50%, transparent 65%);
+    background-size: 250% 100%;
+    background-position: 120% 0;
+    transition: background-position 900ms var(--ease-expo);
+    pointer-events: none;
+  }
+  .sheen:hover::after {
+    background-position: -20% 0;
+  }
+}
+
+@keyframes scanSweep {
+  to { transform: translate3d(0, 340%, 0); }
+}
+/* A word rising out of a slight blur. */
+@keyframes wordIn {
+  from { opacity: 0; transform: translate3d(0, 0.4em, 0); filter: blur(6px); }
+}
+
+/* An announcement the visitor dismissed stays dismissed (RevealScript sets
+   the attribute before first paint, so it never flashes). */
+html[data-bar="hidden"] #announce {
+  display: none;
+}
+
+/* ---------- Word reveals (components/motion/SplitText.tsx) ---------------
+   Headings split into word spans. Section titles rise word by word out of a
+   slight blur when they enter the viewport (driven by RevealScript, so no
+   client JS); hero titles do the same on load. Words are only hidden under
+   html.js with motion allowed, so they're always readable otherwise. */
+.split-word {
+  display: inline-block;
+}
+@media (prefers-reduced-motion: no-preference) {
+  [data-split] .split-word {
+    transition:
+      opacity 650ms var(--ease-expo),
+      transform 900ms var(--ease-expo),
+      filter 700ms var(--ease-expo);
+    transition-delay: min(calc(var(--w, 0) * 45ms), 650ms);
+  }
+  html.js [data-split]:not([data-revealed]) .split-word {
+    opacity: 0;
+    transform: translate3d(0, 0.4em, 0);
+    filter: blur(6px);
+  }
+  .split-load .split-word {
+    animation: wordIn 900ms var(--ease-expo) both;
+    animation-delay: calc(var(--split-delay, 80ms) + var(--w, 0) * 55ms);
+  }
+}
+
+/* ---------- Scroll ink (components/motion/ScrollInk.tsx) -----------------
+   Each word darkens from subtle to full ink as the paragraph scrolls through
+   the viewport, tied to scroll position by a CSS view timeline. It starts
+   at --fg-subtle (6.5:1), so the text is readable before it inks, and it's
+   plain static text in browsers without scroll timelines. */
+@supports (animation-timeline: view()) {
+  @media (prefers-reduced-motion: no-preference) {
+    .ink-scope {
+      view-timeline-name: --ink;
+    }
+    .ink-scope .ink-word {
+      animation: inkIn linear both;
+      animation-timeline: --ink;
+      animation-range:
+        cover calc(14% + var(--w) / var(--n) * 30%)
+        cover calc(20% + var(--w) / var(--n) * 30%);
+    }
+  }
+}
+@keyframes inkIn {
+  from { color: rgb(var(--fg-subtle) / 0.75); }
+}
+
+/* ---------- Disclosures that open smoothly -------------------------------
+   Native <details> keeps keyboard and no-JS support; where the browser can
+   animate to height:auto, the answer slides open instead of popping. */
+@supports selector(::details-content) {
+  @media (prefers-reduced-motion: no-preference) {
+    details.smooth {
+      interpolate-size: allow-keywords;
+    }
+    details.smooth::details-content {
+      height: 0;
+      overflow: clip;
+      transition:
+        height var(--dur-base) var(--ease-expo),
+        content-visibility var(--dur-base) allow-discrete;
+    }
+    details.smooth[open]::details-content {
+      height: auto;
+    }
   }
 }
 
@@ -175,5 +392,229 @@ body {
     animation-delay: 0s !important;
     transition-duration: 0.001ms !important;
     scroll-behavior: auto !important;
+  }
+}
+
+/* ---------- Product art (components/home/products/ProductArt.tsx) -------
+   Looping pictures on the product tiles. The base (non-animated) styles are
+   the still frame shown under reduced motion, so each one still reads. */
+.art-drift {
+  animation: artDrift 6s var(--ease-expo) infinite;
+}
+@keyframes artDrift {
+  0%, 10% { transform: translate(0, 0); box-shadow: 0 0 0 0 rgb(var(--caution) / 0); }
+  40%, 50% { transform: translate(var(--dx), var(--dy)); box-shadow: 0 0 0 3px rgb(var(--caution) / 0.75); }
+  62%, 100% { transform: translate(0, 0); box-shadow: 0 0 0 0 rgb(var(--caution) / 0); }
+}
+.art-pulse {
+  opacity: 0;
+  animation: artPulse 6s ease-out infinite;
+}
+@keyframes artPulse {
+  0%, 50% { transform: scale(1); opacity: 0; }
+  52% { transform: scale(1); opacity: 0.9; }
+  82%, 100% { transform: scale(2.8); opacity: 0; }
+}
+.art-flag {
+  animation: artFlag 6s var(--ease-expo) infinite;
+}
+@keyframes artFlag {
+  0%, 36% { opacity: 0; translate: 0 6px; }
+  44%, 74% { opacity: 1; translate: 0 0; }
+  84%, 100% { opacity: 0; translate: 0 0; }
+}
+.art-route {
+  opacity: 0.25;
+  animation:
+    artRoute 8s ease-in-out infinite both,
+    artDash 1.2s linear infinite;
+}
+@keyframes artRoute {
+  0% { opacity: 0; }
+  4%, 22% { opacity: 1; }
+  28%, 100% { opacity: 0; }
+}
+@keyframes artDash {
+  from { stroke-dashoffset: 20; }
+  to { stroke-dashoffset: 0; }
+}
+.art-chip {
+  animation: artChip 8s ease-in-out infinite both;
+}
+@keyframes artChip {
+  0%, 28%, 100% { border-color: rgb(var(--line) / 0.1); box-shadow: 0 0 0 0 rgb(var(--cobalt) / 0); }
+  4%, 22% { border-color: rgb(var(--cobalt) / 0.5); box-shadow: 0 10px 24px -14px rgb(var(--cobalt) / 0.7); }
+}
+.art-spin {
+  animation: artSpin 30s linear infinite;
+}
+@keyframes artSpin {
+  to { transform: rotate(360deg); }
+}
+.art-dot {
+  transform-box: fill-box;
+  transform-origin: center;
+  animation: artDot 6s var(--ease-expo) infinite both;
+}
+@keyframes artDot {
+  0% { opacity: 0; transform: scale(0.2); }
+  8%, 72% { opacity: 1; transform: scale(1); }
+  86%, 100% { opacity: 0; transform: scale(1); }
+}
+/* Access toggle: granted (knob right, leaf) is the resting state. */
+.art-knob {
+  transform: translateX(16px);
+  animation: artKnob 6s var(--ease-expo) infinite;
+}
+@keyframes artKnob {
+  0%, 55%, 100% { transform: translateX(16px); }
+  62%, 92% { transform: translateX(0); }
+}
+.art-switch {
+  animation: artSwitch 6s var(--ease-expo) infinite;
+}
+@keyframes artSwitch {
+  0%, 55%, 100% { background-color: rgb(var(--leaf) / 0.8); }
+  62%, 92% { background-color: rgb(var(--line) / 0.22); }
+}
+.art-on {
+  animation: artOn 6s ease infinite;
+}
+.art-off {
+  opacity: 0;
+  animation: artOff 6s ease infinite;
+}
+@keyframes artOn {
+  0%, 55%, 97%, 100% { opacity: 1; }
+  60%, 92% { opacity: 0; }
+}
+@keyframes artOff {
+  0%, 55%, 97%, 100% { opacity: 0; }
+  60%, 92% { opacity: 1; }
+}
+
+/* ---------- Basket orbit (components/indices/BasketOrbit.tsx) -----------
+   The token rings turn slowly; each logo counter-turns so it stays upright.
+   Both pause while the pointer is over the basket, so tokens are easy to
+   click. Still under reduced motion. */
+.orbit-spin {
+  animation: orbitTurn 160s linear infinite;
+}
+.orbit-counter {
+  animation: orbitTurn 160s linear infinite reverse;
+}
+.orbit:hover .orbit-spin,
+.orbit:hover .orbit-counter {
+  animation-play-state: paused;
+}
+@keyframes orbitTurn {
+  to { transform: rotate(360deg); }
+}
+
+/* ---------- Product stack (components/protocol/ProductStack.tsx) ---------
+   Sticky deck on wide screens: as each next card slides up, the one under it
+   eases back. Driven by the next card's view timeline (shared through
+   timeline-scope), so it needs no JS; without scroll timelines the cards
+   still stack, just without the easing back. */
+@supports (animation-timeline: view()) {
+  @media (prefers-reduced-motion: no-preference) and (min-width: 1024px) {
+    .pstack {
+      timeline-scope: --pstack-2, --pstack-3;
+    }
+    .pstack > :nth-child(2) {
+      view-timeline-name: --pstack-2;
+    }
+    .pstack > :nth-child(3) {
+      view-timeline-name: --pstack-3;
+    }
+    .pstack > :nth-child(1),
+    .pstack > :nth-child(2) {
+      transform-origin: 50% 0;
+      animation: pstackRecede linear both;
+      animation-range: entry 10% entry 100%;
+    }
+    .pstack > :nth-child(1) {
+      animation-timeline: --pstack-2;
+    }
+    .pstack > :nth-child(2) {
+      animation-timeline: --pstack-3;
+    }
+  }
+}
+/* Dim with a filter, not opacity: cards stay opaque, so nothing behind shows through. */
+@keyframes pstackRecede {
+  to { transform: scale(0.94); filter: brightness(0.86); }
+}
+
+/* ---------- Mobile menu (components/nav/MobileMenu.tsx) ------------------
+   Opens as a circle growing from the menu button (top right), then each
+   group eases in. Closing reverses it; visibility flips only once the
+   circle has shrunk away. */
+.mobile-sheet {
+  clip-path: circle(0px at calc(100% - 40px) 44px);
+  visibility: hidden;
+  transition:
+    clip-path 500ms var(--ease-expo),
+    visibility 0s linear 500ms;
+}
+.mobile-sheet.is-open {
+  clip-path: circle(160% at calc(100% - 40px) 44px);
+  visibility: visible;
+  transition: clip-path 700ms var(--ease-expo);
+}
+.mobile-sheet .sheet-item {
+  opacity: 0;
+  transform: translate3d(0, 14px, 0);
+  transition:
+    opacity 300ms ease,
+    transform 500ms var(--ease-expo);
+}
+.mobile-sheet.is-open .sheet-item {
+  opacity: 1;
+  transform: none;
+  transition-delay: calc(140ms + var(--d, 0ms));
+}
+
+/* ---------- Drawn marks (components/about/Principles.tsx) ----------------
+   Line icons that draw themselves in when their reveal group enters the
+   viewport, staggered by item (--i, set by RevealScript). Drawn by default:
+   hidden only under html.js with motion allowed, before the reveal. */
+.draw-path {
+  stroke-dasharray: 1;
+  stroke-dashoffset: 0;
+}
+@media (prefers-reduced-motion: no-preference) {
+  .draw-path {
+    transition: stroke-dashoffset 1.4s var(--ease-expo);
+    transition-delay: calc(250ms + var(--i, 0) * 120ms);
+  }
+  html.js [data-reveal-group]:not([data-revealed]) .draw-path {
+    stroke-dashoffset: 1;
+  }
+}
+
+/* ---------- Page changes (app/template.tsx) ------------------------------
+   After a client-side navigation the new page eases in. Fill mode
+   "backwards" leaves no transform behind once it ends, so sticky and fixed
+   elements inside the page behave normally. */
+@media (prefers-reduced-motion: no-preference) {
+  .page-enter {
+    animation: pageEnter 520ms var(--ease-expo) backwards;
+  }
+}
+@keyframes pageEnter {
+  from { opacity: 0; transform: translate3d(0, 14px, 0); }
+}
+
+/* ---------- Meters (components/governance/ProposalBoard.tsx) -------------
+   Bars fill from the left when their card reveals (RevealScript), staggered
+   with the card. Full width without JS or with reduced motion. */
+@media (prefers-reduced-motion: no-preference) {
+  .meter-fill {
+    transition: transform 1.1s var(--ease-expo);
+    transition-delay: calc(200ms + var(--i, 0) * 90ms);
+  }
+  html.js [data-reveal-group]:not([data-revealed]) .meter-fill {
+    transform: scaleX(0);
   }
 }

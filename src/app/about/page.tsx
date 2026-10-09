@@ -8,6 +8,7 @@ import { Reveal, Stagger, RevealItem } from "@/components/ui/Reveal";
 import { ExternalIcon } from "@/components/ui/icons";
 import { ProductVideo } from "@/components/about/ProductVideo";
 import { TeamPhoto } from "@/components/about/TeamPhoto";
+import { Principles } from "@/components/about/Principles";
 import { RoadmapTimeline, roadmapUpdated } from "@/components/roadmap/Roadmap";
 import { JsonLd } from "@/components/seo/JsonLd";
 import { breadcrumbSchema } from "@/lib/seo/schema";
@@ -96,18 +97,8 @@ export default function AboutPage() {
         </Reveal>
       </Section>
 
-      <Section id="values" eyebrow="Principles" title="What we won't trade away.">
-        <Stagger as="ul" className="grid gap-5 sm:grid-cols-2 lg:grid-cols-4">
-          {values.map((v) => (
-            <RevealItem as="li" key={v.title}>
-              <Card className="flex h-full flex-col">
-                <h3 className="display text-h3 text-fg">{v.title}</h3>
-                <p className="mt-3 flex-1 text-[15px] text-fg-muted">{v.body}</p>
-                <p className="mt-6 border-t border-line/[0.08] pt-4 text-caption text-leaf">{v.where}</p>
-              </Card>
-            </RevealItem>
-          ))}
-        </Stagger>
+      <Section id="values" tone="dark" eyebrow="Principles" title="What we won't trade away.">
+        <Principles items={values} />
       </Section>
 
       <Section

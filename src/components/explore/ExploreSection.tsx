@@ -1,7 +1,6 @@
 import { Section } from "@/components/ui/Section";
 import { Reveal } from "@/components/ui/Reveal";
 import { ProtocolExplorer, type ExploreStep } from "./ProtocolExplorer";
-import { NetworkPulse } from "@/components/live/NetworkPulse";
 import { links } from "@/lib/data/socials";
 import { sources } from "@/lib/data/indices";
 
@@ -61,7 +60,6 @@ const steps: ExploreStep[] = [
       { k: "Sanity band", v: "±10% vs average" },
     ],
     link: { label: "IndexComponentRegistry.sol", href: sources.componentRegistry },
-    extra: <NetworkPulse />,
   },
   {
     id: "rebalance",
@@ -95,7 +93,6 @@ export function ExploreSection() {
   return (
     <Section
       id="explore"
-      tone="surface"
       eyebrow="Explore the protocol"
       title={
         <>

@@ -23,7 +23,7 @@ export function CopyButton({ value, label = "Copy", className }: { value: string
         }
       }}
       className={cn(
-        "inline-flex items-center gap-1.5 rounded-md border border-line/12 px-2 py-1 font-sans text-[11.5px] text-fg-muted transition-colors hover:border-leaf/40 hover:text-fg",
+        "inline-flex min-h-8 items-center gap-1.5 rounded-md border border-line/12 px-2.5 py-1 font-sans text-[12px] text-fg-muted transition-colors hover:border-leaf/40 hover:text-fg",
         state === "copied" && "border-leaf/40 text-leaf",
         className,
       )}

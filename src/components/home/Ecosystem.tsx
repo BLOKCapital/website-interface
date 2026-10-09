@@ -7,7 +7,8 @@ import { ecosystem, otherChains } from "@/lib/data/ecosystem";
 /**
  * Ecosystem map: grouped by the job each project does in a Garden, each
  * tile linking to the code or docs that proves it. Logos render monochrome
- * so mixed brand colours read as one calm system; hover restores colour.
+ * (black on the light theme, white on the dark) so mixed brand colours read
+ * as one calm system; hover restores colour.
  */
 export function Ecosystem() {
   return (
@@ -46,7 +47,7 @@ export function Ecosystem() {
                             fill
                             sizes="112px"
                             unoptimized
-                            className="object-contain object-left opacity-80 transition-[filter,opacity] duration-300 [filter:grayscale(1)_brightness(0)_invert(1)] group-hover/e:opacity-100 group-hover/e:[filter:none]"
+                            className="object-contain object-left opacity-80 transition-[filter,opacity] duration-300 [filter:var(--logo-filter)] group-hover/e:opacity-100 group-hover/e:[filter:none]"
                             style={{ transform: `scale(${it.scale ?? 1})`, transformOrigin: "left center" }}
                           />
                         </span>

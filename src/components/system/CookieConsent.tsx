@@ -141,7 +141,7 @@ export function CookieConsent() {
         <aside
           role="region"
           aria-labelledby="cookie-banner-title"
-          className="fixed inset-x-3 bottom-3 z-[55] animate-enter-up rounded-2xl border border-line/12 bg-card/95 shadow-[0_24px_60px_-20px_rgb(0_0_0/0.7)] backdrop-blur-xl sm:inset-x-auto sm:right-5 sm:bottom-5 sm:max-w-md"
+          className="fixed inset-x-3 bottom-3 z-[55] animate-enter-up rounded-2xl border border-line/12 bg-card/95 shadow-[0_24px_60px_-20px_rgb(var(--shadow))] backdrop-blur-xl sm:inset-x-auto sm:right-5 sm:bottom-5 sm:max-w-md"
           style={{ animationDelay: "600ms" }}
         >
           <div className="p-5 pb-[max(1.25rem,env(safe-area-inset-bottom))]">
@@ -181,7 +181,7 @@ export function CookieConsent() {
               aria-labelledby="cookie-panel-title"
               aria-describedby="cookie-panel-desc"
               tabIndex={-1}
-              className="relative flex max-h-[86vh] w-full max-w-lg animate-enter-up flex-col overflow-hidden rounded-2xl border border-line/12 bg-card shadow-[0_40px_90px_-30px_rgb(0_0_0/0.8)] focus:outline-none"
+              className="relative flex max-h-[86vh] w-full max-w-lg animate-enter-up flex-col overflow-hidden rounded-2xl border border-line/12 bg-card shadow-[0_40px_90px_-30px_rgb(var(--shadow))] focus:outline-none"
             >
               <div className="flex items-start justify-between gap-4 border-b border-line/[0.08] px-6 pb-5 pt-6">
                 <div>

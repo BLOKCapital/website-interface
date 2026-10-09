@@ -23,7 +23,7 @@ export function Card({
       rel={external ? "noopener noreferrer" : undefined}
       className={cn(
         surface,
-        "group/card block transition-[border-color,background-color,transform] duration-300 ease-out hover:-translate-y-0.5 hover:border-leaf/30 hover:bg-raised",
+        "group/card block transition-[border-color,background-color,transform] duration-base ease-expo hover:-translate-y-0.5 hover:border-leaf/30 hover:bg-raised",
         className,
       )}
     >

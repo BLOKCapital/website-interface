@@ -14,6 +14,14 @@ export type ProposalView = {
   statusLabel: string;
   /** Voting end date, e.g. "1 Sept 2026"; empty if unknown. */
   endLabel: string;
+  /** Voting start date, same format; empty if unknown. */
+  startLabel: string;
+  /** Voting end as ms since epoch (0 if unknown), for ordering. */
+  endTs: number;
+  /** The proposal's own summary text, trimmed; may be empty. */
+  summary: string;
+  /** Full address of the account that created it; empty if unknown. */
+  creator: string;
   active: boolean;
   passing: boolean;
 };
@@ -37,6 +45,9 @@ type RawProposal = {
   abstain: string;
   total_voting_power: string;
   synced_at?: string;
+  start_date?: string;
+  summary?: string;
+  creator?: string;
 };
 
 const ENDPOINT = "https://worker-governance.sn-75f.workers.dev/proposals";
@@ -63,6 +74,7 @@ function toSnapshot(raw: RawProposal[]): GovernanceSnapshot {
     const abstain = BigInt(p.abstain || "0");
     const forPct = pct(yes, yes + no);
     const end = Date.parse(p.end_date);
+    const start = Date.parse(p.start_date ?? "");
     return {
       id: shortAddress(p.id),
       index: p.proposal_index ?? p.id.split("-").pop() ?? "",
@@ -71,10 +83,16 @@ function toSnapshot(raw: RawProposal[]): GovernanceSnapshot {
       turnoutPct: pct(yes + no + abstain, BigInt(p.total_voting_power || "0")),
       statusLabel: statusLabel(p),
       endLabel: Number.isFinite(end) ? dateFmt.format(end) : "",
+      startLabel: Number.isFinite(start) ? dateFmt.format(start) : "",
+      endTs: Number.isFinite(end) ? end : 0,
+      summary: (p.summary ?? "").trim(),
+      creator: p.creator ?? "",
       active: Boolean(p.active),
       passing: forPct >= 50,
     };
   });
+  // Newest first.
+  proposals.sort((a, b) => b.endTs - a.endTs);
   const latest = Math.max(...raw.map((p) => Date.parse(p.synced_at ?? "")).filter(Number.isFinite));
   return { proposals, syncedLabel: Number.isFinite(latest) ? dateTimeFmt.format(latest) : null };
 }

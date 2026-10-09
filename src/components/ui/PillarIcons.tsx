@@ -97,7 +97,12 @@ const map: Record<Pillar["id"], React.FC> = {
   "open-source": OpenSourceIcon,
 };
 
+/** The pillar's icon on a leaf-tinted tile, so its accent reads on either theme. */
 export function PillarIcon({ id }: { id: Pillar["id"] }) {
   const C = map[id];
-  return <C />;
+  return (
+    <span className="grid size-12 shrink-0 place-items-center rounded-2xl border border-leaf/25 bg-leaf/[0.07] text-fg-muted [&_svg]:text-current">
+      <C />
+    </span>
+  );
 }

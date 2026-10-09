@@ -1,9 +1,11 @@
 import Link from "next/link";
+import { SplitText } from "@/components/motion/SplitText";
+import { CornerMarks } from "@/components/motion/CornerMarks";
 
 /**
  * Inner-page header: breadcrumb, h1, lede, optional actions and aside. The
- * entrance is pure CSS, so it paints with the HTML instead of after
- * hydration. Pair with breadcrumbSchema() JSON-LD on the page.
+ * entrance is pure CSS (the h1 rises word by word), so it paints with the
+ * HTML instead of after hydration. Pair with breadcrumbSchema() JSON-LD on the page.
  */
 export function PageHero({
   crumb,
@@ -28,6 +30,7 @@ export function PageHero({
     <section className="relative overflow-hidden border-b border-line/[0.07]">
       <div aria-hidden className="grid-lines pointer-events-none absolute inset-0 [mask-image:radial-gradient(ellipse_at_top,black,transparent_70%)]" />
       <div aria-hidden className="glow-leaf pointer-events-none absolute -top-40 left-1/2 h-[520px] w-[900px] -translate-x-1/2 opacity-60" />
+      <CornerMarks only="bottom" />
       <div className="relative mx-auto grid w-full max-w-page gap-12 px-5 pb-16 pt-32 sm:px-8 sm:pb-20 sm:pt-40 lg:grid-cols-12 lg:items-end">
         <div className="lg:col-span-8">
           <nav aria-label="Breadcrumb" className="animate-enter-fade">
@@ -58,9 +61,9 @@ export function PageHero({
               {eyebrow}
             </p>
           )}
-          <h1 className="display mt-4 animate-enter-up text-h1 text-balance text-fg" style={{ animationDelay: "120ms" }}>
+          <SplitText as="h1" reveal="load" delay={120} className="display mt-4 text-h1 text-balance text-fg">
             {title}
-          </h1>
+          </SplitText>
           <p className="mt-6 max-w-2xl animate-enter-up text-lead text-fg-muted" style={{ animationDelay: "200ms" }}>
             {description}
           </p>

@@ -10,6 +10,7 @@ import { HappeningNow } from "@/components/home/HappeningNow";
 import { BuiltInOpen } from "@/components/home/BuiltInOpen";
 import { ExploreSection } from "@/components/explore/ExploreSection";
 import { Ecosystem } from "@/components/home/Ecosystem";
+import { RulesSection } from "@/components/home/RulesSection";
 import { Section } from "@/components/ui/Section";
 import { Button } from "@/components/ui/Button";
 import { FaqList } from "@/components/ui/FaqList";
@@ -18,7 +19,6 @@ import { RoadmapNowNext, roadmapUpdated } from "@/components/roadmap/Roadmap";
 import { JsonLd } from "@/components/seo/JsonLd";
 import { serviceSchema, softwareApplicationSchema } from "@/lib/seo/schema";
 import { getGovernance } from "@/lib/data/proposals";
-import { getGithub } from "@/lib/data/github";
 import { faqs } from "@/lib/data/faqs";
 
 export const metadata: Metadata = {
@@ -30,11 +30,12 @@ export const metadata: Metadata = {
 /**
  * Home, in the order a newcomer asks: what is it → the facts → why does it
  * exist → how does it work → what can I do → what are the indices → what's
- * under the hood → what's happening right now → is it safe → what is it built
- * on → who builds it → where is it going → questions → how do I join.
+ * under the hood → what do the rules actually stop → what's happening right
+ * now → is it safe → what is it built on → who builds it → where is it going
+ * → questions → how do I join.
  */
 export default async function HomePage() {
-  const [governance, github] = await Promise.all([getGovernance(), getGithub()]);
+  const governance = await getGovernance();
   return (
     <>
       <JsonLd data={[serviceSchema(), softwareApplicationSchema()]} />
@@ -45,13 +46,13 @@ export default async function HomePage() {
       <Products />
       <IndicesSection />
       <ExploreSection />
+      <RulesSection />
       <HappeningNow governance={governance} />
       <SecurityPillars />
       <Ecosystem />
-      <BuiltInOpen github={github} />
+      <BuiltInOpen />
       <Section
         id="roadmap"
-        tone="surface"
         eyebrow="Roadmap"
         title={
           <>
@@ -65,6 +66,7 @@ export default async function HomePage() {
       </Section>
       <Section
         id="faq"
+        tone="surface"
         eyebrow="FAQ"
         title="Questions, answered."
         actions={<Button href="/contact#faq" variant="secondary">All questions</Button>}

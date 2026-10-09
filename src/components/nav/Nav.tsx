@@ -5,25 +5,30 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { Logo } from "@/components/ui/Logo";
 import { Button } from "@/components/ui/Button";
-import { SocialLinks } from "@/components/ui/SocialLinks";
-import { CrossIcon, DiscordIcon, ExternalIcon, MenuIcon } from "@/components/ui/icons";
-import { primaryNav } from "@/lib/nav";
-import { CommandMenu } from "./CommandMenu";
+import { DiscordIcon } from "@/components/ui/icons";
+import { AnnouncementBar } from "./AnnouncementBar";
+import { DesktopNav } from "./DesktopNav";
+import { MobileMenu } from "./MobileMenu";
 import { social } from "@/lib/data/socials";
-import { useScrolled } from "@/lib/hooks";
+import { useOverDarkBand, useScrolled } from "@/lib/hooks";
+import { prefersReducedMotion } from "@/lib/motion";
 import { cn } from "@/lib/utils";
 
-const isCurrent = (href: string, path: string | null) =>
-  !!path && (path === href || path.startsWith(`${href}/`));
-
 /**
- * Sticky header. Transparent over the hero, solid once scrolled. Below lg
- * the links move into a sheet that is `inert` while closed (so it's out of
- * the tab order), closes on Escape and on navigation, and locks page scroll.
+ * The header. At the top of a page it's a bar sitting on the hero; once you
+ * scroll it becomes a floating frosted pill and the announcement bar folds
+ * away. Either way it sits on the page's container, so the logo and the
+ * Discord button line up with the content below. Clicking the logo on the
+ * home page glides back to the top. Over a dark band it turns
+ * dark with it. Desktop menus live in DesktopNav; below lg a full-screen
+ * sheet (MobileMenu) that closes on Escape and on navigation and locks
+ * page scroll while open.
  */
 export function Nav() {
   const pathname = usePathname();
   const scrolled = useScrolled(8);
+  // Over a dark band, the header turns dark with it (closed menu only).
+  const overDark = useOverDarkBand(40);
   const [open, setOpen] = useState(false);
   const buttonRef = useRef<HTMLButtonElement>(null);
 
@@ -51,114 +56,56 @@ export function Nav() {
     };
   }, [open]);
 
-  const solid = scrolled || open;
+  // Already home: glide to the top instead of re-navigating to the same page.
+  const onLogo = (e: React.MouseEvent) => {
+    if (pathname !== "/" || e.metaKey || e.ctrlKey || e.shiftKey) return;
+    e.preventDefault();
+    setOpen(false);
+    window.scrollTo({ top: 0, behavior: prefersReducedMotion() ? "auto" : "smooth" });
+  };
 
   return (
-    <header
-      className={cn(
-        "fixed inset-x-0 top-0 z-50 border-b transition-[background-color,border-color] duration-300",
-        solid ? "border-line/[0.08] bg-canvas/85 backdrop-blur-xl" : "border-transparent",
-      )}
-    >
-      <div className="mx-auto flex h-16 w-full max-w-page items-center justify-between gap-6 px-5 sm:h-[72px] sm:px-8">
-        <Link href="/" aria-label="BLOK Capital, home" className="shrink-0 rounded-md">
-          <Logo />
-        </Link>
+    <header className={cn("fixed inset-x-0 top-0 z-50", overDark && !open && "theme-dark")}>
+      <AnnouncementBar collapsed={scrolled || open} />
+      <MobileMenu open={open} pathname={pathname} />
 
-        <nav aria-label="Primary" className="hidden lg:block">
-          <ul className="flex items-center gap-1">
-            {primaryNav.map((l) => {
-              const external = "external" in l;
-              const current = !external && isCurrent(l.href, pathname);
-              return (
-                <li key={l.href}>
-                  <Link
-                    href={l.href}
-                    target={external ? "_blank" : undefined}
-                    rel={external ? "noopener noreferrer" : undefined}
-                    aria-current={current ? "page" : undefined}
-                    className={cn(
-                      "inline-flex items-center gap-1 rounded-full px-3.5 py-2 text-[14.5px] transition-colors",
-                      current ? "bg-line/[0.07] text-fg" : "text-fg-muted hover:text-fg",
-                    )}
-                  >
-                    {l.label}
-                    {external && (
-                      <>
-                        <ExternalIcon size={11} className="opacity-60" />
-                        <span className="sr-only"> (opens in a new tab)</span>
-                      </>
-                    )}
-                  </Link>
-                </li>
-              );
-            })}
-          </ul>
-        </nav>
+      <div className={cn("relative mx-auto w-full max-w-page px-5 transition-[padding] duration-slow ease-expo sm:px-8", scrolled && "pt-3")}>
+        {/* Negative margins let the pill surface reach past the content
+            edges while the logo and buttons stay exactly on them. */}
+        <div
+          className={cn(
+            "-mx-3 flex items-center justify-between gap-4 border px-3 transition-[height,border-radius,background-color,border-color,box-shadow] duration-slow ease-expo sm:-mx-5 sm:px-5",
+            scrolled
+              ? "h-14 rounded-lg border-line/10 bg-canvas/[0.92] shadow-[0_14px_40px_-24px_rgb(var(--shadow))] backdrop-blur-xl"
+              : "h-16 rounded-[28px] border-transparent sm:h-[72px]",
+          )}
+        >
+          <Link href="/" aria-label="BLOK Capital, home" onClick={onLogo} className="shrink-0 rounded-md">
+            <Logo className={cn("transition-[height] duration-slow ease-expo", scrolled && "h-7 sm:h-7")} />
+          </Link>
 
-        <div className="flex items-center gap-2">
-          <CommandMenu />
-          <Button href={social("discord").href} size="sm" className="hidden sm:inline-flex">
-            <DiscordIcon size={15} /> Join Discord
-          </Button>
-          <button
-            ref={buttonRef}
-            type="button"
-            aria-expanded={open}
-            aria-controls="mobile-menu"
-            aria-label={open ? "Close menu" : "Open menu"}
-            onClick={() => setOpen((o) => !o)}
-            className="inline-flex size-11 items-center justify-center rounded-full border border-line/12 text-fg lg:hidden"
-          >
-            {open ? <CrossIcon size={18} /> : <MenuIcon />}
-          </button>
-        </div>
-      </div>
+          <DesktopNav pathname={pathname} />
 
-      {/* Mobile sheet */}
-      <div
-        id="mobile-menu"
-        inert={!open}
-        className={cn(
-          "grid overflow-hidden border-t border-line/[0.08] bg-canvas transition-[grid-template-rows,opacity] duration-300 lg:hidden",
-          open ? "grid-rows-[1fr] opacity-100" : "grid-rows-[0fr] border-transparent opacity-0",
-        )}
-      >
-        <div className="min-h-0">
-          <nav aria-label="Mobile" className="mx-auto max-w-page px-5 pb-8 pt-3 sm:px-8">
-            <ul>
-              {primaryNav.map((l) => {
-                const external = "external" in l;
-                const current = !external && isCurrent(l.href, pathname);
-                return (
-                  <li key={l.href} className="border-b border-line/[0.07]">
-                    <Link
-                      href={l.href}
-                      target={external ? "_blank" : undefined}
-                      rel={external ? "noopener noreferrer" : undefined}
-                      aria-current={current ? "page" : undefined}
-                      className={cn(
-                        "flex items-center justify-between py-4 text-[20px] display",
-                        current ? "text-leaf" : "text-fg",
-                      )}
-                    >
-                      {l.label}
-                      {external && <ExternalIcon size={14} className="text-fg-subtle" />}
-                    </Link>
-                  </li>
-                );
-              })}
-              <li className="border-b border-line/[0.07]">
-                <Link href="/contact" className="flex py-4 text-[20px] display text-fg">
-                  Contact
-                </Link>
-              </li>
-            </ul>
-            <Button href={social("discord").href} size="lg" className="mt-7 w-full">
-              <DiscordIcon /> Join the Discord
+          <div className="flex items-center gap-2">
+            <Button href={social("discord").href} size="sm" className="hidden sm:inline-flex">
+              <DiscordIcon size={15} /> Join Discord
             </Button>
-            <SocialLinks only={["x", "telegram", "farcaster", "github", "youtube"]} className="mt-6 justify-center" />
-          </nav>
+            <button
+              ref={buttonRef}
+              type="button"
+              aria-expanded={open}
+              aria-controls="mobile-menu"
+              aria-label={open ? "Close menu" : "Open menu"}
+              onClick={() => setOpen((o) => !o)}
+              className="relative inline-flex size-10 items-center justify-center rounded-full border border-line/12 bg-card/60 text-fg lg:hidden"
+            >
+              {/* Two lines that fold into a cross */}
+              <span aria-hidden className="relative block h-3 w-4">
+                <span className={cn("absolute left-0 block h-px w-4 bg-current transition-transform duration-base ease-expo", open ? "top-1.5 rotate-45" : "top-0.5")} />
+                <span className={cn("absolute left-0 block h-px w-4 bg-current transition-transform duration-base ease-expo", open ? "top-1.5 -rotate-45" : "top-2.5")} />
+              </span>
+            </button>
+          </div>
         </div>
       </div>
     </header>

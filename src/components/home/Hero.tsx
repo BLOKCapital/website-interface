@@ -3,7 +3,7 @@ import { Badge } from "@/components/ui/Badge";
 import { GardenAsset } from "@/components/ui/GardenAsset";
 import { CheckIcon } from "@/components/ui/icons";
 import { protocolStatus } from "@/lib/data/status";
-import { HeroLive } from "@/components/live/HeroLive";
+import { SplitText } from "@/components/motion/SplitText";
 
 const d = (ms: number) => ({ animationDelay: `${ms}ms` });
 
@@ -18,8 +18,53 @@ const chips = [
 ];
 
 /**
+ * Dashed currents running into and out of the Garden render: value in from
+ * the left, positions out to the right. Drawn under the render, so the
+ * island itself appears to take them in. Decorative; frozen under reduced
+ * motion like every CSS animation here.
+ */
+const flows = [
+  { d: "M0 150 C 100 150, 150 232, 260 262", dur: "1.6s", tone: "rgb(var(--leaf) / var(--fx-line))" },
+  { d: "M0 404 C 104 404, 162 318, 260 282", dur: "2.1s", tone: "rgb(var(--leaf) / calc(var(--fx-line) * 0.75))" },
+  { d: "M260 250 C 360 218, 418 118, 520 118", dur: "1.9s", tone: "rgb(var(--cobalt) / var(--fx-line))" },
+  { d: "M260 292 C 368 322, 410 428, 520 432", dur: "2.4s", tone: "rgb(var(--sand) / calc(var(--fx-line) * 0.85))" },
+];
+const ends: [number, number, string][] = [
+  [6, 150, "--leaf"],
+  [6, 404, "--leaf"],
+  [514, 118, "--cobalt"],
+  [514, 432, "--sand"],
+];
+
+function FlowLines() {
+  return (
+    <svg viewBox="0 0 520 520" aria-hidden className="absolute inset-0 size-full animate-enter-fade" style={d(500)} fill="none">
+      {flows.map((f) => (
+        <path
+          key={f.d}
+          d={f.d}
+          stroke={f.tone}
+          strokeWidth="1.5"
+          strokeLinecap="round"
+          strokeDasharray="4 6"
+          className="animate-flow"
+          style={{ animationDuration: f.dur }}
+        />
+      ))}
+      {ends.map(([x, y, c]) => (
+        <g key={`${x}-${y}`} fill={`rgb(var(${c}))`}>
+          <circle cx={x} cy={y} r="3" className="origin-center animate-pulse-ring [transform-box:fill-box]" />
+          <circle cx={x} cy={y} r="2.5" />
+        </g>
+      ))}
+    </svg>
+  );
+}
+
+/**
  * Home hero: what BLOK is, in one line; its status; where to go next. Server
- * component; the entrance is pure CSS so the headline paints with the HTML.
+ * component; the entrance is pure CSS (the headline rises word by word) so it
+ * paints with the HTML.
  */
 export function Hero() {
   return (
@@ -30,9 +75,9 @@ export function Hero() {
           <div className="animate-enter-fade">
             <Badge tone="current">{protocolStatus.label} on Arbitrum</Badge>
           </div>
-          <h1 className="display mt-7 animate-enter-up text-h1 text-balance text-fg" style={d(80)}>
+          <SplitText as="h1" reveal="load" delay={80} className="display mt-7 text-h1 text-balance text-fg">
             Grow your crypto. <em className="text-sand">Keep the keys.</em>
-          </h1>
+          </SplitText>
           <p className="mt-7 max-w-xl animate-enter-up text-lead text-fg-muted" style={d(180)}>
             An exchange holds your crypto for you. A wallet leaves you doing all the work. BLOK Capital is the third
             option: a smart wallet at your own address that follows an on-chain index and rebalances itself, with every
@@ -54,13 +99,11 @@ export function Hero() {
               </li>
             ))}
           </ul>
-          <div className="mt-8 animate-enter-up" style={d(420)}>
-            <HeroLive />
-          </div>
         </div>
 
         <div className="relative mx-auto aspect-square w-full max-w-[520px] lg:col-span-5">
           <div aria-hidden className="glow-leaf absolute inset-[-10%] opacity-90" />
+          <FlowLines />
           <div className="absolute inset-[6%] animate-enter-fade" style={d(200)}>
             <div className="absolute inset-0 animate-float">
               <GardenAsset n={11} priority quality={95} sizes="(max-width: 1024px) 90vw, 520px" />
@@ -69,7 +112,7 @@ export function Hero() {
           {chips.map((c) => (
             <p
               key={c.label}
-              className={`absolute ${c.pos} hidden animate-enter-up items-center gap-2 rounded-full border border-line/12 bg-card/80 px-3.5 py-2 text-caption text-fg shadow-[0_12px_30px_-12px_rgb(0_0_0/0.6)] backdrop-blur-md sm:inline-flex`}
+              className={`absolute ${c.pos} hidden animate-enter-up items-center gap-2 rounded-full border border-line/12 bg-card/80 px-3.5 py-2 text-caption text-fg shadow-[0_12px_30px_-12px_rgb(var(--shadow))] backdrop-blur-md sm:inline-flex`}
               style={d(c.delay)}
             >
               <span aria-hidden className="size-1.5 rounded-full bg-leaf" />

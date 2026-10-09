@@ -12,7 +12,7 @@ import { CopyButton } from "@/components/ui/CopyButton";
 import { Hint } from "@/components/ui/Hint";
 import { Badge } from "@/components/ui/Badge";
 import { ArrowIcon, ExternalIcon } from "@/components/ui/icons";
-import { CompositionOrb } from "./CompositionOrb";
+import { BasketOrbit } from "./BasketOrbit";
 import { TokenLogo, TokenStack } from "./TokenLogo";
 
 /**
@@ -60,7 +60,9 @@ export function IndexExplorer({
   const reading = prices.data?.[selected];
 
   return (
-    <div ref={root} className="overflow-hidden rounded-3xl border border-line/[0.08] bg-card">
+    // A dark console on either theme: the component colours are tuned for it.
+    // overflow-clip (not hidden) rounds the corners without breaking the sticky basket.
+    <div ref={root} className="theme-dark overflow-clip rounded-3xl border border-line/[0.08] bg-card">
       {/* Selector */}
       <div className="flex flex-col gap-4 border-b border-line/[0.07] p-4 sm:flex-row sm:items-center sm:justify-between sm:p-5">
         {fixed ? (
@@ -105,19 +107,15 @@ export function IndexExplorer({
         className="grid lg:grid-cols-12"
       >
         {/* Orb */}
-        <div className="relative flex min-w-0 flex-col border-b border-line/[0.07] lg:col-span-5 lg:border-b-0 lg:border-r">
+        <div className="relative min-w-0 border-b border-line/[0.07] px-6 py-8 sm:px-10 lg:col-span-5 lg:border-b-0 lg:border-r">
           <div aria-hidden className="grid-lines pointer-events-none absolute inset-0 opacity-50 [mask-image:radial-gradient(circle_at_50%_50%,black,transparent_70%)]" />
-          <div key={id} className="relative aspect-square w-full animate-enter-fade sm:aspect-[4/3] lg:aspect-auto lg:min-h-[360px] lg:flex-1">
-            <CompositionOrb
-              nodes={idx.components.map((s) => ({ id: s, label: s, color: components[s].color, logo: components[s].logo }))}
-              selected={selected}
-              onSelect={(s) => setSel(s as ComponentSymbol)}
-              className="absolute inset-0 size-full touch-pan-y"
-            />
+          {/* Sticks beside the long detail column on wide screens. */}
+          <div className="relative flex flex-col items-center gap-6 lg:sticky lg:top-28">
+            <BasketOrbit index={idx} selected={selected} onSelect={setSel} className="max-w-[400px]" />
+            <p className="text-center text-caption text-fg-subtle">
+              Click a token to inspect it. All drawn the same size: weights are set on-chain by market cap and aren&apos;t shown.
+            </p>
           </div>
-          <p className="relative px-5 pb-5 text-center text-caption text-fg-subtle">
-            Move your pointer to tilt · click a token to inspect it. Tokens are drawn the same size: weights aren&apos;t shown.
-          </p>
         </div>
 
         {/* Detail */}

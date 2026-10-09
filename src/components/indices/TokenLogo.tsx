@@ -2,7 +2,11 @@ import Image from "next/image";
 import { components, type ComponentSymbol } from "@/lib/data/indices";
 import { cn } from "@/lib/utils";
 
-/** A token's round logo. Decorative: the symbol is always printed beside it. */
+/**
+ * A token's round logo. Decorative: the symbol is always printed beside it.
+ * A hairline inner edge keeps white-disc logos (ETH, UNI, PENDLE) from
+ * dissolving into white cards on the light theme.
+ */
 export function TokenLogo({ symbol, size = 24, className }: { symbol: ComponentSymbol; size?: number; className?: string }) {
   return (
     <Image
@@ -11,7 +15,7 @@ export function TokenLogo({ symbol, size = 24, className }: { symbol: ComponentS
       width={size}
       height={size}
       unoptimized
-      className={cn("shrink-0 rounded-full bg-white", className)}
+      className={cn("shrink-0 rounded-full bg-white outline outline-1 -outline-offset-1 outline-line/[0.14]", className)}
       style={{ width: size, height: size }}
     />
   );

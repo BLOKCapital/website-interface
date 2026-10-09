@@ -3,13 +3,12 @@ import Link from "next/link";
 import { PageHero } from "@/components/ui/PageHero";
 import { Section } from "@/components/ui/Section";
 import { Button } from "@/components/ui/Button";
-import { Badge } from "@/components/ui/Badge";
 import { Card } from "@/components/ui/Card";
 import { ArrowLink } from "@/components/ui/ArrowLink";
 import { CtaBand } from "@/components/ui/CtaBand";
 import { Reveal, Stagger, RevealItem } from "@/components/ui/Reveal";
 import { CustodyDiagram } from "@/components/home/CustodyDiagram";
-import { products } from "@/components/home/Products";
+import { ProductStack } from "@/components/protocol/ProductStack";
 import { FeesRisks } from "@/components/protocol/FeesRisks";
 import { JsonLd } from "@/components/seo/JsonLd";
 import { breadcrumbSchema } from "@/lib/seo/schema";
@@ -21,23 +20,6 @@ export const metadata: Metadata = {
   description:
     "How BLOK Capital works: smart-wallet Gardens, curated Index Gardens, Yield Gardens, on-chain Gardeners, the Diamond architecture, fees and risks.",
   alternates: { canonical: "/protocol" },
-};
-
-/** Extra detail per product, beyond the home-page card. */
-const detail: Record<string, { body: string; audience: string; more?: { label: string; href: string } }> = {
-  index: {
-    audience: "For people who want diversified exposure without managing it.",
-    more: { label: "Explore BLOKC2, BLOKC5 and BLOKC10", href: "/indices" },
-    body: "Connect your Garden to BLOKC2, BLOKC5 or BLOKC10. Weights are each component's share of market cap, priced by Chainlink. A pooled rebalancer trades only assets more than 2% off target, at the best quote across Uniswap and Camelot, at most once a day. Every rebalance is a transaction you can read.",
-  },
-  yield: {
-    audience: "For people who'd rather steer themselves.",
-    body: "A Yield Garden lets you act directly across the venues the protocol composes with: swap on Uniswap V3 and Camelot V3, lend and borrow on Aave V3, take perp exposure on GMX V2, or lock fixed yield with Pendle V2.",
-  },
-  gardeners: {
-    audience: "For people who want a professional, and for the professionals.",
-    body: "A Gardener publishes a strategy on-chain and investors authorise it from their own Garden, then revoke it the same way. Performance writes itself to a non-transferable ERC-5484 badge in the Gardener's wallet, and fees settle on-chain within DAO-set ceilings.",
-  },
 };
 
 const architecture = [
@@ -103,35 +85,13 @@ export default function ProtocolPage() {
         }
       />
 
-      <Section id="products" eyebrow="Products" title="Three ways to run a Garden.">
-        <div className="space-y-5">
-          {products.map((p) => (
-            <Reveal key={p.id} id={p.id} className="scroll-mt-28">
-              <Card className="grid gap-8 lg:grid-cols-12">
-                <div className="lg:col-span-5">
-                  <Badge tone={p.status.tone}>{p.status.label}</Badge>
-                  <h3 className="display mt-4 text-h2 text-fg">{p.name}</h3>
-                  <p className="mt-3 text-small text-fg-subtle">{detail[p.id].audience}</p>
-                </div>
-                <div className="lg:col-span-7">
-                  <p className="text-body text-fg-muted">{detail[p.id].body}</p>
-                  {detail[p.id].more && (
-                    <ArrowLink href={detail[p.id].more!.href} className="mt-4">
-                      {detail[p.id].more!.label}
-                    </ArrowLink>
-                  )}
-                  <ul className="mt-6 grid gap-3 sm:grid-cols-3">
-                    {p.points.map((pt) => (
-                      <li key={pt} className="rounded-xl border border-line/[0.08] bg-raised/60 p-4 text-small text-fg">
-                        {pt}
-                      </li>
-                    ))}
-                  </ul>
-                </div>
-              </Card>
-            </Reveal>
-          ))}
-        </div>
+      <Section
+        id="products"
+        eyebrow="Products"
+        title="Three ways to run a Garden."
+        description="Every Garden is the same smart wallet underneath; what changes is who steers it. Scroll through the three."
+      >
+        <ProductStack />
       </Section>
 
       <Section

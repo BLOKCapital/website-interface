@@ -4,17 +4,16 @@ import { PageHero } from "@/components/ui/PageHero";
 import { Section } from "@/components/ui/Section";
 import { Button } from "@/components/ui/Button";
 import { Card } from "@/components/ui/Card";
-import { Stat } from "@/components/ui/Stat";
-import { Badge } from "@/components/ui/Badge";
-import { AllocationBars } from "@/components/ui/AllocationBars";
 import { CtaBand } from "@/components/ui/CtaBand";
+import { TokenSpec } from "@/components/token/TokenSpec";
+import { AllocationExplorer } from "@/components/token/AllocationExplorer";
+import { TokenTimeline } from "@/components/token/TokenTimeline";
 import { Reveal, Stagger, RevealItem } from "@/components/ui/Reveal";
 import { JsonLd } from "@/components/seo/JsonLd";
 import { breadcrumbSchema } from "@/lib/seo/schema";
 import { milestones } from "@/lib/data/milestones";
 import { protocolStatus } from "@/lib/data/status";
 import { links } from "@/lib/data/socials";
-import { TokenContract } from "@/components/live/TokenContract";
 
 export const metadata: Metadata = {
   title: "$BLOKC token",
@@ -77,17 +76,17 @@ export default function TokenPage() {
         }
       />
 
-      <Section id="facts" title="Token facts">
+      <Section
+        id="facts"
+        eyebrow="Token facts"
+        title={
+          <>
+            One token, <em className="text-sand">four numbers.</em>
+          </>
+        }
+      >
         <Reveal>
-          <dl className="grid grid-cols-2 gap-8 rounded-2xl border border-line/[0.08] bg-card p-7 md:grid-cols-4">
-            <Stat label="Symbol" value="BLOKC" />
-            <Stat label="Total supply" value="10B" />
-            <Stat label="Network" value="Arbitrum One" />
-            <Stat label="Decimals" value="18" />
-          </dl>
-        </Reveal>
-        <Reveal className="mt-5">
-          <TokenContract />
+          <TokenSpec />
         </Reveal>
       </Section>
 
@@ -107,29 +106,16 @@ export default function TokenPage() {
 
       <Section id="allocation" eyebrow="Allocation" title="Where the 10B supply goes.">
         <div className="grid gap-5 lg:grid-cols-12">
-          <Reveal className="lg:col-span-7">
-            <Card>
-              <AllocationBars items={allocation} caption="$BLOKC allocation, as a percentage of the 10 billion total supply" />
-              <p className="mt-6 text-caption text-fg-subtle">
-                Percent of total supply. Vesting and unlock terms are in the whitepaper.
-              </p>
-            </Card>
+          <Reveal className="min-w-0 lg:col-span-8">
+            <AllocationExplorer
+              items={allocation}
+              total={10_000_000_000}
+              symbol="BLOKC"
+              caption="$BLOKC allocation, as a percentage of the 10 billion total supply"
+            />
           </Reveal>
-          <Reveal delay={0.08} className="lg:col-span-5">
-            <Card className="h-full">
-              <h3 className="text-h4 font-medium text-fg">Timeline</h3>
-              <ul className="mt-5 space-y-4">
-                {tokenMilestones.map((m) => (
-                  <li key={m.id} className="border-l-2 border-line/15 pl-4">
-                    <p className="flex items-center justify-between gap-3">
-                      <span className="text-[15px] text-fg">{m.label}</span>
-                      <Badge tone="soon">{m.quarter}</Badge>
-                    </p>
-                    <p className="mt-1 text-small text-fg-muted">{m.description}</p>
-                  </li>
-                ))}
-              </ul>
-            </Card>
+          <Reveal delay={0.08} className="lg:col-span-4">
+            <TokenTimeline items={tokenMilestones} />
           </Reveal>
         </div>
       </Section>

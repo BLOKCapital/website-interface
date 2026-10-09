@@ -1,11 +1,14 @@
 import type { Config } from "tailwindcss";
 
 /**
- * "Night garden" design tokens. Colours are CSS variables holding R G B
- * triplets (see src/app/globals.css) wired with `<alpha-value>`, so opacity
- * modifiers like `border-line/10` or `bg-leaf/15` work everywhere.
+ * Design tokens. Colours are CSS variables holding R G B triplets (see
+ * src/app/globals.css) wired with `<alpha-value>`, so opacity modifiers like
+ * `border-line/10` or `bg-leaf/15` work everywhere, and the same utilities
+ * render the light "Day garden" by default and the dark "Night garden"
+ * inside any `.theme-dark` scope.
  *
- * Every foreground token is ≥ 5:1 against every surface token (measured).
+ * Every foreground token is ≥ 4.5:1 against every surface token in both
+ * themes (measured).
  */
 const c = (v: string) => `rgb(var(${v}) / <alpha-value>)`;
 
@@ -29,7 +32,7 @@ const config: Config = {
         },
         // Brand. Leaf is the one accent; sand is warm emphasis; bloom and
         // cobalt are reserved for data and state, never decoration.
-        leaf: { DEFAULT: c("--leaf"), deep: c("--leaf-deep") },
+        leaf: { DEFAULT: c("--leaf"), deep: c("--leaf-deep"), hover: c("--leaf-hover") },
         sand: c("--sand"),
         bloom: c("--bloom"),
         cobalt: c("--cobalt"),
@@ -58,7 +61,15 @@ const config: Config = {
         h1: ["clamp(40px, 5vw + 16px, 88px)", { lineHeight: "1.02", letterSpacing: "-0.02em" }],
       },
       maxWidth: { page: "1240px", prose: "68ch" },
-      transitionTimingFunction: { out: "cubic-bezier(0.22, 1, 0.36, 1)" },
+      // Motion tokens (mirrored as CSS variables in globals.css): hovers are
+      // fast, UI changes base, reveals slow. Popovers open slower than they close.
+      transitionDuration: { fast: "150ms", base: "300ms", slow: "600ms" },
+      transitionTimingFunction: {
+        out: "cubic-bezier(0.22, 1, 0.36, 1)",
+        // Snappy, then settles: the signature curve for reveals and morphs.
+        expo: "cubic-bezier(0.16, 1, 0.3, 1)",
+        inout: "cubic-bezier(0.65, 0, 0.35, 1)",
+      },
       keyframes: {
         enterUp: {
           "0%": { opacity: "0", transform: "translate3d(0,18px,0)" },
@@ -75,6 +86,20 @@ const config: Config = {
           "0%": { transform: "scale(1)", opacity: "0.55" },
           "100%": { transform: "scale(2.4)", opacity: "0" },
         },
+        // Popover enter: scale 0.96 + 2px blur, the "morph" open state.
+        morphIn: {
+          "0%": { opacity: "0", transform: "scale(0.96)", filter: "blur(2px)" },
+          "100%": { opacity: "1", transform: "scale(1)", filter: "blur(0)" },
+        },
+        blink: { "0%, 49%": { opacity: "1" }, "50%, 100%": { opacity: "0" } },
+        // Auto-advance timers: pair with origin-left and an animation-duration.
+        progress: { "0%": { transform: "scaleX(0)" }, "100%": { transform: "scaleX(1)" } },
+        // A verdict stamp landing on the terminal.
+        stamp: {
+          "0%": { opacity: "0", transform: "rotate(-8deg) scale(1.35)" },
+          "60%": { opacity: "1", transform: "rotate(-8deg) scale(0.96)" },
+          "100%": { opacity: "1", transform: "rotate(-8deg) scale(1)" },
+        },
       },
       animation: {
         "enter-up": "enterUp 700ms cubic-bezier(0.22,1,0.36,1) both",
@@ -82,6 +107,10 @@ const config: Config = {
         flow: "flow 1.2s linear infinite",
         float: "float 9s ease-in-out infinite",
         "pulse-ring": "pulseRing 2s cubic-bezier(0.22,1,0.36,1) infinite",
+        "morph-in": "morphIn 350ms cubic-bezier(0.16,1,0.3,1) both",
+        blink: "blink 1.05s steps(1) infinite",
+        progress: "progress 4s linear both",
+        stamp: "stamp 450ms cubic-bezier(0.16,1,0.3,1) both",
       },
     },
   },

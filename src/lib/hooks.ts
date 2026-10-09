@@ -34,3 +34,33 @@ export function useScrolled(threshold = 12) {
     () => false,
   );
 }
+
+const subscribeView = (cb: () => void) => {
+  window.addEventListener("scroll", cb, { passive: true });
+  window.addEventListener("resize", cb);
+  return () => {
+    window.removeEventListener("scroll", cb);
+    window.removeEventListener("resize", cb);
+  };
+};
+
+/** Whether a dark band ([data-band="dark"]) spans the horizontal line at `y` px. */
+function darkBandAt(y: number) {
+  for (const el of document.querySelectorAll('[data-band="dark"]')) {
+    const r = el.getBoundingClientRect();
+    if (r.top <= y && r.bottom > y) return true;
+  }
+  return false;
+}
+
+/**
+ * True while a dark band sits under the line `y` px from the top of the
+ * viewport, so the sticky header can switch to the dark theme over it.
+ */
+export function useOverDarkBand(y = 36) {
+  return useSyncExternalStore(
+    subscribeView,
+    () => darkBandAt(y),
+    () => false,
+  );
+}
