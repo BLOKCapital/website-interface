@@ -42,9 +42,28 @@ function detail(state: LiveState | StaticState, updatedAt: number | null, now: n
   }
 }
 
+/** What a screen reader is told, and only when things get worse. */
+function degraded(state: LiveState | StaticState, source?: string) {
+  switch (state) {
+    case "delayed":
+      return "Live data delayed; retrying.";
+    case "offline":
+      return "You're offline.";
+    case "error":
+      return source ? `Couldn't reach ${source}.` : "Couldn't load this data.";
+    default:
+      return "";
+  }
+}
+
 /**
  * The one status line for any piece of data. "Live" appears only when a real
  * read succeeded recently; everything else says plainly what's going on.
+ *
+ * The line itself isn't a live region: the clock ticks every second and the
+ * widget pauses whenever it scrolls away, and none of that should be read
+ * out. A separate status region announces only a degraded transition
+ * (delayed, offline, error); live, updating and paused stay silent.
  */
 export function LiveStatus({
   state,
@@ -71,32 +90,31 @@ export function LiveStatus({
   const l = look[state];
   const text = detail(state, updatedAt, now, source);
   return (
-    <p
-      className={cn("flex min-h-5 flex-wrap items-center gap-x-2 gap-y-1 text-caption text-fg-subtle", className)}
-      // Announce state changes, not every second of the clock.
-      aria-live="polite"
-      aria-atomic="false"
-    >
+    <p className={cn("flex min-h-5 flex-wrap items-center gap-x-2 gap-y-1 text-caption text-fg-subtle", className)}>
       <span className={cn("inline-flex items-center gap-1.5 font-mono text-[11px] font-medium uppercase tracking-[0.12em]", l.text)}>
         <span aria-hidden className="relative inline-flex size-1.5">
-          {state === "live" && <span className="absolute inset-0 animate-pulse-ring rounded-full bg-leaf" />}
+          {/* Pulses twice when the data goes live, then rests (no endless loop). */}
+          {state === "live" && <span className="absolute inset-0 animate-pulse-ring rounded-full bg-leaf" style={{ animationIterationCount: 2 }} />}
           {state === "updating" && <span className="absolute inset-[-2px] animate-spin rounded-full border border-leaf/60 border-t-transparent" />}
           {state === "loading" && <span className="absolute inset-0 animate-pulse rounded-full bg-cobalt" />}
           <span className={cn("relative size-1.5 rounded-full", l.dot)} />
         </span>
         {l.label}
       </span>
-      <span className="tabular" aria-hidden={ticking}>{text}</span>
-      {ticking && <span className="sr-only">{l.label}</span>}
+      <span className="tabular">{text}</span>
       {(state === "error" || state === "delayed") && onRetry && (
         <button
           type="button"
           onClick={onRetry}
-          className="rounded-full border border-line/15 px-2 py-0.5 text-[11px] text-fg-muted transition-colors hover:border-leaf/40 hover:text-fg"
+          className="rounded-full border border-line/15 px-2 py-0.5 text-[11px] text-fg-muted transition-colors duration-fast hover:border-leaf/40 hover:text-fg"
         >
           Retry now
         </button>
       )}
+      {/* Always present, so a message that appears in it is announced. */}
+      <span role="status" className="sr-only">
+        {degraded(state, source)}
+      </span>
     </p>
   );
 }

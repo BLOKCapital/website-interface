@@ -25,11 +25,12 @@ export const ecosystem: EcoGroup[] = [
   {
     id: "network",
     label: "Network and data",
-    intro: "Where Gardens live, and where their numbers come from.",
+    intro: "Where Gardens live, where their numbers come from, and how USDC moves between chains.",
     items: [
       { name: "Arbitrum One", use: "The Ethereum L2 every Garden and index runs on", evidence: { label: "Architecture docs", href: links.docsArchitecture } },
       { name: "Chainlink", logo: "/Socialtrust/chainlink-logo.svg", use: "USD price feeds for every index component", evidence: { label: "IndexComponentRegistry.sol", href: `${CORE_REPO_URL}/blob/main/src/indices/IndexComponentRegistry.sol` } },
       { name: "The Graph", use: "Indexes the DAO's governance events", evidence: { label: "blokc-graph", href: "https://github.com/BLOKCapital/blokc-graph" } },
+      { name: "Circle CCTP", use: "Moving USDC across chains", evidence: { label: "cctp facet", href: facet("cctp") } },
     ],
   },
   {
@@ -37,7 +38,7 @@ export const ecosystem: EcoGroup[] = [
     label: "Where rebalances trade",
     intro: "The pooled rebalancer quotes these pools and takes the best price.",
     items: [
-      { name: "Uniswap", logo: "/Socialtrust/uniswap-logo.svg.png", use: "V2 and V3 pools", evidence: { label: "uniswapV3 facet", href: facet("uniswapV3") } },
+      { name: "Uniswap", logo: "/Socialtrust/uniswap-logo-240.webp", use: "V2 and V3 pools", evidence: { label: "uniswapV3 facet", href: facet("uniswapV3") } },
       { name: "Camelot", use: "V2 and V3 pools, Arbitrum-native", evidence: { label: "camelotV3 facet", href: facet("camelotV3") } },
     ],
   },
@@ -46,10 +47,9 @@ export const ecosystem: EcoGroup[] = [
     label: "What a Yield Garden can use",
     intro: "Each venue is a facet: a module the DAO approves before any Garden can install it.",
     items: [
-      { name: "Aave", logo: "/Socialtrust/Aave-logo.png", use: "Lend and borrow (V3)", evidence: { label: "aaveV3 facet", href: facet("aaveV3") } },
-      { name: "GMX", logo: "/Socialtrust/gmx-logo.png", use: "Perpetuals (V2)", evidence: { label: "gmxV2 facet", href: facet("gmxV2") } },
+      { name: "Aave", logo: "/Socialtrust/Aave-logo-240.webp", use: "Lend and borrow (V3)", evidence: { label: "aaveV3 facet", href: facet("aaveV3") } },
+      { name: "GMX", logo: "/Socialtrust/gmx-logo-240.webp", use: "Perpetuals (V2)", evidence: { label: "gmxV2 facet", href: facet("gmxV2") } },
       { name: "Pendle", use: "Fixed yield (V2)", evidence: { label: "pendleV2 facet", href: facet("pendleV2") } },
-      { name: "Circle CCTP", use: "Native USDC across chains", evidence: { label: "cctp facet", href: facet("cctp") } },
     ],
   },
   {
@@ -58,7 +58,9 @@ export const ecosystem: EcoGroup[] = [
     intro: "How you sign in without a seed phrase, and how the protocol decides.",
     items: [
       { name: "Web3Auth", logo: "/Socialtrust/web3auth-logo.svg", use: "Google sign-in with MPC keys", evidence: { label: "Architecture docs", href: links.docsArchitecture } },
-      { name: "ZeroDev", logo: "/Socialtrust/zerodev-logo.svg", use: "Smart-account (ERC-4337) tooling", evidence: { label: "Docs", href: links.docs } },
+      // The account-abstraction docs page says each investor's Smart Wallet Account is "integrated via
+      // ZeroDev". No public BLOKCapital repo contains ZeroDev code, so that page is the evidence.
+      { name: "ZeroDev", logo: "/Socialtrust/zerodev-logo.svg", use: "Smart-account (ERC-4337) tooling", evidence: { label: "Account abstraction docs", href: links.docsAccountAbstraction } },
       { name: "Aragon", use: "On-chain voting for the DAO (OSx)", evidence: { label: "BLOK Capital DAO", href: links.aragon } },
     ],
   },

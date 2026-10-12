@@ -49,24 +49,23 @@ export type Component = {
   token: { symbol: string; address: `0x${string}` };
   /** Chainlink USD feed on Arbitrum One (verified on-chain). */
   feed: `0x${string}`;
-  color: string;
   /** Round 128px logo in /public/tokens (official artwork via CoinGecko). */
   logo: string;
 };
 
 export const components: Record<ComponentSymbol, Component> = {
-  BTC: { symbol: "BTC", name: "Bitcoin", role: "The largest crypto asset, held on Arbitrum as wrapped BTC.", token: { symbol: "WBTC", address: "0x2f2a2543B76A4166549F7aaB2e75Bef0aefC5B0f" }, feed: "0x6ce185860a4963106506C203335A2910413708e9", color: "#E6B872", logo: "/tokens/btc.webp" },
-  ETH: { symbol: "ETH", name: "Ether", role: "Ethereum's native asset, and the gas token Arbitrum settles in. Held as WETH.", token: { symbol: "WETH", address: "0x82aF49447D8a07e3bd95BD0d56f35241523fBab1" }, feed: "0x639Fe6ab55C921f74e7fac1ee960C0B6293ba612", color: "#9DB2FF", logo: "/tokens/eth.webp" },
-  LINK: { symbol: "LINK", name: "Chainlink", role: "Token of the oracle network whose feeds price every component here.", token: { symbol: "LINK", address: "0xf97f4df75117a78c1A5a0DBb814Af92458539FB4" }, feed: "0x86E53CF1B870786351Da77A57575e79CB55812CB", color: "#6F9BFF", logo: "/tokens/link.webp" },
-  UNI: { symbol: "UNI", name: "Uniswap", role: "Governance token of Uniswap, one of the DEXs the rebalancer routes through.", token: { symbol: "UNI", address: "0xFa7F8980b0f1E64A2062791cc3b0871572f1F7f0" }, feed: "0x9C917083fDb403ab5ADbEC26Ee294f6EcAda2720", color: "#F0A3C8", logo: "/tokens/uni.webp" },
-  ARB: { symbol: "ARB", name: "Arbitrum", role: "Governance token of Arbitrum, the network BLOK Capital runs on.", token: { symbol: "ARB", address: "0x912CE59144191C1204E64559FE8253a0e49E6548" }, feed: "0xb2A824043730FE05F3DA2efaFa1CBbe83fa548D6", color: "#7FC8F8", logo: "/tokens/arb.webp" },
-  AAVE: { symbol: "AAVE", name: "Aave", role: "Governance token of Aave, the lending market Gardens compose with.", token: { symbol: "AAVE", address: "0xba5DdD1f9d7F570dc94a51479a000E3BCE967196" }, feed: "0xaD1d5344AaDE45F43E596773Bcc4c423EAbdD034", color: "#C7A6F5", logo: "/tokens/aave.webp" },
-  GMX: { symbol: "GMX", name: "GMX", role: "Token of GMX, the perpetuals exchange native to Arbitrum.", token: { symbol: "GMX", address: "0xfc5A1A6EB076a2C7aD06eD22C90d7E710E35ad0a" }, feed: "0xDB98056FecFff59D032aB628337A4887110df3dB", color: "#8FD6A8", logo: "/tokens/gmx.webp" },
-  PENDLE: { symbol: "PENDLE", name: "Pendle", role: "Token of Pendle, the fixed-yield protocol Gardens compose with.", token: { symbol: "PENDLE", address: "0x0c880f6761F1af8d9Aa9C466984b80DAb9a8c9e8" }, feed: "0x66853E19d73c0F9301fe099c324A1E9726953433", color: "#7ED6C9", logo: "/tokens/pendle.webp" },
-  GRT: { symbol: "GRT", name: "The Graph", role: "Token of The Graph, the indexing network behind on-chain data APIs.", token: { symbol: "GRT", address: "0x9623063377AD1B27544C965cCd7342f7EA7e88C7" }, feed: "0x0F38D86FceF4955B705F35c9e41d1A16e0637c73", color: "#A99CF0", logo: "/tokens/grt.webp" },
-  CRV: { symbol: "CRV", name: "Curve", role: "Governance token of Curve, a stablecoin-focused exchange.", token: { symbol: "CRV", address: "0x11cDb42B0EB46D95f990BeDD4695A6e3fA034978" }, feed: "0xaebDA2c976cfd1eE1977Eac079B4382acb849325", color: "#F2917F", logo: "/tokens/crv.webp" },
-  ZRO: { symbol: "ZRO", name: "LayerZero", role: "Token of LayerZero, a cross-chain messaging protocol.", token: { symbol: "ZRO", address: "0x6985884C4392D348587B19cb9eAAf157F13271cd" }, feed: "0x1940fEd49cDBC397941f2D336eb4994D599e568B", color: "#D9DED9", logo: "/tokens/zro.webp" },
-  DAI: { symbol: "DAI", name: "Dai", role: "A USD stablecoin. Its price is designed to stay near $1.", token: { symbol: "DAI", address: "0xDA10009cBd5D07dd0CeCc66161FC93D7c9000da1" }, feed: "0xc5C8E77B397E531B8EC06BFb0048328B30E9eCfB", color: "#E3C07A", logo: "/tokens/dai.webp" },
+  BTC: { symbol: "BTC", name: "Bitcoin", role: "The largest crypto asset, held on Arbitrum as wrapped BTC.", token: { symbol: "WBTC", address: "0x2f2a2543B76A4166549F7aaB2e75Bef0aefC5B0f" }, feed: "0x6ce185860a4963106506C203335A2910413708e9", logo: "/tokens/btc.webp" },
+  ETH: { symbol: "ETH", name: "Ether", role: "Ethereum's native asset, and the gas token Arbitrum settles in. Held as WETH.", token: { symbol: "WETH", address: "0x82aF49447D8a07e3bd95BD0d56f35241523fBab1" }, feed: "0x639Fe6ab55C921f74e7fac1ee960C0B6293ba612", logo: "/tokens/eth.webp" },
+  LINK: { symbol: "LINK", name: "Chainlink", role: "Token of the oracle network whose feeds price every component here.", token: { symbol: "LINK", address: "0xf97f4df75117a78c1A5a0DBb814Af92458539FB4" }, feed: "0x86E53CF1B870786351Da77A57575e79CB55812CB", logo: "/tokens/link.webp" },
+  UNI: { symbol: "UNI", name: "Uniswap", role: "Governance token of Uniswap, one of the DEXs the rebalancer routes through.", token: { symbol: "UNI", address: "0xFa7F8980b0f1E64A2062791cc3b0871572f1F7f0" }, feed: "0x9C917083fDb403ab5ADbEC26Ee294f6EcAda2720", logo: "/tokens/uni.webp" },
+  ARB: { symbol: "ARB", name: "Arbitrum", role: "Governance token of Arbitrum, the network BLOK Capital runs on.", token: { symbol: "ARB", address: "0x912CE59144191C1204E64559FE8253a0e49E6548" }, feed: "0xb2A824043730FE05F3DA2efaFa1CBbe83fa548D6", logo: "/tokens/arb.webp" },
+  AAVE: { symbol: "AAVE", name: "Aave", role: "Governance token of Aave, the lending market Gardens compose with.", token: { symbol: "AAVE", address: "0xba5DdD1f9d7F570dc94a51479a000E3BCE967196" }, feed: "0xaD1d5344AaDE45F43E596773Bcc4c423EAbdD034", logo: "/tokens/aave.webp" },
+  GMX: { symbol: "GMX", name: "GMX", role: "Token of GMX, the perpetuals exchange native to Arbitrum.", token: { symbol: "GMX", address: "0xfc5A1A6EB076a2C7aD06eD22C90d7E710E35ad0a" }, feed: "0xDB98056FecFff59D032aB628337A4887110df3dB", logo: "/tokens/gmx.webp" },
+  PENDLE: { symbol: "PENDLE", name: "Pendle", role: "Token of Pendle, the fixed-yield protocol Gardens compose with.", token: { symbol: "PENDLE", address: "0x0c880f6761F1af8d9Aa9C466984b80DAb9a8c9e8" }, feed: "0x66853E19d73c0F9301fe099c324A1E9726953433", logo: "/tokens/pendle.webp" },
+  GRT: { symbol: "GRT", name: "The Graph", role: "Token of The Graph, the indexing network behind on-chain data APIs.", token: { symbol: "GRT", address: "0x9623063377AD1B27544C965cCd7342f7EA7e88C7" }, feed: "0x0F38D86FceF4955B705F35c9e41d1A16e0637c73", logo: "/tokens/grt.webp" },
+  CRV: { symbol: "CRV", name: "Curve", role: "Governance token of Curve, a stablecoin-focused exchange.", token: { symbol: "CRV", address: "0x11cDb42B0EB46D95f990BeDD4695A6e3fA034978" }, feed: "0xaebDA2c976cfd1eE1977Eac079B4382acb849325", logo: "/tokens/crv.webp" },
+  ZRO: { symbol: "ZRO", name: "LayerZero", role: "Token of LayerZero, a cross-chain messaging protocol.", token: { symbol: "ZRO", address: "0x6985884C4392D348587B19cb9eAAf157F13271cd" }, feed: "0x1940fEd49cDBC397941f2D336eb4994D599e568B", logo: "/tokens/zro.webp" },
+  DAI: { symbol: "DAI", name: "Dai", role: "A USD stablecoin. Its price is designed to stay near $1.", token: { symbol: "DAI", address: "0xDA10009cBd5D07dd0CeCc66161FC93D7c9000da1" }, feed: "0xc5C8E77B397E531B8EC06BFb0048328B30E9eCfB", logo: "/tokens/dai.webp" },
 };
 
 export type IndexId = "blokc2" | "blokc5" | "blokc10";

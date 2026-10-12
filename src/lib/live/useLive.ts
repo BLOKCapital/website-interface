@@ -1,6 +1,7 @@
 "use client";
 
 import { useCallback, useEffect, useRef, useState, type RefObject } from "react";
+import type { LiveSource } from "./rpc";
 
 /**
  * Honest live-data states, shared by every live widget:
@@ -23,43 +24,80 @@ export type Live<T> = {
   retry: () => void;
 };
 
+export type LiveOptions = {
+  /** Poll period while on screen (ms). */
+  interval?: number;
+  /** A read older than this is "delayed" (ms). */
+  staleAfter?: number;
+  /**
+   * The widget's root. Polling runs only while it's within 120 px of the
+   * viewport and the tab is visible. Required: an element that isn't
+   * mounted (a null ref) counts as off-screen, so nothing polls unseen.
+   */
+  ref: RefObject<Element | null>;
+};
+
+/**
+ * Tells Analytics a live read failed, once per source per mount (a page
+ * view): the `blok:error` contract in src/lib/analytics.ts, which Analytics
+ * drops unless the visitor allowed analytics.
+ */
+function report(seen: Set<LiveSource>, source: LiveSource) {
+  if (seen.has(source)) return;
+  seen.add(source);
+  document.dispatchEvent(new CustomEvent("blok:error", { detail: { source, state: "error" } }));
+}
+
 /**
  * Polls `fetcher` every `interval` ms, but only while `ref` is on screen and
  * the tab is visible. Failures back off (×2, capped at 60s) instead of
  * hammering a public endpoint. Nothing here ever fabricates a value: if a
  * read fails, the last real reading stays, marked delayed.
+ *
+ * Re-renders only when something changes: a read lands, a refresh turns
+ * slow, visibility or connectivity flips, or the reading goes stale (one
+ * timer at `updatedAt + staleAfter`, not a ticking clock).
+ *
+ * A read that ends in `error` dispatches one `blok:error` event per source
+ * while the widget is mounted, i.e. once per page view (src/lib/analytics.ts).
+ * A batch where only some feeds fail is still a live read: those rows show
+ * "—" (prices.ts, feedState) and nothing is reported.
  */
 export function useLive<T>(
   fetcher: () => Promise<T>,
-  { interval = 15000, staleAfter = interval * 2.5, ref }: { interval?: number; staleAfter?: number; ref?: RefObject<Element | null> } = {},
+  { interval = 15000, staleAfter = interval * 2.5, ref }: LiveOptions,
 ): Live<T> {
   const [data, setData] = useState<T | null>(null);
   const [updatedAt, setUpdatedAt] = useState<number | null>(null);
   const [error, setError] = useState<string | null>(null);
   const [inFlight, setInFlight] = useState(false);
-  const [visible, setVisible] = useState(!ref);
+  const [visible, setVisible] = useState(false);
   const [online, setOnline] = useState(true);
-  const [now, setNow] = useState(() => Date.now());
+  // The `updatedAt` whose reading has gone stale; a newer read un-stales it.
+  const [expired, setExpired] = useState<number | null>(null);
   const fetcherRef = useRef(fetcher);
   useEffect(() => {
     fetcherRef.current = fetcher;
   }, [fetcher]);
   const failures = useRef(0);
+  const hasData = useRef(false);
+  // Sources already reported in this mount (a page view).
+  const reported = useRef(new Set<LiveSource>());
   const [kick, setKick] = useState(0);
 
-  // On-screen + tab-visible gate.
+  // On-screen + tab-visible gate. No element yet means off-screen.
   useEffect(() => {
-    let onScreen = !ref;
+    const el = ref.current;
+    let onScreen = !!el && !("IntersectionObserver" in window);
     const update = () => setVisible(onScreen && document.visibilityState === "visible");
     const io =
-      ref?.current && "IntersectionObserver" in window
+      el && "IntersectionObserver" in window
         ? new IntersectionObserver(([e]) => {
             onScreen = e.isIntersecting;
             update();
           }, { rootMargin: "120px" })
         : null;
-    if (io && ref?.current) io.observe(ref.current);
-    else onScreen = true;
+    if (io && el) io.observe(el);
     update();
     document.addEventListener("visibilitychange", update);
     return () => {
@@ -94,11 +132,14 @@ export function useLive<T>(
         setData(d);
         setUpdatedAt(Date.now());
         setError(null);
+        hasData.current = true;
         failures.current = 0;
       } catch (e) {
         if (cancelled) return;
         failures.current += 1;
         setError(e instanceof Error ? e.message : "Request failed");
+        // Nothing to show and still online: the widget now reads "error".
+        if (!hasData.current && navigator.onLine) report(reported.current, (e as { source?: LiveSource }).source ?? "arbitrum-rpc");
       } finally {
         clearTimeout(slow);
         if (!cancelled) {
@@ -115,12 +156,13 @@ export function useLive<T>(
     };
   }, [visible, online, interval, kick]);
 
-  // Clock for staleness, only while visible.
+  // Staleness: one timer for the moment this reading turns stale, only
+  // while visible (off-screen the state is "paused" anyway).
   useEffect(() => {
-    if (!visible) return;
-    const t = setInterval(() => setNow(Date.now()), 1000);
-    return () => clearInterval(t);
-  }, [visible]);
+    if (!visible || updatedAt === null) return;
+    const t = setTimeout(() => setExpired(updatedAt), Math.max(0, updatedAt + staleAfter - Date.now()));
+    return () => clearTimeout(t);
+  }, [visible, updatedAt, staleAfter]);
 
   const retry = useCallback(() => {
     failures.current = 0;
@@ -131,7 +173,7 @@ export function useLive<T>(
   if (!online) state = "offline";
   else if (data === null) state = error ? "error" : "loading";
   else if (!visible) state = "paused";
-  else if (updatedAt && now - updatedAt > staleAfter) state = "delayed";
+  else if (updatedAt !== null && expired === updatedAt) state = "delayed";
   else if (inFlight) state = "updating";
   else state = "live";
 

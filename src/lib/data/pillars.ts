@@ -10,6 +10,12 @@ export type Pillar = {
   spec: string;
   description: string;
   href?: string;
+  /**
+   * Set when the property isn't live yet: a short badge label in the
+   * Badge vocabulary, e.g. "Planned · 2027". Its description is written in
+   * the future tense.
+   */
+  planned?: string;
 };
 
 export const pillars: Pillar[] = [
@@ -19,7 +25,7 @@ export const pillars: Pillar[] = [
     spec: "Web3Auth · ERC-4337",
     description:
       "Every Garden lives at your address. Sign in with Google via Web3Auth's MPC, no seed phrase, no custody, no admin key.",
-    href: "https://docs.blokcapital.io/concepts/blok-c-overview",
+    href: "https://docs.blokcapital.io/en/concepts/blok-c-overview",
   },
   {
     id: "upgradable",
@@ -27,15 +33,19 @@ export const pillars: Pillar[] = [
     spec: "EIP-2535 Diamond",
     description:
       "Add facets, swap strategies, integrate new DEXs, all without forcing users into new contracts. Storage stays put.",
-    href: "https://docs.blokcapital.io/smart-contracts/introduction",
+    href: "https://docs.blokcapital.io/en/smart-contracts/introduction",
   },
   {
     id: "reputation",
     label: "On-chain reputation",
     spec: "ERC-5484 soulbound",
     description:
-      "A Gardener's track record writes itself to a non-transferable badge in their wallet, verifiable from any dapp, owned by no platform.",
-    href: "https://docs.blokcapital.io/builders/blok-capital-v1",
+      "Gardeners arrive in 2027. Each one's track record will be written to a non-transferable badge in their wallet, verifiable from any dapp and owned by no platform.",
+    href: "https://docs.blokcapital.io/en/builders/blok-capital-v1",
+    // 2027: protocolStatus.gardeners, facts.ts ("Planned: manager (Gardener) track
+    // records will be written to … ERC-5484 soulbound badges"), roadmap "Introduction
+    // of Gardeners" (Q2 '27). Year only, so the roadmap stays the one place for quarters.
+    planned: "Planned · 2027",
   },
   {
     id: "audited",
@@ -47,7 +57,7 @@ export const pillars: Pillar[] = [
   {
     id: "dao",
     label: "DAO-governed",
-    spec: "Aragon OSX",
+    spec: "Aragon OSx",
     description:
       "Every protocol change, fees, indices, new facets, routes through on-chain Aragon votes. Core DAO members vote today; $BLOKC holders after launch.",
     href: "/governance",

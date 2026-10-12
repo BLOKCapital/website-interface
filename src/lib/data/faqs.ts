@@ -1,17 +1,28 @@
+import { social } from "./socials";
+
 export type Faq = {
   question: string;
+  /** Plain text, no links: it also feeds the FAQPage JSON-LD and /llms-full.txt. */
   answer: string;
+  /** Optional next step, shown under the answer. Not part of the JSON-LD. */
+  cta?: { label: string; href: string };
 };
+
+const discord = social("discord").href;
 
 /**
  * Every answer must agree with lib/seo/facts.ts, lib/data/status.ts and the
  * User Agreement. These also feed the FAQPage JSON-LD and /llms-full.txt.
+ * Add a question only when its full answer is already stated on the site.
+ *
+ * The home page shows the first five (CRO-08): what it is, who holds the
+ * funds, when it opens, the audit, and the cost.
  */
 export const faqs: Faq[] = [
   {
     question: "What is BLOK Capital?",
     answer:
-      "A non-custodial wealth-management protocol on Arbitrum. You follow a professionally curated on-chain index or, from 2027, hire an on-chain manager, and your assets never leave your own smart-contract wallet. It's currently in private testing.",
+      "A non-custodial wealth-management protocol on Arbitrum. You follow an on-chain index (components chosen by the team and approved by the DAO; weights set on-chain by market cap) or, from 2027, hire an on-chain manager, and your assets never leave your own smart-contract wallet. It's currently in private testing.",
   },
   {
     question: "Who holds my funds?",
@@ -19,19 +30,11 @@ export const faqs: Faq[] = [
       "You do. Your Garden is a smart-contract wallet at your own address. A strategy can rebalance inside it, but only you can move funds out: not BLOK Capital, and not a manager you follow.",
   },
   {
-    question: "Do I need a seed phrase?",
+    // Same message as lib/announce.ts, the CTA band and protocolStatus.label.
+    question: "When can I use it?",
     answer:
-      "Not if you sign in with Google: Web3Auth's MPC ties access to your login. You can also use your own wallet, in which case its seed phrase is your responsibility. Add recovery guardians either way; BLOK Capital can't restore an account.",
-  },
-  {
-    question: "How do I get started?",
-    answer:
-      "BLOK Capital is in private testing, so Gardens aren't open to the public yet. Join the Discord to hear first when they open.",
-  },
-  {
-    question: "What does it cost?",
-    answer:
-      "The protocol is gasless and fee-free at launch; any future protocol fee is set by DAO vote. Gardeners (from 2027) set their own fees within DAO ceilings. Swaps pay the venue's usual costs, and on-ramps like Transak charge their own fees.",
+      "Not yet. Gardens are in private testing and open to the public after testing. Join the Discord to hear first.",
+    cta: { label: "Join the Discord", href: discord },
   },
   {
     question: "Is it audited?",
@@ -39,9 +42,26 @@ export const faqs: Faq[] = [
       "CredShields audited the Garden contracts in November 2024: 26 findings, none critical, all fixed and retested. The newer index and rebalancer contracts haven't had a published audit yet, and SolidityScan and Octane scan the code on release. Audits reduce risk; they don't remove it. Only deposit what you can afford to lose.",
   },
   {
+    question: "What does it cost?",
+    answer:
+      "The protocol is gasless and fee-free at launch; any future protocol fee is set by DAO vote. Gardeners (from 2027) set their own fees within DAO ceilings. Swaps pay the venue's usual costs, and on-ramps like Transak charge their own fees.",
+  },
+  {
+    // The steps are the home page's How it works, in order.
+    question: "How do I get started?",
+    answer:
+      "Once Gardens open: sign in with Google (no seed phrase) or your own wallet to open a Garden, fund it with USDC by card or bank or with crypto you already hold, then choose an index to follow. BLOK Capital is in private testing until then, so join the Discord to hear first when Gardens open.",
+    cta: { label: "Join the Discord", href: discord },
+  },
+  {
+    question: "Do I need a seed phrase?",
+    answer:
+      "Not if you sign in with Google: Web3Auth's MPC ties access to your login. You can also use your own wallet, in which case its seed phrase is your responsibility. Add recovery guardians either way; BLOK Capital can't restore an account.",
+  },
+  {
     question: "How do I add or withdraw funds?",
     answer:
-      "Buy USDC by card or bank through an on-ramp partner such as Transak, which runs its own KYC, or send crypto you already hold. Withdraw the same way, any time.",
+      "Buy USDC by card or bank through an on-ramp such as Transak, which runs its own KYC, or send crypto you already hold. Withdraw the same way, any time.",
   },
   {
     question: "What are stablecoins?",
@@ -55,11 +75,12 @@ export const faqs: Faq[] = [
   {
     question: "Are there geographic restrictions?",
     answer:
-      "Yes. The protocol can't be used from sanctioned jurisdictions (including Cuba, Iran, North Korea, Syria and sanctioned regions of Ukraine) or by sanctioned persons. The User Agreement has the full terms, and on-ramp partners set their own country availability.",
+      "Yes. The protocol can't be used from sanctioned jurisdictions (including Cuba, Iran, North Korea, Syria and sanctioned regions of Ukraine) or by sanctioned persons. The User Agreement has the full terms, and on-ramps set their own country availability.",
   },
   {
     question: "How do I report a security issue?",
     answer:
       "Open a private ticket in the BLOK Capital Discord with steps to reproduce and impact. Please don't post it in a public channel or a public GitHub issue. We reply within 24 hours.",
+    cta: { label: "Open a private ticket in Discord", href: discord },
   },
 ];

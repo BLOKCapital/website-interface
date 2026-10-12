@@ -23,18 +23,25 @@ export type FeedReading = {
 
 const LATEST_ROUND_DATA = "0xfeaf968c";
 
+/**
+ * Reads every feed in one batch. Each feed stands alone: one that errors or
+ * reports a non-positive answer is left out of the result, and the rest are
+ * returned. Throws if the request fails, or, tagged `source: "chainlink"`,
+ * if no feed answered at all.
+ */
 export async function readFeeds(symbols: readonly FeedSymbol[]): Promise<Record<string, FeedReading>> {
   const calls: RpcCall[] = symbols.map((s) => ({
     method: "eth_call",
     params: [{ to: FEEDS[s].address, data: LATEST_ROUND_DATA }, "latest"],
   }));
-  const results = await rpcBatch<string[]>(calls);
+  const results = await rpcBatch(calls);
   const out: Record<string, FeedReading> = {};
   symbols.forEach((s, i) => {
-    const data = results[i];
+    const r = results[i];
+    if (!r.ok || typeof r.value !== "string") return;
     // (roundId, answer, startedAt, updatedAt, answeredInRound)
-    const answer = word(data, 1, true);
-    const updatedAt = word(data, 3);
+    const answer = word(r.value, 1, true);
+    const updatedAt = word(r.value, 3);
     if (answer <= 0n) return;
     out[s] = {
       symbol: s,
@@ -42,5 +49,6 @@ export async function readFeeds(symbols: readonly FeedSymbol[]): Promise<Record<
       oracleUpdatedAt: Number(updatedAt) * 1000,
     };
   });
+  if (symbols.length && !Object.keys(out).length) throw Object.assign(new Error("No price feed answered"), { source: "chainlink" });
   return out;
 }

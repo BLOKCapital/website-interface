@@ -16,22 +16,27 @@ export const socials: Social[] = [
   { id: "discord", label: "Discord", href: "https://discord.com/invite/blokc", desc: "Community, support and private security reports" },
   { id: "x", label: "X", href: "https://x.com/blok_cap", desc: "Announcements and updates" },
   { id: "telegram", label: "Telegram", href: "https://t.me/BLOKCapital", desc: "Community chat" },
-  { id: "farcaster", label: "Farcaster", href: "https://warpcast.com/blokc", desc: "Decentralised social" },
+  { id: "farcaster", label: "Farcaster", href: "https://farcaster.xyz/blokc", desc: "Decentralised social" },
   { id: "github", label: "GitHub", href: "https://github.com/BLOKCapital", desc: "Contracts, front-end and audits" },
   { id: "youtube", label: "YouTube", href: "https://www.youtube.com/@blokcapital", desc: "Walkthroughs and talks" },
 ];
 
 export const social = (id: SocialId) => socials.find((s) => s.id === id)!;
 
-/** Other official destinations used across the site. */
+/**
+ * Other official destinations used across the site. Docs links use their
+ * final /en/ URLs: the unprefixed paths 308-redirect there, and the docs root
+ * redirects to the overview page (checked 2026-10-11).
+ */
 export const links = {
-  docs: "https://docs.blokcapital.io",
-  docsOverview: "https://docs.blokcapital.io/concepts/blok-c-overview",
-  docsArchitecture: "https://docs.blokcapital.io/builders/blok-capital-v1",
-  docsContracts: "https://docs.blokcapital.io/smart-contracts/introduction",
-  docsAddresses: "https://docs.blokcapital.io/resources/smart-contract-address",
-  docsSecurity: "https://docs.blokcapital.io/resources/audits-and-security/audits",
-  docsContribute: "https://docs.blokcapital.io/resources/create-video",
+  docs: "https://docs.blokcapital.io/en/concepts/blok-c-overview",
+  docsOverview: "https://docs.blokcapital.io/en/concepts/blok-c-overview",
+  docsArchitecture: "https://docs.blokcapital.io/en/builders/blok-capital-v1",
+  docsContracts: "https://docs.blokcapital.io/en/smart-contracts/introduction",
+  docsAccountAbstraction: "https://docs.blokcapital.io/en/concepts/protocol-concepts/account-abstraction",
+  docsAddresses: "https://docs.blokcapital.io/en/resources/smart-contract-address",
+  docsSecurity: "https://docs.blokcapital.io/en/resources/audits-and-security/audits",
+  docsContribute: "https://docs.blokcapital.io/en/resources/create-video",
   whitepaper: "https://docsend.com/view/4j6qvvrudyr6izyb",
   auditsRepo: "https://github.com/BLOKCapital/audits",
   aragon:

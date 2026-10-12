@@ -1,15 +1,18 @@
 "use client";
 
-import { useEffect, useId, useRef, useState, type KeyboardEvent } from "react";
-import { scenarios, type TraceLine, type Verdict } from "@/lib/data/scenarios";
-import { prefersReducedMotion, useInView, useReducedMotion } from "@/lib/motion";
+import { useEffect, useId, useRef, useState } from "react";
+import { scenarios, type Scenario, type TraceLine, type Verdict } from "@/lib/data/scenarios";
+import { prefersReducedMotion, useMotionAllowed } from "@/lib/motion";
 import { useIsClient } from "@/lib/hooks";
+import { dwellMs, LG_QUERY, trackSelect, useAutoplay } from "@/lib/explainers";
+import { useRovingTabs } from "@/lib/useRovingTabs";
 import { Badge } from "@/components/ui/Badge";
 import { ArrowLink } from "@/components/ui/ArrowLink";
+import { AutoplayToggle } from "@/components/explore/AutoplayToggle";
 import { cn } from "@/lib/utils";
 
-/** How long a finished trace stays up before autoplay moves on. */
-const HOLD_MS = 4500;
+/** How long a finished trace stays up before autoplay moves on: time to read it. */
+const holdMs = (s: Scenario) => dwellMs(s.caption, ...s.lines.flatMap((l) => [l.text, l.result]), s.verdict.text);
 
 const look: Record<Verdict, { label: string; stamp: string; mark: string; text: string; border: string; bg: string }> = {
   allow: { label: "Allow", stamp: "Allowed", mark: "✓", text: "text-leaf", border: "border-leaf/45", bg: "bg-leaf/[0.07]" },
@@ -24,47 +27,68 @@ const toneText: Record<TraceLine["tone"], string> = {
   info: "text-fg-subtle",
 };
 
-const Cursor = () => <span className="ml-0.5 inline-block h-[1.05em] w-[0.5em] translate-y-[2px] animate-blink bg-leaf/80" />;
+/** A block cursor that blinks four times, then rests on (no endless loop). */
+const Cursor = () => (
+  <span className="ml-0.5 inline-block h-[1.05em] w-[0.5em] translate-y-[2px] animate-blink bg-leaf/80" style={{ animationIterationCount: 4 }} />
+);
 
-type Run = { i: number; shown: number; typed: number };
+/**
+ * Which scenario is up, and how far its trace has run. Modes: "still" shows
+ * it complete; "type" is autoplay's typewriter; "fast" answers a pick: the
+ * call is there at once and the checks follow ~90 ms apart, so the verdict
+ * lands within 800 ms.
+ */
+type Run = { i: number; shown: number; typed: number; mode: "still" | "type" | "fast" };
+
+/** A picked scenario's reveal step: about 90 ms, so the verdict is in by 480 ms and settled (240 ms fade) well inside 800 ms. */
+const fastStep = (stages: number) => Math.min(90, Math.floor(480 / Math.max(1, stages - 1)));
 
 /**
  * The rules, running: pick a situation and watch a Garden's checks trace out
- * line by line to a verdict. Autoplays through the scenarios while on screen
- * (a bar under the active tab shows the wait); any click takes over, and
- * there's a pause control. Server HTML, no-JS and reduced motion all get the
- * complete trace with no typing. The visual terminal is aria-hidden; a plain
- * transcript of the active scenario carries the same content.
+ * line by line to a verdict. On wide screens with a mouse it autoplays
+ * through the scenarios once while on screen, stopping on the last (a bar
+ * under the active tab shows the wait; lib/explainers.ts has the rules every
+ * explainer shares). Any pick takes over for the visit, and there's a
+ * Pause/Resume control. Server HTML, no-JS, phones before a pick and reduced
+ * motion all get the complete trace with no typing. The visual terminal is
+ * aria-hidden; a plain transcript of the active scenario carries the same
+ * content.
  */
 export function RulesDemo() {
   const root = useRef<HTMLDivElement>(null);
-  const inView = useInView(root, { rootMargin: "0px 0px -25% 0px" });
+  const ap = useAutoplay(root, { rootMargin: "0px 0px -25% 0px" });
   const client = useIsClient();
-  const reduce = useReducedMotion();
+  const motion = useMotionAllowed();
   const base = useId();
-  const tabs = useRef<(HTMLButtonElement | null)[]>([]);
-  const [run, setRun] = useState<Run>({ i: 0, shown: 0, typed: 0 });
+  const tabs = useRef<(HTMLElement | null)[]>([]);
+  // Until autoplay starts or the visitor picks, the first scenario shows complete.
+  const [run, setRun] = useState<Run>({ i: 0, shown: 0, typed: 0, mode: "still" });
   const [started, setStarted] = useState(false);
-  const [auto, setAuto] = useState(true);
+  const last = scenarios.length - 1;
 
   const sc = scenarios[run.i];
   const stages = sc.lines.length + 1; // every line, then the verdict
-  const instant = !client || reduce;
+  const instant = !client || !motion || run.mode === "still";
   const done = instant || run.shown >= stages;
-  const typing = !instant && started && run.shown === 0;
-  const holding = !instant && started && auto && inView && done;
+  const typing = !instant && run.shown === 0;
+  const hold = holdMs(sc);
+  const holding = ap.running && started && done && run.i < last;
+  const { on: autoOn, running: autoRunning, end: endAuto } = ap;
 
-  // Begin the first time the demo scrolls into view.
+  // Autoplay begins the first time the demo is on screen with nothing holding it.
   useEffect(() => {
-    if (!inView || started) return;
-    const f = requestAnimationFrame(() => setStarted(true));
+    if (started || !autoRunning) return;
+    const f = requestAnimationFrame(() => {
+      setStarted(true);
+      setRun({ i: 0, shown: 0, typed: 0, mode: "type" });
+    });
     return () => cancelAnimationFrame(f);
-  }, [inView, started]);
+  }, [started, autoRunning]);
 
   // The clock: type the call, reveal each check, land the verdict, then
-  // (autoplay) hold and move to the next scenario.
+  // (autoplay) hold and move to the next scenario, stopping after the last.
   useEffect(() => {
-    if (instant || !started) return;
+    if (instant) return;
     let t: ReturnType<typeof setTimeout> | undefined;
     if (run.shown === 0) {
       t =
@@ -72,12 +96,19 @@ export function RulesDemo() {
           ? setTimeout(() => setRun((r) => ({ ...r, typed: r.typed + 2 })), 24)
           : setTimeout(() => setRun((r) => ({ ...r, shown: 1 })), 260);
     } else if (run.shown < stages) {
-      t = setTimeout(() => setRun((r) => ({ ...r, shown: r.shown + 1 })), run.shown === stages - 1 ? 560 : 380);
-    } else if (auto && inView) {
-      t = setTimeout(() => setRun((r) => ({ i: (r.i + 1) % scenarios.length, shown: 0, typed: 0 })), HOLD_MS);
+      const landing = run.shown === stages - 1;
+      t = setTimeout(
+        () => {
+          setRun((r) => ({ ...r, shown: r.shown + 1 }));
+          if (landing && autoOn && run.i === last) endAuto();
+        },
+        run.mode === "fast" ? fastStep(stages) : landing ? 560 : 380,
+      );
+    } else if (autoRunning && run.i < last) {
+      t = setTimeout(() => setRun({ i: run.i + 1, shown: 0, typed: 0, mode: "type" }), hold);
     }
     return () => clearTimeout(t);
-  }, [instant, started, run, sc, stages, auto, inView]);
+  }, [instant, run, sc, stages, hold, last, autoOn, autoRunning, endAuto]);
 
   // Keep the active scenario in view in the small-screen strip (horizontal
   // scroll only, so the page itself never jumps).
@@ -89,43 +120,41 @@ export function RulesDemo() {
     s.scrollTo({ left: el.offsetLeft - 20, behavior: prefersReducedMotion() ? "auto" : "smooth" });
   }, [run.i]);
 
+  /** The visitor picked a scenario: run it, and stop autoplay for the visit. */
   const select = (i: number) => {
-    setAuto(false);
+    trackSelect("rules_scenario", scenarios[i].id);
+    ap.stop();
     setStarted(true);
-    setRun({ i, shown: 0, typed: 0 });
+    setRun({ i, shown: 1, typed: scenarios[i].lines[0].text.length, mode: "fast" });
+  };
+  const onToggle = () => {
+    // Resuming from the last scenario starts again from the first.
+    if (!ap.on && run.i === last) {
+      setStarted(true);
+      setRun({ i: 0, shown: 0, typed: 0, mode: "type" });
+    }
+    ap.toggle();
   };
 
-  const onKey = (e: KeyboardEvent) => {
-    const n = scenarios.length;
-    const map: Record<string, number> = {
-      ArrowDown: run.i + 1,
-      ArrowRight: run.i + 1,
-      ArrowUp: run.i - 1,
-      ArrowLeft: run.i - 1,
-      Home: 0,
-      End: n - 1,
-    };
-    if (!(e.key in map)) return;
-    e.preventDefault();
-    const next = (map[e.key] + n) % n;
-    select(next);
-    tabs.current[next]?.focus();
-  };
+  // A row of tabs on phones, a column beside the trace from lg.
+  const rt = useRovingTabs({ count: scenarios.length, selected: run.i, onSelect: select, verticalFrom: LG_QUERY, refs: tabs });
 
   const v = look[sc.verdict.kind];
 
   return (
-    <div ref={root} className="grid gap-6 lg:grid-cols-12 lg:gap-8">
+    <div ref={root} {...ap.rootProps} className="grid gap-6 lg:grid-cols-12 lg:gap-8">
       {/* Scenarios */}
       <div className="min-w-0 lg:col-span-4">
         {/* A swipeable strip on small screens, a list beside the trace from lg. */}
         <div
           ref={strip}
-          role="tablist"
+          {...rt.tablist}
           aria-label="Scenarios"
-          aria-orientation="vertical"
-          onKeyDown={onKey}
-          className="relative -mx-5 flex gap-2 overflow-x-auto px-5 pb-1 [scrollbar-width:none] sm:-mx-8 sm:px-8 lg:mx-0 lg:block lg:space-y-2 lg:overflow-visible lg:px-0 lg:pb-0"
+          // A swipe along the strip is the visitor taking over, too.
+          onTouchStart={ap.stop}
+          onWheel={(e) => Math.abs(e.deltaX) > Math.abs(e.deltaY) && ap.stop()}
+          // focus-inset: the phone strip scrolls, and would clip an outside ring.
+          className="focus-inset relative -mx-5 flex gap-2 overflow-x-auto px-5 py-1.5 [scrollbar-width:none] sm:-mx-8 sm:px-8 lg:mx-0 lg:block lg:space-y-2 lg:overflow-visible lg:p-0"
         >
           {scenarios.map((s, i) => {
             const on = i === run.i;
@@ -133,18 +162,13 @@ export function RulesDemo() {
             return (
               <button
                 key={s.id}
-                ref={(el) => {
-                  tabs.current[i] = el;
-                }}
+                {...rt.tab(i)}
                 type="button"
-                role="tab"
                 id={`${base}-tab-${s.id}`}
-                aria-selected={on}
                 aria-controls={`${base}-panel`}
-                tabIndex={on ? 0 : -1}
                 onClick={() => select(i)}
                 className={cn(
-                  "group/sc relative block shrink-0 overflow-hidden rounded-2xl border px-4 py-3 text-left transition-[background-color,border-color] duration-base lg:w-full lg:py-3.5",
+                  "group/sc relative block shrink-0 overflow-hidden rounded-2xl border px-4 py-3 text-left transition-[background-color,border-color] duration-fast lg:w-full lg:py-3.5",
                   on ? "border-leaf/30 bg-card" : "border-line/[0.07] hover:border-line/20 hover:bg-card/60",
                 )}
               >
@@ -167,23 +191,18 @@ export function RulesDemo() {
                     aria-hidden
                     key={`hold-${run.i}`}
                     className="absolute inset-x-0 bottom-0 h-0.5 origin-left animate-progress bg-leaf/70"
-                    style={{ animationDuration: `${HOLD_MS}ms` }}
+                    style={{ animationDuration: `${hold}ms` }}
                   />
                 )}
               </button>
             );
           })}
         </div>
-        {client && !reduce && (
-          <button
-            type="button"
-            onClick={() => setAuto((a) => !a)}
-            className="mt-4 inline-flex items-center gap-2 rounded-full border border-line/12 px-3.5 py-1.5 text-caption text-fg-muted transition-colors duration-fast hover:border-line/30 hover:text-fg"
-          >
-            <span aria-hidden className="font-mono">{auto ? "❚❚" : "▶"}</span>
-            {auto ? "Pause autoplay" : "Resume autoplay"}
-          </button>
-        )}
+        {/* Its space is held from lg (the only place autoplay runs), so the
+            toggle appearing after hydration moves nothing. */}
+        <div className="mt-4 hidden h-8 lg:block">
+          {ap.eligible && <AutoplayToggle on={ap.on} ended={ap.ended} onClick={onToggle} what="autoplay of the scenarios" />}
+        </div>
       </div>
 
       {/* Trace */}
@@ -194,7 +213,8 @@ export function RulesDemo() {
         tabIndex={0}
         className="relative min-w-0 overflow-hidden rounded-3xl border border-line/[0.08] bg-surface lg:col-span-8"
       >
-        <div aria-hidden className="scanlines pointer-events-none absolute inset-0 overflow-hidden" />
+        {/* One sweep of light per scenario (re-keyed), then still. */}
+        <div key={`scan-${run.i}`} aria-hidden data-loop className="scanlines pointer-events-none absolute inset-0 overflow-hidden" />
 
         <div className="relative flex items-center justify-between gap-3 border-b border-line/[0.07] px-5 py-3">
           <p className="flex min-w-0 items-center gap-2 font-mono text-[12px] text-fg-muted">
@@ -204,19 +224,24 @@ export function RulesDemo() {
             </span>
           </p>
           <div className="flex shrink-0 items-center gap-2">
-            {done && (
-              <span
-                key={`stamp-${run.i}`}
-                aria-hidden
-                className={cn(
-                  "hidden animate-stamp rounded-md border-2 px-2 py-0.5 font-mono text-[11px] font-semibold uppercase tracking-[0.2em] sm:inline-block",
-                  v.border,
-                  v.text,
-                )}
-              >
-                {v.stamp}
-              </span>
-            )}
+            {/* Always laid out (hidden until the verdict) and sized for the longest
+                verdict, so the bar keeps its height and nothing beside it moves. */}
+            <span
+              key={`stamp-${run.i}-${done}`}
+              aria-hidden
+              className={cn(
+                "hidden rounded-md border-2 px-2 py-0.5 text-center font-mono text-[11px] font-semibold uppercase tracking-[0.2em] sm:inline-grid",
+                v.border,
+                v.text,
+                done ? !instant && "animate-stamp" : "invisible",
+              )}
+            >
+              {Object.values(look).map((x) => (
+                <span key={x.stamp} className={cn("col-start-1 row-start-1", x.stamp !== v.stamp && "invisible")}>
+                  {x.stamp}
+                </span>
+              ))}
+            </span>
             <Badge tone="example">Illustrative</Badge>
           </div>
         </div>
@@ -238,58 +263,84 @@ export function RulesDemo() {
           </p>
         </div>
 
-        <div aria-hidden className="relative min-h-[320px] px-5 py-5 font-mono text-[12px] leading-relaxed sm:text-[13px]">
-          <ol className="space-y-2">
-            {sc.lines.map((l, k) => {
-              const visible = instant || k < run.shown || (k === 0 && typing);
-              const text = k === 0 && typing ? l.text.slice(0, run.typed) : l.text;
-              const result = instant || k < run.shown;
-              return (
-                <li
-                  key={`${sc.id}-${k}`}
-                  className={cn("grid grid-cols-[14px_1fr_auto] gap-x-3 sm:grid-cols-[68px_1fr_auto]", !visible && "invisible")}
-                >
-                  {/* Phones get just the symbol, leaving room for the trace itself. */}
-                  <span className={l.kind === "call" ? "text-cobalt" : "text-fg-subtle"}>
-                    {l.kind === "call" ? "→" : "·"}
-                    <span className="hidden sm:inline">{l.kind === "call" ? " call" : " check"}</span>
-                  </span>
-                  <span className={cn("min-w-0", l.kind === "call" ? "text-fg" : "text-fg-muted")}>
-                    {text}
-                    {k === 0 && typing && <Cursor />}
-                  </span>
-                  <span className={cn("max-w-[7.5rem] text-right transition-opacity duration-base sm:max-w-none", toneText[l.tone], result ? "opacity-100" : "opacity-0")}>
-                    {l.result}
-                  </span>
-                </li>
-              );
-            })}
-          </ol>
+        {/* Every scenario's trace is laid out complete in the same grid cell, so
+            the terminal is as tall as the longest trace at every width and
+            never changes height between scenarios or while one types out;
+            only the active one is visible. */}
+        <div aria-hidden className="relative grid px-5 py-5 font-mono text-[12px] leading-relaxed sm:text-[13px]">
+          {scenarios.map((x, i) => {
+            const on = i === run.i;
+            const xv = look[x.verdict.kind];
+            return (
+              <div key={x.id} className={cn("col-start-1 row-start-1", !on && "invisible")}>
+                <ol className="space-y-2">
+                  {x.lines.map((l, k) => {
+                    const typingHere = on && k === 0 && typing;
+                    const visible = !on || instant || k < run.shown || typingHere;
+                    const result = !on || instant || k < run.shown;
+                    return (
+                      <li key={k} className={cn("grid grid-cols-[14px_1fr_auto] gap-x-3 sm:grid-cols-[68px_1fr_auto]", !visible && "invisible")}>
+                        {/* Phones get just the symbol, leaving room for the trace itself. */}
+                        <span className={l.kind === "call" ? "text-cobalt" : "text-fg-subtle"}>
+                          {l.kind === "call" ? "→" : "·"}
+                          <span className="hidden sm:inline">{l.kind === "call" ? " call" : " check"}</span>
+                        </span>
+                        {typingHere ? (
+                          // The full line holds the space while it types over it.
+                          <span className="grid min-w-0 text-fg">
+                            <span className="invisible col-start-1 row-start-1">{l.text}</span>
+                            <span className="col-start-1 row-start-1">
+                              {l.text.slice(0, run.typed)}
+                              <Cursor />
+                            </span>
+                          </span>
+                        ) : (
+                          <span className={cn("min-w-0", l.kind === "call" ? "text-fg" : "text-fg-muted")}>{l.text}</span>
+                        )}
+                        <span className={cn("max-w-[7.5rem] text-right transition-opacity duration-base sm:max-w-none", toneText[l.tone], result ? "opacity-100" : "opacity-0")}>
+                          {l.result}
+                        </span>
+                      </li>
+                    );
+                  })}
+                </ol>
 
-          <div
-            className={cn(
-              "mt-6 flex flex-col gap-1 rounded-xl border px-4 py-3 sm:flex-row sm:items-baseline sm:gap-4",
-              v.border,
-              v.bg,
-              !done && "invisible",
-              done && !instant && "animate-enter-up [animation-duration:450ms]",
-            )}
-          >
-            <span className={cn("shrink-0 font-semibold uppercase tracking-[0.14em]", v.text)}>
-              {v.mark} {v.label}
-            </span>
-            <span className="font-sans text-small text-fg">{sc.verdict.text}</span>
-          </div>
-          {done && !instant && (
-            <p className="mt-4 text-fg-subtle">
-              › <Cursor />
-            </p>
-          )}
+                <div
+                  className={cn(
+                    "mt-6 flex flex-col gap-1 rounded-xl border px-4 py-3 sm:flex-row sm:items-baseline sm:gap-4",
+                    xv.border,
+                    xv.bg,
+                    on && !done && "invisible",
+                    on && done && !instant && "animate-swap",
+                  )}
+                >
+                  <span className={cn("shrink-0 font-semibold uppercase tracking-[0.14em]", xv.text)}>
+                    {xv.mark} {xv.label}
+                  </span>
+                  <span className="font-sans text-small text-fg">{x.verdict.text}</span>
+                </div>
+                {/* The prompt line is always laid out, and shows once the verdict is in. */}
+                <p className={cn("mt-4 text-fg-subtle", on && !done && "invisible")}>
+                  › <Cursor />
+                </p>
+              </div>
+            );
+          })}
         </div>
 
         <div className="relative flex flex-wrap items-center justify-between gap-3 border-t border-line/[0.07] px-5 py-3">
           <p className="flex flex-wrap items-center gap-x-2 text-caption text-fg-subtle">
-            Rule from <ArrowLink href={sc.source.href} className="text-[13px]">{sc.source.label}</ArrowLink>
+            Rule from{" "}
+            {/* Every scenario's source in one cell, so the row wraps the same way for all. */}
+            <span className="inline-grid">
+              {scenarios.map((x, i) => (
+                <span key={x.id} inert={i !== run.i} className={cn("col-start-1 row-start-1", i !== run.i && "invisible")}>
+                  <ArrowLink href={x.source.href} className="text-[13px]">
+                    {x.source.label}
+                  </ArrowLink>
+                </span>
+              ))}
+            </span>
           </p>
           <p className="text-caption text-fg-subtle">The checks are real; the figures and addresses are examples.</p>
         </div>
