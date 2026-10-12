@@ -14,18 +14,31 @@ import { useSyncExternalStore } from "react";
  * Either store alone is enough to suppress the banner; whichever is readable
  * wins. Bump CONSENT_VERSION whenever the categories change — stored records
  * from an older version are treated as "not decided" and the banner returns.
+ *
+ * v2 (D-14/D-14b, SEC-05): the "Marketing" category is gone. It only ever
+ * flipped Google's ad signals, and the site runs no ad or marketing tags, so
+ * every `ad_*` Consent Mode signal now stays denied for good. Analytics is the
+ * one optional category. Bumping the version asks everyone once more.
  */
 
 export const CONSENT_COOKIE = "blok_consent";
 export const CONSENT_STORAGE_KEY = "blok:consent";
-export const CONSENT_VERSION = 1;
+export const CONSENT_VERSION = 2;
+
+/**
+ * The Cookie Policy the visitor was shown, stored with every decision as
+ * proof of what they agreed to (SEC-22). Keep it equal to the cookie
+ * policy's `date` in lib/data/policies.ts (tests/consent.spec.ts checks it).
+ * A new policy date alone doesn't re-ask; bump CONSENT_VERSION for that.
+ */
+export const CONSENT_POLICY = "2025-02-18";
 
 /** Re-ask twice a year, the interval most EU regulators treat as reasonable. */
 const MAX_AGE_DAYS = 182;
 const MAX_AGE_SECONDS = MAX_AGE_DAYS * 24 * 60 * 60;
 
 /** Categories the visitor can actually toggle. "essential" is not opt-out. */
-export type ConsentCategory = "analytics" | "marketing";
+export type ConsentCategory = "analytics";
 
 export type ConsentChoices = Record<ConsentCategory, boolean>;
 
@@ -36,10 +49,12 @@ export type ConsentRecord = ConsentChoices & {
   ts: string;
   /** Where the decision came from. */
   source: "banner" | "preferences" | "gpc";
+  /** The Cookie Policy version (its date) in force when the choice was made. */
+  policy: string;
 };
 
-export const DENY_ALL: ConsentChoices = { analytics: false, marketing: false };
-export const ALLOW_ALL: ConsentChoices = { analytics: true, marketing: true };
+export const DENY_ALL: ConsentChoices = { analytics: false };
+export const ALLOW_ALL: ConsentChoices = { analytics: true };
 
 /** Fired on window whenever the decision changes — the hook for tag loaders. */
 export const CONSENT_CHANGE_EVENT = "blok:consentchange";
@@ -54,8 +69,8 @@ function isRecord(value: unknown): value is ConsentRecord {
   return (
     typeof r.v === "number" &&
     typeof r.ts === "string" &&
-    typeof r.analytics === "boolean" &&
-    typeof r.marketing === "boolean"
+    typeof r.policy === "string" &&
+    typeof r.analytics === "boolean"
   );
 }
 
@@ -135,10 +150,11 @@ export function setConsent(
   source: ConsentRecord["source"] = "banner",
 ): ConsentRecord {
   const record: ConsentRecord = {
-    ...choices,
+    analytics: choices.analytics,
     v: CONSENT_VERSION,
     ts: new Date().toISOString(),
     source,
+    policy: CONSENT_POLICY,
   };
   persist(record);
   snapshot = record;
