@@ -18,6 +18,13 @@ const config: NextConfig = {
     // Allowed next/image quality values. 75 is the implicit default; 94/95 are
     // used by the garden art. Next.js 16 requires every value to be declared.
     qualities: [75, 94, 95],
+    // The srcset widths. deviceSizes match the pre-built Garden files 1:1
+    // (garden-NN-480/720/960.webp and the 1440px master), so every `w`
+    // descriptor names the file the loader returns (PERF-05). imageSizes stop
+    // below 384: a `vw` sizes like the hero's ((max-width: 640px) 80vw) asks
+    // for every width >= 480 × 0.8, and a 384 there would point at the 480 file.
+    deviceSizes: [480, 720, 960, 1440],
+    imageSizes: [64, 128, 256],
   },
 };
 

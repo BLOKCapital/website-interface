@@ -23,7 +23,15 @@ type LoaderArgs = {
  * generated from the 1440px masters with sharp). When Cloudflare
  * transformations are off, the loader maps each requested width to the
  * smallest pre-built file that covers it, so a phone no longer downloads the
- * 1440px master. Regenerate the variants if a master changes.
+ * 1440px master. next.config.ts sets deviceSizes to [480, 720, 960, 1440], so
+ * each srcset `w` descriptor is the width of the file it names. Regenerate
+ * the variants if a master changes.
+ *
+ * Small art is pre-sized at about 2× its display size instead (PERF-06) and
+ * referenced by that file's path: the wordmark (-340), the mark (-96),
+ * the ecosystem logos (-240), the home team strip (teamgrid/*-96) and token
+ * logos (tokens/*-64; BasketOrbit's ~50px discs keep the 128px originals).
+ * Unused masters live in design/archive/public/.
  */
 const GARDEN = /^\/gardens\/garden-(\d{2})\.webp$/;
 const GARDEN_WIDTHS = [480, 720, 960];
