@@ -10,7 +10,7 @@ import { cn } from "@/lib/utils";
 export function TokenLogo({ symbol, size = 24, className }: { symbol: ComponentSymbol; size?: number; className?: string }) {
   return (
     <Image
-      src={components[symbol].logo}
+      src={components[symbol].logo.replace(/\.webp$/, "-64.webp")}
       alt=""
       width={size}
       height={size}

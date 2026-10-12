@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import type { ReactNode } from "react";
 import Link from "next/link";
 import { PageHero } from "@/components/ui/PageHero";
 import { Section } from "@/components/ui/Section";
@@ -8,21 +9,26 @@ import { ArrowLink } from "@/components/ui/ArrowLink";
 import { CtaBand } from "@/components/ui/CtaBand";
 import { Reveal, Stagger, RevealItem } from "@/components/ui/Reveal";
 import { CustodyDiagram } from "@/components/home/CustodyDiagram";
+import { Ecosystem } from "@/components/home/Ecosystem";
+import { ExploreSection } from "@/components/explore/ExploreSection";
 import { ProductStack } from "@/components/protocol/ProductStack";
 import { FeesRisks } from "@/components/protocol/FeesRisks";
+import { Glossary, TermLink } from "@/components/protocol/Glossary";
 import { JsonLd } from "@/components/seo/JsonLd";
 import { breadcrumbSchema } from "@/lib/seo/schema";
 import { protocolStatus } from "@/lib/data/status";
-import { links } from "@/lib/data/socials";
+import { links, social } from "@/lib/data/socials";
+import { pageMetadata } from "@/lib/seo/metadata";
 
-export const metadata: Metadata = {
-  title: "Protocol",
-  description:
-    "How BLOK Capital works: smart-wallet Gardens, curated Index Gardens, Yield Gardens, on-chain Gardeners, the Diamond architecture, fees and risks.",
-  alternates: { canonical: "/protocol" },
-};
+export const metadata: Metadata = pageMetadata({
+  title: "Protocol: how non-custodial Gardens work",
+  description: `How BLOK Capital works: smart-wallet Gardens, curated Index Gardens, Yield Gardens, Gardeners (from ${protocolStatus.gardeners}), the Diamond architecture, fees and risks.`,
+  path: "/protocol",
+  // protocol/opengraph-image.tsx supplies the card.
+  ownImage: true,
+});
 
-const architecture = [
+const architecture: { title: string; spec: string; body: ReactNode }[] = [
   {
     title: "Smart accounts",
     spec: "ERC-4337 · EIP-7702 · Web3Auth MPC",
@@ -31,7 +37,13 @@ const architecture = [
   {
     title: "Diamond contracts",
     spec: "EIP-2535 · EIP-7201",
-    body: "Gardens are Diamonds: capabilities live in facets that can be added or swapped without migrating user storage. An upgrade can only install a facet the DAO has approved in the Facet Registry.",
+    body: (
+      <>
+        Gardens are <TermLink id="diamond">Diamonds</TermLink>: capabilities live in <TermLink id="facet">facets</TermLink> that
+        can be added or swapped without migrating user storage. An upgrade can only install a facet the DAO has approved in
+        the Facet Registry.
+      </>
+    ),
   },
   {
     title: "Soulbound reputation",
@@ -47,6 +59,14 @@ const architecture = [
 
 const composes = ["Uniswap V3", "Camelot V3", "Aave V3", "GMX V2", "Pendle V2", "Chainlink"];
 
+/** The builders' first reads; the whitepaper joins them (CRO-24). */
+const startHere = [
+  { label: "Contracts on GitHub", href: social("github").href, cta: "protocol_github" },
+  { label: "V1 architecture", href: links.docsArchitecture, cta: "protocol_docs_architecture" },
+  { label: "Smart-contract guide", href: links.docsContracts, cta: "protocol_docs_contracts" },
+  { label: "Whitepaper", href: links.whitepaper, cta: "protocol_whitepaper" },
+];
+
 export default function ProtocolPage() {
   return (
     <>
@@ -56,13 +76,20 @@ export default function ProtocolPage() {
         eyebrow="The protocol"
         title={
           <>
-            A wallet you own, <em className="text-sand">a strategy on top.</em>
+            One wallet. <em className="text-sand">Three ways to steer it.</em>
           </>
         }
-        description="Every Garden is a smart wallet at your address. Strategies can rebalance inside it; only your signature moves funds out."
+        description={
+          <>
+            Every <TermLink id="garden">Garden</TermLink> is a <TermLink id="smart-account">smart wallet</TermLink> at your
+            address. Strategies can rebalance inside it; only your signature moves funds out.
+          </>
+        }
         actions={
           <>
-            <Button href={links.docs}>Read the docs</Button>
+            <Button href={links.docs} data-cta="protocol_hero_docs">
+              Read the docs
+            </Button>
             <Button href="/security" variant="secondary">
               Security
             </Button>
@@ -84,6 +111,9 @@ export default function ProtocolPage() {
           </dl>
         }
       />
+
+      {/* The canonical "how" (D-08a, UX-04): the layer-by-layer explorer is the centrepiece, right after the hero. */}
+      <ExploreSection />
 
       <Section
         id="products"
@@ -121,6 +151,12 @@ export default function ProtocolPage() {
         </div>
       </Section>
 
+      {/* CRO-15: the six terms, after the sections that use them most. */}
+      <Glossary />
+
+      {/* D-08b: the full ecosystem lives here; home keeps a pointer to it. */}
+      <Ecosystem tone="surface" />
+
       <Section
         id="builders"
         eyebrow="For builders"
@@ -144,7 +180,7 @@ export default function ProtocolPage() {
               </ul>
               <p className="mt-6 text-small text-fg-muted">
                 All wired through the Facet Registry. See the{" "}
-                <Link href="/#ecosystem" className="text-leaf underline underline-offset-2">
+                <Link href="#ecosystem" className="text-leaf underline underline-offset-2">
                   full ecosystem
                 </Link>
                 .
@@ -152,18 +188,24 @@ export default function ProtocolPage() {
             </Card>
           </Reveal>
           <Reveal delay={0.08}>
-            <Card className="flex h-full flex-col gap-3">
+            <Card className="flex h-full flex-col">
               <h3 className="text-h4 font-medium text-fg">Start here</h3>
-              <ArrowLink href="https://github.com/BLOKCapital">Contracts on GitHub</ArrowLink>
-              <ArrowLink href={links.docsArchitecture}>V1 architecture</ArrowLink>
-              <ArrowLink href={links.docsContracts}>Smart-contract guide</ArrowLink>
+              {/* data-cta on each item: ArrowLink takes no extra props, and
+                  the click listener reads the closest [data-cta]. */}
+              <ul className="mt-3 flex flex-col gap-3">
+                {startHere.map((l) => (
+                  <li key={l.cta} data-cta={l.cta}>
+                    <ArrowLink href={l.href}>{l.label}</ArrowLink>
+                  </li>
+                ))}
+              </ul>
             </Card>
           </Reveal>
         </div>
       </Section>
 
       <FeesRisks />
-      <CtaBand />
+      <CtaBand context="protocol" />
     </>
   );
 }

@@ -1,112 +1,180 @@
-import type { ReactNode } from "react";
-import { Stagger, RevealItem } from "@/components/ui/Reveal";
-import { ExternalIcon } from "@/components/ui/icons";
+import Link from "next/link";
+import { Reveal } from "@/components/ui/Reveal";
+import { Icon } from "@/components/ui/Icon";
+import { actions, actors, custody, type Cell } from "./controls";
 import { cn } from "@/lib/utils";
-
-export type Control = { label: string; body: string; by: string; source: string };
 
 const draw = { fill: "none", stroke: "currentColor", strokeWidth: 1.6, strokeLinecap: "round", strokeLinejoin: "round", pathLength: 1, className: "draw-path" } as const;
 
-/** A drawn mark per control, by label. */
-const marks: Record<string, ReactNode> = {
-  "Your funds": (
-    <>
-      <path d="M14 22h20v16H14z" {...draw} />
-      <path d="M18 22v-5a6 6 0 0 1 12 0v5M24 29v3" {...draw} />
-    </>
-  ),
-  Upgrades: (
-    <>
-      <path d="M24 8 10 15l14 7 14-7-14-7ZM10 22l14 7 14-7" {...draw} />
-      <path d="m19 33 4 4 7-8" {...draw} />
-    </>
-  ),
-  "Protocol changes": (
-    <>
-      <path d="M24 8 12 12.5V22c0 8 5 13.5 12 16 7-2.5 12-8 12-16v-9.5L24 8Z" {...draw} />
-      <path d="M19 23h10M24 18v10" {...draw} />
-    </>
-  ),
-  Pausing: (
-    <>
-      <path d="M38 24a14 14 0 1 1-28 0 14 14 0 0 1 28 0Z" {...draw} />
-      <path d="M20.5 18v12M27.5 18v12" {...draw} />
-    </>
-  ),
-  Governance: (
-    <>
-      <path d="M10 24h28v14H10z" {...draw} />
-      <path d="M16 24V10h16v14M19.5 16.5l3 3 6-6" {...draw} />
-    </>
-  ),
-};
-
-function Mark({ label, large }: { label: string; large?: boolean }) {
+/** The padlock mark for "Your funds". */
+function Lock() {
   return (
-    <span
-      aria-hidden
-      className={cn("grid shrink-0 place-items-center rounded-2xl border border-leaf/25 bg-leaf/[0.07] text-leaf", large ? "size-16" : "size-12")}
-    >
-      <svg width={large ? 38 : 28} height={large ? 38 : 28} viewBox="0 0 48 48">
-        {marks[label]}
+    <span aria-hidden className="grid size-14 shrink-0 place-items-center rounded-2xl border border-leaf/25 bg-leaf/[0.07] text-leaf">
+      <svg width="34" height="34" viewBox="0 0 48 48">
+        <path d="M14 22h20v16H14z" {...draw} />
+        <path d="M18 22v-5a6 6 0 0 1 12 0v5M24 29v3" {...draw} />
       </svg>
     </span>
   );
 }
 
-function Source({ href, label, className }: { href: string; label: string; className?: string }) {
+/** A source link: external ones open in a new tab and say so. */
+function SourceLink({ href, children, label, className }: { href: string; children: React.ReactNode; label: string; className?: string }) {
+  const external = /^https?:\/\//.test(href);
   return (
-    <a
+    <Link
       href={href}
-      target="_blank"
-      rel="noopener noreferrer"
-      className={cn("group/s inline-flex items-center gap-1 text-small font-medium text-leaf transition-colors hover:text-fg", className)}
+      prefetch={false}
+      target={external ? "_blank" : undefined}
+      rel={external ? "noopener noreferrer" : undefined}
+      className={cn("group/src rounded-xs transition-colors duration-fast", className)}
     >
-      Read the source <ExternalIcon className="transition-transform group-hover/s:-translate-y-0.5 group-hover/s:translate-x-0.5" />
-      <span className="sr-only"> for {label} (opens in a new tab)</span>
-    </a>
+      {children}
+      <span className="sr-only">
+        {" "}
+        (source: {label}
+        {external ? ", opens in a new tab" : ""})
+      </span>
+    </Link>
+  );
+}
+
+const answerLook = {
+  yes: { icon: "check", tone: "text-success" },
+  no: { icon: "cross", tone: "text-danger" },
+  limited: { icon: null, tone: "" },
+} as const;
+
+/** One cell: a shape and a word for yes / no, then the claim, linked to its source. */
+function CellLink({ cell }: { cell: Cell }) {
+  const look = answerLook[cell.answer];
+  return (
+    <SourceLink
+      href={cell.source.href}
+      label={cell.source.label}
+      className="inline-flex items-start gap-1.5 text-fg underline decoration-line/30 underline-offset-[3px] can-hover:hover:decoration-leaf"
+    >
+      {look.icon && <Icon name={look.icon} size="sm" className={cn("mt-0.5", look.tone)} />}
+      <span>{cell.text}</span>
+    </SourceLink>
+  );
+}
+
+function Unstated() {
+  return (
+    <span className="text-fg-subtle">
+      <span aria-hidden>—</span>
+      <span className="sr-only">Not stated yet</span>
+    </span>
   );
 }
 
 /**
- * Who can change what, as a map: the first control (your funds) is the large
- * dark tile, the rest sit beside it. Each names what enforces it and links to
- * where the docs say so; marks draw in as the cards reveal.
+ * Who can do what (INS-05): the custody guarantee as a wide feature card,
+ * then an actor × action matrix (a table from lg, one card per actor
+ * below). Data and rules: controls.ts. Each filled cell links to the source
+ * the site already cites; empty cells are "not stated yet", never a guess.
  */
-export function ControlMap({ controls }: { controls: Control[] }) {
-  const [lead, ...rest] = controls;
+export function ControlMap() {
   return (
-    <Stagger step={0.08} className="grid gap-5 lg:grid-cols-12">
-      <RevealItem className="lg:col-span-5">
-        <article className="theme-dark relative flex h-full flex-col overflow-hidden rounded-[28px] border border-leaf/20 bg-card p-7 sm:p-9">
+    <div className="flex flex-col gap-5">
+      {/* The headline guarantee, laid out wide so it isn't half empty (VIS-22). */}
+      <Reveal>
+        <article className="theme-dark relative grid gap-6 overflow-hidden rounded-[28px] border border-leaf/20 bg-card p-7 sm:p-9 lg:grid-cols-12 lg:items-center lg:gap-10">
           <div aria-hidden className="glow-leaf pointer-events-none absolute -right-24 -top-24 size-80 opacity-80" />
           <div aria-hidden className="grid-lines pointer-events-none absolute inset-0 opacity-50 [mask-image:radial-gradient(ellipse_at_80%_0%,black,transparent_70%)]" />
-          <Mark label={lead.label} large />
-          <p className="relative mt-8 font-mono text-[11px] uppercase tracking-[0.14em] text-fg-subtle">
-            Enforced by <span className="text-leaf">{lead.by}</span>
-          </p>
-          <h3 className="display relative mt-3 text-[clamp(30px,2.4vw+16px,44px)] leading-tight text-fg">{lead.label}</h3>
-          <p className="relative mt-4 text-lead text-fg-muted">{lead.body}</p>
-          <Source href={lead.source} label={lead.label} className="relative mt-auto pt-8" />
+          <div className="relative flex items-center gap-5 lg:col-span-5">
+            <Lock />
+            <div>
+              <p className="label-caps">
+                Enforced by <span className="text-leaf">{custody.by}</span>
+              </p>
+              <h3 className="display mt-2 text-display-sm text-fg">{custody.label}</h3>
+            </div>
+          </div>
+          <div className="relative lg:col-span-7">
+            <p className="text-lead text-fg-muted">{custody.body}</p>
+            <SourceLink
+              href={custody.source.href}
+              label={custody.label}
+              className="mt-4 inline-flex items-center gap-1 text-small font-medium text-leaf can-hover:hover:text-fg"
+            >
+              Read the source
+              <Icon name="external" size="sm" className="transition-transform duration-fast can-hover:group-hover/src:-translate-y-0.5" />
+            </SourceLink>
+          </div>
         </article>
-      </RevealItem>
-      <ul className="grid gap-5 sm:grid-cols-2 lg:col-span-7">
-        {rest.map((c) => (
-          <RevealItem as="li" key={c.label}>
-            <article className="flex h-full flex-col rounded-[24px] border border-line/[0.08] bg-card p-6 transition-[border-color,transform] duration-base ease-expo hover:-translate-y-0.5 hover:border-leaf/30">
-              <div className="flex items-start justify-between gap-3">
-                <Mark label={c.label} />
-                <span className="rounded-full border border-line/12 px-2.5 py-0.5 text-right font-mono text-[11px] uppercase tracking-[0.1em] text-fg-subtle">
-                  {c.by}
-                </span>
-              </div>
-              <h3 className="mt-5 text-h4 font-medium text-fg">{c.label}</h3>
-              <p className="mt-2 flex-1 text-[15px] leading-relaxed text-fg-muted">{c.body}</p>
-              <Source href={c.source} label={c.label} className="mt-5" />
-            </article>
-          </RevealItem>
+      </Reveal>
+
+      {/* lg and up: the matrix as a table. */}
+      <Reveal className="hidden overflow-hidden rounded-panel border border-subtle bg-card lg:block">
+        <table className="w-full table-fixed border-collapse text-left text-small">
+          <caption className="sr-only">Who can do what with a Garden: each actor against each action</caption>
+          <colgroup>
+            <col className="w-[22%]" />
+            {actions.map((a) => (
+              <col key={a.id} className="w-[15.6%]" />
+            ))}
+          </colgroup>
+          <thead>
+            <tr className="border-b border-subtle">
+              <th scope="col" className="label-caps px-5 py-3.5 align-bottom font-normal">
+                Who
+              </th>
+              {actions.map((a) => (
+                <th key={a.id} scope="col" className="label-caps px-4 py-3.5 align-bottom font-normal">
+                  {a.label}
+                </th>
+              ))}
+            </tr>
+          </thead>
+          <tbody className="divide-y divide-line/[0.07]">
+            {actors.map((actor) => (
+              <tr key={actor.id} className="align-top">
+                <th scope="row" className="px-5 py-4 font-normal">
+                  <span className="block font-medium text-fg">{actor.name}</span>
+                  <span className="mt-1 block text-caption text-fg-subtle">{actor.note}</span>
+                </th>
+                {actions.map((a) => {
+                  const cell = actor.cells[a.id];
+                  return (
+                    <td key={a.id} className="px-4 py-4">
+                      {cell ? <CellLink cell={cell} /> : <Unstated />}
+                    </td>
+                  );
+                })}
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </Reveal>
+
+      {/* Below lg: one card per actor. */}
+      <ul className="grid gap-4 md:grid-cols-2 lg:hidden">
+        {actors.map((actor) => (
+          <li key={actor.id} className="rounded-card border border-subtle bg-card p-5">
+            <h3 className="text-ui font-medium text-fg">{actor.name}</h3>
+            <p className="mt-1 text-caption text-fg-subtle">{actor.note}</p>
+            <dl className="mt-4 divide-y divide-line/[0.07] border-t border-subtle text-small">
+              {actions.map((a) => {
+                const cell = actor.cells[a.id];
+                return (
+                  <div key={a.id} className="grid grid-cols-[minmax(0,9rem)_1fr] gap-3 py-2.5">
+                    <dt className="text-fg-muted">{a.label}</dt>
+                    <dd>{cell ? <CellLink cell={cell} /> : <Unstated />}</dd>
+                  </div>
+                );
+              })}
+            </dl>
+          </li>
         ))}
       </ul>
-    </Stagger>
+
+      <p className="text-caption text-fg-subtle">
+        The rules as the docs and contracts describe them; mainnet contracts aren&apos;t deployed yet. Each filled cell links
+        to its source. <span aria-hidden>—</span> means this site doesn&apos;t state it yet. Delays and timelocks will be
+        listed only once they&apos;re verified on-chain.
+      </p>
+    </div>
   );
 }

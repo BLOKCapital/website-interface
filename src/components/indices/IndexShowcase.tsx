@@ -1,15 +1,18 @@
 "use client";
 
-import { useId, useRef, useState, type CSSProperties, type KeyboardEvent } from "react";
+import { useCallback, useId, useRef, useState } from "react";
 import Link from "next/link";
 import { indices, components, type IndexId, type ComponentSymbol } from "@/lib/data/indices";
-import { useComponentPrices, formatUsd } from "@/lib/live/prices";
+import { useComponentPrices } from "@/lib/live/prices";
 import { LiveStatus } from "@/components/live/LiveStatus";
 import { Badge } from "@/components/ui/Badge";
 import { ArrowIcon } from "@/components/ui/icons";
 import { BasketOrbit } from "./BasketOrbit";
 import { TokenLogo, TokenStack } from "./TokenLogo";
+import { LivePrice } from "./LivePrice";
 import { cn } from "@/lib/utils";
+import { useRovingTabs } from "@/lib/useRovingTabs";
+import { trackSelect } from "@/lib/explainers";
 
 /** The rules every index runs on, as stated in the contracts and docs. */
 const rules = ["Weights from market cap", "Prices from Chainlink", "Rebalance past 2% drift", "Max 0.5% value loss"];
@@ -35,48 +38,47 @@ export function IndexShowcase({ initial = "blokc5" }: { initial?: IndexId }) {
   const root = useRef<HTMLDivElement>(null);
   const prices = useComponentPrices(root);
   const base = useId();
-  const tabs = useRef<(HTMLButtonElement | null)[]>([]);
+  // Crossfade the console only after a pick, never on page load.
+  const [picked, setPicked] = useState(false);
 
   const choose = (next: IndexId) => {
+    trackSelect("index", next);
+    setPicked(true);
     setId(next);
     setSel(indices.find((i) => i.id === next)!.components[0]);
   };
-  const onKey = (e: KeyboardEvent) => {
-    const i = indices.findIndex((x) => x.id === id);
-    const d = e.key === "ArrowRight" || e.key === "ArrowDown" ? 1 : e.key === "ArrowLeft" || e.key === "ArrowUp" ? -1 : 0;
-    if (!d) return;
-    e.preventDefault();
-    const n = (i + d + indices.length) % indices.length;
-    choose(indices[n].id);
-    tabs.current[n]?.focus();
-  };
+  const pickComponent = useCallback((s: ComponentSymbol) => {
+    trackSelect("index_component", s.toLowerCase());
+    setPicked(true);
+    setSel(s);
+  }, []);
+  const rt = useRovingTabs({
+    count: indices.length,
+    selected: indices.findIndex((x) => x.id === id),
+    onSelect: (i) => choose(indices[i].id),
+  });
 
   const comp = components[selected];
 
   return (
     <div ref={root}>
       {/* Choose an index */}
-      <div role="tablist" aria-label="Choose an index" onKeyDown={onKey} className="grid grid-cols-3 gap-2 sm:gap-4">
+      <div {...rt.tablist} aria-label="Choose an index" className="grid grid-cols-3 gap-2 sm:gap-4">
         {indices.map((x, i) => {
           const on = x.id === id;
           return (
             <button
               key={x.id}
-              ref={(el) => {
-                tabs.current[i] = el;
-              }}
+              {...rt.tab(i)}
               type="button"
-              role="tab"
               id={`${base}-${x.id}`}
-              aria-selected={on}
               aria-controls={`${base}-panel`}
-              tabIndex={on ? 0 : -1}
               onClick={() => choose(x.id)}
               className={cn(
-                "group/ix relative overflow-hidden rounded-2xl border p-3 text-left transition-[background-color,border-color,transform,box-shadow] duration-base ease-expo sm:rounded-3xl sm:p-5",
+                "group/ix relative overflow-hidden rounded-2xl border p-3 text-left transition-[background-color,border-color,transform,box-shadow] duration-fast ease-out sm:rounded-3xl sm:p-5",
                 on
                   ? "theme-dark border-leaf/40 bg-card shadow-[0_24px_60px_-30px_rgb(var(--shadow))]"
-                  : "border-line/[0.08] bg-card hover:-translate-y-0.5 hover:border-line/20",
+                  : "border-line/[0.08] bg-card hover:border-line/20 can-hover:hover:-translate-y-0.5",
               )}
             >
               {on && <span aria-hidden className="glow-leaf pointer-events-none absolute -right-16 -top-16 size-48 opacity-70" />}
@@ -91,7 +93,7 @@ export function IndexShowcase({ initial = "blokc5" }: { initial?: IndexId }) {
               <span
                 aria-hidden
                 className={cn(
-                  "absolute inset-x-0 bottom-0 h-0.5 origin-left bg-leaf transition-transform duration-slow ease-expo",
+                  "absolute inset-x-0 bottom-0 h-0.5 origin-left bg-leaf transition-transform duration-base ease-expo",
                   on ? "scale-x-100" : "scale-x-0",
                 )}
               />
@@ -116,7 +118,7 @@ export function IndexShowcase({ initial = "blokc5" }: { initial?: IndexId }) {
             </div>
             {/* Sticks beside a long component list on wide screens. */}
             <div className="relative flex flex-col items-center gap-6 lg:sticky lg:top-28">
-              <BasketOrbit index={idx} selected={selected} onSelect={setSel} className="max-w-[420px]" />
+              <BasketOrbit index={idx} selected={selected} onSelect={pickComponent} picked={picked} className="max-w-[420px]" />
               <p className="text-center text-[11.5px] text-fg-subtle">
                 Pick a token. All drawn the same size: weights are set on-chain by market cap.
               </p>
@@ -124,7 +126,7 @@ export function IndexShowcase({ initial = "blokc5" }: { initial?: IndexId }) {
           </div>
 
           <div className="flex min-w-0 flex-col p-5 sm:p-7 lg:col-span-7">
-            <div key={id} className="animate-enter-up [animation-duration:450ms]">
+            <div key={id} className={cn(picked && "animate-swap")}>
               <div className="flex flex-wrap items-center gap-3">
                 <h3 className="font-mono text-[22px] font-medium tracking-wide text-fg sm:text-[26px]">{idx.name}</h3>
                 <Badge tone="current">{idx.status}</Badge>
@@ -133,17 +135,18 @@ export function IndexShowcase({ initial = "blokc5" }: { initial?: IndexId }) {
               <p className="mt-3 max-w-2xl text-small text-fg-muted">{idx.summary}</p>
             </div>
 
-            <ul key={`list-${id}`} aria-label={`${idx.name} components`} className="mt-6 grid grid-cols-2 gap-2 sm:grid-cols-3">
-              {idx.components.map((s, i) => {
+            {/* One crossfade for the whole list on a switch: no per-item stagger, prices included. */}
+            <ul key={`list-${id}`} aria-label={`${idx.name} components`} className={cn("mt-6 grid grid-cols-2 gap-2 sm:grid-cols-3", picked && "animate-swap")}>
+              {idx.components.map((s) => {
                 const on = s === selected;
                 const price = prices.data?.[s]?.price;
                 const also = alsoIn(s, id);
                 return (
-                  <li key={s} className="animate-enter-up [animation-duration:450ms]" style={{ animationDelay: `${i * 40}ms` } as CSSProperties}>
+                  <li key={s}>
                     <button
                       type="button"
                       aria-pressed={on}
-                      onClick={() => setSel(s)}
+                      onClick={() => pickComponent(s)}
                       className={cn(
                         "w-full rounded-xl border p-3 text-left transition-[background-color,border-color] duration-fast",
                         on ? "border-leaf/45 bg-raised" : "border-line/[0.07] bg-canvas/40 hover:border-line/20 hover:bg-raised/60",
@@ -154,13 +157,7 @@ export function IndexShowcase({ initial = "blokc5" }: { initial?: IndexId }) {
                         <span className="font-mono text-[12.5px] text-fg">{s}</span>
                       </span>
                       <span className="mt-2 block font-mono text-[13.5px] text-fg tabular">
-                        {price !== undefined ? (
-                          formatUsd(price)
-                        ) : prices.state === "error" ? (
-                          "—"
-                        ) : (
-                          <span aria-label="Loading price" className="inline-block h-3 w-16 animate-pulse rounded bg-raised align-middle" />
-                        )}
+                        <LivePrice price={price} state={prices.state} />
                       </span>
                       <span className="mt-0.5 block truncate text-[11px] text-fg-subtle">
                         {also.length ? `Also in ${also.join(", ")}` : components[s].name}
@@ -171,7 +168,7 @@ export function IndexShowcase({ initial = "blokc5" }: { initial?: IndexId }) {
               })}
             </ul>
 
-            <p key={`${id}-${selected}`} className="mt-4 animate-enter-fade rounded-xl border border-line/[0.07] bg-canvas/40 px-4 py-3 text-small text-fg-muted">
+            <p key={`${id}-${selected}`} className={cn("mt-4 rounded-xl border border-line/[0.07] bg-canvas/40 px-4 py-3 text-small text-fg-muted", picked && "animate-swap")}>
               <span className="font-medium text-fg">{comp.name}.</span> {comp.role}
             </p>
 

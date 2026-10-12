@@ -1,7 +1,7 @@
 "use client";
 
 import Image from "next/image";
-import type { CSSProperties } from "react";
+import { memo, type CSSProperties } from "react";
 import { indices, components, type IndexDef, type ComponentSymbol } from "@/lib/data/indices";
 import { cn } from "@/lib/utils";
 
@@ -40,59 +40,69 @@ function layout(index: IndexDef) {
 /**
  * An index drawn as its basket: the index at the core, each component on a
  * ring around it, all drawn the same size (weights are set on-chain by market
- * cap and aren't published yet, so none are implied). The selected token's
- * spoke carries a flowing signal into the core. The rings turn slowly and
- * stop while the pointer is over them; logos stay upright. Clicking a token
- * selects it, a mouse shortcut for the labelled list beside it, so the
- * drawing is aria-hidden. Still under reduced motion.
+ * cap and aren't published yet, so none are implied). The basket stands
+ * still: motion is only for selection. The selected token's spoke is drawn
+ * in leaf, and when the visitor picks a token (`picked`) a pulse runs down
+ * it into the core a few times, then rests (globals.css, "Basket orbit").
+ * Clicking a token selects it, a mouse shortcut for the labelled list beside
+ * it, so the drawing is aria-hidden.
+ *
+ * Memoised: the live price clock re-renders its parent every second.
  */
-export function BasketOrbit({
+export const BasketOrbit = memo(function BasketOrbit({
   index,
   selected,
   onSelect,
+  picked = false,
   className,
 }: {
   index: IndexDef;
   selected: ComponentSymbol | null;
   onSelect?: (s: ComponentSymbol) => void;
+  /** The visitor has picked something: run the selection motion. */
+  picked?: boolean;
   className?: string;
 }) {
   const { subset, rings, slots } = layout(index);
+  const sel = slots.find((t) => t.s === selected);
 
   return (
-    <div aria-hidden className={cn("w-full", className)}>
-      <div className="orbit relative aspect-square w-full">
-        {/* Core glow, outside the turning layer */}
+    <div aria-hidden data-loop className={cn("w-full", className)}>
+      <div data-orbit className="relative aspect-square w-full">
         <div className="glow-leaf absolute inset-[22%] rounded-full opacity-90" />
 
-        <div key={index.id} className="orbit-spin absolute inset-0">
-          <svg viewBox={`0 0 ${SIZE} ${SIZE}`} className="absolute inset-0 size-full" fill="none">
-            {rings.map((r, i) => (
-              <circle key={r} cx={C} cy={C} r={r} stroke={`rgb(var(--line) / ${i ? 0.1 : 0.16})`} strokeDasharray={i ? "2 6" : "3 5"} />
-            ))}
-            {slots.map((t) => (
-              <line key={t.s} x1={t.x} y1={t.y} x2={C} y2={C} stroke="rgb(var(--line) / 0.08)" />
-            ))}
-            {slots
-              .filter((t) => t.s === selected)
-              .map((t) => (
-                // Drawn from the token to the core, so the dashes flow inward.
-                <line
-                  key={`sel-${t.s}`}
-                  x1={t.x}
-                  y1={t.y}
-                  x2={C}
-                  y2={C}
-                  stroke="rgb(var(--leaf))"
-                  strokeWidth="1.5"
-                  strokeDasharray="4 6"
-                  strokeLinecap="round"
-                  className="animate-flow"
-                />
-              ))}
-          </svg>
+        <svg viewBox={`0 0 ${SIZE} ${SIZE}`} className="absolute inset-0 size-full" fill="none">
+          {rings.map((r, i) => (
+            <circle key={r} cx={C} cy={C} r={r} stroke={`rgb(var(--line) / ${i ? 0.1 : 0.16})`} strokeDasharray={i ? "2 6" : "3 5"} />
+          ))}
+          {slots.map((t) => (
+            <line key={t.s} x1={t.x} y1={t.y} x2={C} y2={C} stroke="rgb(var(--line) / 0.08)" />
+          ))}
+        </svg>
 
-          {slots.map((t, i) => {
+        {/* The selected spoke, on its own still layer. */}
+        {sel && (
+          <svg viewBox={`0 0 ${SIZE} ${SIZE}`} className="absolute inset-0 size-full" fill="none">
+            <line x1={sel.x} y1={sel.y} x2={C} y2={C} stroke="rgb(var(--leaf))" strokeWidth="1.5" strokeDasharray="4 6" strokeLinecap="round" />
+          </svg>
+        )}
+        {/* A pulse down the spoke after a pick (re-keyed, so each pick replays it). */}
+        {sel && picked && (
+          <div
+            key={`${index.id}-${sel.s}`}
+            className="orbit-pulse pointer-events-none absolute inset-0"
+            style={{ "--dx": pct(C - sel.x), "--dy": pct(C - sel.y) } as CSSProperties}
+          >
+            <span
+              className="absolute size-2 -translate-x-1/2 -translate-y-1/2 rounded-full bg-leaf shadow-[0_0_10px_2px_rgb(var(--leaf)/0.6)]"
+              style={{ left: pct(sel.x), top: pct(sel.y) }}
+            />
+          </div>
+        )}
+
+        {/* Re-keyed per index, so a switch fades the new basket in. */}
+        <div key={index.id} className={cn("absolute inset-0", picked && "animate-fade-in")}>
+          {slots.map((t) => {
             const on = t.s === selected;
             return (
               <button
@@ -106,30 +116,23 @@ export function BasketOrbit({
                 )}
                 style={{ left: pct(t.x), top: pct(t.y) }}
               >
-                <span className="orbit-counter block">
-                  <span
-                    className="block animate-enter-fade [animation-duration:500ms]"
-                    style={{ animationDelay: `${80 + i * 45}ms` } as CSSProperties}
-                  >
-                    <span
-                      className={cn(
-                        "relative block aspect-square w-full overflow-hidden rounded-full bg-white outline outline-1 -outline-offset-1 outline-line/[0.14] transition-[transform,box-shadow] duration-base ease-expo hover:scale-110",
-                        on
-                          ? "scale-110 shadow-[0_0_0_3px_rgb(var(--card)),0_0_0_5px_rgb(var(--leaf)),0_10px_30px_-8px_rgb(var(--leaf)/0.6)]"
-                          : "shadow-[0_0_0_3px_rgb(var(--card)),0_8px_20px_-10px_rgb(0_0_0/0.6)]",
-                      )}
-                    >
-                      <Image src={components[t.s].logo} alt="" fill sizes="48px" unoptimized className="object-cover" />
-                    </span>
-                    <span
-                      className={cn(
-                        "absolute left-1/2 top-full mt-1 -translate-x-1/2 whitespace-nowrap rounded bg-card/85 px-1 font-mono text-[11px] tracking-wide transition-colors",
-                        on ? "text-leaf" : "text-fg-subtle",
-                      )}
-                    >
-                      {t.s}
-                    </span>
-                  </span>
+                <span
+                  className={cn(
+                    "relative block aspect-square w-full overflow-hidden rounded-full bg-white outline outline-1 -outline-offset-1 outline-line/[0.14] transition-[transform,box-shadow] duration-base ease-expo can-hover:hover:scale-110",
+                    on
+                      ? "scale-110 shadow-[0_0_0_3px_rgb(var(--card)),0_0_0_5px_rgb(var(--leaf)),0_10px_30px_-8px_rgb(var(--leaf)/0.6)]"
+                      : "shadow-[0_0_0_3px_rgb(var(--card)),0_8px_20px_-10px_rgb(0_0_0/0.6)]",
+                  )}
+                >
+                  <Image src={components[t.s].logo} alt="" fill sizes="48px" unoptimized className="object-cover" />
+                </span>
+                <span
+                  className={cn(
+                    "absolute left-1/2 top-full mt-1 -translate-x-1/2 whitespace-nowrap rounded bg-card/85 px-1 font-mono text-[11px] tracking-wide transition-colors duration-fast",
+                    on ? "text-leaf" : "text-fg-subtle",
+                  )}
+                >
+                  {t.s}
                 </span>
               </button>
             );
@@ -138,7 +141,7 @@ export function BasketOrbit({
 
         {/* The index itself */}
         <div className="absolute left-1/2 top-1/2 flex aspect-square w-[27%] -translate-x-1/2 -translate-y-1/2 flex-col items-center justify-center rounded-full border border-leaf/35 bg-raised/90 text-center shadow-[0_0_0_8px_rgb(var(--leaf)/0.06)] backdrop-blur-sm">
-          <span key={index.id} className="animate-enter-fade">
+          <span key={index.id} className={cn("block", picked && "animate-fade-in")}>
             <span className="block font-mono text-[clamp(12px,1.4vw,16px)] font-medium tracking-wide text-fg">{index.name}</span>
             <span className="mt-0.5 block text-[11px] text-fg-subtle">{index.components.length} tokens</span>
           </span>
@@ -157,4 +160,4 @@ export function BasketOrbit({
       )}
     </div>
   );
-}
+});

@@ -7,22 +7,25 @@ import { Badge } from "@/components/ui/Badge";
 import { DecisionPipeline } from "@/components/governance/DecisionPipeline";
 import { CtaBand } from "@/components/ui/CtaBand";
 import { Reveal } from "@/components/ui/Reveal";
-import { ProposalList } from "@/components/governance/ProposalList";
+import { ArrowLink } from "@/components/ui/ArrowLink";
+import { ProposalBoard } from "@/components/governance/ProposalBoard";
 import { JsonLd } from "@/components/seo/JsonLd";
 import { breadcrumbSchema } from "@/lib/seo/schema";
 import { getGovernance } from "@/lib/data/proposals";
 import { links } from "@/lib/data/socials";
+import { pageMetadata } from "@/lib/seo/metadata";
 
-export const metadata: Metadata = {
-  title: "Governance",
-  description: "How BLOK Capital is governed on-chain through Aragon OSx, and the latest DAO proposals.",
-  alternates: { canonical: "/governance" },
-};
+export const metadata: Metadata = pageMetadata({
+  title: "Governance: on-chain DAO votes on Aragon OSx",
+  description:
+    "How BLOK Capital is governed on-chain through Aragon OSx: who votes today, what the DAO decides, and the latest proposals.",
+  path: "/governance",
+});
 
 const process = [
   { label: "Propose", detail: "A protocol upgrade, new index, fee parameter or treasury allocation.", where: "Aragon OSx" },
   { label: "Discuss", detail: "In public on Discord, Telegram and the forum, before any vote.", where: "In public" },
-  { label: "Vote", detail: "On-chain via Aragon OSx, weighted by BLOKC. Every vote is public.", where: "On-chain" },
+  { label: "Vote", detail: "On-chain via Aragon OSx, weighted by $BLOKC. Every vote is public.", where: "On-chain" },
   { label: "Execute", detail: "Passed proposals execute through Aragon OSx. No admin override.", where: "On-chain · no override" },
 ];
 
@@ -44,8 +47,11 @@ export default async function GovernancePage() {
         description="No back-room upgrades and no admin keys with quiet superpowers: changes are proposed, voted and executed on-chain through Aragon OSx."
         actions={
           <>
-            <Button href={links.aragon}>Proposals on Aragon</Button>
-            <Button href="/token" variant="secondary">
+            {/* Too wide for one row on a phone: when they wrap, each fills its row. */}
+            <Button href={links.aragon} data-cta="gov_aragon_proposals" className="max-sm:grow">
+              All proposals on Aragon
+            </Button>
+            <Button href="/token" variant="secondary" className="max-sm:grow">
               $BLOKC token
             </Button>
           </>
@@ -78,35 +84,26 @@ export default async function GovernancePage() {
                 Before the public token launch, only the core DAO members listed on Aragon can vote. Public $BLOKC voting follows the
                 IDO. Every member is verifiable on-chain.
               </p>
-              <a
-                href={links.aragonMembers}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="mt-5 inline-flex text-small font-medium text-leaf underline underline-offset-2 hover:text-fg"
-              >
-                See the members on Aragon<span className="sr-only"> (opens in a new tab)</span>
-              </a>
+              <p className="mt-5" data-cta="gov_aragon_members">
+                <ArrowLink href={links.aragonMembers} className="text-small">
+                  See the members on Aragon
+                </ArrowLink>
+              </p>
             </Card>
           </Reveal>
         </div>
       </Section>
 
-      <Section id="proposals" tone="surface" eyebrow="On-chain record" title="Proposals.">
-        <Reveal>
-          <Card>
-            <ProposalList governance={governance} />
-            <p className="mt-6 border-t border-line/[0.08] pt-5 text-caption text-fg-subtle">
-              {governance.syncedLabel
-                ? `Synced from chain ${governance.syncedLabel}. `
-                : ""}
-              The full record, including votes, is on{" "}
-              <a href={links.aragon} target="_blank" rel="noopener noreferrer" className="text-leaf underline underline-offset-2">
-                Aragon
-              </a>
-              .
-            </p>
-          </Card>
-        </Reveal>
+      {/* The rich board lives here now (UX-07); home shows a compact strip.
+          Its "As of" stamp and Aragon button replace the old sync footer. */}
+      <Section
+        id="proposals"
+        tone="surface"
+        eyebrow="On-chain record"
+        title="Proposals."
+        description="The DAO's proposals, synced from chain when this page was built. The votes themselves live on Aragon."
+      >
+        <ProposalBoard governance={governance} />
       </Section>
       <CtaBand />
     </>

@@ -3,6 +3,7 @@
 import { useEffect, useRef, useState, type ReactNode } from "react";
 import { GardenMock } from "./how/GardenMock";
 import { ArrowLink } from "@/components/ui/ArrowLink";
+import { LG_QUERY, useMediaQuery } from "@/lib/explainers";
 import { cn } from "@/lib/utils";
 
 export type ScrollStep = {
@@ -40,13 +41,16 @@ function Callout({ on, className, children }: { on: boolean; className: string; 
  * How it works, as a scroll story. The three steps scroll past on the left;
  * on the right a Garden (drawn as the app would show it) stays pinned and
  * changes with them: opened, funded, then following an index that may
- * rebalance but never withdraw. Phones and tablets get that same Garden
- * inline under each step instead. Nothing depends on the effect: before
- * hydration the first step simply shows.
+ * rebalance but never withdraw. Phones and tablets get one still Garden,
+ * full width under the steps, showing where they end up. Only one mock is
+ * ever in the page: the server HTML carries the still one, and from lg the
+ * pinned one replaces it once hydrated. Nothing depends on the effect.
  */
 export function HowItWorksScroller({ steps }: { steps: ScrollStep[] }) {
   const [active, setActive] = useState(-1);
   const items = useRef<(HTMLLIElement | null)[]>([]);
+  const list = useRef<HTMLOListElement>(null);
+  const wide = useMediaQuery(LG_QUERY);
 
   useEffect(() => {
     if (!("IntersectionObserver" in window)) return;
@@ -63,68 +67,81 @@ export function HowItWorksScroller({ steps }: { steps: ScrollStep[] }) {
     return () => io.disconnect();
   }, []);
 
-  // The leaf rail runs down to the active step's marker.
+  // The leaf rail runs down to the active step's marker: a full-length rail
+  // scaled from the top (transform, not height), kept right on resize.
   const fill = useRef<HTMLSpanElement>(null);
   useEffect(() => {
-    const el = active >= 0 ? items.current[active] : null;
-    if (fill.current) fill.current.style.height = `${el ? el.offsetTop : 0}px`;
+    const ol = list.current;
+    const f = fill.current;
+    if (!ol || !f) return;
+    const update = () => {
+      const el = active >= 0 ? items.current[active] : null;
+      const length = f.offsetHeight;
+      f.style.transform = `scaleY(${el && length ? Math.min(1, el.offsetTop / length) : 0})`;
+    };
+    update();
+    const ro = new ResizeObserver(update);
+    ro.observe(ol);
+    return () => ro.disconnect();
   }, [active]);
 
   const stage = Math.max(active, 0) as Stage;
 
   return (
     <div className="grid gap-12 lg:grid-cols-12 lg:gap-10">
-      <ol className="relative lg:col-span-5">
-        <span aria-hidden className="absolute bottom-16 left-[21px] top-6 w-px bg-line/10" />
-        <span
-          ref={fill}
-          aria-hidden
-          className="absolute left-[21px] top-6 h-0 w-px bg-leaf transition-[height] duration-slow ease-expo"
-        />
-        {steps.map((s, i) => {
-          const on = active === i;
-          const dim = active >= 0 && !on;
-          return (
-            <li
-              key={s.title}
-              data-step={i}
-              ref={(el) => {
-                items.current[i] = el;
-              }}
-              aria-current={on ? "step" : undefined}
-              className="relative grid grid-cols-[44px_1fr] gap-5 pb-14 lg:min-h-[56vh] lg:pb-16"
-            >
-              <span
-                className={cn(
-                  "relative z-10 inline-flex size-11 items-center justify-center rounded-full border font-mono text-[13px] transition-[background-color,color,box-shadow,border-color] duration-base",
-                  on
-                    ? "border-leaf bg-leaf text-canvas shadow-[0_0_0_7px_rgb(var(--leaf)/0.12)]"
-                    : "border-leaf/35 bg-surface text-leaf",
-                )}
+      <div className="min-w-0 lg:col-span-5">
+        <ol ref={list} className="relative">
+          <span aria-hidden className="absolute bottom-16 left-[21px] top-6 w-px bg-line/10" />
+          <span
+            ref={fill}
+            aria-hidden
+            className="absolute bottom-16 left-[21px] top-6 w-px origin-top scale-y-0 bg-leaf transition-transform duration-slow ease-expo"
+          />
+          {steps.map((s, i) => {
+            const on = active === i;
+            const dim = active >= 0 && !on;
+            return (
+              <li
+                key={s.title}
+                data-step={i}
+                ref={(el) => {
+                  items.current[i] = el;
+                }}
+                aria-current={on ? "step" : undefined}
+                className="relative grid grid-cols-[44px_1fr] gap-5 pb-14 lg:min-h-[56vh] lg:pb-16"
               >
-                {String(i + 1).padStart(2, "0")}
-              </span>
-              <div className="min-w-0 pt-1">
-                <p className="font-mono text-[11px] uppercase tracking-[0.14em] text-fg-subtle">
-                  Step {i + 1} of {steps.length}
-                </p>
-                <h3 className={cn("display mt-2 text-h3 transition-colors duration-slow", dim ? "text-fg-muted" : "text-fg")}>{s.title}</h3>
-                <p className={cn("mt-3 text-[15.5px] leading-relaxed transition-colors duration-slow", dim ? "text-fg-subtle" : "text-fg-muted")}>
-                  {s.body}
-                </p>
-                <p className="mt-4 inline-flex rounded-full border border-line/12 bg-card/70 px-3 py-1 font-mono text-[11px] text-fg-muted">
-                  {s.chain}
-                </p>
-                {/* Below lg: this step's moment of the Garden, inline. */}
-                <GardenMock stage={i as Stage} animate={false} className="mt-7 lg:hidden" />
-              </div>
-            </li>
-          );
-        })}
-        <li className="pl-16">
+                <span
+                  className={cn(
+                    "relative z-10 inline-flex size-11 items-center justify-center rounded-full border font-mono text-[13px] transition-[background-color,color,box-shadow,border-color] duration-base",
+                    on
+                      ? "border-leaf bg-leaf text-canvas shadow-[0_0_0_7px_rgb(var(--leaf)/0.12)]"
+                      : "border-leaf/35 bg-surface text-leaf",
+                  )}
+                >
+                  {String(i + 1).padStart(2, "0")}
+                </span>
+                <div className="min-w-0 pt-1">
+                  <p className="font-mono text-[11px] uppercase tracking-[0.14em] text-fg-subtle">
+                    Step {i + 1} of {steps.length}
+                  </p>
+                  <h3 className={cn("display mt-2 text-h3 transition-colors duration-slow", dim ? "text-fg-muted" : "text-fg")}>{s.title}</h3>
+                  <p className={cn("mt-3 text-[15.5px] leading-relaxed transition-colors duration-slow", dim ? "text-fg-subtle" : "text-fg-muted")}>
+                    {s.body}
+                  </p>
+                  <p className="mt-4 inline-flex rounded-full border border-line/12 bg-card/70 px-3 py-1 font-mono text-[11px] text-fg-muted">
+                    {s.chain}
+                  </p>
+                </div>
+              </li>
+            );
+          })}
+        </ol>
+        {/* Below lg: one still Garden, full width, where the three steps end up. */}
+        {!wide && <GardenMock stage={2} animate={false} className="mb-12 lg:hidden" />}
+        <p className="pl-16">
           <ArrowLink href="/protocol">The full protocol</ArrowLink>
-        </li>
-      </ol>
+        </p>
+      </div>
 
       <div className="hidden lg:col-span-7 lg:block">
         <div className="sticky top-28">
@@ -142,7 +159,7 @@ export function HowItWorksScroller({ steps }: { steps: ScrollStep[] }) {
                   </div>
                   <p
                     className={cn(
-                      "mt-2 font-mono text-[11px] uppercase tracking-[0.14em] transition-colors",
+                      "mt-2 font-mono text-[11px] uppercase tracking-[0.14em] transition-colors duration-fast",
                       i === stage ? "text-leaf" : "text-fg-subtle",
                     )}
                   >
@@ -151,18 +168,17 @@ export function HowItWorksScroller({ steps }: { steps: ScrollStep[] }) {
                 </div>
               ))}
             </div>
-            <div className="relative mt-8">
-              <GardenMock stage={stage} className="xl:ml-0" />
-              {steps.map((s, i) => (
-                <Callout
-                  key={s.tag}
-                  on={i === stage}
-                  className={["top-[72px]", "top-[46%]", "bottom-[118px]"][i]}
-                >
-                  {s.callout}
-                </Callout>
-              ))}
-            </div>
+            {/* Mounted from lg only, after hydration (the still one serves phones). */}
+            {wide && (
+              <div className="relative mt-8">
+                <GardenMock stage={stage} className="xl:ml-0" />
+                {steps.map((s, i) => (
+                  <Callout key={s.tag} on={i === stage} className={["top-[72px]", "top-[46%]", "bottom-[118px]"][i]}>
+                    {s.callout}
+                  </Callout>
+                ))}
+              </div>
+            )}
           </div>
         </div>
       </div>

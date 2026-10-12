@@ -1,10 +1,10 @@
 "use client";
 
-import { useId, useRef, useState, type KeyboardEvent } from "react";
+import { useCallback, useId, useRef, useState } from "react";
 import Link from "next/link";
 import { cn, shortAddress } from "@/lib/utils";
 import { indices, components, type IndexId, type ComponentSymbol } from "@/lib/data/indices";
-import { useComponentPrices, formatUsd } from "@/lib/live/prices";
+import { useComponentPrices, feedState } from "@/lib/live/prices";
 import { ago } from "@/lib/live/useLive";
 import { ARBISCAN } from "@/lib/live/rpc";
 import { LiveStatus } from "@/components/live/LiveStatus";
@@ -14,6 +14,9 @@ import { Badge } from "@/components/ui/Badge";
 import { ArrowIcon, ExternalIcon } from "@/components/ui/icons";
 import { BasketOrbit } from "./BasketOrbit";
 import { TokenLogo, TokenStack } from "./TokenLogo";
+import { LivePrice } from "./LivePrice";
+import { useRovingTabs } from "@/lib/useRovingTabs";
+import { trackSelect } from "@/lib/explainers";
 
 /**
  * Pick an index → see what's in it → pick a component → see its role, its
@@ -40,21 +43,25 @@ export function IndexExplorer({
   const root = useRef<HTMLDivElement>(null);
   const prices = useComponentPrices(root);
   const base = useId();
-  const tabs = useRef<(HTMLButtonElement | null)[]>([]);
+  // Crossfade the panels only after a pick, never on page load.
+  const [picked, setPicked] = useState(false);
 
   const choose = (next: IndexId) => {
+    trackSelect("index", next);
+    setPicked(true);
     setId(next);
     setSel(indices.find((i) => i.id === next)!.components[0]);
   };
-  const onKey = (e: KeyboardEvent) => {
-    const i = indices.findIndex((x) => x.id === id);
-    const d = e.key === "ArrowRight" ? 1 : e.key === "ArrowLeft" ? -1 : 0;
-    if (!d) return;
-    e.preventDefault();
-    const n = (i + d + indices.length) % indices.length;
-    choose(indices[n].id);
-    tabs.current[n]?.focus();
-  };
+  const pickComponent = useCallback((s: ComponentSymbol) => {
+    trackSelect("index_component", s.toLowerCase());
+    setPicked(true);
+    setSel(s);
+  }, []);
+  const rt = useRovingTabs({
+    count: indices.length,
+    selected: indices.findIndex((x) => x.id === id),
+    onSelect: (i) => choose(indices[i].id),
+  });
 
   const c = components[selected];
   const reading = prices.data?.[selected];
@@ -70,22 +77,19 @@ export function IndexExplorer({
             <span className="font-mono text-fg">{idx.name}</span> · {idx.components.length} components · live oracle prices
           </p>
         ) : (
-        <div role="tablist" aria-label="Choose an index" onKeyDown={onKey} className="grid grid-cols-3 gap-1 rounded-2xl bg-canvas/70 p-1 sm:inline-grid">
+        <div {...rt.tablist} aria-label="Choose an index" className="grid grid-cols-3 gap-1 rounded-2xl bg-canvas/70 p-1 sm:inline-grid">
           {indices.map((x, i) => (
             <button
               key={x.id}
-              ref={(el) => {
-                tabs.current[i] = el;
-              }}
-              role="tab"
+              {...rt.tab(i)}
+              type="button"
               id={`${base}-${x.id}`}
-              aria-selected={x.id === id}
               aria-controls={`${base}-panel`}
-              tabIndex={x.id === id ? 0 : -1}
               onClick={() => choose(x.id)}
               className={cn(
-                "relative rounded-xl px-3 py-2.5 text-left transition-[background-color,color,box-shadow] duration-300 sm:px-5",
-                x.id === id ? "bg-raised text-fg shadow-[inset_0_0_0_1px_rgb(var(--leaf)/0.35)]" : "text-fg-muted hover:bg-raised/50 hover:text-fg",
+                "relative rounded-xl px-3 py-2.5 text-left transition-[background-color,color,box-shadow] duration-fast sm:px-5",
+                // A full-strength 1.5px leaf ring (>= 3:1 on the strip), not just a fill change.
+                x.id === id ? "bg-raised text-fg shadow-[inset_0_0_0_1.5px_rgb(var(--leaf))]" : "text-fg-muted hover:bg-raised/50 hover:text-fg",
               )}
             >
               <span className="block font-mono text-[13px] font-medium tracking-wide">{x.name}</span>
@@ -97,7 +101,7 @@ export function IndexExplorer({
           ))}
         </div>
         )}
-        <LiveStatus state={prices.state} updatedAt={prices.updatedAt} source="Chainlink on Arbitrum" onRetry={prices.retry} />
+        <LiveStatus state={prices.state} updatedAt={prices.updatedAt} source="the Arbitrum network" onRetry={prices.retry} />
       </div>
 
       <div
@@ -111,9 +115,9 @@ export function IndexExplorer({
           <div aria-hidden className="grid-lines pointer-events-none absolute inset-0 opacity-50 [mask-image:radial-gradient(circle_at_50%_50%,black,transparent_70%)]" />
           {/* Sticks beside the long detail column on wide screens. */}
           <div className="relative flex flex-col items-center gap-6 lg:sticky lg:top-28">
-            <BasketOrbit index={idx} selected={selected} onSelect={setSel} className="max-w-[400px]" />
+            <BasketOrbit index={idx} selected={selected} onSelect={pickComponent} picked={picked} className="max-w-[400px]" />
             <p className="text-center text-caption text-fg-subtle">
-              Click a token to inspect it. All drawn the same size: weights are set on-chain by market cap and aren&apos;t shown.
+              Tap or select a token to inspect it. All drawn the same size: weights are set on-chain by market cap and aren&apos;t shown.
             </p>
           </div>
         </div>
@@ -121,7 +125,7 @@ export function IndexExplorer({
         {/* Detail */}
         <div className="flex min-w-0 flex-col p-5 sm:p-7 lg:col-span-7">
           {!fixed && (
-          <div key={id} className="animate-enter-up [animation-duration:450ms]">
+          <div key={id} className={cn(picked && "animate-swap")}>
             <div className="flex flex-wrap items-center gap-3">
               <h3 className="font-mono text-[22px] font-medium tracking-wide text-fg">{idx.name}</h3>
               <Badge tone="current">{idx.status}</Badge>
@@ -142,9 +146,9 @@ export function IndexExplorer({
                   <button
                     type="button"
                     aria-pressed={on}
-                    onClick={() => setSel(s)}
+                    onClick={() => pickComponent(s)}
                     className={cn(
-                      "flex w-full items-center gap-3 rounded-xl border px-3 py-2.5 text-left transition-colors duration-200",
+                      "flex w-full items-center gap-3 rounded-xl border px-3 py-2.5 text-left transition-colors duration-fast",
                       on ? "border-leaf/35 bg-raised" : "border-transparent hover:border-line/10 hover:bg-raised/50",
                     )}
                   >
@@ -154,7 +158,7 @@ export function IndexExplorer({
                       <span className="block truncate text-[11.5px] text-fg-subtle">{comp.name}</span>
                     </span>
                     <span className="font-mono text-[12.5px] text-fg-muted tabular">
-                      {r ? formatUsd(r.price) : prices.state === "error" ? "—" : <span aria-label="Loading price" className="inline-block h-3 w-14 animate-pulse rounded bg-raised align-middle" />}
+                      <LivePrice price={r?.price} state={feedState(prices, s)} />
                     </span>
                   </button>
                 </li>
@@ -163,13 +167,15 @@ export function IndexExplorer({
           </ul>
 
           {/* Component drill-down */}
-          <div key={`${id}-${selected}`} className="mt-5 animate-enter-fade rounded-2xl border border-line/[0.07] bg-canvas/50 p-5">
+          <div key={`${id}-${selected}`} className={cn("mt-5 rounded-2xl border border-line/[0.07] bg-canvas/50 p-5", picked && "animate-swap")}>
             <div className="flex flex-wrap items-baseline justify-between gap-2">
               <p className="flex items-center gap-2.5 text-small font-medium text-fg">
                 <TokenLogo symbol={selected} size={26} />
                 {c.name} <span className="font-mono text-fg-subtle">· {c.token.symbol}</span>
               </p>
-              <p className="font-mono text-[15px] text-fg tabular">{reading ? formatUsd(reading.price) : "—"}</p>
+              <p className="font-mono text-[15px] text-fg tabular">
+                <LivePrice price={reading?.price} state={feedState(prices, selected)} />
+              </p>
             </div>
             <p className="mt-1.5 text-small text-fg-muted">{c.role}</p>
             <dl className="mt-4 grid gap-3 text-caption sm:grid-cols-2">

@@ -8,7 +8,8 @@ const fees = [
   { label: "Protocol fee", value: "None at launch", body: "Gasless and fee-free at launch. Any future protocol fee is set by DAO vote." },
   { label: "Gardener fees", value: "Set by each Gardener", body: "Written into the strategy, capped by DAO-set ceilings. Gardeners open in 2027." },
   { label: "Swaps", value: "Venue costs", body: "Trades pay the pool fees and price impact of the venue they route through." },
-  { label: "Card and bank", value: "On-ramp's own fees", body: "Partners such as Transak charge their own fees and run their own KYC." },
+  // An on-ramp provider, not a named partner: no partnership is published (CRO-22).
+  { label: "Card and bank", value: "On-ramp's own fees", body: "The on-ramp provider charges its own fees and runs its own KYC." },
 ];
 
 const risks = [

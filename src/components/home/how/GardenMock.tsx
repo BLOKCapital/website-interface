@@ -1,8 +1,8 @@
 "use client";
 
 import Image from "next/image";
-import { useEffect, useRef, useState, type CSSProperties, type ReactNode } from "react";
-import { easeOut, prefersReducedMotion } from "@/lib/motion";
+import { useEffect, useRef, useState, type ReactNode } from "react";
+import { easeOut, useMotionAllowed } from "@/lib/motion";
 import { indices } from "@/lib/data/indices";
 import { TokenLogo } from "@/components/indices/TokenLogo";
 import { CheckIcon, CrossIcon } from "@/components/ui/icons";
@@ -15,14 +15,18 @@ const FOLLOWING = indices.find((i) => i.id === "blokc5")!;
 
 const usdc = (n: number) => n.toLocaleString("en-US", { minimumFractionDigits: 2, maximumFractionDigits: 2 });
 
-/** Runs a number from its previous value to `target` (instantly when not animating). */
+/**
+ * Runs a number from its previous value to `target`; instantly when not
+ * animating or with motion off (reduced motion or Pause motion, live).
+ */
 function useTween(target: number, animate: boolean, duration = 1200) {
   const [value, setValue] = useState(target);
   const from = useRef(target);
+  const motion = useMotionAllowed();
   useEffect(() => {
     const start = from.current;
     let raf = 0;
-    if (!animate || start === target || prefersReducedMotion()) {
+    if (!animate || !motion || start === target) {
       raf = requestAnimationFrame(() => {
         from.current = target;
         setValue(target);
@@ -39,20 +43,19 @@ function useTween(target: number, animate: boolean, duration = 1200) {
     };
     raf = requestAnimationFrame(step);
     return () => cancelAnimationFrame(raf);
-  }, [target, animate, duration]);
+  }, [target, animate, motion, duration]);
   return value;
 }
 
-/** A block that unfolds (height via grid rows, plus a fade) once `on`. */
+/**
+ * A block that's always laid out, so the card keeps its full height at
+ * every stage and nothing around it moves; it fades and rises in once `on`
+ * (opacity and transform only).
+ */
 function Fold({ on, children }: { on: boolean; children: ReactNode }) {
   return (
-    <div
-      className={cn(
-        "grid transition-[grid-template-rows,opacity] duration-slow ease-expo",
-        on ? "grid-rows-[1fr] opacity-100" : "grid-rows-[0fr] opacity-0",
-      )}
-    >
-      <div className="min-h-0 overflow-hidden">{children}</div>
+    <div className={cn("transition-[opacity,transform] duration-slow ease-expo", on ? "opacity-100" : "translate-y-2 opacity-0")}>
+      {children}
     </div>
   );
 }
@@ -85,7 +88,7 @@ export function GardenMock({
 
         {/* Account */}
         <div className="relative flex items-center gap-3">
-          <Image src="/brand/mark.png" alt="" width={40} height={40} unoptimized className="size-10 rounded-xl" />
+          <Image src="/brand/mark-96.webp" alt="" width={40} height={40} unoptimized className="size-10 rounded-xl" />
           <div className="min-w-0 flex-1">
             <p className="text-small font-medium text-fg">My Garden</p>
             <p className="font-mono text-[11.5px] text-fg-subtle">{ADDRESS}</p>
@@ -105,12 +108,17 @@ export function GardenMock({
         {/* Balance */}
         <div className="relative mt-6">
           <p className={label}>{stage >= 2 ? `Following ${FOLLOWING.name}` : "Balance"}</p>
+          {/* Sized for the widest figure, with the unit always laid out, so the
+              row never reflows as the balance counts up or the stage changes. */}
           <p className="mt-2 flex items-baseline gap-2">
-            <span className="display text-[40px] leading-none text-fg tabular">
-              {stage >= 2 ? "$" : ""}
-              {usdc(balance)}
+            <span className="display inline-grid text-[40px] leading-none text-fg tabular">
+              <span className="invisible col-start-1 row-start-1">${usdc(DEPOSIT)}</span>
+              <span className="col-start-1 row-start-1">
+                {stage >= 2 ? "$" : ""}
+                {usdc(balance)}
+              </span>
             </span>
-            {stage < 2 && <span className="text-small text-fg-subtle">USDC</span>}
+            <span className={cn("text-small text-fg-subtle", stage >= 2 && "invisible")}>USDC</span>
           </p>
         </div>
 
@@ -132,27 +140,18 @@ export function GardenMock({
         {/* Strategy */}
         <Fold on={stage >= 2}>
           <div className="mt-4">
-            <div className="grid grid-cols-3 gap-1 rounded-xl bg-raised p-1 font-mono text-[11px]">
-              {indices.map((x) => (
-                <span
-                  key={x.id}
-                  className={cn(
-                    "rounded-lg py-1.5 text-center transition-colors",
-                    x.id === FOLLOWING.id ? "bg-card text-fg ring-1 ring-leaf/35" : "text-fg-subtle",
-                  )}
-                >
-                  {x.name}
-                </span>
-              ))}
-            </div>
-            <div key={stage >= 2 ? "on" : "off"} className="mt-3 flex items-center justify-between gap-3">
+            {/* A plain label, not a control: nothing here is tappable. */}
+            <p className="flex items-center justify-between gap-3 rounded-xl bg-raised px-3 py-2 text-caption">
+              <span className="text-fg-muted">Strategy</span>
+              <span className="inline-flex items-center gap-1.5 font-mono text-[11px] text-fg">
+                <span className="size-1.5 rounded-full bg-leaf" />
+                {FOLLOWING.name} index
+              </span>
+            </p>
+            <div className="mt-3 flex items-center justify-between gap-3">
               <span className="flex">
                 {FOLLOWING.components.map((s, i) => (
-                  <span
-                    key={s}
-                    className={cn("animate-enter-up", i > 0 && "-ml-1.5")}
-                    style={{ animationDelay: `${200 + i * 70}ms` } as CSSProperties}
-                  >
+                  <span key={s} className={cn(i > 0 && "-ml-1.5")}>
                     <TokenLogo symbol={s} size={26} className="ring-2 ring-card" />
                   </span>
                 ))}

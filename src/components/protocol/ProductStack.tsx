@@ -1,15 +1,24 @@
+import type { CSSProperties, ReactNode } from "react";
 import { products } from "@/components/home/Products";
 import { RebalanceArt, RoutesArt, BadgeArt } from "@/components/home/products/ProductArt";
 import { Badge } from "@/components/ui/Badge";
 import { ArrowLink } from "@/components/ui/ArrowLink";
+import { TermLink } from "@/components/protocol/Glossary";
 import { cn } from "@/lib/utils";
 
 /** Extra detail per product, beyond the home-page tile. */
-const detail: Record<string, { body: string; audience: string; more?: { label: string; href: string } }> = {
+const detail: Record<string, { body: ReactNode; audience: string; more?: { label: string; href: string } }> = {
   index: {
     audience: "For people who want diversified exposure without managing it.",
     more: { label: "Explore BLOKC2, BLOKC5 and BLOKC10", href: "/indices" },
-    body: "Connect your Garden to BLOKC2, BLOKC5 or BLOKC10. Weights are each component's share of market cap, priced by Chainlink. A pooled rebalancer trades only assets more than 2% off target, at the best quote across Uniswap and Camelot, at most once a day. Every rebalance is a transaction you can read.",
+    body: (
+      <>
+        Connect your Garden to an <TermLink id="index">index</TermLink>: BLOKC2, BLOKC5 or BLOKC10. Weights are each
+        component&apos;s share of market cap, priced by Chainlink. A pooled rebalancer trades only assets more than 2% off
+        target, at the best quote across Uniswap and Camelot, at most once a day. Every rebalance is a transaction you can
+        read.
+      </>
+    ),
   },
   yield: {
     audience: "For people who'd rather steer themselves.",
@@ -17,7 +26,13 @@ const detail: Record<string, { body: string; audience: string; more?: { label: s
   },
   gardeners: {
     audience: "For people who want a professional, and for the professionals.",
-    body: "A Gardener publishes a strategy on-chain and investors authorise it from their own Garden, then revoke it the same way. Performance writes itself to a non-transferable ERC-5484 badge in the Gardener's wallet, and fees settle on-chain within DAO-set ceilings.",
+    body: (
+      <>
+        A <TermLink id="gardener">Gardener</TermLink> publishes a strategy on-chain and investors authorise it from their own
+        Garden, then revoke it the same way. Performance writes itself to a non-transferable ERC-5484 badge in the
+        Gardener&apos;s wallet, and fees settle on-chain within DAO-set ceilings.
+      </>
+    ),
   },
 };
 
@@ -48,30 +63,62 @@ const art = { index: RebalanceArt, yield: RoutesArt, gardeners: BadgeArt } as co
 
 const two = (n: number) => String(n).padStart(2, "0");
 
+/** Where each card pins on wide screens: 26px below the one before. */
+const pinTop = (i: number) => 104 + i * 26;
+
+/**
+ * html's scroll-padding-top (globals.css: 88px, the sticky header) is added
+ * to every anchor's scroll margin, so a marker's margin is its card's pin
+ * minus that.
+ */
+const SCROLL_PADDING = 88;
+
 /**
  * The three products as a deck. On wide screens each card pins near the top
  * as you reach it and the next one slides up over it; the one underneath
  * eases back (a CSS scroll timeline, see "Product stack" in globals.css) and
  * a strip of each earlier card stays visible above, so you always see where
- * you are in the three. On phones they simply stack. Each card keeps its
- * #index / #yield / #gardeners anchor for links from elsewhere.
+ * you are in the three. On phones they simply stack.
+ *
+ * Anchors (UX-02): #index, #yield and #gardeners sit on zero-height markers
+ * in the normal flow, not on the cards. A pinned card counts as already in
+ * view, so after a client-side navigation from a scrolled page the browser
+ * (and Next, which skips sticky targets) left the reader about 2,000px past
+ * it. Each marker's scroll margin matches its card's pin, so a link lands
+ * with the card exactly where it pins. The markers come after the cards in
+ * the DOM, so `.pstack > :nth-child(1–3)` in globals.css still picks the
+ * cards; flex `order` places each marker just before its card.
+ *
+ * The recede's scroll timeline is also set inline: in globals.css the
+ * `animation` shorthand sits in a more specific rule than the
+ * `animation-timeline` longhand and resets it to `auto`, which left the
+ * first two cards stuck at their end state (scale 0.94, dimmed) on load.
+ * Inline, it wins; it does nothing where that CSS doesn't animate (phones,
+ * reduced motion, Pause motion, no scroll-timeline support).
  */
 export function ProductStack() {
   return (
-    <div className="pstack flex flex-col gap-5 lg:block">
+    <div className="pstack flex flex-col">
       {products.map((p, i) => {
         const d = detail[p.id];
         const l = look[p.id];
         const Art = art[p.id as keyof typeof art];
+        const last = i === products.length - 1;
         return (
           <article
             key={p.id}
-            id={p.id}
+            aria-labelledby={`product-${p.id}`}
             className={cn(
-              "relative scroll-mt-28 overflow-hidden rounded-[28px] border shadow-[0_30px_80px_-50px_rgb(var(--shadow))] lg:sticky lg:mb-[24vh] lg:last:mb-0",
+              "relative overflow-hidden rounded-[28px] border shadow-[0_30px_80px_-50px_rgb(var(--shadow))] lg:sticky",
+              last ? "mb-0" : "mb-5 lg:mb-[24vh]",
               l.card,
             )}
-            style={{ top: `calc(104px + ${i * 26}px)` }}
+            style={{
+              order: 2 * i + 1,
+              top: pinTop(i),
+              // Driven by the next card's view timeline (see above).
+              animationTimeline: last ? undefined : `--pstack-${i + 2}`,
+            }}
           >
             <div className="grid lg:min-h-[min(560px,calc(100svh-200px))] lg:grid-cols-12">
               <div className="flex flex-col p-6 sm:p-9 lg:col-span-7 lg:p-12">
@@ -82,7 +129,9 @@ export function ProductStack() {
                   </p>
                   <Badge tone={p.status.tone}>{p.status.label}</Badge>
                 </div>
-                <h3 className="display mt-6 text-[clamp(34px,2.6vw+18px,56px)] leading-[1.05] text-fg">{p.name}</h3>
+                <h3 id={`product-${p.id}`} className="display mt-6 text-display-md text-fg">
+                  {p.name}
+                </h3>
                 <p className="mt-4 max-w-xl text-lead text-fg">{p.summary}</p>
                 <p className="mt-4 max-w-2xl text-body text-fg-muted">{d.body}</p>
                 <ul className="mt-8 grid gap-2.5 sm:grid-cols-3 lg:mt-auto lg:pt-8">
@@ -110,6 +159,14 @@ export function ProductStack() {
           </article>
         );
       })}
+      {products.map((p, i) => (
+        <span
+          key={p.id}
+          id={p.id}
+          className="block h-0 scroll-mt-4 lg:scroll-mt-[var(--pin)]"
+          style={{ order: 2 * i, "--pin": `${pinTop(i) - SCROLL_PADDING}px` } as CSSProperties}
+        />
+      ))}
     </div>
   );
 }

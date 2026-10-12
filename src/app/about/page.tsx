@@ -14,12 +14,14 @@ import { JsonLd } from "@/components/seo/JsonLd";
 import { breadcrumbSchema } from "@/lib/seo/schema";
 import { team } from "@/lib/data/team";
 import { links } from "@/lib/data/socials";
+import { pageMetadata } from "@/lib/seo/metadata";
 
-export const metadata: Metadata = {
-  title: "About",
-  description: "Why BLOK Capital exists, what it won't trade away, the people building it, and the roadmap.",
-  alternates: { canonical: "/about" },
-};
+export const metadata: Metadata = pageMetadata({
+  title: { absolute: "About BLOK Capital: team, principles and roadmap" },
+  description:
+    "BLOK Capital DAO LLC (Marshall Islands): why the protocol exists, the principles it won't trade away, the team building it and the roadmap.",
+  path: "/about",
+});
 
 const story = [
   "The first wallet I ever made showed me what was wrong with crypto, but I also understood what was wrong with the alternative.",
@@ -30,7 +32,12 @@ const story = [
 const values = [
   { title: "Self-custody, always", body: "If we ever build a custodial product, we've gotten lost.", where: "In the contracts" },
   { title: "Transparency by default", body: "If it can be on-chain, it should be on-chain. Receipts beat reports.", where: "In the receipts" },
-  { title: "Community-owned", body: "BLOK is governed by people who actually use it. Not us.", where: "In the votes" },
+  // CRO-06: true today (core members vote), and says when that changes.
+  {
+    title: "Community-owned, by design",
+    body: "Today the core members listed on Aragon vote. After the IDO, $BLOKC holders do, and then it stops being up to us.",
+    where: "In the votes",
+  },
   { title: "Long-term wealth", body: "Compound, not pump. Boring is a feature.", where: "In the rebalance" },
 ];
 
@@ -43,10 +50,12 @@ export default function AboutPage() {
         eyebrow="About"
         title={
           <>
-            A protocol, <em className="text-sand">not a product owned by anyone.</em>
+            A protocol, <em className="text-sand">governed in the open.</em>
           </>
         }
-        description="The team that shipped BLOK Capital doesn't hold the keys to your money, the right to change it without a vote, or the ability to take it down."
+        // No "or the ability to take it down": a security council can pause
+        // new Garden deployments (/security, "Pausing").
+        description="The team that shipped BLOK Capital doesn't hold the keys to your money, and every change goes through an on-chain vote."
         aside={
           <dl className="grid grid-cols-2 gap-px overflow-hidden rounded-2xl border border-line/[0.08] bg-line/[0.08] text-small">
             {[
@@ -64,7 +73,7 @@ export default function AboutPage() {
         }
       />
 
-      <Section id="story" eyebrow="Why we built it">
+      <Section id="story" eyebrow="Story" title="Why we built it.">
         <div className="grid gap-12 lg:grid-cols-12">
           <Reveal className="lg:col-span-7">
             <div className="space-y-6 text-[19px] leading-[1.7] text-fg-muted">
@@ -109,11 +118,15 @@ export default function AboutPage() {
         description="Core DAO members, listed on-chain in the Aragon token-voting plugin."
         actions={<Button href={links.aragonMembers} variant="secondary">Verify on Aragon</Button>}
       >
-        <Stagger as="ul" step={0.05} className="grid grid-cols-2 gap-4 sm:grid-cols-3 lg:grid-cols-5">
+        {/* 2 then 5 columns: ten members divide evenly at every width (MOB-18). */}
+        <Stagger as="ul" step={0.05} className="grid grid-cols-2 gap-4 md:grid-cols-5">
           {team.map((m) => {
             const card = (
               <>
-                <span className="relative block aspect-[4/5] overflow-hidden rounded-xl bg-raised">
+                {/* One frame for every tile (VIS-20): the photos are square, so
+                    a square tile shows each one whole, on the same raised
+                    backdrop and hairline edge. */}
+                <span className="relative isolate block aspect-square overflow-hidden rounded-card bg-raised after:pointer-events-none after:absolute after:inset-0 after:rounded-[inherit] after:ring-1 after:ring-inset after:ring-line/8">
                   <TeamPhoto member={m} />
                 </span>
                 <span className="mt-3 flex items-center justify-between gap-2 px-1">

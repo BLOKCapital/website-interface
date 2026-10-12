@@ -1,8 +1,8 @@
 "use client";
 
-import { useEffect, useRef, useState, type ReactNode } from "react";
-import { useInView, useReducedMotion } from "@/lib/motion";
-import { useIsClient } from "@/lib/hooks";
+import { useEffect, useMemo, useRef, useState, type ReactNode } from "react";
+import { dwellMs, useAutoplay } from "@/lib/explainers";
+import { AutoplayToggle } from "@/components/explore/AutoplayToggle";
 import { cn } from "@/lib/utils";
 
 export type Stage = { label: string; detail: string; where: string };
@@ -19,75 +19,105 @@ const icons: ReactNode[] = [
   <path key="e" d="M10 3.5a6.5 6.5 0 1 0 0 13 6.5 6.5 0 0 0 0-13ZM8.5 7.5l3.5 2.5-3.5 2.5z" {...line} />,
 ];
 
-const STEP_MS = 2600;
-
 /**
- * How a decision is made, as a moving pipeline: a proposal travels the four
- * stages on a loop, lighting each in turn; stages it has passed are ticked.
- * Pauses while the pointer is over it or it's off-screen; click a stage to
- * jump there. Under reduced motion it stands still, every stage equal. The
- * stages are a plain ordered list, so the content never depends on motion.
+ * How a decision is made: the four stages as a plain ordered list, so the
+ * content never depends on motion. On wide screens with a mouse it also
+ * plays once as a pipeline (lib/explainers.ts has the rules every explainer
+ * shares): a proposal travels the stages, lighting each in turn and ticking
+ * the ones it has passed, staying long enough on each to read it, and stops
+ * on the last. Pause/Play controls it; pointer over it, focus inside it or
+ * scrolling away pauses it; picking a stage jumps there and stops it for
+ * the visit. Phones, touch screens and reduced motion get the still list,
+ * every stage equal.
  */
 export function DecisionPipeline({ stages }: { stages: Stage[] }) {
   const root = useRef<HTMLDivElement>(null);
-  const inView = useInView(root, { rootMargin: "-15% 0px -15% 0px" });
-  const client = useIsClient();
-  const reduce = useReducedMotion();
+  const ap = useAutoplay(root, { rootMargin: "-15% 0px -15% 0px" });
   const [active, setActive] = useState(0);
-  const [hovered, setHovered] = useState(false);
-  const animate = client && !reduce;
-  const running = animate && inView && !hovered;
+  const last = stages.length - 1;
+  const animate = ap.eligible;
+  const dwell = useMemo(() => stages.map((s) => dwellMs(s.label, s.detail, s.where)), [stages]);
+  const { running, end } = ap;
 
+  // The walk: one stage at a time, stopping on the last.
   useEffect(() => {
-    if (!running) return;
-    const t = setTimeout(() => setActive((a) => (a + 1) % stages.length), STEP_MS);
+    if (!running || active >= last) return;
+    const t = setTimeout(() => {
+      setActive(active + 1);
+      if (active + 1 === last) end();
+    }, dwell[active]);
     return () => clearTimeout(t);
-  }, [running, active, stages.length]);
+  }, [running, active, last, dwell, end]);
 
+  const onToggle = () => {
+    // Playing again from the last stage starts from the first.
+    if (!ap.on && active === last) setActive(0);
+    ap.toggle();
+  };
+
+  // From lg the stages are grid columns (gap 1.5rem) with the icon at each
+  // column's start, so stage i's icon sits i/n of (100% + gap) along.
+  const span = "(100% + 1.5rem)";
   const at = stages.length > 1 ? active / (stages.length - 1) : 0;
 
   return (
     <div
       ref={root}
-      onPointerEnter={(e) => e.pointerType === "mouse" && setHovered(true)}
-      onPointerLeave={() => setHovered(false)}
-      className="theme-dark relative overflow-hidden rounded-[28px] border border-line/[0.08] bg-card p-6 sm:p-8 lg:p-10 lg:pt-16"
+      {...ap.rootProps}
+      data-loop
+      className="theme-dark relative overflow-hidden rounded-[28px] border border-line/[0.08] bg-card p-6 sm:p-8 lg:p-10 lg:pt-20"
     >
       <div aria-hidden className="grid-lines pointer-events-none absolute inset-0 opacity-50 [mask-image:radial-gradient(ellipse_70%_80%_at_50%_0%,black,transparent)]" />
 
+      {animate && (
+        // Clear of the proposal chip, which rides above the track.
+        <AutoplayToggle on={ap.on} ended={ap.ended} onClick={onToggle} what="the pipeline" className="absolute right-6 top-5 z-raised" />
+      )}
+
       <ol className="relative grid gap-6 lg:grid-cols-4 lg:gap-6">
-        {/* The track and the proposal travelling it (wide screens: across; phones: down) */}
+        {/* Phones: a still line down through the stage icons. */}
+        <span aria-hidden className="absolute bottom-6 left-[22px] top-6 w-px bg-line/12 lg:hidden" />
+        {/* Wide screens: the track and the proposal travelling it. */}
         {animate && (
           <>
             <span aria-hidden className="absolute left-[22px] right-[22px] top-[22px] hidden h-px bg-line/12 lg:block" />
             <span
               aria-hidden
               className="absolute left-[22px] top-[22px] hidden h-px origin-left bg-leaf transition-transform duration-slow ease-expo lg:block"
-              style={{ right: 22, transform: `scaleX(${at})` }}
+              // From the first icon to the last; filled up to the active one.
+              style={{ width: `calc(${span} * ${last / stages.length})`, transform: `scaleX(${at})` }}
             />
-            {/* Rides just above the track, so it never covers a stage's icon. */}
+            {/* Rides just above the track, so it never covers a stage's icon. The
+                rail is one column-step × n wide, so translating it by i/n of
+                its own width puts the chip over stage i (transform, not `left`). */}
             <span
               aria-hidden
-              className="absolute -top-7 z-10 hidden -translate-x-1/2 transition-[left] duration-slow ease-expo lg:block"
-              style={{ left: `calc(22px + (100% - 44px) * ${at})` }}
+              className="absolute left-[22px] -top-7 z-raised hidden transition-transform duration-slow ease-expo lg:block"
+              style={{ width: `calc${span}`, transform: `translateX(${(active / stages.length) * 100}%)` }}
             >
-              <span className="flex items-center gap-1.5 rounded-full border border-leaf/50 bg-canvas px-2.5 py-1 font-mono text-[11px] uppercase tracking-[0.12em] text-leaf shadow-[0_0_0_4px_rgb(var(--leaf)/0.12)]">
-                <span className="size-1.5 animate-pulse rounded-full bg-leaf" /> Proposal
+              <span className="absolute left-0 top-0 flex -translate-x-1/2 items-center gap-1.5 whitespace-nowrap rounded-full border border-leaf/50 bg-canvas px-2.5 py-1 font-mono text-[11px] uppercase tracking-[0.12em] text-leaf shadow-[0_0_0_4px_rgb(var(--leaf)/0.12)]">
+                {/* Pulses twice as it arrives at each stage, then rests. */}
+                <span key={active} className="size-1.5 animate-pulse rounded-full bg-leaf" style={{ animationIterationCount: 2 }} /> Proposal
               </span>
             </span>
-            <span aria-hidden className="absolute bottom-6 left-[22px] top-6 w-px bg-line/12 lg:hidden" />
           </>
         )}
 
         {stages.map((s, i) => {
           const on = animate && i === active;
           const passed = animate && i < active;
+          // A stage is a button only while the pipeline plays; still, it's a plain list item.
+          const El = animate ? "button" : "div";
           return (
             <li key={s.label} aria-current={on ? "step" : undefined} className="relative">
-              <button
-                type="button"
-                onClick={() => setActive(i)}
-                disabled={!animate}
+              <El
+                {...(animate && {
+                  type: "button" as const,
+                  onClick: () => {
+                    ap.stop();
+                    setActive(i);
+                  },
+                })}
                 className="group/s grid w-full grid-cols-[44px_1fr] gap-4 text-left lg:block"
               >
                 <span
@@ -129,7 +159,7 @@ export function DecisionPipeline({ stages }: { stages: Stage[] }) {
                     {s.where}
                   </span>
                 </span>
-              </button>
+              </El>
             </li>
           );
         })}

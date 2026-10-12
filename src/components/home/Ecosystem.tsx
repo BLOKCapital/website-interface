@@ -9,18 +9,28 @@ import { ecosystem, otherChains } from "@/lib/data/ecosystem";
  * tile linking to the code or docs that proves it. Logos render monochrome
  * (black on the light theme, white on the dark) so mixed brand colours read
  * as one calm system; hover restores colour.
+ *
+ * Its home is /protocol#ecosystem (D-08b). The tiles are integrations, never
+ * endorsements or partnerships, and the copy says so (CRO-22).
  */
-export function Ecosystem() {
+export function Ecosystem({ tone = "canvas" }: { tone?: "canvas" | "surface" }) {
   return (
     <Section
       id="ecosystem"
+      tone={tone}
       eyebrow="Ecosystem"
       title={
         <>
           Composed from projects <em className="text-sand">you already know.</em>
         </>
       }
-      description="BLOK Capital doesn't reinvent exchanges, oracles or lending. It wires proven ones into your wallet. Each tile links to the code that integrates it."
+      description={
+        <>
+          BLOK Capital doesn&apos;t reinvent exchanges, oracles or lending. It wires proven ones into your wallet.{" "}
+          <strong className="font-medium text-fg">Integrations in our code, not endorsements.</strong> Each tile links to the
+          file or docs page that shows it.
+        </>
+      }
     >
       <div className="divide-y divide-line/[0.07] border-y border-line/[0.07]">
         {ecosystem.map((g) => (
@@ -60,8 +70,9 @@ export function Ecosystem() {
                     <span className="min-w-0">
                       <span className="sr-only">{it.name}: </span>
                       <span className="block text-small text-fg-muted">{it.use}</span>
-                      <span className="mt-1 inline-flex items-center gap-1 font-mono text-[11px] text-fg-subtle group-hover/e:text-leaf">
-                        {it.evidence.label} <ExternalIcon size={10} />
+                      {/* Long file names wrap inside the tile (VIS-10, MOB-09c). */}
+                      <span className="mt-1 block font-mono text-[11px] text-fg-subtle [overflow-wrap:anywhere] group-hover/e:text-leaf">
+                        {it.evidence.label} <ExternalIcon size={10} className="inline-block align-baseline" />
                       </span>
                       <span className="sr-only"> (opens in a new tab)</span>
                     </span>

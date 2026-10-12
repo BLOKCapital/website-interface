@@ -4,6 +4,7 @@ import { PageHero } from "@/components/ui/PageHero";
 import { Section } from "@/components/ui/Section";
 import { Button } from "@/components/ui/Button";
 import { CtaBand } from "@/components/ui/CtaBand";
+import { RiskNote } from "@/components/ui/RiskNote";
 import { Reveal, Stagger, RevealItem } from "@/components/ui/Reveal";
 import { ArrowIcon } from "@/components/ui/icons";
 import { IndexExplorer } from "@/components/indices/IndexExplorer";
@@ -12,16 +13,32 @@ import { TokenStack } from "@/components/indices/TokenLogo";
 import { Methodology } from "@/components/indices/Methodology";
 import { RebalanceLab } from "@/components/indices/RebalanceLab";
 import { DataAvailability } from "@/components/indices/DataAvailability";
+import { AuditNote } from "@/components/indices/AuditNote";
 import { JsonLd } from "@/components/seo/JsonLd";
 import { breadcrumbSchema } from "@/lib/seo/schema";
 import { indices, sources } from "@/lib/data/indices";
+import { pageMetadata } from "@/lib/seo/metadata";
 
-export const metadata: Metadata = {
-  title: "Indices: BLOKC2, BLOKC5, BLOKC10",
+export const metadata: Metadata = pageMetadata({
+  title: "Crypto indices: BLOKC2, BLOKC5, BLOKC10",
   description:
-    "BLOK Capital's three on-chain indices: what each holds, how market-cap weights are computed from Chainlink prices, and how pooled rebalancing works. Live oracle prices.",
-  alternates: { canonical: "/indices" },
-};
+    "BLOK Capital's three on-chain indices: holdings, market-cap weights from Chainlink prices, and pooled rebalancing. Live oracle prices.",
+  path: "/indices",
+});
+
+const names = indices.map((i) => i.name);
+// Every index shares one launch state today; say it once, from the data.
+const shared = indices.every((i) => i.status === indices[0].status) ? ` All three are ${indices[0].status.toLowerCase()}.` : "";
+
+/**
+ * The answer first (SEO-12), from the index data: what the BLOK Capital
+ * indices are, then the one rule they share. "The BLOK Capital indices",
+ * never "each BLOKC index", which reads as the token (MISS-14).
+ */
+const definition =
+  `The BLOK Capital indices, ${names.slice(0, -1).join(", ")} and ${names.at(-1)}, are three fixed baskets of tokens on ` +
+  `Arbitrum, weighted by market cap, priced by Chainlink and rebalanced on-chain.${shared} Nobody picks the weights by ` +
+  "hand; the contract does the maths in public.";
 
 export default function IndicesPage() {
   return (
@@ -35,7 +52,7 @@ export default function IndicesPage() {
             Three baskets, <em className="text-sand">one honest rule.</em>
           </>
         }
-        description="Each BLOKC index holds a fixed set of tokens, weighted by market cap, priced by Chainlink and rebalanced on-chain. Nobody picks the weights by hand; the contract does the maths in public."
+        description={definition}
         actions={
           <>
             <Button href="#explore">Explore the indices</Button>
@@ -158,6 +175,10 @@ export default function IndicesPage() {
         title="What's live, and what isn't yet."
         description="The indices are in private testing. Here's exactly what this page can show today, and what arrives with the public launch."
       >
+        <div className="mb-5 space-y-2">
+          <RiskNote />
+          <AuditNote />
+        </div>
         <DataAvailability />
       </Section>
 

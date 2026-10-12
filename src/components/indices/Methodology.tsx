@@ -1,3 +1,4 @@
+import Link from "next/link";
 import { methodology, sources } from "@/lib/data/indices";
 import { PlusIcon, ExternalIcon } from "@/components/ui/icons";
 import { Stagger, RevealItem } from "@/components/ui/Reveal";
@@ -26,9 +27,34 @@ const Src = ({ href, children }: { href: string; children: React.ReactNode }) =>
 );
 
 /**
- * How every BLOKC index is weighted, in three depths: four plain steps,
- * then the guardrails with the contract that enforces each, then the
- * source files. All three indices share one method; only the components differ.
+ * The formula as a short block that wraps only at its operators (MOB-08,
+ * A11Y-13): one line per equation ("·" in the data separates them), each
+ * operand kept whole, so nothing scrolls sideways at any width.
+ */
+function Formula({ text }: { text: string }) {
+  const lines = text.split("·").map((l) => l.trim());
+  return (
+    <p className="mt-1.5 space-y-1 font-mono text-[13px] text-fg">
+      {lines.map((line, i) => (
+        <span key={line} className="block">
+          {i > 0 && <span className="sr-only">; </span>}
+          {line.split(/ (?=[=÷×] )/).map((part, j) => (
+            <span key={j}>
+              {j > 0 && " "}
+              <span className="whitespace-nowrap">{part}</span>
+            </span>
+          ))}
+        </span>
+      ))}
+    </p>
+  );
+}
+
+/**
+ * How every one of the BLOK Capital indices is weighted, in three depths:
+ * four plain steps, then the guardrails with the contract that enforces
+ * each, then the source files. All three indices share one method; only
+ * the components differ.
  */
 export function Methodology() {
   return (
@@ -45,7 +71,7 @@ export function Methodology() {
 
       <div className="rounded-2xl border border-line/[0.08] bg-canvas/60 px-5 py-4">
         <p className="text-caption text-fg-subtle">The formula, as the contract computes it</p>
-        <p className="mt-1.5 overflow-x-auto whitespace-nowrap font-mono text-[13px] text-fg">{methodology.formula}</p>
+        <Formula text={methodology.formula} />
       </div>
 
       <Disclosure label="Guardrails" hint="The limits the contracts enforce, and why each exists">
@@ -81,8 +107,11 @@ export function Methodology() {
             open-source keeper does it automatically. <Src href={sources.rebalancer}>Rebalancer.sol</Src> <Src href={sources.keeper}>worker-solver</Src>
           </li>
           <li>
-            <span className="text-fg">New indices</span> are deployed through the <code className="font-mono text-[12.5px] text-fg">IndexFactory</code> and need
-            DAO approval before a Garden can use them. <Src href={sources.docsIndexGarden}>Index Garden docs</Src>
+            <span className="text-fg">New indices</span> are deployed through the <code className="font-mono text-[12.5px] text-fg">IndexFactory</code> and need{" "}
+            <Link href="/governance" className="rounded-xs text-leaf underline decoration-leaf/40 underline-offset-[3px] transition-colors duration-fast can-hover:hover:decoration-leaf">
+              DAO approval
+            </Link>{" "}
+            before a Garden can use them. <Src href={sources.docsIndexGarden}>Index Garden docs</Src>
           </li>
           <li className="text-caption text-fg-subtle">
             The docs describe the index architecture as preliminary: constants and routing may change before launch.{" "}

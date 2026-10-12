@@ -2,6 +2,7 @@ import type { CSSProperties } from "react";
 import { Stagger, RevealItem } from "@/components/ui/Reveal";
 import { Badge } from "@/components/ui/Badge";
 import { Button } from "@/components/ui/Button";
+import { ArrowLink } from "@/components/ui/ArrowLink";
 import { ExternalIcon } from "@/components/ui/icons";
 import { CountUp } from "@/components/motion/CountUp";
 import type { GovernanceSnapshot, ProposalView } from "@/lib/data/proposals";
@@ -31,8 +32,25 @@ function Meter({ label, value, tone = "leaf", large }: { label: string; value: n
   );
 }
 
-function Status({ p }: { p: ProposalView }) {
-  return <Badge tone={p.active ? "live" : p.passing ? "done" : "neutral"}>{p.active ? "Voting open" : p.statusLabel}</Badge>;
+/**
+ * The one empty state for proposals, everywhere (UX-16): neutral, and
+ * pointing at where the record lives rather than at how the page was built.
+ */
+export function ProposalsOnAragon({ className }: { className?: string }) {
+  return (
+    <p className={cn("rounded-[24px] border border-dashed border-line/15 p-6 sm:p-8", className)}>
+      <span data-cta="gov_aragon_proposals">
+        <ArrowLink href={links.aragon} className="text-body">
+          Every proposal and vote lives on Aragon
+        </ArrowLink>
+      </span>
+    </p>
+  );
+}
+
+/** One label for an open vote, "Voting open", on every proposal surface (CRO-23). */
+export function ProposalStatus({ p }: { p: ProposalView }) {
+  return p.active ? <Badge status="voting" /> : <Badge tone={p.passing ? "done" : "neutral"}>{p.statusLabel}</Badge>;
 }
 
 const window_ = (p: ProposalView) =>
@@ -49,7 +67,7 @@ function Featured({ p, n }: { p: ProposalView; n: number }) {
         <p className="font-mono text-[11px] uppercase tracking-[0.14em] text-fg-subtle">
           Latest · Proposal <span className="text-leaf">{two(n)}</span>
         </p>
-        <Status p={p} />
+        <ProposalStatus p={p} />
       </div>
 
       <h3 className="display relative mt-5 text-[clamp(24px,1.6vw+16px,34px)] leading-tight text-fg">{p.title}</h3>
@@ -89,8 +107,8 @@ function Featured({ p, n }: { p: ProposalView; n: number }) {
       </dl>
 
       <div className="relative mt-auto pt-7">
-        <Button href={links.aragon} size="md">
-          Read it on Aragon <ExternalIcon />
+        <Button href={links.aragon} size="md" data-cta="gov_aragon_proposals">
+          All proposals on Aragon
         </Button>
       </div>
     </article>
@@ -108,7 +126,7 @@ function Compact({ p, n }: { p: ProposalView; n: number }) {
     >
       <div className="flex items-center justify-between gap-3">
         <span className="font-mono text-[11px] uppercase tracking-[0.14em] text-fg-subtle">Proposal {two(n)}</span>
-        <Status p={p} />
+        <ProposalStatus p={p} />
       </div>
       <h3 className="mt-3 text-[16.5px] font-medium leading-snug text-fg [overflow-wrap:anywhere]">{p.title}</h3>
       <div className="mt-4 grid grid-cols-2 gap-4">
@@ -137,18 +155,7 @@ export function ProposalBoard({ governance }: { governance: GovernanceSnapshot }
   const list = governance.proposals;
   const total = list.length;
 
-  if (total === 0) {
-    return (
-      <div className="flex flex-col items-start gap-5 rounded-[28px] border border-dashed border-line/15 p-8 sm:flex-row sm:items-center sm:justify-between">
-        <p className="max-w-xl text-body text-fg-muted">
-          Every proposal, vote and execution is public on Aragon, the DAO&apos;s on-chain home.
-        </p>
-        <Button href={links.aragon}>
-          Open the DAO on Aragon <ExternalIcon />
-        </Button>
-      </div>
-    );
-  }
+  if (total === 0) return <ProposalsOnAragon />;
 
   const executed = list.filter((p) => p.statusLabel === "Executed").length;
   const avg = (k: "forPct" | "turnoutPct") => list.reduce((s, p) => s + p[k], 0) / total;
@@ -172,11 +179,13 @@ export function ProposalBoard({ governance }: { governance: GovernanceSnapshot }
             </div>
           ))}
         </dl>
-        <div className="flex flex-col items-start gap-2 lg:items-end">
-          <Button href={links.aragon} variant="secondary">
-            All proposals on Aragon <ExternalIcon />
+        <div className="flex flex-col items-start gap-2 lg:items-end lg:text-right">
+          <Button href={links.aragon} variant="secondary" data-cta="gov_aragon_proposals">
+            All proposals on Aragon
           </Button>
-          <p className="text-caption text-fg-subtle">Core members vote until $BLOKC launches ({protocolStatus.token}).</p>
+          <p className="text-caption text-fg-subtle">Core members vote until $BLOKC launches ({protocolStatus.token.replace(" ", "\u00a0")}).</p>
+          {/* Build-time data: say when it was read, so a stale "Voting open" can't pass as live (UX-15). */}
+          {governance.syncedLabel && <p className="font-mono text-[11.5px] text-fg-subtle">As of {governance.syncedLabel}</p>}
         </div>
       </div>
 

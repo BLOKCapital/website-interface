@@ -4,7 +4,9 @@ import { PageHero } from "@/components/ui/PageHero";
 import { Section } from "@/components/ui/Section";
 import { Button } from "@/components/ui/Button";
 import { Card } from "@/components/ui/Card";
+import { Badge } from "@/components/ui/Badge";
 import { CtaBand } from "@/components/ui/CtaBand";
+import { RiskNote } from "@/components/ui/RiskNote";
 import { TokenSpec } from "@/components/token/TokenSpec";
 import { AllocationExplorer } from "@/components/token/AllocationExplorer";
 import { TokenTimeline } from "@/components/token/TokenTimeline";
@@ -14,18 +16,27 @@ import { breadcrumbSchema } from "@/lib/seo/schema";
 import { milestones } from "@/lib/data/milestones";
 import { protocolStatus } from "@/lib/data/status";
 import { links } from "@/lib/data/socials";
+import { BLOKC_TOKEN } from "@/lib/data/token";
+import { pageMetadata } from "@/lib/seo/metadata";
 
-export const metadata: Metadata = {
-  title: "$BLOKC token",
-  description: "The $BLOKC governance token: utility, allocation of the 10B supply, and launch timing.",
-  alternates: { canonical: "/token" },
-};
+export const metadata: Metadata = pageMetadata({
+  title: "$BLOKC token: supply, utility and allocation",
+  description: `The $BLOKC governance token on Arbitrum One: 10B supply, utility, allocation, the official contract address and the IDO planned for ${protocolStatus.token}.`,
+  path: "/token",
+  // token/opengraph-image.tsx supplies the card.
+  ownImage: true,
+});
 
-const utilities = [
-  { title: "Governance", body: "Vote on protocol upgrades, index approvals and fee parameters, on-chain through Aragon OSx." },
-  { title: "Loyalty rewards", body: "BLOKC is distributed to Garden owners who actively use the protocol." },
-  { title: "Staking", body: "Stake BLOKC to earn a share of protocol fees once the fee switch is turned on by DAO vote." },
-  { title: "Manager boost", body: "Delegate BLOKC to boost the visibility of a Gardener you trust." },
+// Present tense only for what exists today: core members already vote
+// (as /governance states). Everything $BLOKC itself unlocks is planned (CRO-13).
+const utilities: { title: string; body: string; planned?: boolean }[] = [
+  {
+    title: "Governance",
+    body: "Core DAO members vote today on protocol upgrades, index approvals and fee parameters, on-chain through Aragon OSx. $BLOKC holders will vote after the IDO.",
+  },
+  { title: "Loyalty rewards", planned: true, body: "$BLOKC will be distributed to Garden owners who actively use the protocol." },
+  { title: "Staking", planned: true, body: "Staked $BLOKC will earn a share of protocol fees, once the fee switch is turned on by DAO vote." },
+  { title: "Manager boost", planned: true, body: "You will be able to delegate $BLOKC to boost the visibility of a Gardener you trust." },
 ];
 
 // Share of the 10B supply, largest first.
@@ -45,6 +56,16 @@ const allocation = [
   { label: "Airdrop", pct: 1 },
 ];
 
+// Key facts (SEO-12): plain text an answer engine can lift, using only
+// what this page already shows (TokenSpec and TokenContract).
+const keyFacts = [
+  { k: "Symbol", v: "$BLOKC, an ERC-20 token" },
+  { k: "Total supply", v: "10,000,000,000 $BLOKC" },
+  { k: "Network", v: "Arbitrum One (chain ID 42161)" },
+  { k: "Decimals", v: "18" },
+  { k: "Contract", v: BLOKC_TOKEN },
+];
+
 const tokenMilestones = milestones.filter((m) => ["staking", "ido", "dao-vote"].includes(m.id));
 
 export default function TokenPage() {
@@ -59,18 +80,21 @@ export default function TokenPage() {
             The token that <em className="text-sand">governs the protocol.</em>
           </>
         }
-        description={`$BLOKC gives the people who use BLOK Capital a say in how it changes. It launches at the IDO, planned for ${protocolStatus.token}.`}
+        description={`$BLOKC is BLOK Capital's governance token, an ERC-20 on Arbitrum One. It launches at the IDO, planned for ${protocolStatus.token}, and will give the people who use BLOK Capital a say in how the protocol changes.`}
         actions={
           <>
-            <Button href={links.whitepaper}>Read the whitepaper</Button>
-            <Button href="/governance" variant="secondary">
+            {/* With the ↗ cue the pair no longer fits one row at 375: when they wrap, each fills its row. */}
+            <Button href={links.whitepaper} data-cta="token_whitepaper" className="max-sm:grow">
+              Read the whitepaper
+            </Button>
+            <Button href="/governance" variant="secondary" className="max-sm:grow">
               Governance
             </Button>
           </>
         }
         aside={
           <div className="relative mx-auto aspect-square w-full max-w-[260px]">
-            <div aria-hidden className="glow-leaf absolute inset-[-20%]" />
+            <div aria-hidden className="glow-leaf pointer-events-none absolute inset-[-20%]" />
             <Image src="/brand/token-front.webp" alt="The $BLOKC token" fill sizes="260px" priority className="animate-float object-contain" />
           </div>
         }
@@ -86,22 +110,41 @@ export default function TokenPage() {
         }
       >
         <Reveal>
+          <h3 className="font-mono text-[11px] uppercase tracking-[0.14em] text-fg-subtle">Key facts</h3>
+          <ul className="mb-8 mt-3 grid list-disc gap-x-10 gap-y-1.5 pl-5 text-small text-fg-muted marker:text-leaf sm:grid-cols-2">
+            {keyFacts.map((f) => (
+              <li key={f.k}>
+                {`${f.k}: `}
+                <span className={f.k === "Contract" ? "break-all font-mono text-[12.5px] text-fg" : "text-fg"}>{f.v}</span>
+              </li>
+            ))}
+          </ul>
           <TokenSpec />
         </Reveal>
       </Section>
 
-      <Section id="utility" tone="surface" eyebrow="Utility" title="What $BLOKC does.">
+      <Section
+        id="utility"
+        tone="surface"
+        eyebrow="Utility"
+        title="What $BLOKC is for."
+        description="The DAO already governs the protocol through its core members. Voting with $BLOKC, and everything else here, is planned."
+      >
         <Stagger as="ul" className="grid gap-5 sm:grid-cols-2 lg:grid-cols-4">
           {utilities.map((u, i) => (
             <RevealItem as="li" key={u.title}>
-              <Card className="h-full">
-                <span className="font-mono text-[12px] text-leaf">0{i + 1}</span>
+              <Card tone={u.planned ? "planned" : "default"} className="h-full">
+                <div className="flex h-6 items-center justify-between gap-3">
+                  <span className="font-mono text-[12px] text-leaf">0{i + 1}</span>
+                  {u.planned && <Badge status="planned" />}
+                </div>
                 <h3 className="mt-3 text-h4 font-medium text-fg">{u.title}</h3>
                 <p className="mt-2 text-small text-fg-muted">{u.body}</p>
               </Card>
             </RevealItem>
           ))}
         </Stagger>
+        <RiskNote className="mt-8" />
       </Section>
 
       <Section id="allocation" eyebrow="Allocation" title="Where the 10B supply goes.">

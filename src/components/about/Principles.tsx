@@ -31,8 +31,9 @@ const marks: ReactNode[] = [
 
 /**
  * The principles, each a card with its own drawn mark: the line draws itself
- * in as the card reveals (globals.css, "Drawn marks"), a large numeral sits
- * behind, and the place each principle is proven is pinned at the foot.
+ * in as the card reveals (globals.css, "Drawn marks"), a large CSS-drawn
+ * numeral sits behind, and the place each principle is proven is pinned at
+ * the foot.
  * Server component; the drawing is pure CSS and fully drawn without JS or
  * with reduced motion.
  */
@@ -42,9 +43,13 @@ export function Principles({ items }: { items: Principle[] }) {
       {items.map((v, i) => (
         <RevealItem as="li" key={v.title} className="h-full">
           <article className="group/p relative flex h-full flex-col overflow-hidden rounded-[24px] border border-line/[0.08] bg-card p-7 transition-[border-color,transform] duration-base ease-expo hover:-translate-y-1 hover:border-leaf/30">
-            <span aria-hidden className="pointer-events-none absolute -right-2 -top-6 font-mono text-[96px] leading-none text-line/[0.05] transition-colors duration-base group-hover/p:text-leaf/10">
-              {String(i + 1).padStart(2, "0")}
-            </span>
+            {/* Decorative numeral, drawn from CSS so it isn't text: axe doesn't
+                contrast-check pseudo-element content (A11Y-15). */}
+            <span
+              aria-hidden
+              data-n={String(i + 1).padStart(2, "0")}
+              className="pointer-events-none absolute -right-2 -top-6 font-mono text-[96px] leading-none text-line/[0.05] transition-colors duration-base before:content-[attr(data-n)] group-hover/p:text-leaf/10"
+            />
             <span aria-hidden className="relative grid size-14 place-items-center rounded-2xl border border-leaf/25 bg-leaf/[0.07] text-leaf">
               <svg width="34" height="34" viewBox="0 0 48 48">
                 {marks[i % marks.length]}

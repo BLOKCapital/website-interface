@@ -1,4 +1,6 @@
+import Link from "next/link";
 import { Section } from "@/components/ui/Section";
+import { Icon } from "@/components/ui/Icon";
 import { HowItWorksScroller, type ScrollStep } from "@/components/home/HowItWorksScroller";
 
 const steps: ScrollStep[] = [
@@ -25,7 +27,11 @@ const steps: ScrollStep[] = [
   },
 ];
 
-/** Three steps told as a scroll story beside a Garden that changes with them. */
+/**
+ * Three steps told as a scroll story beside a Garden that changes with them,
+ * then one line to the six-layer explorer, which now lives on /protocol
+ * (D-08a). `id="explore"` keeps old /#explore links landing on that line.
+ */
 export function HowItWorks() {
   return (
     <Section
@@ -40,6 +46,19 @@ export function HowItWorks() {
       description="A Garden is a smart wallet only you control. Strategies can rebalance inside it; they can never move funds out."
     >
       <HowItWorksScroller steps={steps} />
+      <p id="explore" className="mt-12 flex flex-wrap items-center gap-x-3 gap-y-1 border-t border-subtle pt-6 text-ui text-fg-muted">
+        {/* The space stays inside this text node (see CtaBand, A11Y-21). */}
+        {"Six layers sit under every Garden, from your sign-in to the DAO. "}
+        <Link
+          href="/protocol#explore"
+          prefetch={false}
+          data-cta="how_explore_layers"
+          className="group/x inline-flex items-center gap-1.5 rounded-xs py-2 font-medium text-leaf transition-colors duration-fast can-hover:hover:text-fg"
+        >
+          Explore all six layers
+          <Icon name="arrow-right" size="sm" className="transition-transform duration-fast can-hover:group-hover/x:translate-x-0.5" />
+        </Link>
+      </p>
     </Section>
   );
 }

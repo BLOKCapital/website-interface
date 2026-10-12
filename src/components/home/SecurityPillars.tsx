@@ -1,63 +1,111 @@
 import Link from "next/link";
+import type { ReactNode } from "react";
 import { Section } from "@/components/ui/Section";
 import { Button } from "@/components/ui/Button";
+import { Badge } from "@/components/ui/Badge";
 import { PillarIcon } from "@/components/ui/PillarIcons";
-import { Stagger, RevealItem } from "@/components/ui/Reveal";
+import { Stagger } from "@/components/ui/Reveal";
 import { ArrowIcon, ExternalIcon } from "@/components/ui/icons";
 import { pillars } from "@/lib/data/pillars";
 
-/** Six security properties, each linking to where it's proven. */
-export function SecurityPillars() {
+/**
+ * Docs explain how something works; code, the audit and the on-chain record
+ * prove it. Each link says which it is (CRO-13).
+ */
+const isDocs = (href: string) => /^https?:\/\/docs\./.test(href);
+
+/**
+ * "Don't trust us. Check.": six security properties, each linking to where
+ * it's shown, then `children` (on home, RulesDemo as hands-on proof; D-08d).
+ * A property that isn't live yet carries its "Planned" badge, and its copy
+ * is in the future tense (pillars.ts).
+ *
+ * The grid clips its rounded corners, so focus rings are drawn inside each
+ * cell (focus-inset, A11Y-16). Each cell's link is named by its title, its
+ * status and what it leads to, with the description read after (A11Y-31).
+ */
+export function SecurityPillars({ children }: { children?: ReactNode }) {
   return (
     <Section
       id="security"
-      tone="surface"
       eyebrow="Security"
       title={
         <>
           Don&apos;t trust us. <em className="text-sand">Check.</em>
         </>
       }
-      description="Each property maps to a contract, an audit or a line of open-source code."
-      actions={<Button href="/security" variant="secondary">Contracts and audits</Button>}
+      description="Each property maps to a contract, an audit or a line of open-source code. Then watch the rules run."
+      actions={
+        <Button href="/security" variant="secondary" data-cta="security_contracts_audits">
+          Contracts and audits
+        </Button>
+      }
     >
-      <Stagger as="ul" className="grid gap-px overflow-hidden rounded-2xl border border-line/[0.08] bg-line/[0.08] sm:grid-cols-2 lg:grid-cols-3">
+      <Stagger
+        as="ul"
+        className="focus-inset grid gap-px overflow-hidden rounded-card border border-subtle bg-line/[0.08] sm:grid-cols-2 lg:grid-cols-3"
+      >
         {pillars.map((p) => {
-          const external = p.href?.startsWith("http");
+          const external = p.href?.startsWith("http") ?? false;
+          const id = `pillar-${p.id}`;
+          const named = [`${id}-title`, p.planned && `${id}-status`, p.href && `${id}-cta`, external && `${id}-newtab`]
+            .filter(Boolean)
+            .join(" ");
           const inner = (
             <>
               <div className="flex items-center justify-between gap-3">
                 <PillarIcon id={p.id} />
-                <span className="text-right font-mono text-[11.5px] text-fg-subtle">{p.spec}</span>
+                <span className="text-right font-mono text-label text-fg-subtle">{p.spec}</span>
               </div>
-              <h3 className="mt-6 text-h4 font-medium text-fg">{p.label}</h3>
-              <p className="mt-2 text-small text-fg-muted">{p.description}</p>
+              <div className="mt-6 flex flex-wrap items-center gap-x-3 gap-y-2">
+                <h3 id={`${id}-title`} className="text-h4 font-medium text-fg">
+                  {p.label}
+                </h3>
+                {p.planned && (
+                  <span id={`${id}-status`}>
+                    <Badge tone="soon">{p.planned}</Badge>
+                  </span>
+                )}
+              </div>
+              <p id={`${id}-desc`} className="mt-2 text-small text-fg-muted">
+                {p.description}
+              </p>
               {p.href && (
-                <span className="mt-5 inline-flex items-center gap-1.5 text-small font-medium text-leaf">
-                  See the proof {external ? <ExternalIcon /> : <ArrowIcon size={13} />}
+                <span id={`${id}-cta`} className="mt-5 inline-flex items-center gap-1.5 text-small font-medium text-leaf">
+                  {isDocs(p.href) ? "Read how it works" : "See the proof"}
+                  {external ? <ExternalIcon /> : <ArrowIcon size={13} />}
                 </span>
               )}
             </>
           );
           return (
-            <RevealItem as="li" key={p.id} className="bg-canvas">
+            // A RevealItem that also carries the analytics id for its link.
+            <li key={p.id} data-reveal-item="" data-cta={`pillar_${p.id.replace(/-/g, "_")}`} suppressHydrationWarning className="bg-canvas">
               {p.href ? (
                 <Link
                   href={p.href}
+                  prefetch={false}
                   target={external ? "_blank" : undefined}
                   rel={external ? "noopener noreferrer" : undefined}
-                  className="block h-full p-7 transition-colors hover:bg-card"
+                  aria-labelledby={named}
+                  aria-describedby={`${id}-desc`}
+                  className="block h-full p-7 transition-colors duration-fast can-hover:hover:bg-card"
                 >
                   {inner}
-                  {external && <span className="sr-only"> (opens in a new tab)</span>}
+                  {external && (
+                    <span id={`${id}-newtab`} className="sr-only">
+                      (opens in a new tab)
+                    </span>
+                  )}
                 </Link>
               ) : (
                 <div className="h-full p-7">{inner}</div>
               )}
-            </RevealItem>
+            </li>
           );
         })}
       </Stagger>
+      {children}
     </Section>
   );
 }

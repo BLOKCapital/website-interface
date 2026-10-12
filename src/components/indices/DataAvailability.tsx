@@ -1,10 +1,24 @@
+import Link from "next/link";
+import type { ReactNode } from "react";
 import { LiveStatus, type StaticState } from "@/components/live/LiveStatus";
 
-type Row = { label: string; state: "live" | StaticState; note: string };
+type Row = { label: string; state: "live" | StaticState; note: ReactNode };
 
 const rows: Row[] = [
   { label: "Component prices", state: "live", note: "Read from Chainlink on Arbitrum, the same feeds the index contracts use." },
-  { label: "Component lists", state: "live", note: "Confirmed by the BLOK Capital team. Changes need a DAO vote." },
+  {
+    label: "Component lists",
+    state: "live",
+    note: (
+      <>
+        {"Confirmed by the BLOK Capital team. Changes need a "}
+        <Link href="/governance" className="rounded-xs text-leaf underline decoration-leaf/40 underline-offset-[3px] transition-colors duration-fast can-hover:hover:decoration-leaf">
+          DAO vote
+        </Link>
+        .
+      </>
+    ),
+  },
   { label: "Target weights", state: "soon", note: "Recomputed on-chain from market caps, so they move with the market. Not listed here as fixed numbers." },
   { label: "Index value", state: "nodata", note: "An index has no value until Gardens follow it publicly." },
   { label: "Performance history", state: "nodata", note: "Starts at public launch. We won't show backtests as if they were history." },

@@ -26,7 +26,7 @@ export function BuiltInOpen() {
             {team.map((m) => (
               <RevealItem as="li" key={m.name}>
                 {m.image ? (
-                  <Image src={m.image} alt={m.name} title={m.name} width={44} height={44} className="size-11 rounded-full border border-line/10 object-cover" />
+                  <Image src={m.image.replace(/\.webp$/, "-96.webp")} alt={m.name} title={m.name} width={44} height={44} className="size-11 rounded-full border border-line/10 object-cover" />
                 ) : (
                   <span className="grid size-11 place-items-center rounded-full bg-raised text-caption text-fg-muted" title={m.name}>
                     {m.initials}

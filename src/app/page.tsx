@@ -8,8 +8,7 @@ import { SecurityPillars } from "@/components/home/SecurityPillars";
 import { IndicesSection } from "@/components/home/IndicesSection";
 import { HappeningNow } from "@/components/home/HappeningNow";
 import { BuiltInOpen } from "@/components/home/BuiltInOpen";
-import { ExploreSection } from "@/components/explore/ExploreSection";
-import { Ecosystem } from "@/components/home/Ecosystem";
+import { EcosystemStrip } from "@/components/home/EcosystemStrip";
 import { RulesSection } from "@/components/home/RulesSection";
 import { Section } from "@/components/ui/Section";
 import { Button } from "@/components/ui/Button";
@@ -20,19 +19,28 @@ import { JsonLd } from "@/components/seo/JsonLd";
 import { serviceSchema, softwareApplicationSchema } from "@/lib/seo/schema";
 import { getGovernance } from "@/lib/data/proposals";
 import { faqs } from "@/lib/data/faqs";
+import { pageMetadata } from "@/lib/seo/metadata";
 
-export const metadata: Metadata = {
+export const metadata: Metadata = pageMetadata({
+  title: { absolute: "BLOK Capital · Non-custodial wealth management on Arbitrum" },
   description:
-    "Non-custodial wealth management on Arbitrum. Follow BLOKC2, BLOKC5 or BLOKC10, market-cap-weighted on-chain indices, from a smart wallet at your own address.",
-  alternates: { canonical: "/" },
-};
+    "Non-custodial wealth management on Arbitrum: market-cap-weighted on-chain indices (BLOKC2, BLOKC5, BLOKC10) from a smart wallet at your own address.",
+  path: "/",
+  // The root opengraph-image.tsx is this page's own card.
+  ownImage: true,
+});
 
 /**
- * Home, in the order a newcomer asks: what is it → the facts → why does it
- * exist → how does it work → what can I do → what are the indices → what's
- * under the hood → what do the rules actually stop → what's happening right
- * now → is it safe → what is it built on → who builds it → where is it going
- * → questions → how do I join.
+ * Home, problem → how → proof → act (UI_UX_SUGGESTIONS §3.1, D-08 a–e): what
+ * is it → the facts → why does it exist → how does it work → what can I do
+ * → what are the indices → can I check it (the security properties, then
+ * the rules running) → what has the DAO decided → what is it built on → who
+ * builds it → where is it going → questions → how do I join.
+ *
+ * Moved, not deleted: the six-layer explorer and the full ecosystem go to
+ * /protocol, the proposal board to /governance, the index explorer stays on
+ * /indices. Old anchors still land: #explore (the How it works teaser
+ * line), #rules (the demo inside #security), #now, #ecosystem.
  */
 export default async function HomePage() {
   const governance = await getGovernance();
@@ -45,11 +53,11 @@ export default async function HomePage() {
       <HowItWorks />
       <Products />
       <IndicesSection />
-      <ExploreSection />
-      <RulesSection />
+      <SecurityPillars>
+        <RulesSection />
+      </SecurityPillars>
       <HappeningNow governance={governance} />
-      <SecurityPillars />
-      <Ecosystem />
+      <EcosystemStrip />
       <BuiltInOpen />
       <Section
         id="roadmap"
@@ -69,7 +77,11 @@ export default async function HomePage() {
         tone="surface"
         eyebrow="FAQ"
         title="Questions, answered."
-        actions={<Button href="/contact#faq" variant="secondary">All questions</Button>}
+        actions={
+          <Button href="/contact#faq" variant="secondary" data-cta="faq_all_questions">
+            All questions
+          </Button>
+        }
       >
         <FaqList items={faqs.slice(0, 5)} />
       </Section>

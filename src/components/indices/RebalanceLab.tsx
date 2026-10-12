@@ -1,6 +1,7 @@
 "use client";
 
-import { useId, useState } from "react";
+import { useEffect, useId, useRef, useState } from "react";
+import { track } from "@/lib/explainers";
 import { cn } from "@/lib/utils";
 import { Badge } from "@/components/ui/Badge";
 import { TokenLogo } from "./TokenLogo";
@@ -13,6 +14,11 @@ import { TokenLogo } from "./TokenLogo";
  * The point it makes is real maths: when a price moves, holdings and target
  * weights move together, so drift stays ~0. Trades happen when something
  * else changes, like a component's circulating supply.
+ *
+ * Direct manipulation: the bars follow the sliders 1:1 (transform, no
+ * easing), and only the verdict changes colour. Screen readers hear the
+ * slider's own value ("+12%") and, once the slider rests for 400 ms, the
+ * verdict, not a running commentary.
  */
 const BASE = { btc: 800, eth: 200 };
 const THRESHOLD = 0.02;
@@ -24,6 +30,15 @@ export function RebalanceLab() {
   const [supply, setSupply] = useState(0);
   const pid = useId();
   const sid = useId();
+
+  // Once per page view: the first time the visitor moves a slider.
+  const used = useRef(false);
+  const onUse = () => {
+    if (used.current) return;
+    used.current = true;
+    const m = window.location.pathname.match(/^\/indices\/([^/.]+)/);
+    track("rebalance_lab_use", { index_id: m ? m[1] : "none" });
+  };
 
   // Holdings: the Garden still holds the same coins; ETH's value moves with price.
   const hold = { btc: BASE.btc, eth: BASE.eth * (1 + price / 100) };
@@ -38,6 +53,18 @@ export function RebalanceLab() {
   });
   const trades = rows.some((r) => r.trade);
   const move = Math.abs(hold.eth - target.eth);
+  const verdict = trades
+    ? `Outside the 2% band: the next pooled rebalance would move about ${usd(move)} between BTC and ETH to restore the target.`
+    : price !== 0
+      ? "No trade. The price moved, but the target moved with it: a market-cap index mostly rebalances itself."
+      : "Inside the 2% band: nothing to trade. Try moving the sliders.";
+
+  // The announced verdict waits until the slider has rested for 400 ms.
+  const [said, setSaid] = useState(verdict);
+  useEffect(() => {
+    const t = setTimeout(() => setSaid(verdict), 400);
+    return () => clearTimeout(t);
+  }, [verdict]);
 
   return (
     <div className="rounded-3xl border border-line/[0.08] bg-card p-5 sm:p-7">
@@ -56,7 +83,8 @@ export function RebalanceLab() {
               <label htmlFor={c.id} className="text-small text-fg-muted">
                 {c.label}
               </label>
-              <output htmlFor={c.id} className="font-mono text-small text-fg tabular">
+              {/* The slider announces its own value (aria-valuetext); this is for the eye. */}
+              <output htmlFor={c.id} aria-hidden className="font-mono text-small text-fg tabular">
                 {c.value > 0 ? "+" : ""}
                 {c.value}%
               </output>
@@ -68,8 +96,12 @@ export function RebalanceLab() {
               max={c.max}
               step={1}
               value={c.value}
-              onChange={(e) => c.set(Number(e.target.value))}
-              className="mt-3 w-full accent-[rgb(var(--leaf))]"
+              aria-valuetext={`${c.value > 0 ? "+" : ""}${c.value}%`}
+              onChange={(e) => {
+                onUse();
+                c.set(Number(e.target.value));
+              }}
+              className="lab-range mt-1"
             />
           </div>
         ))}
@@ -99,11 +131,15 @@ export function RebalanceLab() {
                   className="absolute inset-y-[-3px] rounded bg-leaf/15"
                   style={{ left: `${((r.target * (1 - THRESHOLD)) / max) * 100}%`, width: `${((r.target * THRESHOLD * 2) / max) * 100}%` }}
                 />
-                <span
-                  aria-hidden
-                  className={cn("absolute inset-y-0 left-0 rounded-full transition-[width] duration-300 ease-out", r.trade ? "bg-caution" : "bg-leaf")}
-                  style={{ width: `${(r.hold / max) * 100}%` }}
-                />
+                {/* The holding: a full-length bar slid in from the left inside its own
+                    clip, so it moves 1:1 with the slider by transform and keeps
+                    its rounded end. Only its colour eases, when the verdict flips. */}
+                <span aria-hidden className="absolute inset-0 overflow-hidden rounded-full">
+                  <span
+                    className={cn("block h-full w-full rounded-full transition-colors duration-fast", r.trade ? "bg-caution" : "bg-leaf")}
+                    style={{ transform: `translateX(${(r.hold / max) * 100 - 100}%)` }}
+                  />
+                </span>
                 <span aria-hidden className="absolute inset-y-[-5px] w-px bg-fg" style={{ left: `${(r.target / max) * 100}%` }} />
               </div>
             </div>
@@ -112,17 +148,16 @@ export function RebalanceLab() {
       </div>
 
       <p
-        aria-live="polite"
+        aria-hidden
         className={cn(
-          "mt-7 rounded-2xl border px-4 py-3.5 text-small transition-colors",
+          "mt-7 rounded-2xl border px-4 py-3.5 text-small transition-colors duration-fast",
           trades ? "border-caution/30 bg-caution/[0.07] text-fg" : "border-leaf/25 bg-leaf/[0.06] text-fg",
         )}
       >
-        {trades
-          ? `Outside the 2% band: the next pooled rebalance would move about ${usd(move)} between BTC and ETH to restore the target.`
-          : price !== 0
-            ? "No trade. The price moved, but the target moved with it: a market-cap index mostly rebalances itself."
-            : "Inside the 2% band: nothing to trade. Try moving the sliders."}
+        {verdict}
+      </p>
+      <p className="sr-only" aria-live="polite">
+        {said}
       </p>
       <p className="mt-3 text-caption text-fg-subtle">
         The marker is the target; the shaded band is the 2% tolerance from the Rebalancer contract. Real rebalances also
