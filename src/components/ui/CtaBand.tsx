@@ -1,6 +1,9 @@
+import type { ReactNode } from "react";
 import { Button } from "@/components/ui/Button";
+import { Container } from "@/components/ui/Container";
 import { SocialLinks } from "@/components/ui/SocialLinks";
 import { DiscordIcon } from "@/components/ui/icons";
+import { Icon } from "@/components/ui/Icon";
 import { GardenAsset } from "@/components/ui/GardenAsset";
 import { CornerMarks } from "@/components/motion/CornerMarks";
 import { DotField } from "@/components/motion/DotField";
@@ -8,47 +11,109 @@ import { Scramble } from "@/components/motion/Scramble";
 import { protocolStatus } from "@/lib/data/status";
 import { links, social } from "@/lib/data/socials";
 
+export type CtaContext = "default" | "index" | "protocol";
+
+// Copy: docs/audit/findings/I-content-conversion.md §3.2. The space before
+// each payoff word lives in the same text node as the words before it: a
+// lone {" "} becomes its own text node after a React <!-- --> marker, and
+// Chrome then drops it from the heading's accessible name (A11Y-21).
+function copy(context: CtaContext, indexName?: string): { title: ReactNode; lead: string } {
+  switch (context) {
+    case "index":
+      return {
+        title: (
+          <>
+            {`${indexName ?? "This index"} opens with the `}
+            <em className="text-sand">
+              <Scramble text="public launch." />
+            </em>
+          </>
+        ),
+        lead: "Follow it from your own Garden when Gardens open. The Discord hears first.",
+      };
+    case "protocol":
+      return {
+        title: (
+          <>
+            {"Be first to plant a "}
+            <em className="text-sand">
+              <Scramble text="Garden." />
+            </em>
+          </>
+        ),
+        lead: "Read the code, then ask the people who wrote it.",
+      };
+    default:
+      return {
+        title: (
+          <>
+            {"Be first to plant a "}
+            <em className="text-sand">
+              <Scramble text="Garden." />
+            </em>
+          </>
+        ),
+        lead: "Gardens open to the public after testing. Launch news lands in the Discord first, and the team is there every day.",
+      };
+  }
+}
+
 /**
  * Closing call to action, shared by every page: join the community. The
- * payoff word decodes into place, over a field of rising signal rings. A
- * dark band, running into the dark footer.
+ * payoff word decodes into place, over a field of rising signal rings (a
+ * canvas that runs at 12 fps and settles; see useFieldLoop). A Night-garden
+ * band that closes the page, above the light footer.
+ *
+ * `context` tunes the copy to what the visitor just read: "index" (pass
+ * `indexName`, e.g. BLOKC5) on index pages, "protocol" on the protocol and
+ * security pages; the default everywhere else, including /token.
  */
-export function CtaBand() {
+export function CtaBand({ context = "default", indexName }: { context?: CtaContext; indexName?: string }) {
+  const { title, lead } = copy(context, indexName);
+  const x = social("x");
   return (
-    <section data-band="dark" className="theme-dark relative overflow-hidden bg-surface">
+    <section id="cta_band" data-band="dark" className="theme-dark relative overflow-hidden bg-surface">
       <CornerMarks only="top" />
       <div aria-hidden className="glow-leaf pointer-events-none absolute -bottom-40 right-0 h-[520px] w-[720px] opacity-70" />
       <div aria-hidden className="pointer-events-none absolute inset-y-0 right-0 hidden w-[62%] opacity-60 [mask-image:radial-gradient(ellipse_60%_70%_at_70%_55%,black,transparent)] lg:block">
         <DotField variant="rings" tone="leaf" gap={11} />
       </div>
-      <div className="relative mx-auto grid w-full max-w-page items-center gap-10 px-5 py-20 sm:px-8 sm:py-24 lg:grid-cols-12">
+      <Container className="relative grid items-center gap-10 py-section-sm lg:grid-cols-12">
         <div className="lg:col-span-7">
           <p className="eyebrow">{protocolStatus.label}</p>
-          <h2 className="display mt-4 text-h2 text-balance text-fg">
-            Be first to plant a{" "}
-            <em className="text-sand">
-              <Scramble text="Garden." />
-            </em>
-          </h2>
-          <p className="mt-5 max-w-xl text-lead text-fg-muted">
-            Gardens open to the public after testing. The community hears first, and the team is in the Discord every day.
-          </p>
+          <h2 className="display mt-4 text-h2 text-balance text-fg">{title}</h2>
+          <p className="mt-5 max-w-xl text-lead text-fg-muted">{lead}</p>
           <div className="mt-9 flex flex-wrap items-center gap-3">
-            <Button href={social("discord").href} size="lg">
+            <Button href={social("discord").href} size="lg" data-placement="cta_band">
               <DiscordIcon /> Join the Discord
             </Button>
             <Button href={links.docs} size="lg" variant="secondary">
               Read the docs
             </Button>
           </div>
-          <SocialLinks only={["x", "telegram", "farcaster", "github", "youtube"]} className="mt-8" />
+          <p className="mt-5 text-small text-fg-muted">
+            {"Not on Discord? "}
+            <a
+              href={x.href}
+              target="_blank"
+              rel="noopener noreferrer"
+              data-placement="cta_band"
+              className="inline-flex items-center gap-0.5 rounded-xs font-medium text-leaf underline decoration-leaf/40 underline-offset-[3px] transition-colors duration-fast can-hover:hover:decoration-leaf"
+            >
+              Follow us on X
+              <Icon name="external" size="sm" className="-mx-1" />
+              <span className="sr-only"> (opens in a new tab)</span>
+            </a>
+            .
+          </p>
+          <SocialLinks only={["x", "telegram", "farcaster", "github", "youtube"]} placement="cta_band" className="mt-6" />
         </div>
         <div className="relative mx-auto hidden aspect-square w-full max-w-[420px] lg:col-span-5 lg:block">
           <div className="absolute inset-0 animate-float">
             <GardenAsset n={4} sizes="420px" />
           </div>
         </div>
-      </div>
+      </Container>
     </section>
   );
 }

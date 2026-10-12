@@ -1,7 +1,8 @@
 "use client";
 
 import { useCallback, useRef } from "react";
-import { themeRgb, useCanvasLoop, type CanvasDraw } from "@/lib/motion";
+import { themeRgb } from "@/lib/motion";
+import { useFieldLoop, type FieldDraw } from "./useFieldLoop";
 import { cn } from "@/lib/utils";
 
 export type DotVariant = "orb" | "wave" | "rings" | "drift";
@@ -51,8 +52,9 @@ const LEVELS = 6;
 /**
  * Halftone dot-matrix art: a grid of dots whose size and brightness follow a
  * slowly moving field. Data-like texture in place of stock imagery, drawn in
- * one of the theme's colours. Decorative (aria-hidden); runs only while on
- * screen, and holds a still frame under reduced motion.
+ * one of the theme's colours. Decorative (aria-hidden). It runs at 12 fps
+ * only while on screen, settles 5 s after the last scroll or pointer move,
+ * and holds a still frame with motion off or Save-Data on (useFieldLoop).
  */
 export function DotField({
   variant = "orb",
@@ -69,7 +71,7 @@ export function DotField({
   const ref = useRef<HTMLCanvasElement>(null);
   const rgb = useRef<string | null>(null);
 
-  const draw = useCallback<CanvasDraw>(
+  const draw = useCallback<FieldDraw>(
     (ctx, w, h, t) => {
       rgb.current ??= themeRgb(toneVar[tone], ctx.canvas);
       ctx.clearRect(0, 0, w, h);
@@ -98,6 +100,6 @@ export function DotField({
     [variant, tone, gap],
   );
 
-  useCanvasLoop(ref, draw, { fps: 30, stillAt: 3 });
+  useFieldLoop(ref, draw, { fps: 12, stillAt: 3 });
   return <canvas ref={ref} aria-hidden className={cn("pointer-events-none block size-full", className)} />;
 }

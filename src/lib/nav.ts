@@ -15,26 +15,28 @@ export type NavGroup = {
 };
 
 /**
- * Primary navigation: three groups that open a menu, and Docs as a plain
- * link. Shared by the desktop menus and the mobile sheet.
+ * Primary navigation: three groups that open a menu, then Security and Docs
+ * as plain top-level links. Shared by the desktop menus and the mobile sheet.
+ * The group names (Protocol, Governance, Company) are what the menu triggers
+ * say; tests find the triggers by those names.
  */
 export const navGroups: NavGroup[] = [
   {
     id: "protocol",
     label: "Protocol",
     links: [
-      { href: "/protocol", label: "How it works", hint: "Gardens, strategies and the architecture" },
+      { href: "/protocol", label: "Protocol overview", hint: "How a Garden works, layer by layer" },
       { href: "/indices", label: "Indices", hint: "BLOKC2, BLOKC5 and BLOKC10, priced live" },
-      { href: "/security", label: "Security", hint: "Contracts, controls and audits" },
     ],
   },
   {
     id: "governance",
     label: "Governance",
     links: [
-      { href: "/governance", label: "Governance", hint: "How the DAO decides, and its proposals" },
+      { href: "/governance", label: "How the DAO decides", hint: "The process, and its proposals" },
       { href: "/token", label: "$BLOKC token", hint: "Supply, utility and allocation" },
-      { href: links.aragon, label: "Vote on Aragon", hint: "The DAO's on-chain home", external: true },
+      // Not "Vote on Aragon": only core members vote until the token launches (CRO-17).
+      { href: links.aragon, label: "The DAO on Aragon", hint: "Proposals, votes and members", external: true },
     ],
   },
   {
@@ -44,11 +46,18 @@ export const navGroups: NavGroup[] = [
       { href: "/about", label: "About", hint: "Why we built it, and who builds it" },
       { href: "/about#roadmap", label: "Roadmap", hint: "Every milestone since 2023" },
       { href: "/contact", label: "Contact", hint: "Channels and common questions" },
+      { href: links.whitepaper, label: "Whitepaper", hint: "The full paper, hosted on DocSend", external: true },
     ],
   },
 ];
 
-export const docsLink: NavLink = { href: links.docs, label: "Docs", external: true };
+/** A top-level link beside Docs (D-13), so the trust page is one step from anywhere. */
+export const securityLink: NavLink = { href: "/security", label: "Security", hint: "Contracts, controls and audits" };
+
+export const docsLink: NavLink = { href: links.docs, label: "Docs", hint: "Guides, contracts and addresses", external: true };
+
+/** The one label for every Discord button in the header and menus (CRO-10). */
+export const DISCORD_LABEL = "Join the Discord";
 
 const pathOf = (href: string) => href.split("#")[0];
 

@@ -1,15 +1,28 @@
-import Link from "next/link";
-import { SplitText } from "@/components/motion/SplitText";
+import type { ReactNode } from "react";
+import { Breadcrumb, type Crumb } from "@/components/ui/Breadcrumb";
+import { Container } from "@/components/ui/Container";
 import { CornerMarks } from "@/components/motion/CornerMarks";
+import { cn } from "@/lib/utils";
 
 /**
- * Inner-page header: breadcrumb, h1, lede, optional actions and aside. The
- * entrance is pure CSS (the h1 rises word by word), so it paints with the
- * HTML instead of after hydration. Pair with breadcrumbSchema() JSON-LD on the page.
+ * Inner-page header: breadcrumb, h1, lede, optional actions and aside.
+ *
+ * Entrance (D-32, PERF-01, MOT-01): pure CSS, painted with the HTML. The h1,
+ * lede, actions and aside rise 8px from full opacity with no delay
+ * (`animate-rise`), so the LCP candidate and the CTAs are visible on the
+ * first frame. Only the breadcrumb and the eyebrow fade in. Everything has
+ * settled by --dur-slow (420ms); after a client-side navigation none of it
+ * replays (globals.css, "Page changes").
+ *
+ * The eyebrow is the h1's first line (SEO-11): a block span styled exactly
+ * as the eyebrow always was, so the page's topic keyword is part of its
+ * main heading with no visual change. Pair with breadcrumbSchema() JSON-LD
+ * on the page, using the same labels as the breadcrumb.
  */
 export function PageHero({
   crumb,
   parent,
+  crumbs,
   eyebrow,
   title,
   description,
@@ -17,68 +30,37 @@ export function PageHero({
   aside,
 }: {
   /** Current page name in the breadcrumb. */
-  crumb: string;
+  crumb?: string;
   /** Optional middle breadcrumb, e.g. Indices on an index page. */
   parent?: { label: string; href: string };
+  /** The whole trail after Home, instead of `parent` + `crumb`. The last item is the current page. */
+  crumbs?: Crumb[];
   eyebrow?: string;
-  title: React.ReactNode;
-  description: React.ReactNode;
-  actions?: React.ReactNode;
-  aside?: React.ReactNode;
+  title: ReactNode;
+  description: ReactNode;
+  actions?: ReactNode;
+  aside?: ReactNode;
 }) {
+  const trail: Crumb[] = crumbs ?? [...(parent ? [parent] : []), ...(crumb ? [{ label: crumb }] : [])];
   return (
-    <section className="relative overflow-hidden border-b border-line/[0.07]">
+    <section className="relative overflow-hidden border-b border-subtle">
       <div aria-hidden className="grid-lines pointer-events-none absolute inset-0 [mask-image:radial-gradient(ellipse_at_top,black,transparent_70%)]" />
       <div aria-hidden className="glow-leaf pointer-events-none absolute -top-40 left-1/2 h-[520px] w-[900px] -translate-x-1/2 opacity-60" />
       <CornerMarks only="bottom" />
-      <div className="relative mx-auto grid w-full max-w-page gap-12 px-5 pb-16 pt-32 sm:px-8 sm:pb-20 sm:pt-40 lg:grid-cols-12 lg:items-end">
+      <Container className="relative grid gap-12 pb-16 pt-32 sm:pb-20 sm:pt-40 lg:grid-cols-12 lg:items-end">
         <div className="lg:col-span-8">
-          <nav aria-label="Breadcrumb" className="animate-enter-fade">
-            <ol className="flex items-center gap-2 text-caption text-fg-subtle">
-              <li>
-                <Link href="/" className="transition-colors hover:text-fg">
-                  Home
-                </Link>
-              </li>
-              <li aria-hidden>/</li>
-              {parent && (
-                <>
-                  <li>
-                    <Link href={parent.href} className="transition-colors hover:text-fg">
-                      {parent.label}
-                    </Link>
-                  </li>
-                  <li aria-hidden>/</li>
-                </>
-              )}
-              <li aria-current="page" className="text-fg-muted">
-                {crumb}
-              </li>
-            </ol>
-          </nav>
-          {eyebrow && (
-            <p className="eyebrow mt-8 animate-enter-up" style={{ animationDelay: "60ms" }}>
-              {eyebrow}
-            </p>
-          )}
-          <SplitText as="h1" reveal="load" delay={120} className="display mt-4 text-h1 text-balance text-fg">
+          {trail.length > 0 && <Breadcrumb items={trail} className="animate-fade-in" />}
+          <h1 className={cn("display animate-rise text-h1 text-balance text-fg", eyebrow ? "mt-8" : "mt-4")}>
+            {/* The trailing space keeps "Eyebrow Title" apart in the text
+                content; layout drops it at the end of the block. */}
+            {eyebrow && <span className="eyebrow mb-4 block animate-fade-in">{`${eyebrow} `}</span>}
             {title}
-          </SplitText>
-          <p className="mt-6 max-w-2xl animate-enter-up text-lead text-fg-muted" style={{ animationDelay: "200ms" }}>
-            {description}
-          </p>
-          {actions && (
-            <div className="mt-9 flex animate-enter-up flex-wrap gap-3" style={{ animationDelay: "280ms" }}>
-              {actions}
-            </div>
-          )}
+          </h1>
+          <p className="mt-6 max-w-2xl animate-rise text-lead text-fg-muted">{description}</p>
+          {actions && <div className="mt-9 flex animate-rise flex-wrap gap-3">{actions}</div>}
         </div>
-        {aside && (
-          <div className="animate-enter-up lg:col-span-4" style={{ animationDelay: "320ms" }}>
-            {aside}
-          </div>
-        )}
-      </div>
+        {aside && <div className="animate-rise lg:col-span-4">{aside}</div>}
+      </Container>
     </section>
   );
 }

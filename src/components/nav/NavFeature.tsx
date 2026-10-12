@@ -6,7 +6,7 @@ import { TokenStack } from "@/components/indices/TokenLogo";
 import { indices } from "@/lib/data/indices";
 import { protocolStatus } from "@/lib/data/status";
 import { social } from "@/lib/data/socials";
-import type { NavGroup } from "@/lib/nav";
+import { DISCORD_LABEL, type NavGroup } from "@/lib/nav";
 
 const card = "flex h-full flex-col rounded-2xl border border-line/[0.08] p-5";
 
@@ -59,11 +59,12 @@ export function NavFeature({ id }: { id: NavGroup["id"] }) {
       <p className="mt-1.5 text-small text-fg-subtle">Testing feedback, support and security reports go there.</p>
       <a
         href={social("discord").href}
+        data-placement="nav_company"
         target="_blank"
         rel="noopener noreferrer"
         className="group/f mt-auto inline-flex items-center gap-1.5 pt-4 text-small font-medium text-leaf"
       >
-        Join the Discord <ArrowIcon size={12} className="transition-transform group-hover/f:translate-x-0.5" />
+        {DISCORD_LABEL} <ArrowIcon size={12} className="transition-transform group-hover/f:translate-x-0.5" />
         <span className="sr-only"> (opens in a new tab)</span>
       </a>
     </div>

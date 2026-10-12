@@ -1,76 +1,187 @@
 "use client";
 
-import type { CSSProperties } from "react";
+import { useLayoutEffect, useRef, useState, type CSSProperties, type Ref } from "react";
 import Link from "next/link";
-import { navGroups, docsLink, isCurrent } from "@/lib/nav";
+import { navGroups, docsLink, securityLink, isCurrent, DISCORD_LABEL, type NavLink } from "@/lib/nav";
+import { indices } from "@/lib/data/indices";
 import { Button } from "@/components/ui/Button";
 import { SocialLinks } from "@/components/ui/SocialLinks";
-import { DiscordIcon, ExternalIcon } from "@/components/ui/icons";
+import { CrossIcon, DiscordIcon, ExternalIcon } from "@/components/ui/icons";
+import { MotionToggle } from "@/components/system/MotionToggle";
 import { NavIcon } from "./NavIcons";
 import { social } from "@/lib/data/socials";
 import { cn } from "@/lib/utils";
 
-/**
- * The phone menu: a full-screen sheet that opens as a circle growing from the
- * menu button (globals.css, "Mobile menu"), with each group easing in after
- * it. `inert` while closed, so nothing in it can be focused or read.
- */
-export function MobileMenu({ open, pathname }: { open: boolean; pathname: string | null }) {
+/** Stagger position for a sheet group (globals.css, "Mobile menu"). */
+const at = (i: number) => ({ "--i": i }) as CSSProperties;
+
+/** One row: icon, label and hint. Internal links close the sheet when tapped. */
+function Row({ link, pathname, onPick }: { link: NavLink; pathname: string | null; onPick: () => void }) {
+  const current = !link.href.includes("#") && isCurrent(link.href, pathname);
   return (
-    <div id="mobile-menu" inert={!open} className={cn("mobile-sheet fixed inset-0 overflow-y-auto bg-canvas lg:hidden", open && "is-open")}>
-      <nav aria-label="Mobile" className="mx-auto max-w-page px-5 pb-10 pt-28 sm:px-8">
-        {navGroups.map((g, gi) => (
-          <div key={g.id} className="sheet-item border-t border-line/[0.08] py-5" style={{ "--d": `${gi * 70}ms` } as CSSProperties}>
-            <p className="eyebrow">{g.label}</p>
-            <ul className="mt-3">
-              {g.links.map((l) => {
-                const current = !l.href.includes("#") && isCurrent(l.href, pathname);
-                return (
-                  <li key={l.href}>
-                    <Link
-                      href={l.href}
-                      target={l.external ? "_blank" : undefined}
-                      rel={l.external ? "noopener noreferrer" : undefined}
-                      aria-current={current ? "page" : undefined}
-                      className="group/m flex items-center gap-4 py-2.5"
-                    >
-                      <span
-                        className={cn(
-                          "grid size-10 shrink-0 place-items-center rounded-xl border",
-                          current ? "border-leaf/40 bg-leaf/10 text-leaf" : "border-line/10 bg-card text-fg-muted",
+    <Link
+      href={link.href}
+      onClick={link.external ? undefined : onPick}
+      target={link.external ? "_blank" : undefined}
+      rel={link.external ? "noopener noreferrer" : undefined}
+      aria-current={current ? "page" : undefined}
+      className="flex items-center gap-4 rounded-xl py-2.5"
+    >
+      <span
+        className={cn(
+          "grid size-10 shrink-0 place-items-center rounded-xl border",
+          current ? "border-leaf/40 bg-leaf/10 text-leaf" : "border-line/10 bg-card text-fg-muted",
+        )}
+      >
+        <NavIcon href={link.href} />
+      </span>
+      <span className="min-w-0">
+        <span className={cn("display flex items-center gap-2 text-[24px] leading-tight", current ? "text-leaf" : "text-fg")}>
+          {link.label}
+          {link.external && <ExternalIcon size={13} className="text-fg-subtle" />}
+        </span>
+        {link.hint && <span className="block text-caption text-fg-subtle [@media(max-height:500px)]:hidden">{link.hint}</span>}
+      </span>
+      {link.external && <span className="sr-only"> (opens in a new tab)</span>}
+    </Link>
+  );
+}
+
+/**
+ * The phone and tablet menu (below lg): a modal dialog sheet that opens as a
+ * circle growing from the menu button (globals.css, "Mobile menu"), with each
+ * group easing in just after it. Nav owns the modal behaviour (focus in on
+ * open, Tab kept between the sheet and the menu button, the page behind made
+ * inert, Escape, scroll lock); this renders the sheet.
+ *
+ * - The links scroll in their own region, starting under the header row, and
+ *   overscroll stays inside it.
+ * - "Join the Discord" is pinned to the bottom edge, in the thumb zone, with
+ *   a second close button beside it: the menu button sits outside the dialog,
+ *   where aria-modal hides it from some screen readers.
+ * - Internal links close the sheet as well as navigating, so a same-page or
+ *   #hash link (Roadmap on /about) doesn't leave it covering the page.
+ * - `inert` while closed, so nothing in it can be focused or read.
+ * - Its contents render on the first open, not in every page's HTML
+ *   (PERF-08); the dialog element, which the menu button's aria-controls
+ *   names, is always there. The footer and page bodies still link every
+ *   destination, so nothing is lost to crawlers.
+ */
+export function MobileMenu({
+  open,
+  pathname,
+  onClose,
+  onDismiss,
+  ref,
+}: {
+  open: boolean;
+  pathname: string | null;
+  /** Close after a link tap; focus goes wherever the link takes it. */
+  onClose: () => void;
+  /** Close from the close button; focus returns to the menu button. */
+  onDismiss: () => void;
+  ref?: Ref<HTMLDivElement>;
+}) {
+  // Contents mount on the first open and then stay (adjusted during render).
+  const [mounted, setMounted] = useState(false);
+  if (open && !mounted) setMounted(true);
+  // On that first open, the contents arrive in the same commit as the open
+  // state. `armed` holds `is-open` back for one commit: the layout effect
+  // makes the browser compute the closed styles first, so the circle and the
+  // group stagger still transition in, all before the first paint (so focus,
+  // moved in a later effect, lands on a visible link).
+  const [armed, setArmed] = useState(false);
+  const inner = useRef<HTMLDivElement>(null);
+  useLayoutEffect(() => {
+    if (!mounted || armed) return;
+    void inner.current?.offsetHeight;
+    setArmed(true);
+  }, [mounted, armed]);
+
+  return (
+    <div
+      ref={ref}
+      id="mobile-menu"
+      role="dialog"
+      aria-modal="true"
+      aria-label="Menu"
+      inert={!open}
+      className={cn("mobile-sheet fixed inset-0 z-[49] flex flex-col bg-canvas lg:hidden", open && armed && "is-open")}
+    >
+      {mounted && (
+        <>
+          <div ref={inner} className="mt-16 min-h-0 flex-1 overflow-y-auto overscroll-contain sm:mt-[72px] [@media(max-height:500px)]:mt-[52px]">
+            <nav aria-label="Mobile" className="mx-auto max-w-page px-5 pb-8 pt-2 sm:grid sm:grid-cols-2 sm:gap-x-10 sm:px-8">
+              {navGroups.map((g, gi) => (
+                <div key={g.id} className="sheet-item border-t border-line/[0.08] py-5" style={at(gi)}>
+                  <p id={`sheet-${g.id}`} className="eyebrow">
+                    {g.label}
+                  </p>
+                  <ul aria-labelledby={`sheet-${g.id}`} className="mt-3">
+                    {g.links.map((l) => (
+                      <li key={l.href}>
+                        <Row link={l} pathname={pathname} onPick={onClose} />
+                        {l.href === "/indices" && (
+                          // The three index pages, one tap from anywhere (UX-23).
+                          <ul aria-label="Index pages" className="mb-1 ml-14 flex flex-wrap gap-1.5">
+                            {indices.map((x) => {
+                              const href = `/indices/${x.id}`;
+                              const current = pathname === href;
+                              return (
+                                <li key={x.id}>
+                                  <Link
+                                    href={href}
+                                    onClick={onClose}
+                                    aria-current={current ? "page" : undefined}
+                                    className={cn(
+                                      "inline-flex h-9 items-center rounded-full border px-2.5 font-mono text-label transition-colors duration-fast",
+                                      current ? "border-leaf/40 bg-leaf/10 text-leaf" : "border-line/12 bg-card text-fg-muted hover:text-fg",
+                                    )}
+                                  >
+                                    {x.name}
+                                  </Link>
+                                </li>
+                              );
+                            })}
+                          </ul>
                         )}
-                      >
-                        <NavIcon href={l.href} />
-                      </span>
-                      <span className="min-w-0">
-                        <span className={cn("display flex items-center gap-2 text-[24px] leading-tight", current ? "text-leaf" : "text-fg")}>
-                          {l.label}
-                          {l.external && <ExternalIcon size={13} className="text-fg-subtle" />}
-                        </span>
-                        <span className="block text-caption text-fg-subtle">{l.hint}</span>
-                      </span>
-                      {l.external && <span className="sr-only"> (opens in a new tab)</span>}
-                    </Link>
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+              ))}
+              <ul className="sheet-item border-t border-line/[0.08] py-5" style={at(navGroups.length)}>
+                {[securityLink, docsLink].map((l) => (
+                  <li key={l.href}>
+                    <Row link={l} pathname={pathname} onPick={onClose} />
                   </li>
-                );
-              })}
-            </ul>
+                ))}
+              </ul>
+              <div className="sheet-item flex flex-wrap items-center justify-between gap-4 border-t border-line/[0.08] pt-6 sm:col-span-2" style={at(navGroups.length + 1)}>
+                <SocialLinks only={["x", "telegram", "farcaster", "github", "youtube"]} />
+                <MotionToggle className="inline-flex h-10 items-center gap-2.5 rounded-full border border-line/12 px-4 text-small text-fg-muted transition-colors duration-fast before:size-2 before:rounded-full before:bg-line/30 hover:text-fg aria-pressed:border-leaf/40 aria-pressed:bg-leaf/10 aria-pressed:text-fg aria-pressed:before:bg-leaf" />
+              </div>
+            </nav>
           </div>
-        ))}
-        <div className="sheet-item border-y border-line/[0.08] py-4" style={{ "--d": `${navGroups.length * 70}ms` } as CSSProperties}>
-          <a href={docsLink.href} target="_blank" rel="noopener noreferrer" className="flex items-center justify-between">
-            <span className="display text-[24px] text-fg">{docsLink.label}</span>
-            <ExternalIcon size={14} className="text-fg-subtle" />
-            <span className="sr-only"> (opens in a new tab)</span>
-          </a>
-        </div>
-        <div className="sheet-item" style={{ "--d": `${(navGroups.length + 1) * 70}ms` } as CSSProperties}>
-          <Button href={social("discord").href} size="lg" className="mt-7 w-full">
-            <DiscordIcon /> Join the Discord
-          </Button>
-          <SocialLinks only={["x", "telegram", "farcaster", "github", "youtube"]} className="mt-6 justify-center" />
-        </div>
-      </nav>
+
+          {/* Pinned: the primary action stays in reach however far the links scroll. */}
+          <div className="shrink-0 border-t border-line/[0.08] bg-canvas px-5 py-3 sm:px-8">
+            <div className="mx-auto flex max-w-page items-center gap-3">
+              <Button href={social("discord").href} data-placement="mobile_menu" size="lg" className="flex-1">
+                <DiscordIcon /> {DISCORD_LABEL}
+              </Button>
+              <button
+                type="button"
+                onClick={onDismiss}
+                aria-label="Close menu"
+                className="inline-flex size-12 shrink-0 items-center justify-center rounded-full border border-line/12 bg-card text-fg transition-colors duration-fast hover:border-line/30"
+              >
+                <CrossIcon size={16} />
+              </button>
+            </div>
+          </div>
+        </>
+      )}
     </div>
   );
 }

@@ -34,10 +34,18 @@ const paths: Record<string, React.ReactNode> = {
   "/about#roadmap": <path d="M4 17V4M4 4h9l-1.5 3L13 10H4M7 17h9" {...line} />,
   // Speech bubble
   "/contact": <path d="M4 5.5h12v8H9l-3.5 3v-3H4z" {...line} />,
+  // A page with a folded corner, off-site
+  whitepaper: <path d="M5.5 3h6l3 3v11h-9zM11.5 3v3h3M8 10h4.5M8 13h4.5" {...line} />,
+  // An open book, off-site
+  docs: <path d="M10 6c-1.6-1.3-3.6-1.8-6-1.5v10.5c2.4-.3 4.4.2 6 1.5 1.6-1.3 3.6-1.8 6-1.5V4.5c-2.4-.3-4.4.2-6 1.5ZM10 6v10.5" {...line} />,
 };
 
+/** Off-site links share one icon per destination, whatever the full URL. */
+const keyOf = (href: string) =>
+  /aragon/.test(href) ? "aragon" : /docsend/.test(href) ? "whitepaper" : /^https:\/\/docs\./.test(href) ? "docs" : href;
+
 export function NavIcon({ href, size = 18, className }: { href: string; size?: number; className?: string }) {
-  const key = /aragon/.test(href) ? "aragon" : href;
+  const key = keyOf(href);
   return (
     <svg width={size} height={size} viewBox="0 0 20 20" aria-hidden className={className}>
       {paths[key] ?? <circle cx="10" cy="10" r="3" {...line} />}

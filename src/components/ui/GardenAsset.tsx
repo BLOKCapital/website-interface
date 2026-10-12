@@ -33,9 +33,14 @@ type Props = {
 };
 
 /**
- * Brand Garden render — drops in any of the 12 photorealistic floating-island
- * assets. Lives inside a relative-positioned container; pass dimensions via
- * the wrapper class.
+ * Brand Garden render — one of the photorealistic floating-island assets.
+ * Lives inside a relative-positioned container; pass dimensions via the
+ * wrapper class.
+ *
+ * Only the renders in use ship in public/gardens: 4 (CtaBand), 7 (404) and
+ * 11 (home hero), plus garden-06-480 for the easter egg. The rest (and 06's
+ * other widths) are kept in design/archive/public/gardens (D-24): `git mv` a
+ * render's four files back into public/gardens before passing its `n`.
  *
  * Performance:
  *   - The sources are pre-compressed 1440×1440 WebP (~210-320KB), which is 2×
@@ -71,7 +76,7 @@ export function GardenAsset({
     <div
       className={cn(
         "relative size-full",
-        interactive && "transition-transform duration-700 ease-in-soft hover:-translate-y-1",
+        interactive && "transition-transform duration-700 ease-out hover:-translate-y-1",
         className,
       )}
     >

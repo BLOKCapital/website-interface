@@ -26,11 +26,6 @@ export const CrossIcon = ({ size = 14, className }: P) => (
     <path d="m4 4 8 8M12 4l-8 8" {...line} />
   </svg>
 );
-export const MenuIcon = ({ size = 18, className }: P) => (
-  <svg width={size} height={size} viewBox="0 0 18 18" aria-hidden className={className}>
-    <path d="M3 6h12M3 12h12" {...line} />
-  </svg>
-);
 export const PlusIcon = ({ size = 14, className }: P) => (
   <svg width={size} height={size} viewBox="0 0 16 16" aria-hidden className={className}>
     <path d="M8 3v10M3 8h10" {...line} />

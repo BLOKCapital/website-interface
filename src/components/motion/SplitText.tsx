@@ -37,9 +37,14 @@ export function splitWords(node: ReactNode, className = "split-word"): { nodes: 
 type Tag = "h1" | "h2" | "h3" | "p" | "span";
 
 /**
- * A heading whose words rise out of a slight blur, in sequence.
+ * A heading whose words ink in and rise, in sequence (globals.css, "Word
+ * reveals"); every word is readable from the first frame.
  *   reveal="scroll" (default): when it scrolls into view, via RevealScript.
  *   reveal="load": on page load, for above-the-fold heroes; `delay` in ms.
+ *
+ * Screen readers get the heading as one string: the full text sits in an
+ * sr-only span, and the per-word inline-block spans are aria-hidden, so
+ * VoiceOver can't step through the heading word by word (A11Y-41).
  */
 export function SplitText({
   as = "h2",
@@ -64,7 +69,8 @@ export function SplitText({
       // RevealScript adds data-revealed before React hydrates.
       suppressHydrationWarning
     >
-      {nodes}
+      <span className="sr-only">{children}</span>
+      <span aria-hidden>{nodes}</span>
     </El>
   );
 }
