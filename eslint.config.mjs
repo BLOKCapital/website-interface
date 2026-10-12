@@ -17,6 +17,7 @@ const config = [
       "node_modules/**",
       "out/**",
       "dist/**",
+      "tests/.output/**",
       "next-env.d.ts",
     ],
   },
