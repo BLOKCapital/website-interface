@@ -1,32 +1,53 @@
 "use client";
 
 import { useEffect, useRef, useState, useSyncExternalStore, type RefObject } from "react";
+import { isMotionPaused, MOTION_EVENT } from "./motion-pref";
+
+export { isMotionPaused, setMotionPaused, MOTION_EVENT, MOTION_KEY } from "./motion-pref";
 
 /**
  * Shared plumbing for the JS-driven effects in components/motion. Every
  * effect has the same contract: it never runs off-screen or in a hidden tab,
- * and under prefers-reduced-motion it shows its final, static state.
+ * and with motion off it shows its final, static state. "Motion off" means
+ * prefers-reduced-motion OR the site's Pause-motion switch
+ * (html[data-motion="paused"], lib/motion-pref.ts); every helper here
+ * honours both, and reacts when either changes mid-visit.
  */
 
 const REDUCE = "(prefers-reduced-motion: reduce)";
 
-const subscribeReduce = (cb: () => void) => {
+const subscribeMotion = (cb: () => void) => {
   const m = window.matchMedia(REDUCE);
   m.addEventListener("change", cb);
-  return () => m.removeEventListener("change", cb);
+  window.addEventListener(MOTION_EVENT, cb);
+  return () => {
+    m.removeEventListener("change", cb);
+    window.removeEventListener(MOTION_EVENT, cb);
+  };
 };
 
-/** True when the visitor asked for reduced motion. False on the server. */
-export function useReducedMotion() {
-  return useSyncExternalStore(
-    subscribeReduce,
-    () => window.matchMedia(REDUCE).matches,
-    () => false,
-  );
+const motionAllowedNow = () => !window.matchMedia(REDUCE).matches && !isMotionPaused();
+
+/**
+ * True while motion may run: no reduced-motion preference and Pause motion
+ * off. Reactive, so use it as an effect dependency. True on the server.
+ */
+export function useMotionAllowed() {
+  return useSyncExternalStore(subscribeMotion, motionAllowedNow, () => true);
 }
 
-export const prefersReducedMotion = () =>
-  typeof window !== "undefined" && window.matchMedia(REDUCE).matches;
+/** True under reduced motion or Pause motion. Reactive; false on the server. */
+export function useReducedMotion() {
+  return !useMotionAllowed();
+}
+
+/** Whether the site's Pause-motion switch is on. Reactive; false on the server. */
+export function useMotionPaused() {
+  return useSyncExternalStore(subscribeMotion, isMotionPaused, () => false);
+}
+
+/** One-off read of "motion off" (reduced motion or paused). False on the server. */
+export const prefersReducedMotion = () => typeof window !== "undefined" && !motionAllowedNow();
 
 /**
  * Whether `ref` is on screen. With `once`, it latches true the first time.
@@ -74,8 +95,9 @@ export type CanvasDraw = (ctx: CanvasRenderingContext2D, w: number, h: number, t
 /**
  * Runs `draw` on a canvas at up to `fps`, sized to its CSS box at device
  * pixel ratio (capped at 2). The loop only runs while the canvas is on
- * screen and the tab is visible; otherwise, and always under reduced motion,
- * the canvas holds one still frame drawn at `stillAt` seconds.
+ * screen and the tab is visible; otherwise, and whenever motion is off
+ * (reduced motion or Pause motion, re-checked live), the canvas holds one
+ * still frame drawn at `stillAt` seconds.
  */
 export function useCanvasLoop(
   ref: RefObject<HTMLCanvasElement | null>,
@@ -92,7 +114,7 @@ export function useCanvasLoop(
     const ctx = canvas?.getContext("2d");
     if (!canvas || !ctx) return;
 
-    const reduce = prefersReducedMotion();
+    let reduce = prefersReducedMotion();
     const frameMs = 1000 / fps;
     let w = 0;
     let h = 0;
@@ -139,11 +161,22 @@ export function useCanvasLoop(
     });
     io.observe(canvas);
     document.addEventListener("visibilitychange", sync);
+    // Reduced motion or Pause motion switched mid-visit: settle or resume.
+    const onMotion = () => {
+      reduce = prefersReducedMotion();
+      sync();
+      if (!running()) still();
+    };
+    const mq = window.matchMedia(REDUCE);
+    mq.addEventListener("change", onMotion);
+    window.addEventListener(MOTION_EVENT, onMotion);
     return () => {
       cancelAnimationFrame(raf);
       ro.disconnect();
       io.disconnect();
       document.removeEventListener("visibilitychange", sync);
+      mq.removeEventListener("change", onMotion);
+      window.removeEventListener(MOTION_EVENT, onMotion);
     };
   }, [ref, fps, stillAt]);
 }

@@ -1,5 +1,6 @@
 import type { Metadata, Viewport } from "next";
 import { Inter, Newsreader, JetBrains_Mono } from "next/font/google";
+import { Fragment } from "react";
 import "./globals.css";
 import { Nav } from "@/components/nav/Nav";
 import { Footer } from "@/components/footer/Footer";
@@ -13,19 +14,31 @@ import { siteConfig } from "@/lib/seo/site";
 
 const inter = Inter({ subsets: ["latin"], display: "swap", variable: "--font-body" });
 
-// Display serif: regular + italic only (headlines are set at 400).
+// Display serif: 400 regular + italic only. Every headline renders at 400,
+// and a second weight makes Google serve the heavier variable files
+// (preloads 171 → 95 kB). Both styles stay preloaded: the italic <em>
+// payoff is in the first-screen h1 on every page.
 const newsreader = Newsreader({
   subsets: ["latin"],
-  weight: ["400", "500"],
+  weight: ["400"],
   style: ["normal", "italic"],
   display: "swap",
   variable: "--font-display",
 });
 
-// Mono for addresses and figures; not needed for first paint.
-const mono = JetBrains_Mono({ subsets: ["latin"], weight: ["400"], display: "swap", preload: false, variable: "--font-mono" });
-
-const tagline = "Non-custodial wealth management on Arbitrum. Follow curated on-chain indices; your assets never leave your own wallet.";
+// Mono for labels, addresses and figures. Not preloaded (it is small and
+// requested at first layout anyway), and it falls back to a system mono
+// rather than a size-adjusted Arial, so the swap is mono to mono with no
+// change of letterforms or width.
+const mono = JetBrains_Mono({
+  subsets: ["latin"],
+  weight: ["400"],
+  display: "swap",
+  preload: false,
+  adjustFontFallback: false,
+  fallback: ["ui-monospace", "SFMono-Regular", "Menlo", "Consolas", "monospace"],
+  variable: "--font-mono",
+});
 
 export const metadata: Metadata = {
   metadataBase: new URL(siteConfig.url),
@@ -46,12 +59,11 @@ export const metadata: Metadata = {
   authors: [{ name: siteConfig.name, url: siteConfig.url }],
   creator: siteConfig.name,
   publisher: siteConfig.legalName,
-  alternates: { canonical: "/" },
+  // Site-wide defaults only. No canonical, og:url, title or description
+  // here: every page sets its own through pageMetadata() (SEO-01, SEO-05),
+  // so a page that forgot one would have none, not the homepage's.
   openGraph: {
-    title: "BLOK Capital · Non-custodial wealth management",
-    description: tagline,
     type: "website",
-    url: siteConfig.url,
     siteName: siteConfig.name,
     locale: siteConfig.locale,
   },
@@ -59,8 +71,6 @@ export const metadata: Metadata = {
     card: "summary_large_image",
     site: siteConfig.twitterHandle,
     creator: siteConfig.twitterHandle,
-    title: "BLOK Capital · Non-custodial wealth management",
-    description: tagline,
   },
   robots: {
     index: true,
@@ -80,7 +90,7 @@ export const viewport: Viewport = {
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
     <html
-      lang="en"
+      lang="en-GB"
       // Next keeps route changes jumping to the top instantly (not scrolling
       // through the old page) while in-page anchors still glide.
       data-scroll-behavior="smooth"
@@ -88,6 +98,12 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
       suppressHydrationWarning
       className={`${inter.variable} ${newsreader.variable} ${mono.variable}`}
     >
+      <head>
+        {/* Print rules, loaded off the critical path (see public/print.css).
+            A bundled CSS import would be render-blocking; media="print" isn't. */}
+        {/* eslint-disable-next-line @next/next/no-css-tags */}
+        <link rel="stylesheet" href="/print.css" media="print" />
+      </head>
       {/* suppressHydrationWarning also tolerates attributes that browser
           extensions inject onto <body> before React hydrates. */}
       <body className="min-h-screen bg-canvas text-fg antialiased" suppressHydrationWarning>
@@ -98,12 +114,26 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         >
           Skip to content
         </a>
+        {/* Early in the DOM so the consent choice is the first Tab stop after
+            the skip link; it still sits visually fixed at the bottom. */}
+        <CookieConsent />
         <JsonLd data={[organizationSchema(), websiteSchema()]} />
         <Nav />
-        <main id="main">{children}</main>
+        {/* Focusable by script only (A11Y-12, A11Y-22), so the skip link
+            and a client-side navigation can move focus, not just the scroll
+            position, into the content. It's a landmark, not a control, so
+            it draws no ring round the whole page when it takes focus. */}
+        <main id="main" tabIndex={-1} className="focus:outline-none">
+          {/* Keyed Fragment = hydration fix; keep it. If the page element is
+              still waiting for a chunk (error.tsx) when hydration reaches
+              <main>, React 19.2 replays <main> itself, claims it twice and
+              throws #418 (facebook/react#35494). Replaying the Fragment
+              claims no DOM node. Remove once Next ships a React with the
+              upstream fix. tests/hydration.spec.ts (STRESS=1) covers it. */}
+          <Fragment key="page">{children}</Fragment>
+        </main>
         <Footer />
         <EasterEggs />
-        <CookieConsent />
         <Analytics />
       </body>
     </html>
