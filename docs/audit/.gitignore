@@ -1,0 +1,4 @@
+# Large binary/raw audit artefacts stay local; summaries live in the .md files.
+*/screenshots/
+*/lighthouse/
+*/lighthouse-median/

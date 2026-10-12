@@ -1,0 +1,1476 @@
+{
+  "label": "baseline",
+  "base": "http://localhost:4173",
+  "at": "2026-10-11T06:54:30.179Z",
+  "routes": {
+    "/": {
+      "widths": {
+        "375": {
+          "cls": 0.01,
+          "scrollWidth": 375,
+          "innerWidth": 375,
+          "pageHeight": 24411,
+          "title": "BLOK Capital · Non-custodial wealth management on Arbitrum",
+          "h1": [
+            "Grow your crypto. Keep the keys."
+          ],
+          "metaDescription": "Non-custodial wealth management on Arbitrum. Follow BLOKC2, BLOKC5 or BLOKC10, market-cap-weighted on-chain indices, from a smart wallet at your own address.",
+          "canonical": "https://blokcapital.io/",
+          "images": 110,
+          "imagesNoAlt": 0,
+          "links": 107,
+          "domNodes": 2340,
+          "consoleErrors": [],
+          "failedRequests": [],
+          "axe": [
+            {
+              "id": "definition-list",
+              "impact": "serious",
+              "nodes": 1,
+              "help": "<dl> elements must only directly contain properly-ordered <dt> and <dd> groups, <script>, <template> or <div> elements",
+              "targets": [
+                ".md\\:grid-cols-6"
+              ]
+            },
+            {
+              "id": "dlitem",
+              "impact": "serious",
+              "nodes": 10,
+              "help": "<dt> and <dd> elements must be contained by a <dl>",
+              "targets": [
+                "a[href$=\"protocol#architecture\"] > .text-\\[clamp\\(22px\\,1\\.4vw\\+14px\\,28px\\)\\]",
+                "a[href$=\"protocol#architecture\"] > .group-hover\\/g\\:text-fg-muted",
+                ".md\\:col-span-2.lg\\:col-span-1.bg-surface:nth-child(2) > .group\\/g.py-6.sm\\:px-6 > .text-\\[clamp\\(22px\\,1\\.4vw\\+14px\\,28px\\)\\]",
+                ".md\\:col-span-2.lg\\:col-span-1.bg-surface:nth-child(2) > .group\\/g.py-6.sm\\:px-6 > .group-hover\\/g\\:text-fg-muted"
+              ]
+            }
+          ]
+        },
+        "768": {
+          "cls": 0.0065,
+          "scrollWidth": 768,
+          "innerWidth": 768,
+          "pageHeight": 20215,
+          "title": "BLOK Capital · Non-custodial wealth management on Arbitrum",
+          "h1": [
+            "Grow your crypto. Keep the keys."
+          ],
+          "metaDescription": "Non-custodial wealth management on Arbitrum. Follow BLOKC2, BLOKC5 or BLOKC10, market-cap-weighted on-chain indices, from a smart wallet at your own address.",
+          "canonical": "https://blokcapital.io/",
+          "images": 110,
+          "imagesNoAlt": 0,
+          "links": 107,
+          "domNodes": 2331,
+          "consoleErrors": [],
+          "failedRequests": [],
+          "axe": null
+        },
+        "1280": {
+          "cls": 0.0145,
+          "scrollWidth": 1280,
+          "innerWidth": 1280,
+          "pageHeight": 16164,
+          "title": "BLOK Capital · Non-custodial wealth management on Arbitrum",
+          "h1": [
+            "Grow your crypto. Keep the keys."
+          ],
+          "metaDescription": "Non-custodial wealth management on Arbitrum. Follow BLOKC2, BLOKC5 or BLOKC10, market-cap-weighted on-chain indices, from a smart wallet at your own address.",
+          "canonical": "https://blokcapital.io/",
+          "images": 110,
+          "imagesNoAlt": 0,
+          "links": 107,
+          "domNodes": 2337,
+          "consoleErrors": [],
+          "failedRequests": [],
+          "axe": [
+            {
+              "id": "definition-list",
+              "impact": "serious",
+              "nodes": 1,
+              "help": "<dl> elements must only directly contain properly-ordered <dt> and <dd> groups, <script>, <template> or <div> elements",
+              "targets": [
+                ".md\\:grid-cols-6"
+              ]
+            },
+            {
+              "id": "dlitem",
+              "impact": "serious",
+              "nodes": 10,
+              "help": "<dt> and <dd> elements must be contained by a <dl>",
+              "targets": [
+                "a[href$=\"protocol#architecture\"] > .text-\\[clamp\\(22px\\,1\\.4vw\\+14px\\,28px\\)\\]",
+                "a[href$=\"protocol#architecture\"] > .group-hover\\/g\\:text-fg-muted",
+                ".md\\:col-span-2.lg\\:col-span-1.bg-surface:nth-child(2) > .group\\/g.py-6.sm\\:px-6 > .text-\\[clamp\\(22px\\,1\\.4vw\\+14px\\,28px\\)\\]",
+                ".md\\:col-span-2.lg\\:col-span-1.bg-surface:nth-child(2) > .group\\/g.py-6.sm\\:px-6 > .group-hover\\/g\\:text-fg-muted"
+              ]
+            },
+            {
+              "id": "empty-table-header",
+              "impact": "minor",
+              "nodes": 1,
+              "help": "Table header text should not be empty",
+              "targets": [
+                ".w-\\[22\\%\\]"
+              ]
+            }
+          ]
+        },
+        "1920": {
+          "cls": 0.0064,
+          "scrollWidth": 1920,
+          "innerWidth": 1920,
+          "pageHeight": 16303,
+          "title": "BLOK Capital · Non-custodial wealth management on Arbitrum",
+          "h1": [
+            "Grow your crypto. Keep the keys."
+          ],
+          "metaDescription": "Non-custodial wealth management on Arbitrum. Follow BLOKC2, BLOKC5 or BLOKC10, market-cap-weighted on-chain indices, from a smart wallet at your own address.",
+          "canonical": "https://blokcapital.io/",
+          "images": 110,
+          "imagesNoAlt": 0,
+          "links": 107,
+          "domNodes": 2337,
+          "consoleErrors": [],
+          "failedRequests": [],
+          "axe": null
+        }
+      },
+      "status": 200
+    },
+    "/about": {
+      "widths": {
+        "375": {
+          "cls": 0.0104,
+          "scrollWidth": 375,
+          "innerWidth": 375,
+          "pageHeight": 11628,
+          "title": "About · BLOK Capital",
+          "h1": [
+            "A protocol, not a product owned by anyone."
+          ],
+          "metaDescription": "Why BLOK Capital exists, what it won't trade away, the people building it, and the roadmap.",
+          "canonical": "https://blokcapital.io/about",
+          "images": 28,
+          "imagesNoAlt": 0,
+          "links": 71,
+          "domNodes": 968,
+          "consoleErrors": [],
+          "failedRequests": [],
+          "axe": [
+            {
+              "id": "color-contrast",
+              "impact": "serious",
+              "nodes": 4,
+              "help": "Elements must meet minimum color contrast ratio thresholds",
+              "targets": [
+                ".h-full[data-reveal-item=\"\"]:nth-child(1) > article > .-right-2.-top-6.text-\\[96px\\]",
+                ".h-full[data-reveal-item=\"\"]:nth-child(2) > article > .-right-2.-top-6.text-\\[96px\\]",
+                ".h-full[data-reveal-item=\"\"]:nth-child(3) > article > .-right-2.-top-6.text-\\[96px\\]",
+                ".h-full[data-reveal-item=\"\"]:nth-child(4) > article > .-right-2.-top-6.text-\\[96px\\]"
+              ]
+            }
+          ]
+        },
+        "768": {
+          "cls": 0.0065,
+          "scrollWidth": 768,
+          "innerWidth": 768,
+          "pageHeight": 9632,
+          "title": "About · BLOK Capital",
+          "h1": [
+            "A protocol, not a product owned by anyone."
+          ],
+          "metaDescription": "Why BLOK Capital exists, what it won't trade away, the people building it, and the roadmap.",
+          "canonical": "https://blokcapital.io/about",
+          "images": 28,
+          "imagesNoAlt": 0,
+          "links": 71,
+          "domNodes": 968,
+          "consoleErrors": [],
+          "failedRequests": [],
+          "axe": null
+        },
+        "1280": {
+          "cls": 0.0063,
+          "scrollWidth": 1280,
+          "innerWidth": 1280,
+          "pageHeight": 8462,
+          "title": "About · BLOK Capital",
+          "h1": [
+            "A protocol, not a product owned by anyone."
+          ],
+          "metaDescription": "Why BLOK Capital exists, what it won't trade away, the people building it, and the roadmap.",
+          "canonical": "https://blokcapital.io/about",
+          "images": 28,
+          "imagesNoAlt": 0,
+          "links": 71,
+          "domNodes": 968,
+          "consoleErrors": [],
+          "failedRequests": [],
+          "axe": [
+            {
+              "id": "color-contrast",
+              "impact": "serious",
+              "nodes": 4,
+              "help": "Elements must meet minimum color contrast ratio thresholds",
+              "targets": [
+                ".h-full[data-reveal-item=\"\"]:nth-child(1) > article > .-right-2.-top-6.text-\\[96px\\]",
+                ".h-full[data-reveal-item=\"\"]:nth-child(2) > article > .-right-2.-top-6.text-\\[96px\\]",
+                ".h-full[data-reveal-item=\"\"]:nth-child(3) > article > .-right-2.-top-6.text-\\[96px\\]",
+                ".h-full[data-reveal-item=\"\"]:nth-child(4) > article > .-right-2.-top-6.text-\\[96px\\]"
+              ]
+            }
+          ]
+        },
+        "1920": {
+          "cls": 0.0026,
+          "scrollWidth": 1920,
+          "innerWidth": 1920,
+          "pageHeight": 8598,
+          "title": "About · BLOK Capital",
+          "h1": [
+            "A protocol, not a product owned by anyone."
+          ],
+          "metaDescription": "Why BLOK Capital exists, what it won't trade away, the people building it, and the roadmap.",
+          "canonical": "https://blokcapital.io/about",
+          "images": 28,
+          "imagesNoAlt": 0,
+          "links": 71,
+          "domNodes": 968,
+          "consoleErrors": [],
+          "failedRequests": [],
+          "axe": null
+        }
+      },
+      "status": 200
+    },
+    "/protocol": {
+      "widths": {
+        "375": {
+          "cls": 0.0099,
+          "scrollWidth": 375,
+          "innerWidth": 375,
+          "pageHeight": 9674,
+          "title": "Protocol · BLOK Capital",
+          "h1": [
+            "A wallet you own, a strategy on top."
+          ],
+          "metaDescription": "How BLOK Capital works: smart-wallet Gardens, curated Index Gardens, Yield Gardens, on-chain Gardeners, the Diamond architecture, fees and risks.",
+          "canonical": "https://blokcapital.io/protocol",
+          "images": 28,
+          "imagesNoAlt": 0,
+          "links": 66,
+          "domNodes": 912,
+          "consoleErrors": [],
+          "failedRequests": [],
+          "axe": []
+        },
+        "768": {
+          "cls": 0.0067,
+          "scrollWidth": 768,
+          "innerWidth": 768,
+          "pageHeight": 8617,
+          "title": "Protocol · BLOK Capital",
+          "h1": [
+            "A wallet you own, a strategy on top."
+          ],
+          "metaDescription": "How BLOK Capital works: smart-wallet Gardens, curated Index Gardens, Yield Gardens, on-chain Gardeners, the Diamond architecture, fees and risks.",
+          "canonical": "https://blokcapital.io/protocol",
+          "images": 28,
+          "imagesNoAlt": 0,
+          "links": 66,
+          "domNodes": 912,
+          "consoleErrors": [],
+          "failedRequests": [],
+          "axe": null
+        },
+        "1280": {
+          "cls": 0.0061,
+          "scrollWidth": 1280,
+          "innerWidth": 1280,
+          "pageHeight": 7159,
+          "title": "Protocol · BLOK Capital",
+          "h1": [
+            "A wallet you own, a strategy on top."
+          ],
+          "metaDescription": "How BLOK Capital works: smart-wallet Gardens, curated Index Gardens, Yield Gardens, on-chain Gardeners, the Diamond architecture, fees and risks.",
+          "canonical": "https://blokcapital.io/protocol",
+          "images": 28,
+          "imagesNoAlt": 0,
+          "links": 66,
+          "domNodes": 912,
+          "consoleErrors": [],
+          "failedRequests": [],
+          "axe": []
+        },
+        "1920": {
+          "cls": 0.003,
+          "scrollWidth": 1920,
+          "innerWidth": 1920,
+          "pageHeight": 7291,
+          "title": "Protocol · BLOK Capital",
+          "h1": [
+            "A wallet you own, a strategy on top."
+          ],
+          "metaDescription": "How BLOK Capital works: smart-wallet Gardens, curated Index Gardens, Yield Gardens, on-chain Gardeners, the Diamond architecture, fees and risks.",
+          "canonical": "https://blokcapital.io/protocol",
+          "images": 28,
+          "imagesNoAlt": 0,
+          "links": 66,
+          "domNodes": 912,
+          "consoleErrors": [],
+          "failedRequests": [],
+          "axe": null
+        }
+      },
+      "status": 200
+    },
+    "/indices": {
+      "widths": {
+        "375": {
+          "cls": 0.0099,
+          "scrollWidth": 375,
+          "innerWidth": 375,
+          "pageHeight": 10322,
+          "title": "Indices: BLOKC2, BLOKC5, BLOKC10 · BLOK Capital",
+          "h1": [
+            "Three baskets, one honest rule."
+          ],
+          "metaDescription": "BLOK Capital's three on-chain indices: what each holds, how market-cap weights are computed from Chainlink prices, and how pooled rebalancing works. Live oracle prices.",
+          "canonical": "https://blokcapital.io/indices",
+          "images": 66,
+          "imagesNoAlt": 0,
+          "links": 83,
+          "domNodes": 1303,
+          "consoleErrors": [],
+          "failedRequests": [],
+          "axe": [
+            {
+              "id": "scrollable-region-focusable",
+              "impact": "serious",
+              "nodes": 1,
+              "help": "Scrollable region must have keyboard access",
+              "targets": [
+                ".overflow-x-auto.mt-1\\.5.text-\\[13px\\]"
+              ]
+            }
+          ]
+        },
+        "768": {
+          "cls": 0.0065,
+          "scrollWidth": 768,
+          "innerWidth": 768,
+          "pageHeight": 8795,
+          "title": "Indices: BLOKC2, BLOKC5, BLOKC10 · BLOK Capital",
+          "h1": [
+            "Three baskets, one honest rule."
+          ],
+          "metaDescription": "BLOK Capital's three on-chain indices: what each holds, how market-cap weights are computed from Chainlink prices, and how pooled rebalancing works. Live oracle prices.",
+          "canonical": "https://blokcapital.io/indices",
+          "images": 66,
+          "imagesNoAlt": 0,
+          "links": 83,
+          "domNodes": 1309,
+          "consoleErrors": [],
+          "failedRequests": [],
+          "axe": null
+        },
+        "1280": {
+          "cls": 0.0061,
+          "scrollWidth": 1280,
+          "innerWidth": 1280,
+          "pageHeight": 7177,
+          "title": "Indices: BLOKC2, BLOKC5, BLOKC10 · BLOK Capital",
+          "h1": [
+            "Three baskets, one honest rule."
+          ],
+          "metaDescription": "BLOK Capital's three on-chain indices: what each holds, how market-cap weights are computed from Chainlink prices, and how pooled rebalancing works. Live oracle prices.",
+          "canonical": "https://blokcapital.io/indices",
+          "images": 66,
+          "imagesNoAlt": 0,
+          "links": 83,
+          "domNodes": 1309,
+          "consoleErrors": [],
+          "failedRequests": [],
+          "axe": []
+        },
+        "1920": {
+          "cls": 0.0026,
+          "scrollWidth": 1920,
+          "innerWidth": 1920,
+          "pageHeight": 7306,
+          "title": "Indices: BLOKC2, BLOKC5, BLOKC10 · BLOK Capital",
+          "h1": [
+            "Three baskets, one honest rule."
+          ],
+          "metaDescription": "BLOK Capital's three on-chain indices: what each holds, how market-cap weights are computed from Chainlink prices, and how pooled rebalancing works. Live oracle prices.",
+          "canonical": "https://blokcapital.io/indices",
+          "images": 66,
+          "imagesNoAlt": 0,
+          "links": 83,
+          "domNodes": 1309,
+          "consoleErrors": [],
+          "failedRequests": [],
+          "axe": null
+        }
+      },
+      "status": 200
+    },
+    "/indices/blokc2": {
+      "widths": {
+        "375": {
+          "cls": 0.0099,
+          "scrollWidth": 375,
+          "innerWidth": 375,
+          "pageHeight": 8878,
+          "title": "BLOKC2: Bitcoin and Ether · BLOK Capital",
+          "h1": [
+            "BLOKC2"
+          ],
+          "metaDescription": "BLOKC2: a market-cap-weighted index of 2 assets on Arbitrum (BTC, ETH), priced by Chainlink. Composition and methodology.",
+          "canonical": "https://blokcapital.io/indices/blokc2",
+          "images": 41,
+          "imagesNoAlt": 0,
+          "links": 79,
+          "domNodes": 1016,
+          "consoleErrors": [],
+          "failedRequests": [],
+          "axe": [
+            {
+              "id": "scrollable-region-focusable",
+              "impact": "serious",
+              "nodes": 1,
+              "help": "Scrollable region must have keyboard access",
+              "targets": [
+                ".overflow-x-auto"
+              ]
+            }
+          ]
+        },
+        "768": {
+          "cls": 0.0065,
+          "scrollWidth": 768,
+          "innerWidth": 768,
+          "pageHeight": 7554,
+          "title": "BLOKC2: Bitcoin and Ether · BLOK Capital",
+          "h1": [
+            "BLOKC2"
+          ],
+          "metaDescription": "BLOKC2: a market-cap-weighted index of 2 assets on Arbitrum (BTC, ETH), priced by Chainlink. Composition and methodology.",
+          "canonical": "https://blokcapital.io/indices/blokc2",
+          "images": 41,
+          "imagesNoAlt": 0,
+          "links": 79,
+          "domNodes": 1016,
+          "consoleErrors": [],
+          "failedRequests": [],
+          "axe": null
+        },
+        "1280": {
+          "cls": 0.0061,
+          "scrollWidth": 1280,
+          "innerWidth": 1280,
+          "pageHeight": 6569,
+          "title": "BLOKC2: Bitcoin and Ether · BLOK Capital",
+          "h1": [
+            "BLOKC2"
+          ],
+          "metaDescription": "BLOKC2: a market-cap-weighted index of 2 assets on Arbitrum (BTC, ETH), priced by Chainlink. Composition and methodology.",
+          "canonical": "https://blokcapital.io/indices/blokc2",
+          "images": 41,
+          "imagesNoAlt": 0,
+          "links": 79,
+          "domNodes": 1015,
+          "consoleErrors": [],
+          "failedRequests": [],
+          "axe": []
+        },
+        "1920": {
+          "cls": 0.0026,
+          "scrollWidth": 1920,
+          "innerWidth": 1920,
+          "pageHeight": 6690,
+          "title": "BLOKC2: Bitcoin and Ether · BLOK Capital",
+          "h1": [
+            "BLOKC2"
+          ],
+          "metaDescription": "BLOKC2: a market-cap-weighted index of 2 assets on Arbitrum (BTC, ETH), priced by Chainlink. Composition and methodology.",
+          "canonical": "https://blokcapital.io/indices/blokc2",
+          "images": 41,
+          "imagesNoAlt": 0,
+          "links": 79,
+          "domNodes": 1015,
+          "consoleErrors": [],
+          "failedRequests": [],
+          "axe": null
+        }
+      },
+      "status": 200
+    },
+    "/indices/blokc5": {
+      "widths": {
+        "375": {
+          "cls": 0.0099,
+          "scrollWidth": 375,
+          "innerWidth": 375,
+          "pageHeight": 9192,
+          "title": "BLOKC5: Five DeFi blue chips · BLOK Capital",
+          "h1": [
+            "BLOKC5"
+          ],
+          "metaDescription": "BLOKC5: a market-cap-weighted index of 5 assets on Arbitrum (LINK, UNI, AAVE, ARB, PENDLE), priced by Chainlink. Composition and methodology.",
+          "canonical": "https://blokcapital.io/indices/blokc5",
+          "images": 47,
+          "imagesNoAlt": 0,
+          "links": 79,
+          "domNodes": 1054,
+          "consoleErrors": [],
+          "failedRequests": [],
+          "axe": [
+            {
+              "id": "scrollable-region-focusable",
+              "impact": "serious",
+              "nodes": 1,
+              "help": "Scrollable region must have keyboard access",
+              "targets": [
+                ".overflow-x-auto"
+              ]
+            }
+          ]
+        },
+        "768": {
+          "cls": 0.0065,
+          "scrollWidth": 768,
+          "innerWidth": 768,
+          "pageHeight": 7791,
+          "title": "BLOKC5: Five DeFi blue chips · BLOK Capital",
+          "h1": [
+            "BLOKC5"
+          ],
+          "metaDescription": "BLOKC5: a market-cap-weighted index of 5 assets on Arbitrum (LINK, UNI, AAVE, ARB, PENDLE), priced by Chainlink. Composition and methodology.",
+          "canonical": "https://blokcapital.io/indices/blokc5",
+          "images": 47,
+          "imagesNoAlt": 0,
+          "links": 79,
+          "domNodes": 1060,
+          "consoleErrors": [],
+          "failedRequests": [],
+          "axe": null
+        },
+        "1280": {
+          "cls": 0.0061,
+          "scrollWidth": 1280,
+          "innerWidth": 1280,
+          "pageHeight": 6645,
+          "title": "BLOKC5: Five DeFi blue chips · BLOK Capital",
+          "h1": [
+            "BLOKC5"
+          ],
+          "metaDescription": "BLOKC5: a market-cap-weighted index of 5 assets on Arbitrum (LINK, UNI, AAVE, ARB, PENDLE), priced by Chainlink. Composition and methodology.",
+          "canonical": "https://blokcapital.io/indices/blokc5",
+          "images": 47,
+          "imagesNoAlt": 0,
+          "links": 79,
+          "domNodes": 1056,
+          "consoleErrors": [],
+          "failedRequests": [],
+          "axe": []
+        },
+        "1920": {
+          "cls": 0.0026,
+          "scrollWidth": 1920,
+          "innerWidth": 1920,
+          "pageHeight": 6766,
+          "title": "BLOKC5: Five DeFi blue chips · BLOK Capital",
+          "h1": [
+            "BLOKC5"
+          ],
+          "metaDescription": "BLOKC5: a market-cap-weighted index of 5 assets on Arbitrum (LINK, UNI, AAVE, ARB, PENDLE), priced by Chainlink. Composition and methodology.",
+          "canonical": "https://blokcapital.io/indices/blokc5",
+          "images": 47,
+          "imagesNoAlt": 0,
+          "links": 79,
+          "domNodes": 1056,
+          "consoleErrors": [],
+          "failedRequests": [],
+          "axe": null
+        }
+      },
+      "status": 200
+    },
+    "/indices/blokc10": {
+      "widths": {
+        "375": {
+          "cls": 0.0104,
+          "scrollWidth": 375,
+          "innerWidth": 375,
+          "pageHeight": 9498,
+          "title": "BLOKC10: The wider DeFi stack · BLOK Capital",
+          "h1": [
+            "BLOKC10"
+          ],
+          "metaDescription": "BLOKC10: a market-cap-weighted index of 10 assets on Arbitrum (LINK, DAI, UNI, AAVE, ARB, CRV, ZRO, PENDLE, GRT, GMX), priced by Chainlink. Composition and methodology.",
+          "canonical": "https://blokcapital.io/indices/blokc10",
+          "images": 57,
+          "imagesNoAlt": 0,
+          "links": 79,
+          "domNodes": 1125,
+          "consoleErrors": [],
+          "failedRequests": [],
+          "axe": [
+            {
+              "id": "scrollable-region-focusable",
+              "impact": "serious",
+              "nodes": 1,
+              "help": "Scrollable region must have keyboard access",
+              "targets": [
+                ".overflow-x-auto"
+              ]
+            }
+          ]
+        },
+        "768": {
+          "cls": 0.0065,
+          "scrollWidth": 768,
+          "innerWidth": 768,
+          "pageHeight": 7925,
+          "title": "BLOKC10: The wider DeFi stack · BLOK Capital",
+          "h1": [
+            "BLOKC10"
+          ],
+          "metaDescription": "BLOKC10: a market-cap-weighted index of 10 assets on Arbitrum (LINK, DAI, UNI, AAVE, ARB, CRV, ZRO, PENDLE, GRT, GMX), priced by Chainlink. Composition and methodology.",
+          "canonical": "https://blokcapital.io/indices/blokc10",
+          "images": 57,
+          "imagesNoAlt": 0,
+          "links": 79,
+          "domNodes": 1136,
+          "consoleErrors": [],
+          "failedRequests": [],
+          "axe": null
+        },
+        "1280": {
+          "cls": 0.0061,
+          "scrollWidth": 1280,
+          "innerWidth": 1280,
+          "pageHeight": 6729,
+          "title": "BLOKC10: The wider DeFi stack · BLOK Capital",
+          "h1": [
+            "BLOKC10"
+          ],
+          "metaDescription": "BLOKC10: a market-cap-weighted index of 10 assets on Arbitrum (LINK, DAI, UNI, AAVE, ARB, CRV, ZRO, PENDLE, GRT, GMX), priced by Chainlink. Composition and methodology.",
+          "canonical": "https://blokcapital.io/indices/blokc10",
+          "images": 57,
+          "imagesNoAlt": 0,
+          "links": 79,
+          "domNodes": 1127,
+          "consoleErrors": [],
+          "failedRequests": [],
+          "axe": []
+        },
+        "1920": {
+          "cls": 0.0026,
+          "scrollWidth": 1920,
+          "innerWidth": 1920,
+          "pageHeight": 6850,
+          "title": "BLOKC10: The wider DeFi stack · BLOK Capital",
+          "h1": [
+            "BLOKC10"
+          ],
+          "metaDescription": "BLOKC10: a market-cap-weighted index of 10 assets on Arbitrum (LINK, DAI, UNI, AAVE, ARB, CRV, ZRO, PENDLE, GRT, GMX), priced by Chainlink. Composition and methodology.",
+          "canonical": "https://blokcapital.io/indices/blokc10",
+          "images": 57,
+          "imagesNoAlt": 0,
+          "links": 79,
+          "domNodes": 1127,
+          "consoleErrors": [],
+          "failedRequests": [],
+          "axe": null
+        }
+      },
+      "status": 200
+    },
+    "/security": {
+      "widths": {
+        "375": {
+          "cls": 0.0099,
+          "scrollWidth": 375,
+          "innerWidth": 375,
+          "pageHeight": 7597,
+          "title": "Security · BLOK Capital",
+          "h1": [
+            "Check the work, not our word."
+          ],
+          "metaDescription": "Who can change the BLOK Capital contracts, who has audited them, and how to report a vulnerability.",
+          "canonical": "https://blokcapital.io/security",
+          "images": 17,
+          "imagesNoAlt": 0,
+          "links": 73,
+          "domNodes": 785,
+          "consoleErrors": [],
+          "failedRequests": [],
+          "axe": []
+        },
+        "768": {
+          "cls": 0.0065,
+          "scrollWidth": 768,
+          "innerWidth": 768,
+          "pageHeight": 5831,
+          "title": "Security · BLOK Capital",
+          "h1": [
+            "Check the work, not our word."
+          ],
+          "metaDescription": "Who can change the BLOK Capital contracts, who has audited them, and how to report a vulnerability.",
+          "canonical": "https://blokcapital.io/security",
+          "images": 17,
+          "imagesNoAlt": 0,
+          "links": 73,
+          "domNodes": 785,
+          "consoleErrors": [],
+          "failedRequests": [],
+          "axe": null
+        },
+        "1280": {
+          "cls": 0.0061,
+          "scrollWidth": 1280,
+          "innerWidth": 1280,
+          "pageHeight": 5169,
+          "title": "Security · BLOK Capital",
+          "h1": [
+            "Check the work, not our word."
+          ],
+          "metaDescription": "Who can change the BLOK Capital contracts, who has audited them, and how to report a vulnerability.",
+          "canonical": "https://blokcapital.io/security",
+          "images": 17,
+          "imagesNoAlt": 0,
+          "links": 73,
+          "domNodes": 785,
+          "consoleErrors": [],
+          "failedRequests": [],
+          "axe": []
+        },
+        "1920": {
+          "cls": 0.0026,
+          "scrollWidth": 1920,
+          "innerWidth": 1920,
+          "pageHeight": 5296,
+          "title": "Security · BLOK Capital",
+          "h1": [
+            "Check the work, not our word."
+          ],
+          "metaDescription": "Who can change the BLOK Capital contracts, who has audited them, and how to report a vulnerability.",
+          "canonical": "https://blokcapital.io/security",
+          "images": 17,
+          "imagesNoAlt": 0,
+          "links": 73,
+          "domNodes": 785,
+          "consoleErrors": [],
+          "failedRequests": [],
+          "axe": null
+        }
+      },
+      "status": 200
+    },
+    "/token": {
+      "widths": {
+        "375": {
+          "cls": 0.0099,
+          "scrollWidth": 375,
+          "innerWidth": 375,
+          "pageHeight": 6550,
+          "title": "$BLOKC token · BLOK Capital",
+          "h1": [
+            "The token that governs the protocol."
+          ],
+          "metaDescription": "The $BLOKC governance token: utility, allocation of the 10B supply, and launch timing.",
+          "canonical": "https://blokcapital.io/token",
+          "images": 19,
+          "imagesNoAlt": 0,
+          "links": 62,
+          "domNodes": 786,
+          "consoleErrors": [],
+          "failedRequests": [],
+          "axe": [
+            {
+              "id": "aria-prohibited-attr",
+              "impact": "serious",
+              "nodes": 1,
+              "help": "Elements must only use permitted ARIA attributes",
+              "targets": [
+                ".h-4"
+              ]
+            }
+          ]
+        },
+        "768": {
+          "cls": 0.0065,
+          "scrollWidth": 768,
+          "innerWidth": 768,
+          "pageHeight": 5642,
+          "title": "$BLOKC token · BLOK Capital",
+          "h1": [
+            "The token that governs the protocol."
+          ],
+          "metaDescription": "The $BLOKC governance token: utility, allocation of the 10B supply, and launch timing.",
+          "canonical": "https://blokcapital.io/token",
+          "images": 19,
+          "imagesNoAlt": 0,
+          "links": 62,
+          "domNodes": 786,
+          "consoleErrors": [],
+          "failedRequests": [],
+          "axe": null
+        },
+        "1280": {
+          "cls": 0.0061,
+          "scrollWidth": 1280,
+          "innerWidth": 1280,
+          "pageHeight": 4485,
+          "title": "$BLOKC token · BLOK Capital",
+          "h1": [
+            "The token that governs the protocol."
+          ],
+          "metaDescription": "The $BLOKC governance token: utility, allocation of the 10B supply, and launch timing.",
+          "canonical": "https://blokcapital.io/token",
+          "images": 19,
+          "imagesNoAlt": 0,
+          "links": 62,
+          "domNodes": 786,
+          "consoleErrors": [],
+          "failedRequests": [],
+          "axe": [
+            {
+              "id": "aria-prohibited-attr",
+              "impact": "serious",
+              "nodes": 1,
+              "help": "Elements must only use permitted ARIA attributes",
+              "targets": [
+                ".h-4"
+              ]
+            }
+          ]
+        },
+        "1920": {
+          "cls": 0.0028,
+          "scrollWidth": 1920,
+          "innerWidth": 1920,
+          "pageHeight": 4614,
+          "title": "$BLOKC token · BLOK Capital",
+          "h1": [
+            "The token that governs the protocol."
+          ],
+          "metaDescription": "The $BLOKC governance token: utility, allocation of the 10B supply, and launch timing.",
+          "canonical": "https://blokcapital.io/token",
+          "images": 19,
+          "imagesNoAlt": 0,
+          "links": 62,
+          "domNodes": 786,
+          "consoleErrors": [],
+          "failedRequests": [],
+          "axe": null
+        }
+      },
+      "status": 200
+    },
+    "/governance": {
+      "widths": {
+        "375": {
+          "cls": 0.01,
+          "scrollWidth": 375,
+          "innerWidth": 375,
+          "pageHeight": 4882,
+          "title": "Governance · BLOK Capital",
+          "h1": [
+            "Every change goes through the same door."
+          ],
+          "metaDescription": "How BLOK Capital is governed on-chain through Aragon OSx, and the latest DAO proposals.",
+          "canonical": "https://blokcapital.io/governance",
+          "images": 17,
+          "imagesNoAlt": 0,
+          "links": 62,
+          "domNodes": 665,
+          "consoleErrors": [],
+          "failedRequests": [],
+          "axe": []
+        },
+        "768": {
+          "cls": 0.0065,
+          "scrollWidth": 768,
+          "innerWidth": 768,
+          "pageHeight": 4008,
+          "title": "Governance · BLOK Capital",
+          "h1": [
+            "Every change goes through the same door."
+          ],
+          "metaDescription": "How BLOK Capital is governed on-chain through Aragon OSx, and the latest DAO proposals.",
+          "canonical": "https://blokcapital.io/governance",
+          "images": 17,
+          "imagesNoAlt": 0,
+          "links": 62,
+          "domNodes": 659,
+          "consoleErrors": [],
+          "failedRequests": [],
+          "axe": null
+        },
+        "1280": {
+          "cls": 0.0063,
+          "scrollWidth": 1280,
+          "innerWidth": 1280,
+          "pageHeight": 3765,
+          "title": "Governance · BLOK Capital",
+          "h1": [
+            "Every change goes through the same door."
+          ],
+          "metaDescription": "How BLOK Capital is governed on-chain through Aragon OSx, and the latest DAO proposals.",
+          "canonical": "https://blokcapital.io/governance",
+          "images": 17,
+          "imagesNoAlt": 0,
+          "links": 62,
+          "domNodes": 659,
+          "consoleErrors": [],
+          "failedRequests": [],
+          "axe": []
+        },
+        "1920": {
+          "cls": 0.0026,
+          "scrollWidth": 1920,
+          "innerWidth": 1920,
+          "pageHeight": 3890,
+          "title": "Governance · BLOK Capital",
+          "h1": [
+            "Every change goes through the same door."
+          ],
+          "metaDescription": "How BLOK Capital is governed on-chain through Aragon OSx, and the latest DAO proposals.",
+          "canonical": "https://blokcapital.io/governance",
+          "images": 17,
+          "imagesNoAlt": 0,
+          "links": 62,
+          "domNodes": 659,
+          "consoleErrors": [],
+          "failedRequests": [],
+          "axe": null
+        }
+      },
+      "status": 200
+    },
+    "/contact": {
+      "widths": {
+        "375": {
+          "cls": 0.0099,
+          "scrollWidth": 375,
+          "innerWidth": 375,
+          "pageHeight": 3973,
+          "title": "Contact · BLOK Capital",
+          "h1": [
+            "Talk to the team."
+          ],
+          "metaDescription": "Reach the BLOK Capital team and community: Discord for support and security reports, plus answers to common questions.",
+          "canonical": "https://blokcapital.io/contact",
+          "images": 16,
+          "imagesNoAlt": 0,
+          "links": 58,
+          "domNodes": 675,
+          "consoleErrors": [],
+          "failedRequests": [],
+          "axe": []
+        },
+        "768": {
+          "cls": 0.0065,
+          "scrollWidth": 768,
+          "innerWidth": 768,
+          "pageHeight": 3565,
+          "title": "Contact · BLOK Capital",
+          "h1": [
+            "Talk to the team."
+          ],
+          "metaDescription": "Reach the BLOK Capital team and community: Discord for support and security reports, plus answers to common questions.",
+          "canonical": "https://blokcapital.io/contact",
+          "images": 16,
+          "imagesNoAlt": 0,
+          "links": 58,
+          "domNodes": 675,
+          "consoleErrors": [],
+          "failedRequests": [],
+          "axe": null
+        },
+        "1280": {
+          "cls": 0.0058,
+          "scrollWidth": 1280,
+          "innerWidth": 1280,
+          "pageHeight": 3163,
+          "title": "Contact · BLOK Capital",
+          "h1": [
+            "Talk to the team."
+          ],
+          "metaDescription": "Reach the BLOK Capital team and community: Discord for support and security reports, plus answers to common questions.",
+          "canonical": "https://blokcapital.io/contact",
+          "images": 16,
+          "imagesNoAlt": 0,
+          "links": 58,
+          "domNodes": 675,
+          "consoleErrors": [],
+          "failedRequests": [],
+          "axe": []
+        },
+        "1920": {
+          "cls": 0.0026,
+          "scrollWidth": 1920,
+          "innerWidth": 1920,
+          "pageHeight": 3280,
+          "title": "Contact · BLOK Capital",
+          "h1": [
+            "Talk to the team."
+          ],
+          "metaDescription": "Reach the BLOK Capital team and community: Discord for support and security reports, plus answers to common questions.",
+          "canonical": "https://blokcapital.io/contact",
+          "images": 16,
+          "imagesNoAlt": 0,
+          "links": 58,
+          "domNodes": 675,
+          "consoleErrors": [],
+          "failedRequests": [],
+          "axe": null
+        }
+      },
+      "status": 200
+    },
+    "/legal/cookie-policy": {
+      "widths": {
+        "375": {
+          "cls": 0.0099,
+          "scrollWidth": 375,
+          "innerWidth": 375,
+          "pageHeight": 3787,
+          "title": "Cookie Policy · BLOK Capital",
+          "h1": [
+            "Cookie Policy"
+          ],
+          "metaDescription": "Cookie Policy, BLOK Capital DAO LLC.",
+          "canonical": "https://blokcapital.io/legal/cookie-policy",
+          "images": 16,
+          "imagesNoAlt": 0,
+          "links": 76,
+          "domNodes": 536,
+          "consoleErrors": [],
+          "failedRequests": [],
+          "axe": [
+            {
+              "id": "landmark-complementary-is-top-level",
+              "impact": "moderate",
+              "nodes": 1,
+              "help": "Aside should not be contained in another landmark",
+              "targets": [
+                "aside"
+              ]
+            }
+          ]
+        },
+        "768": {
+          "cls": 0.0065,
+          "scrollWidth": 768,
+          "innerWidth": 768,
+          "pageHeight": 3170,
+          "title": "Cookie Policy · BLOK Capital",
+          "h1": [
+            "Cookie Policy"
+          ],
+          "metaDescription": "Cookie Policy, BLOK Capital DAO LLC.",
+          "canonical": "https://blokcapital.io/legal/cookie-policy",
+          "images": 16,
+          "imagesNoAlt": 0,
+          "links": 76,
+          "domNodes": 536,
+          "consoleErrors": [],
+          "failedRequests": [],
+          "axe": null
+        },
+        "1280": {
+          "cls": 0.0058,
+          "scrollWidth": 1280,
+          "innerWidth": 1280,
+          "pageHeight": 2877,
+          "title": "Cookie Policy · BLOK Capital",
+          "h1": [
+            "Cookie Policy"
+          ],
+          "metaDescription": "Cookie Policy, BLOK Capital DAO LLC.",
+          "canonical": "https://blokcapital.io/legal/cookie-policy",
+          "images": 16,
+          "imagesNoAlt": 0,
+          "links": 76,
+          "domNodes": 536,
+          "consoleErrors": [],
+          "failedRequests": [],
+          "axe": [
+            {
+              "id": "landmark-complementary-is-top-level",
+              "impact": "moderate",
+              "nodes": 1,
+              "help": "Aside should not be contained in another landmark",
+              "targets": [
+                "aside"
+              ]
+            }
+          ]
+        },
+        "1920": {
+          "cls": 0.0026,
+          "scrollWidth": 1920,
+          "innerWidth": 1920,
+          "pageHeight": 2993,
+          "title": "Cookie Policy · BLOK Capital",
+          "h1": [
+            "Cookie Policy"
+          ],
+          "metaDescription": "Cookie Policy, BLOK Capital DAO LLC.",
+          "canonical": "https://blokcapital.io/legal/cookie-policy",
+          "images": 16,
+          "imagesNoAlt": 0,
+          "links": 76,
+          "domNodes": 536,
+          "consoleErrors": [],
+          "failedRequests": [],
+          "axe": null
+        }
+      },
+      "status": 200
+    },
+    "/legal/acceptable-use": {
+      "widths": {
+        "375": {
+          "cls": 0.0099,
+          "scrollWidth": 375,
+          "innerWidth": 375,
+          "pageHeight": 5089,
+          "title": "Acceptable Use Policy · BLOK Capital",
+          "h1": [
+            "Acceptable Use Policy"
+          ],
+          "metaDescription": "Acceptable Use Policy, BLOK Capital DAO LLC.",
+          "canonical": "https://blokcapital.io/legal/acceptable-use",
+          "images": 16,
+          "imagesNoAlt": 0,
+          "links": 72,
+          "domNodes": 571,
+          "consoleErrors": [],
+          "failedRequests": [],
+          "axe": [
+            {
+              "id": "landmark-complementary-is-top-level",
+              "impact": "moderate",
+              "nodes": 1,
+              "help": "Aside should not be contained in another landmark",
+              "targets": [
+                "aside"
+              ]
+            }
+          ]
+        },
+        "768": {
+          "cls": 0.0065,
+          "scrollWidth": 768,
+          "innerWidth": 768,
+          "pageHeight": 4068,
+          "title": "Acceptable Use Policy · BLOK Capital",
+          "h1": [
+            "Acceptable Use Policy"
+          ],
+          "metaDescription": "Acceptable Use Policy, BLOK Capital DAO LLC.",
+          "canonical": "https://blokcapital.io/legal/acceptable-use",
+          "images": 16,
+          "imagesNoAlt": 0,
+          "links": 72,
+          "domNodes": 571,
+          "consoleErrors": [],
+          "failedRequests": [],
+          "axe": null
+        },
+        "1280": {
+          "cls": 0.0058,
+          "scrollWidth": 1280,
+          "innerWidth": 1280,
+          "pageHeight": 3775,
+          "title": "Acceptable Use Policy · BLOK Capital",
+          "h1": [
+            "Acceptable Use Policy"
+          ],
+          "metaDescription": "Acceptable Use Policy, BLOK Capital DAO LLC.",
+          "canonical": "https://blokcapital.io/legal/acceptable-use",
+          "images": 16,
+          "imagesNoAlt": 0,
+          "links": 72,
+          "domNodes": 571,
+          "consoleErrors": [],
+          "failedRequests": [],
+          "axe": [
+            {
+              "id": "landmark-complementary-is-top-level",
+              "impact": "moderate",
+              "nodes": 1,
+              "help": "Aside should not be contained in another landmark",
+              "targets": [
+                "aside"
+              ]
+            }
+          ]
+        },
+        "1920": {
+          "cls": 0.0026,
+          "scrollWidth": 1920,
+          "innerWidth": 1920,
+          "pageHeight": 3980,
+          "title": "Acceptable Use Policy · BLOK Capital",
+          "h1": [
+            "Acceptable Use Policy"
+          ],
+          "metaDescription": "Acceptable Use Policy, BLOK Capital DAO LLC.",
+          "canonical": "https://blokcapital.io/legal/acceptable-use",
+          "images": 16,
+          "imagesNoAlt": 0,
+          "links": 72,
+          "domNodes": 571,
+          "consoleErrors": [],
+          "failedRequests": [],
+          "axe": null
+        }
+      },
+      "status": 200
+    },
+    "/legal/user-agreement": {
+      "widths": {
+        "375": {
+          "cls": 0.0099,
+          "scrollWidth": 375,
+          "innerWidth": 375,
+          "pageHeight": 14673,
+          "title": "User Agreement · BLOK Capital",
+          "h1": [
+            "User Agreement"
+          ],
+          "metaDescription": "User Agreement, BLOK Capital DAO LLC.",
+          "canonical": "https://blokcapital.io/legal/user-agreement",
+          "images": 16,
+          "imagesNoAlt": 0,
+          "links": 83,
+          "domNodes": 595,
+          "consoleErrors": [],
+          "failedRequests": [],
+          "axe": [
+            {
+              "id": "landmark-complementary-is-top-level",
+              "impact": "moderate",
+              "nodes": 1,
+              "help": "Aside should not be contained in another landmark",
+              "targets": [
+                "aside"
+              ]
+            }
+          ]
+        },
+        "768": {
+          "cls": 0.0065,
+          "scrollWidth": 768,
+          "innerWidth": 768,
+          "pageHeight": 9032,
+          "title": "User Agreement · BLOK Capital",
+          "h1": [
+            "User Agreement"
+          ],
+          "metaDescription": "User Agreement, BLOK Capital DAO LLC.",
+          "canonical": "https://blokcapital.io/legal/user-agreement",
+          "images": 16,
+          "imagesNoAlt": 0,
+          "links": 83,
+          "domNodes": 595,
+          "consoleErrors": [],
+          "failedRequests": [],
+          "axe": null
+        },
+        "1280": {
+          "cls": 0.0058,
+          "scrollWidth": 1280,
+          "innerWidth": 1280,
+          "pageHeight": 8739,
+          "title": "User Agreement · BLOK Capital",
+          "h1": [
+            "User Agreement"
+          ],
+          "metaDescription": "User Agreement, BLOK Capital DAO LLC.",
+          "canonical": "https://blokcapital.io/legal/user-agreement",
+          "images": 16,
+          "imagesNoAlt": 0,
+          "links": 83,
+          "domNodes": 595,
+          "consoleErrors": [],
+          "failedRequests": [],
+          "axe": [
+            {
+              "id": "landmark-complementary-is-top-level",
+              "impact": "moderate",
+              "nodes": 1,
+              "help": "Aside should not be contained in another landmark",
+              "targets": [
+                "aside"
+              ]
+            }
+          ]
+        },
+        "1920": {
+          "cls": 0.0026,
+          "scrollWidth": 1920,
+          "innerWidth": 1920,
+          "pageHeight": 8854,
+          "title": "User Agreement · BLOK Capital",
+          "h1": [
+            "User Agreement"
+          ],
+          "metaDescription": "User Agreement, BLOK Capital DAO LLC.",
+          "canonical": "https://blokcapital.io/legal/user-agreement",
+          "images": 16,
+          "imagesNoAlt": 0,
+          "links": 83,
+          "domNodes": 595,
+          "consoleErrors": [],
+          "failedRequests": [],
+          "axe": null
+        }
+      },
+      "status": 200
+    },
+    "/this-page-does-not-exist": {
+      "widths": {
+        "375": {
+          "cls": 0.0099,
+          "scrollWidth": 375,
+          "innerWidth": 375,
+          "pageHeight": 1838,
+          "title": "Page not found · BLOK Capital",
+          "h1": [
+            "Nothing planted here."
+          ],
+          "metaDescription": "Non-custodial, on-chain wealth management on Arbitrum. Curated indices and yield strategies that run from your own smart-contract wallet. Currently in private testing.",
+          "canonical": "https://blokcapital.io/",
+          "images": 17,
+          "imagesNoAlt": 0,
+          "links": 52,
+          "domNodes": 439,
+          "consoleErrors": [
+            "Failed to load resource: the server responded with a status of 404 (Not Found)"
+          ],
+          "failedRequests": [],
+          "axe": []
+        },
+        "768": {
+          "cls": 0.0065,
+          "scrollWidth": 768,
+          "innerWidth": 768,
+          "pageHeight": 1813,
+          "title": "Page not found · BLOK Capital",
+          "h1": [
+            "Nothing planted here."
+          ],
+          "metaDescription": "Non-custodial, on-chain wealth management on Arbitrum. Curated indices and yield strategies that run from your own smart-contract wallet. Currently in private testing.",
+          "canonical": "https://blokcapital.io/",
+          "images": 17,
+          "imagesNoAlt": 0,
+          "links": 52,
+          "domNodes": 439,
+          "consoleErrors": [
+            "Failed to load resource: the server responded with a status of 404 (Not Found)"
+          ],
+          "failedRequests": [],
+          "axe": null
+        },
+        "1280": {
+          "cls": 0.0058,
+          "scrollWidth": 1280,
+          "innerWidth": 1280,
+          "pageHeight": 1491,
+          "title": "Page not found · BLOK Capital",
+          "h1": [
+            "Nothing planted here."
+          ],
+          "metaDescription": "Non-custodial, on-chain wealth management on Arbitrum. Curated indices and yield strategies that run from your own smart-contract wallet. Currently in private testing.",
+          "canonical": "https://blokcapital.io/",
+          "images": 17,
+          "imagesNoAlt": 0,
+          "links": 52,
+          "domNodes": 439,
+          "consoleErrors": [
+            "Failed to load resource: the server responded with a status of 404 (Not Found)"
+          ],
+          "failedRequests": [],
+          "axe": []
+        },
+        "1920": {
+          "cls": 0.0026,
+          "scrollWidth": 1920,
+          "innerWidth": 1920,
+          "pageHeight": 1598,
+          "title": "Page not found · BLOK Capital",
+          "h1": [
+            "Nothing planted here."
+          ],
+          "metaDescription": "Non-custodial, on-chain wealth management on Arbitrum. Curated indices and yield strategies that run from your own smart-contract wallet. Currently in private testing.",
+          "canonical": "https://blokcapital.io/",
+          "images": 17,
+          "imagesNoAlt": 0,
+          "links": 52,
+          "domNodes": 439,
+          "consoleErrors": [
+            "Failed to load resource: the server responded with a status of 404 (Not Found)"
+          ],
+          "failedRequests": [],
+          "axe": null
+        }
+      },
+      "status": 404
+    }
+  },
+  "overflow": {},
+  "reducedMotion": {
+    "/": {
+      "hiddenRevealTargets": 0,
+      "infiniteAnimationsRunning": 0
+    },
+    "/about": {
+      "hiddenRevealTargets": 0,
+      "infiniteAnimationsRunning": 0
+    },
+    "/protocol": {
+      "hiddenRevealTargets": 0,
+      "infiniteAnimationsRunning": 0
+    },
+    "/indices": {
+      "hiddenRevealTargets": 0,
+      "infiniteAnimationsRunning": 0
+    },
+    "/indices/blokc2": {
+      "hiddenRevealTargets": 0,
+      "infiniteAnimationsRunning": 0
+    },
+    "/indices/blokc5": {
+      "hiddenRevealTargets": 0,
+      "infiniteAnimationsRunning": 0
+    },
+    "/indices/blokc10": {
+      "hiddenRevealTargets": 0,
+      "infiniteAnimationsRunning": 0
+    },
+    "/security": {
+      "hiddenRevealTargets": 0,
+      "infiniteAnimationsRunning": 0
+    },
+    "/token": {
+      "hiddenRevealTargets": 0,
+      "infiniteAnimationsRunning": 0
+    },
+    "/governance": {
+      "hiddenRevealTargets": 0,
+      "infiniteAnimationsRunning": 0
+    },
+    "/contact": {
+      "hiddenRevealTargets": 0,
+      "infiniteAnimationsRunning": 0
+    }
+  }
+}
