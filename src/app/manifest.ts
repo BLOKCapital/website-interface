@@ -5,25 +5,35 @@ import { siteConfig } from "@/lib/seo/site";
 // rendered once at build time rather than per request.
 export const dynamic = "force-static";
 
+/** Day garden paper (--p-paper-50), the page background and the icons' tile. */
+const PAPER = "#F7F8F4";
+
 /**
  * Web app manifest. Improves mobile/PWA signals and how the site appears when
- * added to a home screen. Icons reference the static metadata files in
- * src/app (icon.png, apple-icon.png) so there's a single source of truth for
- * the brand mark.
+ * added to a home screen. Icons are the static metadata files in src/app
+ * (icon.png, apple-icon.png) plus a padded maskable copy of icon.png; all
+ * three sit on the Day garden paper (MISS-03).
+ *
+ * `display: "browser"` keeps the address bar when the site is installed: the
+ * site tells people to check the domain, so it shouldn't hide it.
  */
 export default function manifest(): MetadataRoute.Manifest {
   return {
-    name: `${siteConfig.name} · Decentralized Wealth Management`,
+    id: "/",
+    name: `${siteConfig.name} · Non-custodial wealth management`,
     short_name: siteConfig.name,
     description: siteConfig.description,
+    lang: "en-GB",
     start_url: "/",
-    display: "standalone",
-    background_color: "#F7F8F4",
-    theme_color: "#F7F8F4",
+    scope: "/",
+    display: "browser",
+    background_color: PAPER,
+    theme_color: PAPER,
+    categories: ["finance"],
     icons: [
-      { src: "/favicon.ico", sizes: "any", type: "image/x-icon" },
       { src: "/icon.png", sizes: "512x512", type: "image/png", purpose: "any" },
-      { src: "/icon.png", sizes: "512x512", type: "image/png", purpose: "maskable" },
+      // The same art at 85%, so the mark's corners stay inside the 80% safe circle.
+      { src: "/icon-maskable.png", sizes: "512x512", type: "image/png", purpose: "maskable" },
       { src: "/apple-icon.png", sizes: "180x180", type: "image/png" },
     ],
   };

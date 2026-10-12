@@ -3,3 +3,30 @@
 /features/ /protocol 301
 /preview / 301
 /preview/ / 301
+
+# Vanity URLs people type from a post or a breadcrumb (MISS-10, SEO-20,
+# D-28). Destinations are the ones the site already links to. No /privacy
+# until a Privacy Policy exists (SEC-01).
+/legal /legal/user-agreement 301
+/legal/ /legal/user-agreement 301
+/whitepaper https://docsend.com/view/4j6qvvrudyr6izyb 301
+/whitepaper/ https://docsend.com/view/4j6qvvrudyr6izyb 301
+/docs https://docs.blokcapital.io/en/concepts/blok-c-overview 301
+/docs/ https://docs.blokcapital.io/en/concepts/blok-c-overview 301
+/discord https://discord.com/invite/blokc 301
+/discord/ https://discord.com/invite/blokc 301
+/tokenomics /token 301
+/tokenomics/ /token 301
+/team /about#team 301
+/team/ /about#team 301
+/roadmap /about#roadmap 301
+/roadmap/ /about#roadmap 301
+/audits /security#audits 301
+/audits/ /security#audits 301
+
+# Index tickers as written in posts. Pages matches sources case-sensitively
+# (checked on the preview: /features redirects, /FEATURES 404s), so these
+# can't catch the lowercase pages and loop.
+/indices/BLOKC2 /indices/blokc2 301
+/indices/BLOKC5 /indices/blokc5 301
+/indices/BLOKC10 /indices/blokc10 301
