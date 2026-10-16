@@ -124,12 +124,18 @@ export function Nav() {
 
         <div className="hidden items-center gap-3 md:flex">
           <Button
-            variant="discord"
+            variant="primary"
             size="sm"
-            href="https://discord.com/invite/blokc"
+            href="https://blokc.app/"
           >
-            Join Discord
-            <svg width="12" height="12" viewBox="0 0 14 14" aria-hidden>
+            Launch App
+            <svg
+              width="12"
+              height="12"
+              viewBox="0 0 14 14"
+              aria-hidden
+              className="transition-transform duration-150 group-hover:translate-x-0.5 motion-reduce:transition-none motion-reduce:group-hover:translate-x-0"
+            >
               <path
                 d="M2 7 H11 M7 3 L11 7 L7 11"
                 stroke="currentColor"
@@ -238,13 +244,19 @@ export function Nav() {
           })}
           <li className="mt-5">
             <Button
-              variant="discord"
+              variant="primary"
               size="md"
-              href="https://discord.com/invite/blokc"
               className="w-full"
+              href="https://blokc.app/"
             >
-              Join Discord
-              <svg width="12" height="12" viewBox="0 0 14 14" aria-hidden>
+              Launch App
+              <svg
+                width="12"
+                height="12"
+                viewBox="0 0 14 14"
+                aria-hidden
+                className="transition-transform duration-150 group-hover:translate-x-0.5 motion-reduce:transition-none motion-reduce:group-hover:translate-x-0"
+              >
                 <path
                   d="M2 7 H11 M7 3 L11 7 L7 11"
                   stroke="currentColor"
