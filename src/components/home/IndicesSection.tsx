@@ -17,11 +17,7 @@ export function IndicesSection() {
       id="indices"
       tone="surface"
       eyebrow="The indices"
-      title={
-        <>
-          BLOKC2, BLOKC5, BLOKC10. <em className="text-sand">Open them up.</em>
-        </>
-      }
+      title="BLOKC2, BLOKC5, BLOKC10. Open them up."
       description="Three baskets with one rule: each token is weighted by its share of market cap, priced by Chainlink on Arbitrum."
       actions={
         <Button href="/indices" variant="secondary" data-cta="indices_compare">

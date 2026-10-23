@@ -57,6 +57,9 @@ type Props = {
   /** Element for a non-link card (default div). */
   as?: ElementType;
   id?: string;
+  /** Analytics hooks (lib/analytics.ts): a CTA id and where it sits. */
+  "data-cta"?: string;
+  "data-placement"?: string;
   className?: string;
   children: ReactNode;
 };
@@ -79,11 +82,13 @@ export function Card({
   "aria-labelledby": labelledBy,
   "aria-describedby": describedBy,
   id,
+  "data-cta": dataCta,
+  "data-placement": dataPlacement,
 }: Props) {
   const surface = cn("relative border", radii[radius], tones[tone], sizes[size]);
   if (!href) {
     return (
-      <El id={id} className={cn(surface, interactive && within, className)}>
+      <El id={id} data-cta={dataCta} data-placement={dataPlacement} className={cn(surface, interactive && within, className)}>
         {children}
       </El>
     );
@@ -96,6 +101,8 @@ export function Card({
     <Link
       href={href}
       id={id}
+      data-cta={dataCta}
+      data-placement={dataPlacement}
       target={external ? "_blank" : undefined}
       rel={external ? "noopener noreferrer" : undefined}
       aria-labelledby={labelledBy ? [labelledBy, noteId].filter(Boolean).join(" ") : undefined}

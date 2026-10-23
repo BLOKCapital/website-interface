@@ -67,7 +67,7 @@ export function RebalanceLab() {
   }, [verdict]);
 
   return (
-    <div className="rounded-3xl border border-line/[0.08] bg-card p-5 sm:p-7">
+    <div className="rounded-panel border border-subtle bg-card p-5 sm:p-7">
       <div className="flex flex-wrap items-center justify-between gap-3">
         <p className="text-small font-medium text-fg">A 1,000 USDC Garden following an 80/20 BTC–ETH index</p>
         <Badge tone="example">Example · numbers from the docs</Badge>
@@ -124,7 +124,7 @@ export function RebalanceLab() {
                   </span>
                 </span>
               </div>
-              <div className="relative mt-2 h-2.5 rounded-full bg-line/[0.07]">
+              <div className="relative mt-2 h-2.5 rounded-full bg-line/7">
                 {/* 2% tolerance band around the target */}
                 <span
                   aria-hidden
@@ -150,8 +150,8 @@ export function RebalanceLab() {
       <p
         aria-hidden
         className={cn(
-          "mt-7 rounded-2xl border px-4 py-3.5 text-small transition-colors duration-fast",
-          trades ? "border-caution/30 bg-caution/[0.07] text-fg" : "border-leaf/25 bg-leaf/[0.06] text-fg",
+          "mt-7 rounded-card border px-4 py-3.5 text-small transition-colors duration-fast",
+          trades ? "border-caution/30 bg-caution/7 text-fg" : "border-leaf/25 bg-leaf/6 text-fg",
         )}
       >
         {verdict}

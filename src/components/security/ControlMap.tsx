@@ -1,4 +1,4 @@
-import Link from "next/link";
+import { IntentLink } from "@/components/ui/IntentLink";
 import { Reveal } from "@/components/ui/Reveal";
 import { Icon } from "@/components/ui/Icon";
 import { actions, actors, custody, type Cell } from "./controls";
@@ -9,7 +9,7 @@ const draw = { fill: "none", stroke: "currentColor", strokeWidth: 1.6, strokeLin
 /** The padlock mark for "Your funds". */
 function Lock() {
   return (
-    <span aria-hidden className="grid size-14 shrink-0 place-items-center rounded-2xl border border-leaf/25 bg-leaf/[0.07] text-leaf">
+    <span aria-hidden className="grid size-14 shrink-0 place-items-center rounded-card border border-leaf/25 bg-leaf/7 text-leaf">
       <svg width="34" height="34" viewBox="0 0 48 48">
         <path d="M14 22h20v16H14z" {...draw} />
         <path d="M18 22v-5a6 6 0 0 1 12 0v5M24 29v3" {...draw} />
@@ -22,9 +22,8 @@ function Lock() {
 function SourceLink({ href, children, label, className }: { href: string; children: React.ReactNode; label: string; className?: string }) {
   const external = /^https?:\/\//.test(href);
   return (
-    <Link
+    <IntentLink
       href={href}
-      prefetch={false}
       target={external ? "_blank" : undefined}
       rel={external ? "noopener noreferrer" : undefined}
       className={cn("group/src rounded-xs transition-colors duration-fast", className)}
@@ -35,7 +34,7 @@ function SourceLink({ href, children, label, className }: { href: string; childr
         (source: {label}
         {external ? ", opens in a new tab" : ""})
       </span>
-    </Link>
+    </IntentLink>
   );
 }
 
@@ -80,7 +79,7 @@ export function ControlMap() {
     <div className="flex flex-col gap-5">
       {/* The headline guarantee, laid out wide so it isn't half empty (VIS-22). */}
       <Reveal>
-        <article className="theme-dark relative grid gap-6 overflow-hidden rounded-[28px] border border-leaf/20 bg-card p-7 sm:p-9 lg:grid-cols-12 lg:items-center lg:gap-10">
+        <article className="theme-dark relative grid gap-6 overflow-hidden rounded-panel border border-leaf/20 bg-card p-7 sm:p-9 lg:grid-cols-12 lg:items-center lg:gap-10">
           <div aria-hidden className="glow-leaf pointer-events-none absolute -right-24 -top-24 size-80 opacity-80" />
           <div aria-hidden className="grid-lines pointer-events-none absolute inset-0 opacity-50 [mask-image:radial-gradient(ellipse_at_80%_0%,black,transparent_70%)]" />
           <div className="relative flex items-center gap-5 lg:col-span-5">
@@ -128,7 +127,7 @@ export function ControlMap() {
               ))}
             </tr>
           </thead>
-          <tbody className="divide-y divide-line/[0.07]">
+          <tbody className="divide-y divide-subtle">
             {actors.map((actor) => (
               <tr key={actor.id} className="align-top">
                 <th scope="row" className="px-5 py-4 font-normal">
@@ -155,7 +154,7 @@ export function ControlMap() {
           <li key={actor.id} className="rounded-card border border-subtle bg-card p-5">
             <h3 className="text-ui font-medium text-fg">{actor.name}</h3>
             <p className="mt-1 text-caption text-fg-subtle">{actor.note}</p>
-            <dl className="mt-4 divide-y divide-line/[0.07] border-t border-subtle text-small">
+            <dl className="mt-4 divide-y divide-subtle border-t border-subtle text-small">
               {actions.map((a) => {
                 const cell = actor.cells[a.id];
                 return (

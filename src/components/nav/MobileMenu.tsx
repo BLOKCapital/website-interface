@@ -1,49 +1,52 @@
 "use client";
 
 import { useLayoutEffect, useRef, useState, type CSSProperties, type Ref } from "react";
-import Link from "next/link";
-import { navGroups, docsLink, securityLink, isCurrent, DISCORD_LABEL, type NavLink } from "@/lib/nav";
+import { IntentLink } from "@/components/ui/IntentLink";
+import { navGroups, docsLink, securityLink, isCurrent, appLink, type NavLink } from "@/lib/nav";
 import { indices } from "@/lib/data/indices";
 import { Button } from "@/components/ui/Button";
 import { SocialLinks } from "@/components/ui/SocialLinks";
-import { CrossIcon, DiscordIcon, ExternalIcon } from "@/components/ui/icons";
+import { CrossIcon, ExternalIcon } from "@/components/ui/icons";
 import { MotionToggle } from "@/components/system/MotionToggle";
 import { NavIcon } from "./NavIcons";
-import { social } from "@/lib/data/socials";
 import { cn } from "@/lib/utils";
 
 /** Stagger position for a sheet group (globals.css, "Mobile menu"). */
 const at = (i: number) => ({ "--i": i }) as CSSProperties;
 
-/** One row: icon, label and hint. Internal links close the sheet when tapped. */
+/**
+ * One row: icon, label and hint. Internal links close the sheet when tapped.
+ * IntentLink: opening the sheet would otherwise prefetch every route at once,
+ * and on a slow connection the one you tap waits behind the rest.
+ */
 function Row({ link, pathname, onPick }: { link: NavLink; pathname: string | null; onPick: () => void }) {
   const current = !link.href.includes("#") && isCurrent(link.href, pathname);
   return (
-    <Link
+    <IntentLink
       href={link.href}
       onClick={link.external ? undefined : onPick}
       target={link.external ? "_blank" : undefined}
       rel={link.external ? "noopener noreferrer" : undefined}
       aria-current={current ? "page" : undefined}
-      className="flex items-center gap-4 rounded-xl py-2.5"
+      className="flex items-center gap-4 rounded-control py-2.5"
     >
       <span
         className={cn(
-          "grid size-10 shrink-0 place-items-center rounded-xl border",
+          "grid size-10 shrink-0 place-items-center rounded-control border",
           current ? "border-leaf/40 bg-leaf/10 text-leaf" : "border-line/10 bg-card text-fg-muted",
         )}
       >
         <NavIcon href={link.href} />
       </span>
       <span className="min-w-0">
-        <span className={cn("display flex items-center gap-2 text-[24px] leading-tight", current ? "text-leaf" : "text-fg")}>
+        <span className={cn("display flex items-center gap-2 text-h3 leading-tight", current ? "text-leaf" : "text-fg")}>
           {link.label}
           {link.external && <ExternalIcon size={13} className="text-fg-subtle" />}
         </span>
         {link.hint && <span className="block text-caption text-fg-subtle [@media(max-height:500px)]:hidden">{link.hint}</span>}
       </span>
       {link.external && <span className="sr-only"> (opens in a new tab)</span>}
-    </Link>
+    </IntentLink>
   );
 }
 
@@ -56,7 +59,7 @@ function Row({ link, pathname, onPick }: { link: NavLink; pathname: string | nul
  *
  * - The links scroll in their own region, starting under the header row, and
  *   overscroll stays inside it.
- * - "Join the Discord" is pinned to the bottom edge, in the thumb zone, with
+ * - "Launch App" is pinned to the bottom edge, in the thumb zone, with
  *   a second close button beside it: the menu button sits outside the dialog,
  *   where aria-modal hides it from some screen readers.
  * - Internal links close the sheet as well as navigating, so a same-page or
@@ -106,14 +109,14 @@ export function MobileMenu({
       aria-modal="true"
       aria-label="Menu"
       inert={!open}
-      className={cn("mobile-sheet fixed inset-0 z-[49] flex flex-col bg-canvas lg:hidden", open && armed && "is-open")}
+      className={cn("mobile-sheet fixed inset-0 z-sheet flex flex-col bg-canvas lg:hidden", open && armed && "is-open")}
     >
       {mounted && (
         <>
           <div ref={inner} className="mt-16 min-h-0 flex-1 overflow-y-auto overscroll-contain sm:mt-[72px] [@media(max-height:500px)]:mt-[52px]">
-            <nav aria-label="Mobile" className="mx-auto max-w-page px-5 pb-8 pt-2 sm:grid sm:grid-cols-2 sm:gap-x-10 sm:px-8">
+            <nav aria-label="Mobile" className="mx-auto max-w-page px-gutter pb-8 pt-2 sm:grid sm:grid-cols-2 sm:gap-x-10">
               {navGroups.map((g, gi) => (
-                <div key={g.id} className="sheet-item border-t border-line/[0.08] py-5" style={at(gi)}>
+                <div key={g.id} className="sheet-item border-t border-subtle py-5" style={at(gi)}>
                   <p id={`sheet-${g.id}`} className="eyebrow">
                     {g.label}
                   </p>
@@ -129,7 +132,7 @@ export function MobileMenu({
                               const current = pathname === href;
                               return (
                                 <li key={x.id}>
-                                  <Link
+                                  <IntentLink
                                     href={href}
                                     onClick={onClose}
                                     aria-current={current ? "page" : undefined}
@@ -139,7 +142,7 @@ export function MobileMenu({
                                     )}
                                   >
                                     {x.name}
-                                  </Link>
+                                  </IntentLink>
                                 </li>
                               );
                             })}
@@ -150,25 +153,25 @@ export function MobileMenu({
                   </ul>
                 </div>
               ))}
-              <ul className="sheet-item border-t border-line/[0.08] py-5" style={at(navGroups.length)}>
+              <ul className="sheet-item border-t border-subtle py-5" style={at(navGroups.length)}>
                 {[securityLink, docsLink].map((l) => (
                   <li key={l.href}>
                     <Row link={l} pathname={pathname} onPick={onClose} />
                   </li>
                 ))}
               </ul>
-              <div className="sheet-item flex flex-wrap items-center justify-between gap-4 border-t border-line/[0.08] pt-6 sm:col-span-2" style={at(navGroups.length + 1)}>
-                <SocialLinks only={["x", "telegram", "farcaster", "github", "youtube"]} />
+              <div className="sheet-item flex flex-wrap items-center justify-between gap-4 border-t border-subtle pt-6 sm:col-span-2" style={at(navGroups.length + 1)}>
+                <SocialLinks only={["discord", "x", "telegram", "farcaster", "github", "youtube"]} />
                 <MotionToggle className="inline-flex h-10 items-center gap-2.5 rounded-full border border-line/12 px-4 text-small text-fg-muted transition-colors duration-fast before:size-2 before:rounded-full before:bg-line/30 hover:text-fg aria-pressed:border-leaf/40 aria-pressed:bg-leaf/10 aria-pressed:text-fg aria-pressed:before:bg-leaf" />
               </div>
             </nav>
           </div>
 
           {/* Pinned: the primary action stays in reach however far the links scroll. */}
-          <div className="shrink-0 border-t border-line/[0.08] bg-canvas px-5 py-3 sm:px-8">
+          <div className="shrink-0 border-t border-subtle bg-canvas px-5 py-3 sm:px-8">
             <div className="mx-auto flex max-w-page items-center gap-3">
-              <Button href={social("discord").href} data-placement="mobile_menu" size="lg" className="flex-1">
-                <DiscordIcon /> {DISCORD_LABEL}
+              <Button href={appLink.href} data-cta="nav_launch_app" data-placement="mobile_menu" size="lg" className="flex-1">
+                {appLink.label}
               </Button>
               <button
                 type="button"

@@ -101,7 +101,7 @@ const map: Record<Pillar["id"], React.FC> = {
 export function PillarIcon({ id }: { id: Pillar["id"] }) {
   const C = map[id];
   return (
-    <span className="grid size-12 shrink-0 place-items-center rounded-2xl border border-leaf/25 bg-leaf/[0.07] text-fg-muted [&_svg]:text-current">
+    <span className="grid size-12 shrink-0 place-items-center rounded-card border border-leaf/25 bg-leaf/7 text-fg-muted [&_svg]:text-current">
       <C />
     </span>
   );

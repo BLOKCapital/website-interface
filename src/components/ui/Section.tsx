@@ -1,6 +1,7 @@
 import { cn } from "@/lib/utils";
 import { SplitText } from "@/components/motion/SplitText";
 import { CornerMarks } from "@/components/motion/CornerMarks";
+import { Container } from "@/components/ui/Container";
 
 /**
  * Page section: full-bleed band (`tone`) around a centred container, with an
@@ -36,18 +37,19 @@ export function Section({
       id={id}
       data-band={tone === "dark" ? "dark" : undefined}
       className={cn(
-        "relative py-20 sm:py-24 lg:py-28",
-        tone === "surface" && "border-y border-line/[0.07] bg-surface",
+        "relative py-section",
+        tone === "surface" && "border-y border-subtle bg-surface",
         tone === "dark" && "theme-dark bg-canvas",
         className,
       )}
     >
       {tone !== "canvas" && <CornerMarks />}
-      <div className="mx-auto w-full max-w-page px-5 sm:px-8">
+      <Container>
         {(eyebrow || title || description) && (
           <header
             className={cn(
-              "mb-12 flex flex-col gap-6 sm:mb-14 lg:flex-row lg:items-end lg:justify-between",
+              "flex flex-col gap-6 lg:flex-row lg:items-end lg:justify-between",
+              children != null && "mb-header",
               align === "center" && "items-center text-center lg:flex-col lg:items-center",
             )}
           >
@@ -60,7 +62,7 @@ export function Section({
           </header>
         )}
         {children}
-      </div>
+      </Container>
     </section>
   );
 }

@@ -1,52 +1,59 @@
 import Image from "next/image";
-import { Section } from "@/components/ui/Section";
-import { Reveal, Stagger, RevealItem } from "@/components/ui/Reveal";
+import { Container } from "@/components/ui/Container";
+import { Stagger, RevealItem } from "@/components/ui/Reveal";
 import { ArrowLink } from "@/components/ui/ArrowLink";
-import { SocialLinks } from "@/components/ui/SocialLinks";
+import { CornerMarks } from "@/components/motion/CornerMarks";
+import { SplitText } from "@/components/motion/SplitText";
 import { team } from "@/lib/data/team";
+import { social } from "@/lib/data/socials";
 
-/** Who builds BLOK Capital and where to find them: the people and the community channels. */
+/**
+ * Who builds BLOK Capital, as a compact band: the people, then where to read
+ * their work. The community channels aren't repeated here; the CTA band and
+ * the footer below carry them.
+ */
 export function BuiltInOpen() {
   return (
-    <Section
-      id="builders"
-      tone="surface"
-      eyebrow="Who's building it"
-      title={
-        <>
-          A small team, <em className="text-sand">working in public.</em>
-        </>
-      }
-      description="The contracts, the rebalancing keeper, the docs and this website are all on GitHub. Read the code, and ask the people who wrote it in the Discord."
-    >
-      <div className="grid gap-5 lg:grid-cols-2">
-        <Reveal className="rounded-3xl border border-line/[0.08] bg-card p-6">
-          <p className="text-small font-medium text-fg">The people</p>
-          <Stagger as="ul" step={0.04} className="mt-4 flex flex-wrap gap-2">
+    <section id="builders" className="relative border-y border-subtle bg-surface py-section-sm">
+      <CornerMarks />
+      <Container className="grid gap-8 lg:grid-cols-12 lg:items-center lg:gap-12">
+        <div className="lg:col-span-6">
+          <p className="eyebrow">Who&apos;s building it</p>
+          <SplitText className="display mt-4 text-h2 text-balance text-fg">
+            A small team, working in public.
+          </SplitText>
+          <p className="mt-4 max-w-md text-ui text-fg-muted">
+            The contracts, the rebalancing keeper, the docs and this website are all on GitHub. Read the code, and ask the
+            people who wrote it in the Discord.
+          </p>
+        </div>
+        <div className="lg:col-span-6">
+          <Stagger as="ul" step={0.04} aria-label="The team" className="flex flex-wrap -space-x-3">
             {team.map((m) => (
               <RevealItem as="li" key={m.name}>
                 {m.image ? (
-                  <Image src={m.image.replace(/\.webp$/, "-96.webp")} alt={m.name} title={m.name} width={44} height={44} className="size-11 rounded-full border border-line/10 object-cover" />
+                  <Image
+                    src={m.image.replace(/\.webp$/, "-96.webp")}
+                    alt={m.name}
+                    title={m.name}
+                    width={48}
+                    height={48}
+                    className="size-10 rounded-full object-cover ring-2 ring-surface sm:size-12"
+                  />
                 ) : (
-                  <span className="grid size-11 place-items-center rounded-full bg-raised text-caption text-fg-muted" title={m.name}>
+                  <span className="grid size-10 place-items-center rounded-full bg-raised text-caption text-fg-muted ring-2 ring-surface sm:size-12" title={m.name}>
                     {m.initials}
                   </span>
                 )}
               </RevealItem>
             ))}
           </Stagger>
-          <ArrowLink href="/about#team" className="mt-5">
-            Meet the team and read the story
-          </ArrowLink>
-        </Reveal>
-        <Reveal delay={0.06} className="rounded-3xl border border-line/[0.08] bg-card p-6">
-          <p className="text-small font-medium text-fg">The community</p>
-          <p className="mt-2 text-small text-fg-muted">
-            The Discord is where testing feedback, support and security reports go. Everything else is announced on X first.
-          </p>
-          <SocialLinks className="mt-5" />
-        </Reveal>
-      </div>
-    </Section>
+          <div className="mt-6 flex flex-wrap gap-x-6 gap-y-2">
+            <ArrowLink href="/about#team">Meet the team and read the story</ArrowLink>
+            <ArrowLink href={social("github").href}>Read the code on GitHub</ArrowLink>
+          </div>
+        </div>
+      </Container>
+    </section>
   );
 }

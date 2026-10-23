@@ -1,4 +1,4 @@
-import Link from "next/link";
+import { IntentLink } from "@/components/ui/IntentLink";
 import type { ReactNode } from "react";
 import { Section } from "@/components/ui/Section";
 import { Button } from "@/components/ui/Button";
@@ -43,7 +43,7 @@ export function SecurityPillars({ children }: { children?: ReactNode }) {
     >
       <Stagger
         as="ul"
-        className="focus-inset grid gap-px overflow-hidden rounded-card border border-subtle bg-line/[0.08] sm:grid-cols-2 lg:grid-cols-3"
+        className="focus-inset grid gap-px overflow-hidden rounded-card border border-subtle bg-line/8 sm:grid-cols-2 lg:grid-cols-3"
       >
         {pillars.map((p) => {
           const external = p.href?.startsWith("http") ?? false;
@@ -82,9 +82,8 @@ export function SecurityPillars({ children }: { children?: ReactNode }) {
             // A RevealItem that also carries the analytics id for its link.
             <li key={p.id} data-reveal-item="" data-cta={`pillar_${p.id.replace(/-/g, "_")}`} suppressHydrationWarning className="bg-canvas">
               {p.href ? (
-                <Link
+                <IntentLink
                   href={p.href}
-                  prefetch={false}
                   target={external ? "_blank" : undefined}
                   rel={external ? "noopener noreferrer" : undefined}
                   aria-labelledby={named}
@@ -97,7 +96,7 @@ export function SecurityPillars({ children }: { children?: ReactNode }) {
                       (opens in a new tab)
                     </span>
                   )}
-                </Link>
+                </IntentLink>
               ) : (
                 <div className="h-full p-7">{inner}</div>
               )}

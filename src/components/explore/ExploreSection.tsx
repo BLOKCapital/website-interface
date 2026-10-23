@@ -94,11 +94,7 @@ export function ExploreSection() {
     <Section
       id="explore"
       eyebrow="Explore the protocol"
-      title={
-        <>
-          From your signature <em className="text-sand">to the DAO.</em>
-        </>
-      }
+      title="From your signature to the DAO."
       description="Six layers, top to bottom. Each one tells you what it does and what actually happens on-chain, with a link to the source."
     >
       <Reveal>

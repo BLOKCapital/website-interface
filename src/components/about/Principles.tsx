@@ -42,22 +42,22 @@ export function Principles({ items }: { items: Principle[] }) {
     <Stagger as="ul" step={0.1} className="grid gap-5 sm:grid-cols-2 lg:grid-cols-4">
       {items.map((v, i) => (
         <RevealItem as="li" key={v.title} className="h-full">
-          <article className="group/p relative flex h-full flex-col overflow-hidden rounded-[24px] border border-line/[0.08] bg-card p-7 transition-[border-color,transform] duration-base ease-expo hover:-translate-y-1 hover:border-leaf/30">
+          <article className="group/p relative flex h-full flex-col overflow-hidden rounded-panel border border-subtle bg-card p-7 transition-[border-color,transform] duration-base ease-expo hover:-translate-y-1 hover:border-leaf/30">
             {/* Decorative numeral, drawn from CSS so it isn't text: axe doesn't
                 contrast-check pseudo-element content (A11Y-15). */}
             <span
               aria-hidden
               data-n={String(i + 1).padStart(2, "0")}
-              className="pointer-events-none absolute -right-2 -top-6 font-mono text-[96px] leading-none text-line/[0.05] transition-colors duration-base before:content-[attr(data-n)] group-hover/p:text-leaf/10"
+              className="pointer-events-none absolute -right-2 -top-6 font-mono text-[96px] leading-none text-line/5 transition-colors duration-base before:content-[attr(data-n)] group-hover/p:text-leaf/10"
             />
-            <span aria-hidden className="relative grid size-14 place-items-center rounded-2xl border border-leaf/25 bg-leaf/[0.07] text-leaf">
+            <span aria-hidden className="relative grid size-14 place-items-center rounded-card border border-leaf/25 bg-leaf/7 text-leaf">
               <svg width="34" height="34" viewBox="0 0 48 48">
                 {marks[i % marks.length]}
               </svg>
             </span>
             <h3 className="display relative mt-8 text-h3 text-fg">{v.title}</h3>
-            <p className="relative mt-3 flex-1 text-[15px] text-fg-muted">{v.body}</p>
-            <p className="relative mt-7 inline-flex items-center gap-2 self-start rounded-full border border-leaf/25 bg-leaf/[0.06] px-3 py-1 font-mono text-[11px] uppercase tracking-[0.1em] text-leaf">
+            <p className="relative mt-3 flex-1 text-ui text-fg-muted">{v.body}</p>
+            <p className="relative mt-7 inline-flex items-center gap-2 self-start rounded-full border border-leaf/25 bg-leaf/6 px-3 py-1 font-mono text-label uppercase tracking-[0.1em] text-leaf">
               <span aria-hidden className="size-1.5 rounded-full bg-leaf" />
               {v.where}
             </p>

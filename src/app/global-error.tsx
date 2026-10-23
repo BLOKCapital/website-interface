@@ -20,7 +20,7 @@ const fonts = {
 } as React.CSSProperties;
 
 const pill =
-  "inline-flex h-11 items-center justify-center rounded-full px-5 text-[14.5px] font-medium transition-colors duration-fast";
+  "inline-flex h-11 items-center justify-center rounded-full px-5 text-small font-medium transition-colors duration-fast";
 
 export default function GlobalError({ error, reset }: { error: Error & { digest?: string }; reset: () => void }) {
   const heading = useRef<HTMLHeadingElement>(null);

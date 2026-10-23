@@ -70,11 +70,7 @@ export function Glossary() {
     <Section
       id="glossary"
       eyebrow="Glossary"
-      title={
-        <>
-          Six words, <em className="text-sand">defined once.</em>
-        </>
-      }
+      title="Six words, defined once."
       description="The terms this page leans on. Each one's first mention above links here."
     >
       <Reveal>

@@ -1,4 +1,4 @@
-import Link from "next/link";
+import { IntentLink } from "@/components/ui/IntentLink";
 import { Logo } from "@/components/ui/Logo";
 import { Badge } from "@/components/ui/Badge";
 import { Container } from "@/components/ui/Container";
@@ -96,9 +96,9 @@ function FooterLink({ href, label, file }: Item) {
   // No viewport prefetch: the footer links every route, and prefetching all
   // of them cost ~165 kB per page view (PERF-07).
   return (
-    <Link href={href} prefetch={false} className={itemCls}>
+    <IntentLink href={href} className={itemCls}>
       {label}
-    </Link>
+    </IntentLink>
   );
 }
 
@@ -119,10 +119,11 @@ export function Footer() {
         </div>
         <CornerMarks only="bottom" />
         <Container className="relative py-section-sm">
-          <p className="display max-w-3xl text-h1 text-fg">
+          {/* A sign-off, not a second hero: smaller than the CTA band above it, so the band reads as the page's one ending. */}
+          <p className="display max-w-3xl text-display-md text-fg">
             It&apos;s crypto, <em className="text-sand">but different.</em>
           </p>
-          <p className="mt-6 flex flex-wrap gap-x-3 gap-y-1 font-mono text-label uppercase tracking-eyebrow text-fg-subtle">
+          <p className="mt-6 flex flex-wrap gap-x-3 gap-y-1 label-caps">
             {["Your keys", "Your address", "Every move on-chain"].map((t, i) => (
               <span key={t} className="whitespace-nowrap">
                 {i > 0 && <span aria-hidden className="mr-3 text-leaf/60">·</span>}

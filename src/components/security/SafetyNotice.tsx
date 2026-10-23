@@ -1,4 +1,4 @@
-import Link from "next/link";
+import { IntentLink } from "@/components/ui/IntentLink";
 import { Icon } from "@/components/ui/Icon";
 import { cn } from "@/lib/utils";
 
@@ -21,13 +21,12 @@ export function SafetyNotice({ className }: { className?: string }) {
       <p className="text-small text-fg-muted">
         <strong className="font-medium text-fg">{"Stay safe. "}</strong>
         {"The BLOK Capital team will never DM you first, and never asks for your seed phrase, private keys or Google login, or for you to sign a transaction or ‘verify’ a wallet. Support happens only in tickets inside our Discord server. "}
-        <Link
+        <IntentLink
           href="/security#official"
-          prefetch={false}
           className="rounded-xs font-medium text-leaf underline decoration-leaf/40 underline-offset-[3px] transition-colors duration-fast can-hover:hover:decoration-leaf"
         >
           Official links are listed here.
-        </Link>
+        </IntentLink>
       </p>
     </div>
   );

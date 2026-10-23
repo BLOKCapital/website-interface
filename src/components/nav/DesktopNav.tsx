@@ -36,18 +36,18 @@ function Panel({ group, pathname, onPick }: { group: NavGroup; pathname: string 
                 target={l.external ? "_blank" : undefined}
                 rel={l.external ? "noopener noreferrer" : undefined}
                 aria-current={current ? "page" : undefined}
-                className="group/nl flex items-start gap-4 rounded-2xl p-4 transition-colors duration-fast hover:bg-line/[0.05] focus-visible:bg-line/[0.05]"
+                className="group/nl flex items-start gap-4 rounded-card p-4 transition-colors duration-fast hover:bg-line/5 focus-visible:bg-line/5"
               >
                 <span
                   className={cn(
-                    "grid size-11 shrink-0 place-items-center rounded-xl border transition-colors duration-fast",
+                    "grid size-11 shrink-0 place-items-center rounded-control border transition-colors duration-fast",
                     current ? "border-leaf/40 bg-leaf/10 text-leaf" : "border-line/10 bg-canvas text-fg-muted group-hover/nl:text-leaf",
                   )}
                 >
                   <NavIcon href={l.href} size={20} />
                 </span>
                 <span className="min-w-0 pt-0.5">
-                  <span className="flex items-center gap-1.5 text-[16px] font-medium text-fg">
+                  <span className="flex items-center gap-1.5 text-body font-medium text-fg">
                     {l.label}
                     {l.external && <ExternalIcon size={10} className="text-fg-subtle" />}
                     {current && <span className="size-1.5 rounded-full bg-leaf" aria-hidden />}
@@ -252,7 +252,7 @@ export function DesktopNav({ pathname }: { pathname: string | null }) {
         <li
           aria-hidden
           className={cn(
-            "pointer-events-none absolute inset-y-0 rounded-full bg-line/[0.07] transition-[transform,width,opacity] duration-base ease-expo",
+            "pointer-events-none absolute inset-y-0 rounded-full bg-line/7 transition-[transform,width,opacity] duration-base ease-expo",
             hover ? "opacity-100" : "opacity-0",
           )}
           style={{ width: hover?.width ?? 0, transform: `translateX(${hover?.left ?? 0}px)` }}
@@ -278,7 +278,7 @@ export function DesktopNav({ pathname }: { pathname: string | null }) {
                 onKeyDown={(e) => onTriggerKey(e, g.id)}
                 onFocus={() => onItemFocus(g.id)}
                 className={cn(
-                  "relative inline-flex items-center gap-1.5 rounded-full px-3.5 py-2 text-[14.5px] transition-colors duration-fast",
+                  "relative inline-flex items-center gap-1.5 rounded-full px-3.5 py-2 text-small transition-colors duration-fast",
                   on || here ? "text-fg" : "text-fg-muted hover:text-fg",
                 )}
               >
@@ -304,7 +304,7 @@ export function DesktopNav({ pathname }: { pathname: string | null }) {
             onPointerLeave={() => !open && setHover(null)}
             onFocus={() => onItemFocus("security")}
             className={cn(
-              "relative inline-flex items-center rounded-full px-3.5 py-2 text-[14.5px] transition-colors duration-fast",
+              "relative inline-flex items-center rounded-full px-3.5 py-2 text-small transition-colors duration-fast",
               securityHere ? "text-fg" : "text-fg-muted hover:text-fg",
             )}
           >
@@ -327,7 +327,7 @@ export function DesktopNav({ pathname }: { pathname: string | null }) {
             }}
             onPointerLeave={() => !open && setHover(null)}
             onFocus={() => onItemFocus("docs")}
-            className="relative inline-flex items-center gap-1 rounded-full px-3.5 py-2 text-[14.5px] text-fg-muted transition-colors duration-fast hover:text-fg"
+            className="relative inline-flex items-center gap-1 rounded-full px-3.5 py-2 text-small text-fg-muted transition-colors duration-fast hover:text-fg"
           >
             {docsLink.label}
             <ExternalIcon size={11} className="opacity-60" />
@@ -343,7 +343,7 @@ export function DesktopNav({ pathname }: { pathname: string | null }) {
         onKeyDown={onPanelKey}
         inert={!open}
         className={cn(
-          "absolute top-full mt-3 origin-top overflow-hidden rounded-3xl border border-line/12 bg-card shadow-[0_32px_80px_-24px_rgb(var(--shadow))]",
+          "absolute top-full mt-3 origin-top overflow-hidden rounded-panel border border-line/12 bg-card shadow-e3",
           "transition-[transform,width,height,opacity,filter] duration-base ease-expo",
           open ? "opacity-100 blur-0" : "pointer-events-none opacity-0 blur-[2px]",
         )}

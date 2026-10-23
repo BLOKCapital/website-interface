@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useRef, useState, type ReactNode } from "react";
-import { GardenMock } from "./how/GardenMock";
+import { OpenGardenMachine } from "@/components/iso/OpenGardenMachine";
 import { ArrowLink } from "@/components/ui/ArrowLink";
 import { LG_QUERY, useMediaQuery } from "@/lib/explainers";
 import { cn } from "@/lib/utils";
@@ -24,7 +24,7 @@ function Callout({ on, className, children }: { on: boolean; className: string; 
   return (
     <p
       className={cn(
-        "absolute right-0 hidden w-[180px] rounded-2xl border border-line/10 bg-card px-3.5 py-2.5 text-[11.5px] leading-snug text-fg-muted shadow-[0_16px_40px_-20px_rgb(var(--shadow))] transition-[opacity,transform] duration-slow ease-expo xl:block",
+        "absolute right-0 hidden w-[180px] rounded-card border border-line/10 bg-card px-3.5 py-2.5 text-label leading-snug text-fg-muted shadow-e2 transition-[opacity,transform] duration-slow ease-expo xl:block",
         on ? "translate-y-0 opacity-100" : "translate-y-2 opacity-0",
         className,
       )}
@@ -112,7 +112,7 @@ export function HowItWorksScroller({ steps }: { steps: ScrollStep[] }) {
               >
                 <span
                   className={cn(
-                    "relative z-10 inline-flex size-11 items-center justify-center rounded-full border font-mono text-[13px] transition-[background-color,color,box-shadow,border-color] duration-base",
+                    "relative z-raised inline-flex size-11 items-center justify-center rounded-full border font-mono text-caption transition-[background-color,color,box-shadow,border-color] duration-base",
                     on
                       ? "border-leaf bg-leaf text-canvas shadow-[0_0_0_7px_rgb(var(--leaf)/0.12)]"
                       : "border-leaf/35 bg-surface text-leaf",
@@ -121,14 +121,14 @@ export function HowItWorksScroller({ steps }: { steps: ScrollStep[] }) {
                   {String(i + 1).padStart(2, "0")}
                 </span>
                 <div className="min-w-0 pt-1">
-                  <p className="font-mono text-[11px] uppercase tracking-[0.14em] text-fg-subtle">
+                  <p className="label-caps">
                     Step {i + 1} of {steps.length}
                   </p>
                   <h3 className={cn("display mt-2 text-h3 transition-colors duration-slow", dim ? "text-fg-muted" : "text-fg")}>{s.title}</h3>
-                  <p className={cn("mt-3 text-[15.5px] leading-relaxed transition-colors duration-slow", dim ? "text-fg-subtle" : "text-fg-muted")}>
+                  <p className={cn("mt-3 text-ui leading-relaxed transition-colors duration-slow", dim ? "text-fg-subtle" : "text-fg-muted")}>
                     {s.body}
                   </p>
-                  <p className="mt-4 inline-flex rounded-full border border-line/12 bg-card/70 px-3 py-1 font-mono text-[11px] text-fg-muted">
+                  <p className="mt-4 inline-flex rounded-full border border-line/12 bg-card/70 px-3 py-1 font-mono text-label text-fg-muted">
                     {s.chain}
                   </p>
                 </div>
@@ -137,7 +137,7 @@ export function HowItWorksScroller({ steps }: { steps: ScrollStep[] }) {
           })}
         </ol>
         {/* Below lg: one still Garden, full width, where the three steps end up. */}
-        {!wide && <GardenMock stage={2} animate={false} className="mb-12 lg:hidden" />}
+        {!wide && <OpenGardenMachine stage={2} animate={false} className="mb-12 lg:hidden" />}
         <p className="pl-16">
           <ArrowLink href="/protocol">The full protocol</ArrowLink>
         </p>
@@ -145,7 +145,7 @@ export function HowItWorksScroller({ steps }: { steps: ScrollStep[] }) {
 
       <div className="hidden lg:col-span-7 lg:block">
         <div className="sticky top-28">
-          <div className="relative overflow-hidden rounded-[32px] border border-line/[0.08] bg-canvas/70 px-6 pb-6 pt-6 xl:px-8">
+          <div className="relative overflow-hidden rounded-panel border border-subtle bg-canvas/70 px-6 pb-6 pt-6 xl:px-8">
             <div aria-hidden className="grid-lines pointer-events-none absolute inset-0 [mask-image:radial-gradient(ellipse_at_center,black,transparent_75%)]" />
             {/* Progress through the three steps */}
             <div aria-hidden className="relative flex gap-3">
@@ -159,7 +159,7 @@ export function HowItWorksScroller({ steps }: { steps: ScrollStep[] }) {
                   </div>
                   <p
                     className={cn(
-                      "mt-2 font-mono text-[11px] uppercase tracking-[0.14em] transition-colors duration-fast",
+                      "mt-2 font-mono text-label uppercase tracking-eyebrow transition-colors duration-fast",
                       i === stage ? "text-leaf" : "text-fg-subtle",
                     )}
                   >
@@ -171,7 +171,7 @@ export function HowItWorksScroller({ steps }: { steps: ScrollStep[] }) {
             {/* Mounted from lg only, after hydration (the still one serves phones). */}
             {wide && (
               <div className="relative mt-8">
-                <GardenMock stage={stage} className="xl:ml-0" />
+                <OpenGardenMachine stage={stage} />
                 {steps.map((s, i) => (
                   <Callout key={s.tag} on={i === stage} className={["top-[72px]", "top-[46%]", "bottom-[118px]"][i]}>
                     {s.callout}

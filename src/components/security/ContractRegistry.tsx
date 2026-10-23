@@ -128,7 +128,7 @@ export function ContractRegistry() {
               ))}
             </tr>
           </thead>
-          <tbody className="divide-y divide-line/[0.07]">
+          <tbody className="divide-y divide-subtle">
             {registry.map((row) => (
               <tr key={row.id} className="align-top">
                 <th scope="row" className="px-5 py-4 font-normal">

@@ -128,7 +128,7 @@ export const BasketOrbit = memo(function BasketOrbit({
                 </span>
                 <span
                   className={cn(
-                    "absolute left-1/2 top-full mt-1 -translate-x-1/2 whitespace-nowrap rounded bg-card/85 px-1 font-mono text-[11px] tracking-wide transition-colors duration-fast",
+                    "absolute left-1/2 top-full mt-1 -translate-x-1/2 whitespace-nowrap rounded bg-card/85 px-1 font-mono text-label tracking-wide transition-colors duration-fast",
                     on ? "text-leaf" : "text-fg-subtle",
                   )}
                 >
@@ -143,13 +143,13 @@ export const BasketOrbit = memo(function BasketOrbit({
         <div className="absolute left-1/2 top-1/2 flex aspect-square w-[27%] -translate-x-1/2 -translate-y-1/2 flex-col items-center justify-center rounded-full border border-leaf/35 bg-raised/90 text-center shadow-[0_0_0_8px_rgb(var(--leaf)/0.06)] backdrop-blur-sm">
           <span key={index.id} className={cn("block", picked && "animate-fade-in")}>
             <span className="block font-mono text-[clamp(12px,1.4vw,16px)] font-medium tracking-wide text-fg">{index.name}</span>
-            <span className="mt-0.5 block text-[11px] text-fg-subtle">{index.components.length} tokens</span>
+            <span className="mt-0.5 block text-label text-fg-subtle">{index.components.length} tokens</span>
           </span>
         </div>
 
       </div>
       {subset && (
-        <p className="mt-5 flex flex-wrap items-center justify-center gap-x-4 gap-y-1 text-[11px] text-fg-subtle">
+        <p className="mt-5 flex flex-wrap items-center justify-center gap-x-4 gap-y-1 text-label text-fg-subtle">
           <span className="inline-flex items-center gap-1.5">
             <span className="size-2 rounded-full border border-line/40" /> Inner ring: all of {subset.name}
           </span>

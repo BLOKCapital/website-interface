@@ -1,4 +1,4 @@
-import Link from "next/link";
+import { IntentLink } from "@/components/ui/IntentLink";
 import type { ReactNode } from "react";
 import { Button } from "@/components/ui/Button";
 import { PlusIcon } from "@/components/ui/icons";
@@ -16,7 +16,7 @@ export type FaqItem = {
    * links here and read as their text elsewhere.
    */
   answer: string;
-  /** A next step under the answer, e.g. Join the Discord (CRO-11). */
+  /** A next step under the answer, e.g. Launch App (CRO-11). */
   cta?: { label: string; href: string };
 };
 
@@ -42,9 +42,9 @@ function renderAnswer(answer: string): ReactNode[] {
       );
     } else {
       out.push(
-        <Link key={at} href={href} prefetch={false} className={linkCls}>
+        <IntentLink key={at} href={href} className={linkCls}>
           {text}
-        </Link>,
+        </IntentLink>,
       );
     }
     last = at + whole.length;
@@ -66,7 +66,7 @@ export function FaqList({ items, className }: { items: FaqItem[]; className?: st
         {items.map((f, i) => (
           <li key={f.question}>
             <details className="smooth group">
-              <summary className="flex cursor-pointer list-none items-center justify-between gap-6 py-5 text-left text-[17px] font-medium text-fg transition-colors duration-fast can-hover:hover:text-leaf [&::-webkit-details-marker]:hidden">
+              <summary className="flex cursor-pointer list-none items-center justify-between gap-6 py-5 text-left text-lead font-medium text-fg transition-colors duration-fast can-hover:hover:text-leaf [&::-webkit-details-marker]:hidden">
                 <span className="flex items-baseline gap-4">
                   <span aria-hidden className="w-6 shrink-0 font-mono text-label text-fg-subtle tabular transition-colors group-open:text-leaf">
                     {String(i + 1).padStart(2, "0")}

@@ -1,0 +1,117 @@
+/*
+ * Motion for the isometric protocol scenes (components/iso). A CSS module,
+ * so it ships only with the pages that show a scene, not in the global
+ * stylesheet.
+ *
+ * Each scene plays once, in under 5 s, and settles (D-33). Moving parts are
+ * HTML layers moved with transform and opacity only (MOT-03). The base style
+ * of every part is its resting place, which is the still frame shown under
+ * reduced motion and Pause motion (the global rule ends every animation at
+ * once). Scenes carry data-loop and .art-tile, so they wait, paused, until
+ * they're on screen (globals.css, "Off-screen pausing", "Product tiles").
+ * Text only ever steps in or out (step-end), never part-transparent.
+ *
+ * Per-part timing and paths come in as custom properties: --delay, --dur,
+ * and --fx/--fy (start offset), --mx/--my (mid point), --bx/--by (furthest
+ * point of a bounce), all in % of the part's own box (geometry.ts `offset`).
+ */
+
+/* An arc from --fx/--fy, up through --mx/--my, down to its resting place. */
+.hop {
+  animation: isoHop var(--dur, 900ms) var(--ease-inout) var(--delay, 0ms) both;
+}
+@keyframes isoHop {
+  0% {
+    transform: translate3d(var(--fx), var(--fy), 0);
+  }
+  50% {
+    transform: translate3d(var(--mx), var(--my), 0);
+  }
+}
+
+/* Out to --bx/--by, a beat against the wall, and back home. */
+.bounce {
+  animation: isoBounce var(--dur, 1000ms) var(--ease-inout) var(--delay, 0ms) both;
+}
+@keyframes isoBounce {
+  42%,
+  52% {
+    transform: translate3d(var(--bx), var(--by), 0);
+  }
+  47% {
+    transform: translate3d(calc(var(--bx) * 1.04), calc(var(--by) * 1.04), 0);
+  }
+}
+
+/* Away along a path to --tx/--ty, then gone: a coin leaving through an open gate. Rests hidden at the end. */
+.exit {
+  animation: isoExit var(--dur, 1400ms) var(--ease-inout) var(--delay, 0ms) both;
+}
+@keyframes isoExit {
+  85% {
+    transform: translate3d(var(--tx), var(--ty), 0);
+    opacity: 1;
+  }
+  100% {
+    transform: translate3d(var(--tx), var(--ty), 0);
+    opacity: 0;
+  }
+}
+
+/* A mark that pops in when something hits it, and stays. */
+.pop {
+  animation: isoPop 360ms var(--ease-expo) var(--delay, 0ms) both;
+}
+@keyframes isoPop {
+  from {
+    transform: translate(-50%, -50%) scale(0.4);
+    opacity: 0;
+  }
+  60% {
+    transform: translate(-50%, -50%) scale(1.15);
+    opacity: 1;
+  }
+}
+
+/* A lamp that lights at its moment (the delay is set inline), and stays lit. */
+.lampOn {
+  animation: isoLamp 200ms var(--ease-out) both;
+}
+@keyframes isoLamp {
+  from {
+    opacity: 0;
+  }
+}
+
+/* SVG-internal motions (offsets in user units, set inline as --h). */
+
+/* Liquid rising inside its glass: starts below the clip, slides up into place. */
+.rise {
+  animation: isoRise 700ms var(--ease-out) both;
+}
+@keyframes isoRise {
+  from {
+    transform: translate(0, var(--h));
+  }
+}
+
+/* A card dropping into a slot from above. */
+.drop {
+  animation: isoDrop 520ms var(--ease-expo) both;
+}
+@keyframes isoDrop {
+  from {
+    transform: translate(0, var(--h));
+    opacity: 0;
+  }
+}
+
+/* Out, and stays out: the state a step replaces. */
+.fadeOut {
+  animation: isoFadeOut 220ms var(--ease-out) both;
+}
+@keyframes isoFadeOut {
+  to {
+    opacity: 0;
+  }
+}

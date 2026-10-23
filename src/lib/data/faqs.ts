@@ -1,4 +1,4 @@
-import { social } from "./socials";
+import { links, social } from "./socials";
 
 export type Faq = {
   question: string;
@@ -30,10 +30,10 @@ export const faqs: Faq[] = [
       "You do. Your Garden is a smart-contract wallet at your own address. A strategy can rebalance inside it, but only you can move funds out: not BLOK Capital, and not a manager you follow.",
   },
   {
-    // Same message as lib/announce.ts, the CTA band and protocolStatus.label.
+    // Same message as lib/announce.ts, the StatusLine and the CTA band.
     question: "When can I use it?",
     answer:
-      "Not yet. Gardens are in private testing and open to the public after testing. Join the Discord to hear first.",
+      "Not for everyone yet. The app is in private testing and open to testers first; Gardens open to the public after testing. Launch news goes out on X and in the Discord.",
     cta: { label: "Join the Discord", href: discord },
   },
   {
@@ -50,8 +50,8 @@ export const faqs: Faq[] = [
     // The steps are the home page's How it works, in order.
     question: "How do I get started?",
     answer:
-      "Once Gardens open: sign in with Google (no seed phrase) or your own wallet to open a Garden, fund it with USDC by card or bank or with crypto you already hold, then choose an index to follow. BLOK Capital is in private testing until then, so join the Discord to hear first when Gardens open.",
-    cta: { label: "Join the Discord", href: discord },
+      "Once Gardens open: sign in with Google (no seed phrase) or your own wallet to open a Garden, fund it with USDC by card or bank or with crypto you already hold, then choose an index to follow. The app is in private testing until then and open to testers first.",
+    cta: { label: "Launch App", href: links.app },
   },
   {
     question: "Do I need a seed phrase?",

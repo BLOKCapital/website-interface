@@ -5,16 +5,15 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { Logo } from "@/components/ui/Logo";
 import { Button } from "@/components/ui/Button";
-import { DiscordIcon } from "@/components/ui/icons";
 import { AnnouncementBar } from "./AnnouncementBar";
 import { DesktopNav } from "./DesktopNav";
 import { MobileMenu } from "./MobileMenu";
-import { social } from "@/lib/data/socials";
-import { DISCORD_LABEL } from "@/lib/nav";
+import { appLink } from "@/lib/nav";
 import { useScrolled } from "@/lib/hooks";
 import { useOverDarkBand } from "@/lib/dark-band";
 import { prefersReducedMotion } from "@/lib/motion";
 import { cn } from "@/lib/utils";
+import { Container } from "@/components/ui/Container";
 
 const FOCUSABLE = "a[href], button:not([disabled]), [tabindex]:not([tabindex='-1'])";
 /** The desktop nav takes over here; the sheet and its button are hidden. */
@@ -27,12 +26,12 @@ const SHORT = "(max-height: 500px)";
  * scroll, a floating frosted pill fades in behind it and the announcement
  * bar folds away. The row's height never changes (MOT-10): only the pill's
  * opacity and scale and the logo's scale animate. It sits on the page's
- * container, so the logo and the Discord button line up with the content
+ * container, so the logo and the app button line up with the content
  * below. Clicking the logo on the home page glides back to the top. Over a
  * dark band it turns dark with it. Desktop menus live in DesktopNav.
  *
- * Phones (< 640 px) get no announcement bar; an icon-only Discord button
- * (44 px) sits beside the menu button instead, at every scroll position
+ * Phones (< 640 px) get no announcement bar; a compact "App" button
+ * (44 px tall) sits beside the menu button instead, at every scroll position
  * (D-05). Short viewports get a 52 px row that hides on scroll-down.
  *
  * Below lg the menu button opens MobileMenu, a modal sheet (A11Y-02):
@@ -192,7 +191,7 @@ export function Nav() {
       >
         <AnnouncementBar collapsed={scrolled || open} onDismiss={() => logoRef.current?.focus()} />
 
-        <div className="mx-auto w-full max-w-page px-5 sm:px-8">
+        <Container>
           {/* A fixed-height row: scrolling never changes the layout, only the
               pill surface behind it fades and scales in (MOT-10). */}
           <div className="relative flex h-16 items-center justify-between gap-4 sm:h-[72px] [@media(max-height:500px)]:h-[52px]">
@@ -201,7 +200,7 @@ export function Nav() {
             <div
               aria-hidden
               className={cn(
-                "pointer-events-none absolute -inset-x-3 inset-y-1 rounded-lg border border-line/10 bg-canvas/[0.92] shadow-[0_14px_40px_-24px_rgb(var(--shadow))] backdrop-blur-xl sm:-inset-x-5 sm:inset-y-2 [@media(max-height:500px)]:inset-y-0",
+                "pointer-events-none absolute -inset-x-3 inset-y-1 rounded-lg border border-line/10 bg-canvas/[0.92] shadow-e2 backdrop-blur-xl sm:-inset-x-5 sm:inset-y-2 [@media(max-height:500px)]:inset-y-0",
                 "transition-[opacity,transform] duration-base ease-out",
                 scrolled ? "scale-100 opacity-100" : "scale-[0.98] opacity-0",
               )}
@@ -215,26 +214,35 @@ export function Nav() {
 
             <DesktopNav pathname={pathname} />
 
-            {/* While the sheet is open its pinned bar carries Discord; these
-                stay in place (invisible) so the close button doesn't move. */}
+            {/* While the sheet is open its pinned bar carries the app link;
+                these stay in place (invisible) so the close button doesn't move. */}
             <div className="relative flex items-center gap-2">
-              <Button href={social("discord").href} data-placement="header" size="sm" className={cn("hidden sm:inline-flex", open && "invisible")}>
-                <DiscordIcon size={15} /> {DISCORD_LABEL}
+              <Button
+                href={appLink.href}
+                data-cta="nav_launch_app"
+                data-placement="header"
+                size="sm"
+                className={cn("hidden sm:inline-flex", open && "invisible")}
+              >
+                {appLink.label}
               </Button>
               {/* Phones: the primary action in reach at every scroll position (D-05). */}
               <a
-                href={social("discord").href}
+                href={appLink.href}
+                data-cta="nav_launch_app"
                 data-placement="header"
                 target="_blank"
                 rel="noopener noreferrer"
-                aria-label={DISCORD_LABEL}
+                aria-label={appLink.label}
                 aria-describedby="nav-new-tab"
                 className={cn(
-                  "inline-flex size-11 items-center justify-center rounded-full bg-leaf text-canvas transition-[background-color,transform] duration-fast ease-out hover:bg-leaf-hover active:scale-[0.98] sm:hidden",
+                  "inline-flex h-11 items-center justify-center whitespace-nowrap rounded-full bg-leaf px-3 text-caption font-medium text-canvas transition-[background-color,transform] duration-fast ease-out hover:bg-leaf-hover active:scale-[0.98] sm:hidden",
                   open && "invisible",
                 )}
               >
-                <DiscordIcon size={20} />
+                {/* "Launch App" fits from 360 px; the narrowest phones get "App". */}
+                <span className="min-[360px]:hidden">App</span>
+                <span className="hidden min-[360px]:inline">{appLink.label}</span>
               </a>
               <span id="nav-new-tab" hidden>
                 Opens in a new tab
@@ -257,10 +265,10 @@ export function Nav() {
               </button>
             </div>
           </div>
-        </div>
+        </Container>
       </header>
       {/* After the header, so it follows the menu button in reading order;
-          z-[49] keeps the header row (logo, close button) above it. */}
+          z-sheet keeps the header row (logo, close button) above it. */}
       <MobileMenu ref={sheetRef} open={open} pathname={pathname} onClose={() => setOpen(false)} onDismiss={dismiss} />
     </>
   );

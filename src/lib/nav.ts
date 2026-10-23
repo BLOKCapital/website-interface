@@ -56,8 +56,11 @@ export const securityLink: NavLink = { href: "/security", label: "Security", hin
 
 export const docsLink: NavLink = { href: links.docs, label: "Docs", hint: "Guides, contracts and addresses", external: true };
 
-/** The one label for every Discord button in the header and menus (CRO-10). */
+/** The one label for every Discord button (CRO-10). Discord is the community's home. */
 export const DISCORD_LABEL = "Join the Discord";
+
+/** The app (in private testing): the header's and mobile menu's primary action. */
+export const appLink: NavLink = { href: links.app, label: "Launch App", external: true };
 
 const pathOf = (href: string) => href.split("#")[0];
 

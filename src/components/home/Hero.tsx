@@ -1,15 +1,14 @@
 import type { CSSProperties } from "react";
-import Link from "next/link";
+import { IntentLink } from "@/components/ui/IntentLink";
 import { Button } from "@/components/ui/Button";
 import { Badge } from "@/components/ui/Badge";
 import { GardenAsset } from "@/components/ui/GardenAsset";
 import { Icon } from "@/components/ui/Icon";
-import { StatusLine } from "@/components/ui/StatusLine";
 import { RiskNote } from "@/components/ui/RiskNote";
-import { CheckIcon, DiscordIcon } from "@/components/ui/icons";
+import { CheckIcon } from "@/components/ui/icons";
 import { protocolStatus } from "@/lib/data/status";
 import { audits } from "@/lib/data/audits";
-import { social } from "@/lib/data/socials";
+import { links } from "@/lib/data/socials";
 import { SplitText } from "@/components/motion/SplitText";
 
 const d = (ms: number): CSSProperties => ({ animationDelay: `${ms}ms` });
@@ -115,11 +114,10 @@ function FlowLines() {
  * on a still frame within 5s (D-33, MOT-02/03).
  */
 export function Hero() {
-  const discord = social("discord").href;
   return (
     <section data-placement="hero" className="relative overflow-hidden">
       <div aria-hidden className="grid-lines pointer-events-none absolute inset-0 [mask-image:radial-gradient(ellipse_70%_60%_at_65%_40%,black,transparent)]" />
-      <div className="relative mx-auto grid w-full max-w-page items-center gap-12 px-5 pb-20 pt-24 sm:px-8 sm:pt-32 lg:grid-cols-12 lg:gap-8 lg:pb-28 lg:pt-44">
+      <div className="relative mx-auto grid w-full max-w-page items-center gap-12 px-gutter pb-20 pt-24 sm:pt-32 lg:grid-cols-12 lg:gap-8 lg:pb-28 lg:pt-44">
         <div className="lg:col-span-7">
           <div className="animate-fade-in">
             <Badge tone="current">{protocolStatus.label} on Arbitrum</Badge>
@@ -128,16 +126,15 @@ export function Hero() {
             Grow your crypto. <em className="text-sand">Keep the keys.</em>
           </SplitText>
           <p className="mt-5 max-w-xl animate-rise text-lead text-fg-muted sm:mt-7">
-            An exchange holds your crypto for you. A wallet leaves you doing all the work. BLOK Capital is the third
-            option: a smart wallet at your own address that follows an on-chain index and rebalances itself, with every
-            trade a transaction you can read.
+            BLOK Capital gives you a smart wallet at your own address that follows an on-chain index and rebalances
+            itself. Every trade is a transaction you can read.
           </p>
           <div className="mt-7 flex animate-rise flex-wrap items-center gap-3 sm:mt-10">
-            <Button href="/indices" size="lg" data-cta="hero_explore_indices">
-              Explore the indices
+            <Button href={links.app} size="lg" data-cta="hero_launch_app">
+              Launch App
             </Button>
-            <Button href={discord} size="lg" variant="secondary" data-placement="hero">
-              <DiscordIcon /> Hear first on Discord
+            <Button href="/indices" size="lg" variant="secondary" data-cta="hero_explore_indices">
+              Explore the indices
             </Button>
             <a
               href="#how"
@@ -148,7 +145,6 @@ export function Hero() {
               <Icon name="arrow-down" size="sm" className="transition-transform duration-fast can-hover:group-hover/how:translate-y-0.5" />
             </a>
           </div>
-          <StatusLine className="mt-5 animate-fade-in" />
           <ul
             className="mt-8 flex animate-fade-in flex-col gap-3 text-small text-fg-muted sm:flex-row sm:flex-wrap sm:gap-x-6"
             style={d(100)}
@@ -157,14 +153,13 @@ export function Hero() {
               <li key={f.text} className="flex items-center gap-2">
                 <CheckIcon className="shrink-0 text-leaf" />
                 {f.href ? (
-                  <Link
+                  <IntentLink
                     href={f.href}
-                    prefetch={false}
                     data-cta="hero_audit_scope"
                     className="rounded-xs underline decoration-line/30 underline-offset-[3px] transition-colors duration-fast can-hover:hover:text-fg can-hover:hover:decoration-leaf"
                   >
                     {f.text}
-                  </Link>
+                  </IntentLink>
                 ) : (
                   f.text
                 )}

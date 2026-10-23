@@ -106,7 +106,7 @@ export function Eggs() {
       {showBloom && (
         <div
           aria-hidden
-          className="pointer-events-none fixed z-[60] -translate-x-1/2 -translate-y-1/2 transition-opacity duration-base"
+          className="pointer-events-none fixed z-overlay -translate-x-1/2 -translate-y-1/2 transition-opacity duration-base"
           style={motion ? { left: pos.x, top: pos.y } : { left: "50%", top: "50%" }}
         >
           {/* Halo */}
@@ -135,11 +135,11 @@ export function Eggs() {
         <div
           ref={stickerRef}
           aria-hidden
-          className="pointer-events-none fixed bottom-6 right-6 z-[60] rotate-[-6deg] rounded-2xl border border-leaf/40 bg-card/90 px-4 py-2 backdrop-blur"
+          className="pointer-events-none fixed bottom-6 right-6 z-overlay rotate-[-6deg] rounded-card border border-leaf/40 bg-card/90 px-4 py-2 backdrop-blur"
           style={{ boxShadow: "0 20px 40px -15px rgb(var(--leaf) / 0.35)" }}
         >
-          <p className="display text-[18px] text-leaf">{STICKER}</p>
-          <p className="font-mono text-[10px] text-fg-subtle">a sticker, just for you</p>
+          <p className="display text-lead text-leaf">{STICKER}</p>
+          <p className="font-mono text-micro text-fg-subtle">a sticker, just for you</p>
         </div>
       )}
 

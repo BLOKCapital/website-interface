@@ -9,6 +9,13 @@ const config: NextConfig = {
   // (no server actions, no middleware, both route handlers are force-static),
   // so there is no server to run. Emits to `out/`.
   output: "export",
+  // Not `experimental.inlineCss` (PERF-10), on purpose. Measured 2026-10-22:
+  // inlining cuts a fresh visit's first paint (1.36 → 1.05s inner pages,
+  // 1.51 → 1.21s home, Lighthouse mobile) but puts the whole stylesheet in
+  // every page's navigation payload too (about 17 → 35 kB brotli). On slow
+  // 4G that made a click on a link that isn't prefetched yet 150–250ms
+  // slower, and doubled what scrolling the home page prefetches. Fast page
+  // changes won; a cached <link> stylesheet is the better trade here.
   images: {
     // Static export removes Next's built-in optimizer, so `formats` and
     // `remotePatterns` no longer apply — resizing is delegated to Cloudflare

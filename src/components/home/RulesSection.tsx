@@ -15,7 +15,7 @@ export function RulesSection() {
       <div className="mb-8 max-w-2xl">
         <p className="label-caps">Simulation</p>
         <h3 className="display mt-3 text-display-sm text-balance text-fg">
-          Watch a Garden <em className="text-sand">say no.</em>
+          Watch a Garden say no.
         </h3>
         <p className="mt-3 text-ui text-fg-muted">
           Five things that could happen to a Garden, run through the checks its contracts enforce. Each trace links to

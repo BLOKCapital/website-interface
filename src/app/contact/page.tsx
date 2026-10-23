@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { PageHero } from "@/components/ui/PageHero";
+import { FactGrid } from "@/components/ui/FactGrid";
 import { Section } from "@/components/ui/Section";
 import { Button } from "@/components/ui/Button";
 import { Card } from "@/components/ui/Card";
@@ -36,6 +37,26 @@ export default function ContactPage() {
           </>
         }
         description="Support, partnerships, press and security all start in the Discord, where the whole team works in the open. We reply within 24 hours."
+        actions={
+          <>
+            <Button href={social("discord").href} data-placement="contact_hero">
+              <DiscordIcon /> Join the Discord
+            </Button>
+            <Button href="#faq" variant="secondary">
+              Common questions
+            </Button>
+          </>
+        }
+        aside={
+          <FactGrid
+            items={[
+              ["Fastest reply", "Discord"],
+              ["Response", "Within 24 hours"],
+              ["Security reports", "Private ticket"],
+              ["Launch news", "X and Discord"],
+            ]}
+          />
+        }
       />
 
       <Section id="channels" eyebrow="Channels" title="Where to find us.">
@@ -43,11 +64,11 @@ export default function ContactPage() {
           {/* The Discord card and, beside it, the rule to check a fake
               "support" DM against (SEC-09). */}
           <Reveal className="flex flex-col gap-4 lg:col-span-5">
-            <Card className="relative flex flex-1 flex-col overflow-hidden border-leaf/25">
+            <Card tone="feature" className="relative flex flex-1 flex-col overflow-hidden">
               <div aria-hidden className="glow-leaf absolute -right-20 -top-20 size-80" />
               <DiscordIcon size={32} className="relative text-leaf" />
               <h3 className="display relative mt-6 text-h2 text-fg">Discord</h3>
-              <p className="relative mt-3 flex-1 text-[15.5px] text-fg-muted">
+              <p className="relative mt-3 flex-1 text-ui text-fg-muted">
                 The main channel for support, partnerships and press. For security issues, open a private ticket; never a public
                 channel.
               </p>
@@ -58,6 +79,18 @@ export default function ContactPage() {
             <SafetyNotice />
           </Reveal>
           <Stagger as="ul" className="grid gap-4 sm:grid-cols-2 lg:col-span-7">
+            <RevealItem as="li">
+              <Card href={links.app} className="flex h-full items-center gap-4 p-5" data-cta="contact_launch_app" data-placement="contact_channels">
+                <span className="inline-flex size-11 shrink-0 items-center justify-center rounded-full border border-leaf/30 bg-leaf/10 text-leaf">
+                  <Icon name="arrow-right" />
+                </span>
+                <span className="min-w-0 flex-1">
+                  <span className="block text-ui text-fg">The app</span>
+                  <span className="block text-caption text-fg-subtle">In private testing · open to testers first</span>
+                </span>
+                <ExternalIcon className="text-fg-subtle" />
+              </Card>
+            </RevealItem>
             {others.map((s) => {
               const Icon = SOCIAL_ICONS[s.id];
               return (
@@ -67,7 +100,7 @@ export default function ContactPage() {
                       <Icon size={18} />
                     </span>
                     <span className="min-w-0 flex-1">
-                      <span className="block text-[15px] text-fg">{s.label}</span>
+                      <span className="block text-ui text-fg">{s.label}</span>
                       <span className="block text-caption text-fg-subtle">{s.desc}</span>
                     </span>
                     <ExternalIcon className="text-fg-subtle" />
@@ -81,7 +114,7 @@ export default function ContactPage() {
                   <Icon name="doc" />
                 </span>
                 <span className="min-w-0 flex-1">
-                  <span className="block text-[15px] text-fg">Documentation</span>
+                  <span className="block text-ui text-fg">Documentation</span>
                   <span className="block text-caption text-fg-subtle">Guides, architecture and contracts</span>
                 </span>
                 <ExternalIcon className="text-fg-subtle" />

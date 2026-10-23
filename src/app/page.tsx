@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { Hero } from "@/components/home/Hero";
 import { AtAGlance } from "@/components/home/AtAGlance";
+import { AppPreview } from "@/components/home/AppPreview";
 import { Problem } from "@/components/home/Problem";
 import { HowItWorks } from "@/components/home/HowItWorks";
 import { Products } from "@/components/home/Products";
@@ -49,6 +50,7 @@ export default async function HomePage() {
       <JsonLd data={[serviceSchema(), softwareApplicationSchema()]} />
       <Hero />
       <AtAGlance governance={governance} />
+      <AppPreview />
       <Problem />
       <HowItWorks />
       <Products />

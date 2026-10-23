@@ -24,7 +24,7 @@ export default function Error({ error, reset }: { error: Error & { digest?: stri
   }, []);
 
   return (
-    <section className="mx-auto flex min-h-[70vh] w-full max-w-page flex-col justify-center px-5 pb-16 pt-32 sm:px-8">
+    <section className="mx-auto flex min-h-[70vh] w-full max-w-page flex-col justify-center px-gutter pb-16 pt-32">
       <p className="eyebrow">Something went wrong</p>
       <h1 ref={heading} tabIndex={-1} className="display mt-4 text-h2 text-fg focus:outline-none">
         This page didn&apos;t load.

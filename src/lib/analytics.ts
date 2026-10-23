@@ -23,7 +23,7 @@ import { hasConsent } from "@/lib/consent";
  *
  * placement: the closest `[data-placement]`; otherwise announcement_bar,
  * mobile_menu, header, footer, or the closest `section[id]`'s id.
- * destination: docs | whitepaper | aragon | github | audit_report | arbiscan
+ * destination: app | docs | whitepaper | aragon | github | audit_report | arbiscan
  * | internal | other, from the link's host. A Discord link is only ever a
  * `join_group`, never also a `cta_click`.
  *
@@ -178,7 +178,7 @@ export function isDiscordInvite(href: string) {
   }
 }
 
-export type Destination = "docs" | "whitepaper" | "aragon" | "github" | "audit_report" | "arbiscan" | "internal" | "other";
+export type Destination = "app" | "docs" | "whitepaper" | "aragon" | "github" | "audit_report" | "arbiscan" | "internal" | "other";
 
 /** Where a link goes, as an enum. */
 export function destinationOf(href: string | null | undefined): Destination {
@@ -188,6 +188,7 @@ export function destinationOf(href: string | null | undefined): Destination {
     if (u.origin === window.location.origin) return "internal";
     const host = u.hostname.replace(/^www\./, "");
     if (host === "blokcapital.io") return "internal";
+    if (host === "blokc.app" || host.endsWith(".blokc.app")) return "app";
     if (host === "docs.blokcapital.io") return "docs";
     if (host === "docsend.com") return "whitepaper";
     if (host === "aragon.org" || host.endsWith(".aragon.org")) return "aragon";

@@ -77,11 +77,7 @@ export function Products() {
     <Section
       id="products"
       eyebrow="What you can do"
-      title={
-        <>
-          Three ways to <em className="text-sand">grow a Garden.</em>
-        </>
-      }
+      title="Three ways to grow a Garden."
       description="Every Garden is the same smart wallet underneath; what changes is who steers it."
     >
       <Stagger as="ul" className="grid gap-5 md:grid-cols-2">
@@ -110,7 +106,7 @@ export function Products() {
               >
                 <div
                   className={cn(
-                    "relative flex items-center justify-center overflow-hidden border-b border-line/[0.07] px-4 py-5",
+                    "relative flex items-center justify-center overflow-hidden border-b border-subtle px-4 py-5",
                     featured
                       ? "bg-[radial-gradient(ellipse_at_50%_45%,rgb(var(--leaf)/0.13),transparent_65%)] sm:px-10 sm:py-8 lg:border-b-0 lg:border-r"
                       : "bg-[radial-gradient(ellipse_at_30%_50%,rgb(var(--glow)/0.16),transparent_70%)]",
@@ -132,7 +128,7 @@ export function Products() {
                   <p id={`${titleId}-summary`} className={cn("mt-3 text-fg-muted", featured ? "text-lead" : "text-ui")}>
                     {p.summary}
                   </p>
-                  <ul className="mt-5 flex-1 space-y-2.5 border-t border-line/[0.08] pt-5 lg:flex-none">
+                  <ul className="mt-5 flex-1 space-y-2.5 border-t border-subtle pt-5 lg:flex-none">
                     {p.points.map((pt) => (
                       <li key={pt} className="flex gap-2.5 text-small text-fg-muted">
                         <span aria-hidden className="mt-2 size-1 shrink-0 rounded-full bg-leaf" />

@@ -8,6 +8,7 @@ import { EasterEggs } from "@/components/easter/EasterEggs";
 import { CookieConsent } from "@/components/system/CookieConsent";
 import { Analytics } from "@/components/system/Analytics";
 import { RevealScript } from "@/components/system/RevealScript";
+import { NavProgress } from "@/components/system/NavProgress";
 import { JsonLd } from "@/components/seo/JsonLd";
 import { organizationSchema, websiteSchema } from "@/lib/seo/schema";
 import { siteConfig } from "@/lib/seo/site";
@@ -110,7 +111,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         <RevealScript />
         <a
           href="#main"
-          className="sr-only focus:not-sr-only focus:fixed focus:left-4 focus:top-4 focus:z-[70] focus:rounded-full focus:bg-leaf focus:px-4 focus:py-2 focus:text-small focus:font-medium focus:text-canvas"
+          className="sr-only focus:not-sr-only focus:fixed focus:left-4 focus:top-4 focus:z-skip focus:rounded-full focus:bg-leaf focus:px-4 focus:py-2 focus:text-small focus:font-medium focus:text-canvas"
         >
           Skip to content
         </a>
@@ -118,6 +119,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
             the skip link; it still sits visually fixed at the bottom. */}
         <CookieConsent />
         <JsonLd data={[organizationSchema(), websiteSchema()]} />
+        <NavProgress />
         <Nav />
         {/* Focusable by script only (A11Y-12, A11Y-22), so the skip link
             and a client-side navigation can move focus, not just the scroll

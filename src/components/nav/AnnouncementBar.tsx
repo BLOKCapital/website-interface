@@ -13,7 +13,7 @@ import { cn } from "@/lib/utils";
  * flashes. `inert` while folded keeps its link out of the tab order.
  *
  * - Below 640 px, and in short (landscape) viewports, it isn't shown at all
- *   (D-05): the phone header carries a Discord button instead.
+ *   (D-05): the phone header carries the Launch App button instead.
  * - Only the descriptive text truncates; the Discord link keeps its whole
  *   label and the bar's full height as its hit area. Rings are drawn inset
  *   (`focus-inset`), so the fold wrapper's overflow can't clip them.
@@ -41,9 +41,9 @@ export function AnnouncementBar({ collapsed, onDismiss }: { collapsed: boolean; 
       )}
     >
       <div className="min-h-0 overflow-hidden">
-        <div className="theme-dark focus-inset relative border-b border-line/[0.07] bg-canvas">
+        <div className="theme-dark focus-inset relative border-b border-subtle bg-canvas">
           <div className="mx-auto flex h-11 w-full max-w-page items-center justify-center gap-3 px-14 text-caption">
-            <Badge tone="soon" className="self-center py-0.5 font-mono text-[11px] uppercase tracking-[0.12em]">
+            <Badge tone="soon" className="self-center py-0.5 font-mono text-label uppercase tracking-caps">
               {announcement.label}
             </Badge>
             <p className="hidden min-w-0 truncate text-fg-muted md:block">{announcement.text}</p>

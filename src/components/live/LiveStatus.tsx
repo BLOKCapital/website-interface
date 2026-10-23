@@ -91,7 +91,7 @@ export function LiveStatus({
   const text = detail(state, updatedAt, now, source);
   return (
     <p className={cn("flex min-h-5 flex-wrap items-center gap-x-2 gap-y-1 text-caption text-fg-subtle", className)}>
-      <span className={cn("inline-flex items-center gap-1.5 font-mono text-[11px] font-medium uppercase tracking-[0.12em]", l.text)}>
+      <span className={cn("inline-flex items-center gap-1.5 font-mono text-label font-medium uppercase tracking-caps", l.text)}>
         <span aria-hidden className="relative inline-flex size-1.5">
           {/* Pulses twice when the data goes live, then rests (no endless loop). */}
           {state === "live" && <span className="absolute inset-0 animate-pulse-ring rounded-full bg-leaf" style={{ animationIterationCount: 2 }} />}
@@ -106,7 +106,7 @@ export function LiveStatus({
         <button
           type="button"
           onClick={onRetry}
-          className="rounded-full border border-line/15 px-2 py-0.5 text-[11px] text-fg-muted transition-colors duration-fast hover:border-leaf/40 hover:text-fg"
+          className="rounded-full border border-line/15 px-2 py-0.5 text-label text-fg-muted transition-colors duration-fast hover:border-leaf/40 hover:text-fg"
         >
           Retry now
         </button>

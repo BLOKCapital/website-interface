@@ -21,29 +21,25 @@ const risks = [
   { label: "Access risk", body: "BLOK Capital can't recover accounts. Set up recovery guardians." },
 ];
 
-export function FeesRisks() {
+export function FeesRisks({ tone = "surface" }: { tone?: "canvas" | "surface" } = {}) {
   return (
     <Section
       id="fees"
-      tone="surface"
+      tone={tone}
       eyebrow="Fees & risks"
-      title={
-        <>
-          What it costs, <em className="text-sand">what can go wrong.</em>
-        </>
-      }
+      title="What it costs, what can go wrong."
       description="Read this before you plant anything you can't afford to lose."
     >
       <div className="grid gap-5 lg:grid-cols-12">
         <Reveal className="lg:col-span-5">
           <Card className="h-full">
             <h3 className="text-h4 font-medium text-fg">Fees</h3>
-            <dl className="mt-4 divide-y divide-line/[0.08]">
+            <dl className="mt-4 divide-y divide-subtle">
               {fees.map((f) => (
                 <div key={f.label} className="py-4 last:pb-0">
                   <dt className="flex flex-wrap items-baseline justify-between gap-x-3">
-                    <span className="text-[15px] text-fg">{f.label}</span>
-                    <span className="font-mono text-[12.5px] text-leaf">{f.value}</span>
+                    <span className="text-ui text-fg">{f.label}</span>
+                    <span className="font-mono text-caption text-leaf">{f.value}</span>
                   </dt>
                   <dd className="mt-1 text-small text-fg-muted">{f.body}</dd>
                 </div>
@@ -57,12 +53,12 @@ export function FeesRisks() {
             <ul className="mt-5 grid gap-x-8 gap-y-5 sm:grid-cols-2">
               {risks.map((r) => (
                 <li key={r.label} className="border-l-2 border-negative/50 pl-4">
-                  <p className="text-[15px] text-fg">{r.label}</p>
+                  <p className="text-ui text-fg">{r.label}</p>
                   <p className="mt-1 text-small text-fg-muted">{r.body}</p>
                 </li>
               ))}
             </ul>
-            <p className="mt-7 border-t border-line/[0.08] pt-5 text-caption text-fg-subtle">
+            <p className="mt-7 border-t border-subtle pt-5 text-caption text-fg-subtle">
               Not investment advice. Full terms in the{" "}
               <Link href="/legal/user-agreement" className="text-fg-muted underline underline-offset-2 hover:text-fg">
                 User Agreement

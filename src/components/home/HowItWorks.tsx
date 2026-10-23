@@ -1,4 +1,4 @@
-import Link from "next/link";
+import { IntentLink } from "@/components/ui/IntentLink";
 import { Section } from "@/components/ui/Section";
 import { Icon } from "@/components/ui/Icon";
 import { HowItWorksScroller, type ScrollStep } from "@/components/home/HowItWorksScroller";
@@ -38,26 +38,21 @@ export function HowItWorks() {
       id="how"
       tone="surface"
       eyebrow="How it works"
-      title={
-        <>
-          Your wallet, <em className="text-sand">a strategy on top.</em>
-        </>
-      }
+      title="Your wallet, a strategy on top."
       description="A Garden is a smart wallet only you control. Strategies can rebalance inside it; they can never move funds out."
     >
       <HowItWorksScroller steps={steps} />
       <p id="explore" className="mt-12 flex flex-wrap items-center gap-x-3 gap-y-1 border-t border-subtle pt-6 text-ui text-fg-muted">
         {/* The space stays inside this text node (see CtaBand, A11Y-21). */}
         {"Six layers sit under every Garden, from your sign-in to the DAO. "}
-        <Link
+        <IntentLink
           href="/protocol#explore"
-          prefetch={false}
           data-cta="how_explore_layers"
           className="group/x inline-flex items-center gap-1.5 rounded-xs py-2 font-medium text-leaf transition-colors duration-fast can-hover:hover:text-fg"
         >
           Explore all six layers
           <Icon name="arrow-right" size="sm" className="transition-transform duration-fast can-hover:group-hover/x:translate-x-0.5" />
-        </Link>
+        </IntentLink>
       </p>
     </Section>
   );

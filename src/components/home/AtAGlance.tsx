@@ -1,4 +1,4 @@
-import Link from "next/link";
+import { IntentLink } from "@/components/ui/IntentLink";
 import { audits } from "@/lib/data/audits";
 import { indices } from "@/lib/data/indices";
 import { links } from "@/lib/data/socials";
@@ -6,6 +6,7 @@ import type { GovernanceSnapshot } from "@/lib/data/proposals";
 import { ArrowIcon } from "@/components/ui/icons";
 import { CornerMarks } from "@/components/motion/CornerMarks";
 import { cn } from "@/lib/utils";
+import { Container } from "@/components/ui/Container";
 
 const credShields = audits.find((a) => a.partner === "CredShields");
 
@@ -34,13 +35,13 @@ export function AtAGlance({ governance }: { governance: GovernanceSnapshot }) {
     { id: "supply", value: "10B", label: "$BLOKC supply", href: "/token" },
   ];
   return (
-    <section aria-label="At a glance" className="relative border-y border-line/[0.07] bg-surface">
+    <section aria-label="At a glance" className="relative border-y border-subtle bg-surface">
       <CornerMarks />
       {/* Hairlines are the 1px gaps showing the line colour through.
           Phones: 2 per row (the last spans both). Tablets: 3 then 2, on a
           6-column grid. Desktop: all 5 in a row. */}
-      <div className="mx-auto w-full max-w-page px-5 sm:px-8">
-        <ul className="grid grid-cols-2 gap-px bg-line/[0.07] md:grid-cols-6 lg:grid-cols-5">
+      <Container>
+        <ul className="grid grid-cols-2 gap-px bg-line/7 md:grid-cols-6 lg:grid-cols-5">
           {items.map((i, idx) => {
             const external = /^https?:\/\//.test(i.href);
             return (
@@ -53,9 +54,8 @@ export function AtAGlance({ governance }: { governance: GovernanceSnapshot }) {
                   "lg:col-span-1",
                 )}
               >
-                <Link
+                <IntentLink
                   href={i.href}
-                  prefetch={false}
                   target={external ? "_blank" : undefined}
                   rel={external ? "noopener noreferrer" : undefined}
                   data-cta={`glance_${i.id}`}
@@ -70,14 +70,14 @@ export function AtAGlance({ governance }: { governance: GovernanceSnapshot }) {
                       className="ml-1.5 inline-block align-[-1px] opacity-50 transition-opacity duration-fast group-focus-visible/g:opacity-100 can-hover:group-hover/g:opacity-100"
                     />
                   </span>
-                  <span className="display text-[clamp(22px,1.4vw+14px,28px)] leading-tight text-fg tabular">{i.value}</span>
+                  <span className="display text-h3 leading-tight text-fg tabular">{i.value}</span>
                   {external && <span className="sr-only">(opens in a new tab)</span>}
-                </Link>
+                </IntentLink>
               </li>
             );
           })}
         </ul>
-      </div>
+      </Container>
     </section>
   );
 }

@@ -42,20 +42,20 @@ const look: Record<string, { card: string; art: string; accent: string; chip: st
     card: "theme-dark border-leaf/20 bg-card",
     art: "bg-[radial-gradient(ellipse_at_50%_45%,rgb(var(--leaf)/0.14),transparent_65%)]",
     accent: "text-leaf",
-    chip: "border-leaf/20 bg-leaf/[0.06]",
+    chip: "border-leaf/20 bg-leaf/6",
   },
   yield: {
     // Solid card colour under the tint: the card it slides over must not show through.
     card: "border-cobalt/20 bg-card bg-[linear-gradient(155deg,rgb(var(--cobalt)/0.09),rgb(var(--card))_55%)]",
     art: "bg-[radial-gradient(ellipse_at_40%_50%,rgb(var(--cobalt)/0.1),transparent_70%)]",
     accent: "text-cobalt",
-    chip: "border-cobalt/15 bg-cobalt/[0.05]",
+    chip: "border-cobalt/15 bg-cobalt/5",
   },
   gardeners: {
     card: "border-sand/25 bg-card bg-[linear-gradient(155deg,rgb(var(--sand)/0.12),rgb(var(--card))_55%)]",
     art: "bg-[radial-gradient(ellipse_at_40%_50%,rgb(var(--sand)/0.12),transparent_70%)]",
     accent: "text-sand",
-    chip: "border-sand/20 bg-sand/[0.06]",
+    chip: "border-sand/20 bg-sand/6",
   },
 };
 
@@ -109,7 +109,7 @@ export function ProductStack() {
             key={p.id}
             aria-labelledby={`product-${p.id}`}
             className={cn(
-              "relative overflow-hidden rounded-[28px] border shadow-[0_30px_80px_-50px_rgb(var(--shadow))] lg:sticky",
+              "relative overflow-hidden rounded-panel border shadow-e2 lg:sticky",
               last ? "mb-0" : "mb-5 lg:mb-[24vh]",
               l.card,
             )}
@@ -123,7 +123,7 @@ export function ProductStack() {
             <div className="grid lg:min-h-[min(560px,calc(100svh-200px))] lg:grid-cols-12">
               <div className="flex flex-col p-6 sm:p-9 lg:col-span-7 lg:p-12">
                 <div className="flex flex-wrap items-center justify-between gap-3">
-                  <p className="font-mono text-[11px] uppercase tracking-[0.14em] text-fg-subtle">
+                  <p className="label-caps">
                     <span className={l.accent}>{two(i + 1)}</span> / {two(products.length)} · Steered by{" "}
                     <span className={l.accent}>{p.steer}</span>
                   </p>
@@ -136,7 +136,7 @@ export function ProductStack() {
                 <p className="mt-4 max-w-2xl text-body text-fg-muted">{d.body}</p>
                 <ul className="mt-8 grid gap-2.5 sm:grid-cols-3 lg:mt-auto lg:pt-8">
                   {p.points.map((pt) => (
-                    <li key={pt} className={cn("rounded-xl border p-3.5 text-small text-fg", l.chip)}>
+                    <li key={pt} className={cn("rounded-control border p-3.5 text-small text-fg", l.chip)}>
                       {pt}
                     </li>
                   ))}
@@ -148,7 +148,7 @@ export function ProductStack() {
               </div>
               <div
                 className={cn(
-                  "relative order-first flex items-center justify-center overflow-hidden border-b border-line/[0.07] px-5 py-8 sm:px-10 lg:order-none lg:col-span-5 lg:border-b-0 lg:border-l",
+                  "relative order-first flex items-center justify-center overflow-hidden border-b border-subtle px-5 py-8 sm:px-10 lg:order-none lg:col-span-5 lg:border-b-0 lg:border-l",
                   l.art,
                 )}
               >

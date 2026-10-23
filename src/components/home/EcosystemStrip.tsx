@@ -1,5 +1,5 @@
 import Image from "next/image";
-import Link from "next/link";
+import { IntentLink } from "@/components/ui/IntentLink";
 import { Container } from "@/components/ui/Container";
 import { Icon } from "@/components/ui/Icon";
 import { SplitText } from "@/components/motion/SplitText";
@@ -22,19 +22,18 @@ export function EcosystemStrip() {
           <div className="max-w-2xl">
             <p className="eyebrow">Ecosystem</p>
             <SplitText className="display mt-4 text-h3 text-balance text-fg">
-              Composed from projects <em className="text-sand">you already know.</em>
+              Composed from projects you already know.
             </SplitText>
             <p className="mt-3 text-ui text-fg-muted">Integrations in our code, not endorsements.</p>
           </div>
-          <Link
+          <IntentLink
             href="/protocol#ecosystem"
-            prefetch={false}
             data-cta="ecosystem_see_all"
             className="group/eco inline-flex shrink-0 items-center gap-1.5 self-start rounded-xs py-2 text-ui font-medium text-leaf transition-colors duration-fast can-hover:hover:text-fg lg:self-auto"
           >
             See every integration
             <Icon name="arrow-right" size="sm" className="transition-transform duration-fast can-hover:group-hover/eco:translate-x-0.5" />
-          </Link>
+          </IntentLink>
         </div>
         <ul
           aria-label="Projects integrated in the code"
@@ -55,7 +54,7 @@ export function EcosystemStrip() {
                   />
                 </span>
               ) : (
-                <span className="text-[17px] font-semibold tracking-tight text-fg/80">{p.name}</span>
+                <span className="text-body font-semibold tracking-tight text-fg/80">{p.name}</span>
               )}
             </li>
           ))}

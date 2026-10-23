@@ -19,7 +19,7 @@ export function ArrowLink({
       target={external ? "_blank" : undefined}
       rel={external ? "noopener noreferrer" : undefined}
       className={cn(
-        "group/al inline-flex items-center gap-1.5 text-[14.5px] font-medium text-leaf transition-colors hover:text-fg",
+        "group/al inline-flex items-center gap-1.5 text-small font-medium text-leaf transition-colors hover:text-fg",
         className,
       )}
     >

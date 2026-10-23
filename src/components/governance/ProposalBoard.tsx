@@ -7,7 +7,6 @@ import { ExternalIcon } from "@/components/ui/icons";
 import { CountUp } from "@/components/motion/CountUp";
 import type { GovernanceSnapshot, ProposalView } from "@/lib/data/proposals";
 import { links } from "@/lib/data/socials";
-import { protocolStatus } from "@/lib/data/status";
 import { ARBISCAN } from "@/lib/live/rpc";
 import { cn, shortAddress } from "@/lib/utils";
 
@@ -19,10 +18,10 @@ function Meter({ label, value, tone = "leaf", large }: { label: string; value: n
   return (
     <div>
       <div className="flex items-baseline justify-between gap-3">
-        <span className="font-mono text-[11px] uppercase tracking-[0.12em] text-fg-subtle">{label}</span>
-        <span className={cn("font-mono tabular text-fg", large ? "text-[22px]" : "text-[13px]")}>{pctLabel(value)}</span>
+        <span className="label-caps">{label}</span>
+        <span className={cn("font-mono tabular text-fg", large ? "text-h3" : "text-caption")}>{pctLabel(value)}</span>
       </div>
-      <div className={cn("mt-2 overflow-hidden rounded-full bg-line/[0.1]", large ? "h-2" : "h-1.5")} role="img" aria-label={`${label} ${pctLabel(value)}`}>
+      <div className={cn("mt-2 overflow-hidden rounded-full bg-line/10", large ? "h-2" : "h-1.5")} role="img" aria-label={`${label} ${pctLabel(value)}`}>
         <div
           className={cn("meter-fill h-full origin-left rounded-full", tone === "leaf" ? "bg-leaf" : "bg-cobalt")}
           style={{ width: `${Math.max(0, Math.min(100, value))}%` } as CSSProperties}
@@ -38,7 +37,7 @@ function Meter({ label, value, tone = "leaf", large }: { label: string; value: n
  */
 export function ProposalsOnAragon({ className }: { className?: string }) {
   return (
-    <p className={cn("rounded-[24px] border border-dashed border-line/15 p-6 sm:p-8", className)}>
+    <p className={cn("rounded-panel border border-dashed border-line/15 p-6 sm:p-8", className)}>
       <span data-cta="gov_aragon_proposals">
         <ArrowLink href={links.aragon} className="text-body">
           Every proposal and vote lives on Aragon
@@ -59,18 +58,18 @@ const window_ = (p: ProposalView) =>
 /** The newest proposal, in full. */
 function Featured({ p, n }: { p: ProposalView; n: number }) {
   return (
-    <article className="theme-dark relative flex h-full flex-col overflow-hidden rounded-[28px] border border-leaf/20 bg-card p-6 sm:p-8">
+    <article className="theme-dark relative flex h-full flex-col overflow-hidden rounded-panel border border-leaf/20 bg-card p-6 sm:p-8">
       <div aria-hidden className="glow-leaf pointer-events-none absolute -right-28 -top-28 size-96 opacity-80" />
       <div aria-hidden className="grid-lines pointer-events-none absolute inset-0 opacity-50 [mask-image:radial-gradient(ellipse_at_85%_0%,black,transparent_65%)]" />
 
       <div className="relative flex flex-wrap items-center justify-between gap-3">
-        <p className="font-mono text-[11px] uppercase tracking-[0.14em] text-fg-subtle">
+        <p className="label-caps">
           Latest · Proposal <span className="text-leaf">{two(n)}</span>
         </p>
         <ProposalStatus p={p} />
       </div>
 
-      <h3 className="display relative mt-5 text-[clamp(24px,1.6vw+16px,34px)] leading-tight text-fg">{p.title}</h3>
+      <h3 className="display relative mt-5 text-display-sm leading-tight text-fg">{p.title}</h3>
       {/* Summaries can hold raw addresses: let them wrap anywhere. */}
       {p.summary && (
         <p className="relative mt-3 line-clamp-3 max-w-2xl whitespace-pre-line text-small text-fg-muted [overflow-wrap:anywhere]">{p.summary}</p>
@@ -81,16 +80,16 @@ function Featured({ p, n }: { p: ProposalView; n: number }) {
         <Meter label="Turnout" value={p.turnoutPct} tone="cobalt" large />
       </div>
 
-      <dl className="relative mt-7 grid gap-4 border-t border-line/[0.08] pt-5 text-small sm:grid-cols-2">
+      <dl className="relative mt-7 grid gap-4 border-t border-subtle pt-5 text-small sm:grid-cols-2">
         {window_(p) && (
           <div>
-            <dt className="font-mono text-[11px] uppercase tracking-[0.12em] text-fg-subtle">Voting window</dt>
+            <dt className="label-caps">Voting window</dt>
             <dd className="mt-1 text-fg">{window_(p)}</dd>
           </div>
         )}
         {p.creator && (
           <div>
-            <dt className="font-mono text-[11px] uppercase tracking-[0.12em] text-fg-subtle">Proposed by</dt>
+            <dt className="label-caps">Proposed by</dt>
             <dd className="mt-1">
               <a
                 href={`${ARBISCAN}/address/${p.creator}`}
@@ -106,11 +105,6 @@ function Featured({ p, n }: { p: ProposalView; n: number }) {
         )}
       </dl>
 
-      <div className="relative mt-auto pt-7">
-        <Button href={links.aragon} size="md" data-cta="gov_aragon_proposals">
-          All proposals on Aragon
-        </Button>
-      </div>
     </article>
   );
 }
@@ -122,13 +116,13 @@ function Compact({ p, n }: { p: ProposalView; n: number }) {
       href={links.aragon}
       target="_blank"
       rel="noopener noreferrer"
-      className="group/p flex h-full flex-col rounded-[24px] border border-line/[0.08] bg-card p-5 transition-[border-color,transform,box-shadow] duration-base ease-expo hover:-translate-y-0.5 hover:border-leaf/30 hover:shadow-[0_18px_40px_-28px_rgb(var(--shadow))] sm:p-6"
+      className="group/p flex h-full flex-col rounded-panel border border-subtle bg-card p-5 transition-[border-color,transform,box-shadow] duration-base ease-expo hover:-translate-y-0.5 hover:border-leaf/30 hover:shadow-e1 sm:p-6"
     >
       <div className="flex items-center justify-between gap-3">
-        <span className="font-mono text-[11px] uppercase tracking-[0.14em] text-fg-subtle">Proposal {two(n)}</span>
+        <span className="label-caps">Proposal {two(n)}</span>
         <ProposalStatus p={p} />
       </div>
-      <h3 className="mt-3 text-[16.5px] font-medium leading-snug text-fg [overflow-wrap:anywhere]">{p.title}</h3>
+      <h3 className="mt-3 text-body font-medium leading-snug text-fg [overflow-wrap:anywhere]">{p.title}</h3>
       <div className="mt-4 grid grid-cols-2 gap-4">
         <Meter label="Support" value={p.forPct} />
         <Meter label="Turnout" value={p.turnoutPct} tone="cobalt" />
@@ -170,12 +164,12 @@ export function ProposalBoard({ governance }: { governance: GovernanceSnapshot }
   return (
     <div className="space-y-5">
       {/* Summary strip */}
-      <div className="flex flex-col gap-5 rounded-[24px] border border-line/[0.08] bg-card p-5 sm:p-6 lg:flex-row lg:items-center lg:justify-between">
+      <div className="flex flex-col gap-5 rounded-panel border border-subtle bg-card p-5 sm:p-6 lg:flex-row lg:items-center lg:justify-between">
         <dl className="grid grid-cols-2 gap-x-8 gap-y-4 sm:grid-cols-4 lg:gap-x-12">
           {stats.map((s) => (
             <div key={s.k}>
-              <dt className="font-mono text-[11px] uppercase tracking-[0.12em] text-fg-subtle">{s.k}</dt>
-              <dd className="display mt-1 text-[28px] leading-none text-fg tabular">{s.v}</dd>
+              <dt className="label-caps">{s.k}</dt>
+              <dd className="display mt-1 text-display-sm leading-none text-fg tabular">{s.v}</dd>
             </div>
           ))}
         </dl>
@@ -183,9 +177,8 @@ export function ProposalBoard({ governance }: { governance: GovernanceSnapshot }
           <Button href={links.aragon} variant="secondary" data-cta="gov_aragon_proposals">
             All proposals on Aragon
           </Button>
-          <p className="text-caption text-fg-subtle">Core members vote until $BLOKC launches ({protocolStatus.token.replace(" ", "\u00a0")}).</p>
           {/* Build-time data: say when it was read, so a stale "Voting open" can't pass as live (UX-15). */}
-          {governance.syncedLabel && <p className="font-mono text-[11.5px] text-fg-subtle">As of {governance.syncedLabel}</p>}
+          {governance.syncedLabel && <p className="font-mono text-label text-fg-subtle">As of {governance.syncedLabel}</p>}
         </div>
       </div>
 

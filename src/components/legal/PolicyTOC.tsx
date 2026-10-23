@@ -59,8 +59,8 @@ export function PolicyTOC({
 
   return (
     <nav aria-label="Contents">
-      {label && <p className="text-caption font-semibold uppercase tracking-[0.12em] text-fg-subtle">Contents</p>}
-      <ol className={cn("space-y-1 border-l border-line/[0.1]", label && "mt-4")}>
+      {label && <p className="text-caption font-semibold uppercase tracking-caps text-fg-subtle">Contents</p>}
+      <ol className={cn("space-y-1 border-l border-line/10", label && "mt-4")}>
         {headings.map((h) => (
           <li key={h.id}>
             <a

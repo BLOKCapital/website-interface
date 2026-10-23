@@ -33,7 +33,7 @@ export function AutoplayToggle({
       {...TOGGLE_ATTR}
       onClick={onClick}
       className={cn(
-        "inline-flex h-8 shrink-0 items-center gap-2 rounded-full border border-line/12 px-3.5 text-caption text-fg-muted transition-colors duration-fast hover:border-line/30 hover:text-fg active:bg-line/[0.06]",
+        "inline-flex h-8 shrink-0 items-center gap-2 rounded-full border border-line/12 px-3.5 text-caption text-fg-muted transition-colors duration-fast hover:border-line/30 hover:text-fg active:bg-line/6",
         className,
       )}
     >

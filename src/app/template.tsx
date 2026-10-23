@@ -9,7 +9,8 @@ let hydrated = false;
 /**
  * Wraps every page. On a fresh load the page simply paints (its own hero
  * entrance runs); after a client-side navigation, such as a nav link or
- * the logo, the new page eases in (globals.css, "Page changes") and focus
+ * the logo, the new page appears at once with its hero already settled
+ * (globals.css, "Page changes": no fade, no replayed entrance) and focus
  * moves to the start of its content, #main (A11Y-22): otherwise it stays
  * on the link that was clicked, often in the footer, and the next Tab
  * carries on from there. Next's route announcer still reads the title.

@@ -11,7 +11,7 @@ export function StatusLine({ className }: { className?: string }) {
   return (
     <p className={cn("flex items-center gap-2 text-small text-fg-muted", className)}>
       <span aria-hidden className="size-1.5 shrink-0 rounded-full bg-progress" />
-      Not open yet: Gardens are {protocolStatus.label.toLowerCase()}.
+      {protocolStatus.label}: the app is open to testers first, and Gardens open to everyone after testing.
     </p>
   );
 }

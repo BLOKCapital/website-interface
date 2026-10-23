@@ -69,15 +69,15 @@ export function IndexExplorer({
   return (
     // A dark console on either theme: the component colours are tuned for it.
     // overflow-clip (not hidden) rounds the corners without breaking the sticky basket.
-    <div ref={root} className="theme-dark overflow-clip rounded-3xl border border-line/[0.08] bg-card">
+    <div ref={root} className="theme-dark overflow-clip rounded-panel border border-subtle bg-card">
       {/* Selector */}
-      <div className="flex flex-col gap-4 border-b border-line/[0.07] p-4 sm:flex-row sm:items-center sm:justify-between sm:p-5">
+      <div className="flex flex-col gap-4 border-b border-subtle p-4 sm:flex-row sm:items-center sm:justify-between sm:p-5">
         {fixed ? (
           <p className="text-small text-fg-muted">
             <span className="font-mono text-fg">{idx.name}</span> · {idx.components.length} components · live oracle prices
           </p>
         ) : (
-        <div {...rt.tablist} aria-label="Choose an index" className="grid grid-cols-3 gap-1 rounded-2xl bg-canvas/70 p-1 sm:inline-grid">
+        <div {...rt.tablist} aria-label="Choose an index" className="grid grid-cols-3 gap-1 rounded-card bg-canvas/70 p-1 sm:inline-grid">
           {indices.map((x, i) => (
             <button
               key={x.id}
@@ -87,13 +87,13 @@ export function IndexExplorer({
               aria-controls={`${base}-panel`}
               onClick={() => choose(x.id)}
               className={cn(
-                "relative rounded-xl px-3 py-2.5 text-left transition-[background-color,color,box-shadow] duration-fast sm:px-5",
+                "relative rounded-control px-3 py-2.5 text-left transition-[background-color,color,box-shadow] duration-fast sm:px-5",
                 // A full-strength 1.5px leaf ring (>= 3:1 on the strip), not just a fill change.
                 x.id === id ? "bg-raised text-fg shadow-[inset_0_0_0_1.5px_rgb(var(--leaf))]" : "text-fg-muted hover:bg-raised/50 hover:text-fg",
               )}
             >
-              <span className="block font-mono text-[13px] font-medium tracking-wide">{x.name}</span>
-              <span className="mt-1 flex items-center gap-2 text-[11.5px] text-fg-subtle">
+              <span className="block font-mono text-caption font-medium tracking-wide">{x.name}</span>
+              <span className="mt-1 flex items-center gap-2 text-label text-fg-subtle">
                 <TokenStack symbols={x.components} size={16} max={5} className="hidden sm:flex" />
                 {x.components.length} tokens
               </span>
@@ -111,7 +111,7 @@ export function IndexExplorer({
         className="grid lg:grid-cols-12"
       >
         {/* Orb */}
-        <div className="relative min-w-0 border-b border-line/[0.07] px-6 py-8 sm:px-10 lg:col-span-5 lg:border-b-0 lg:border-r">
+        <div className="relative min-w-0 border-b border-subtle px-6 py-8 sm:px-10 lg:col-span-5 lg:border-b-0 lg:border-r">
           <div aria-hidden className="grid-lines pointer-events-none absolute inset-0 opacity-50 [mask-image:radial-gradient(circle_at_50%_50%,black,transparent_70%)]" />
           {/* Sticks beside the long detail column on wide screens. */}
           <div className="relative flex flex-col items-center gap-6 lg:sticky lg:top-28">
@@ -127,7 +127,7 @@ export function IndexExplorer({
           {!fixed && (
           <div key={id} className={cn(picked && "animate-swap")}>
             <div className="flex flex-wrap items-center gap-3">
-              <h3 className="font-mono text-[22px] font-medium tracking-wide text-fg">{idx.name}</h3>
+              <h3 className="font-mono text-h3 font-medium tracking-wide text-fg">{idx.name}</h3>
               <Badge tone="current">{idx.status}</Badge>
             </div>
             <p className="mt-1 text-body text-fg">{idx.tagline}</p>
@@ -148,16 +148,16 @@ export function IndexExplorer({
                     aria-pressed={on}
                     onClick={() => pickComponent(s)}
                     className={cn(
-                      "flex w-full items-center gap-3 rounded-xl border px-3 py-2.5 text-left transition-colors duration-fast",
+                      "flex w-full items-center gap-3 rounded-control border px-3 py-2.5 text-left transition-colors duration-fast",
                       on ? "border-leaf/35 bg-raised" : "border-transparent hover:border-line/10 hover:bg-raised/50",
                     )}
                   >
                     <TokenLogo symbol={s} size={28} />
                     <span className="min-w-0 flex-1">
-                      <span className="block font-mono text-[13px] text-fg">{s}</span>
-                      <span className="block truncate text-[11.5px] text-fg-subtle">{comp.name}</span>
+                      <span className="block font-mono text-caption text-fg">{s}</span>
+                      <span className="block truncate text-label text-fg-subtle">{comp.name}</span>
                     </span>
-                    <span className="font-mono text-[12.5px] text-fg-muted tabular">
+                    <span className="font-mono text-caption text-fg-muted tabular">
                       <LivePrice price={r?.price} state={feedState(prices, s)} />
                     </span>
                   </button>
@@ -167,13 +167,13 @@ export function IndexExplorer({
           </ul>
 
           {/* Component drill-down */}
-          <div key={`${id}-${selected}`} className={cn("mt-5 rounded-2xl border border-line/[0.07] bg-canvas/50 p-5", picked && "animate-swap")}>
+          <div key={`${id}-${selected}`} className={cn("mt-5 rounded-card border border-subtle bg-canvas/50 p-5", picked && "animate-swap")}>
             <div className="flex flex-wrap items-baseline justify-between gap-2">
               <p className="flex items-center gap-2.5 text-small font-medium text-fg">
                 <TokenLogo symbol={selected} size={26} />
                 {c.name} <span className="font-mono text-fg-subtle">· {c.token.symbol}</span>
               </p>
-              <p className="font-mono text-[15px] text-fg tabular">
+              <p className="font-mono text-ui text-fg tabular">
                 <LivePrice price={reading?.price} state={feedState(prices, selected)} />
               </p>
             </div>

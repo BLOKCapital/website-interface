@@ -1,4 +1,4 @@
-import Link from "next/link";
+import { IntentLink } from "@/components/ui/IntentLink";
 import { Badge } from "@/components/ui/Badge";
 import { Container } from "@/components/ui/Container";
 import { Icon } from "@/components/ui/Icon";
@@ -41,20 +41,19 @@ export function HappeningNow({ governance }: { governance: GovernanceSnapshot })
         <div className="lg:col-span-5">
           <p className="eyebrow">Governance on-chain</p>
           <SplitText className="display mt-4 text-h2 text-balance text-fg">
-            Every change, <em className="text-sand">on the record.</em>
+            Every change, on the record.
           </SplitText>
           <p className="mt-4 max-w-md text-ui text-fg-muted">
             Every change to the protocol is a proposal the DAO votes on with Aragon, on Arbitrum.
           </p>
-          <Link
+          <IntentLink
             href="/governance#proposals"
-            prefetch={false}
             data-cta="now_all_proposals"
             className="group/now mt-5 inline-flex items-center gap-1.5 rounded-xs py-2 text-ui font-medium text-leaf transition-colors duration-fast can-hover:hover:text-fg"
           >
             All proposals
             <Icon name="arrow-right" size="sm" className="transition-transform duration-fast can-hover:group-hover/now:translate-x-0.5" />
-          </Link>
+          </IntentLink>
         </div>
 
         <div className="rounded-panel border border-subtle bg-card p-pad-card lg:col-span-7">

@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { PageHero } from "@/components/ui/PageHero";
+import { Card } from "@/components/ui/Card";
 import { Section } from "@/components/ui/Section";
 import { Button } from "@/components/ui/Button";
 import { Badge } from "@/components/ui/Badge";
@@ -11,8 +12,7 @@ import { ArrowIcon, CheckIcon } from "@/components/ui/icons";
 import { IndexExplorer } from "@/components/indices/IndexExplorer";
 import { TokenLogo, TokenStack } from "@/components/indices/TokenLogo";
 import { ArrowLink } from "@/components/ui/ArrowLink";
-import { RiskNote } from "@/components/ui/RiskNote";
-import { AuditNote } from "@/components/indices/AuditNote";
+import { IndexCaveats } from "@/components/indices/IndexCaveats";
 import { JsonLd } from "@/components/seo/JsonLd";
 import { breadcrumbSchema } from "@/lib/seo/schema";
 import { BASE } from "@/lib/seo/site";
@@ -107,6 +107,7 @@ export default async function IndexPage({ params }: { params: Promise<{ id: stri
         eyebrow={idx.tagline}
         title={<span className="font-mono tracking-tight">{idx.name}</span>}
         description={definition(idx)}
+        asideAlign="start"
         actions={
           <>
             <Button href="#composition">See what&apos;s inside</Button>
@@ -116,20 +117,20 @@ export default async function IndexPage({ params }: { params: Promise<{ id: stri
           </>
         }
         aside={
-          <div className="rounded-2xl border border-line/[0.08] bg-card">
-            <div className="flex items-center justify-between gap-3 border-b border-line/[0.07] px-5 py-3.5">
+          <div className="rounded-card border border-subtle bg-card">
+            <div className="flex items-center justify-between gap-3 border-b border-subtle px-5 py-3.5">
               <TokenStack symbols={idx.components} size={24} />
               <Badge tone="current">{idx.status}</Badge>
             </div>
             <dl className="grid grid-cols-2">
               {stats.map((s, i) => (
-                <div key={s.k} className={`px-5 py-4 ${i % 2 ? "border-l border-line/[0.07]" : ""} ${i > 1 ? "border-t border-line/[0.07]" : ""}`}>
+                <div key={s.k} className={`px-5 py-4 ${i % 2 ? "border-l border-subtle" : ""} ${i > 1 ? "border-t border-subtle" : ""}`}>
                   <dt className="text-caption text-fg-subtle">{s.k}</dt>
-                  <dd className="mt-1 text-[17px] text-fg">{s.v}</dd>
+                  <dd className="mt-1 text-lead text-fg">{s.v}</dd>
                 </div>
               ))}
             </dl>
-            <dl className="divide-y divide-line/[0.07] border-t border-line/[0.07]">
+            <dl className="divide-y divide-subtle border-t border-subtle">
               {rules.map((r) => (
                 <div key={r.k} className="px-5 py-3.5">
                   <dt className="text-caption text-fg-subtle">{r.k}</dt>
@@ -164,12 +165,12 @@ export default async function IndexPage({ params }: { params: Promise<{ id: stri
           </Reveal>
           <Stagger as="ul" className="space-y-3 lg:col-span-7">
             {idx.notes.map((n) => (
-              <RevealItem as="li" key={n} className="flex gap-3 rounded-2xl border border-line/[0.08] bg-card p-5 text-small text-fg-muted">
+              <RevealItem as="li" key={n} className="flex gap-3 rounded-card border border-subtle bg-card p-5 text-small text-fg-muted">
                 <CheckIcon className="mt-0.5 shrink-0 text-leaf" />
                 {n}
               </RevealItem>
             ))}
-            <RevealItem as="li" className="rounded-2xl border border-dashed border-line/15 p-5 text-small text-fg-subtle">
+            <RevealItem as="li" className="rounded-card border border-dashed border-line/15 p-5 text-small text-fg-subtle">
               Components as confirmed by the BLOK Capital team. Weights aren&apos;t listed: they&apos;re recomputed on-chain
               from market caps and move with the market. Any change to the component list needs{" "}
               <Link href="/governance" className="rounded-xs text-leaf underline decoration-leaf/40 underline-offset-[3px] transition-colors duration-fast can-hover:hover:decoration-leaf">
@@ -196,12 +197,12 @@ export default async function IndexPage({ params }: { params: Promise<{ id: stri
             </p>
             <ArrowLink href="/indices#methodology">Same method as every BLOK Capital index</ArrowLink>
           </Reveal>
-          <Reveal id="data" delay={0.08} className="space-y-4 lg:col-span-5">
-            <div className="space-y-2">
-              <RiskNote />
-              <AuditNote />
-            </div>
-            <ArrowLink href="/indices#data">What&apos;s live, and what isn&apos;t yet</ArrowLink>
+          <Reveal id="data" delay={0.08} className="lg:col-span-5">
+            <IndexCaveats>
+              <ArrowLink href="/indices#data" className="mt-4">
+                What&apos;s live, and what isn&apos;t yet
+              </ArrowLink>
+            </IndexCaveats>
           </Reveal>
         </div>
       </Section>
@@ -210,24 +211,21 @@ export default async function IndexPage({ params }: { params: Promise<{ id: stri
         <Stagger as="ul" className="grid gap-4 md:grid-cols-2">
           {others.map((o) => (
             <RevealItem as="li" key={o.id}>
-              <Link
-                href={`/indices/${o.id}`}
-                className="group/r flex h-full flex-col rounded-2xl border border-line/[0.08] bg-card p-6 transition-[border-color,background-color,transform] duration-300 hover:-translate-y-0.5 hover:border-leaf/30 hover:bg-raised"
-              >
+              <Card href={`/indices/${o.id}`} className="flex h-full flex-col">
                 <span className="flex items-center justify-between">
-                  <span className="font-mono text-[18px] font-medium text-fg">{o.name}</span>
-                  <ArrowIcon className="text-fg-subtle transition-transform group-hover/r:translate-x-0.5 group-hover/r:text-leaf" />
+                  <span className="font-mono text-lead font-medium text-fg">{o.name}</span>
+                  <ArrowIcon className="text-fg-subtle transition-transform duration-fast can-hover:group-hover/card:translate-x-0.5 can-hover:group-hover/card:text-leaf" />
                 </span>
                 <span className="mt-1 text-small text-fg-muted">{o.tagline}</span>
                 <span className="mt-5 flex flex-wrap gap-1.5">
                   {o.components.map((s) => (
-                    <span key={s} className="inline-flex items-center gap-1.5 rounded-full border border-line/10 px-2.5 py-1 font-mono text-[11px] text-fg-muted">
+                    <span key={s} className="inline-flex items-center gap-1.5 rounded-full border border-line/10 px-2.5 py-1 font-mono text-label text-fg-muted">
                       <TokenLogo symbol={s} size={16} />
                       {s}
                     </span>
                   ))}
                 </span>
-              </Link>
+              </Card>
             </RevealItem>
           ))}
         </Stagger>

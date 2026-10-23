@@ -32,8 +32,8 @@ const DAO_ADDRESS = links.aragon.match(/0x[0-9a-fA-F]{40}/)![0];
 /**
  * Generated from the site's verified sources (siteConfig, socials.ts,
  * token.ts), so the list can't drift from the links used everywhere else
- * (SEC-10, H §3.6). The app domain is deliberately not listed while it's in
- * private testing (owner decision).
+ * (SEC-10, H §3.6). The app is listed too, now that it's the navbar's
+ * primary action; it is in private testing.
  */
 const groups: { id: string; title: string; entries: Entry[] }[] = [
   {
@@ -41,6 +41,7 @@ const groups: { id: string; title: string; entries: Entry[] }[] = [
     title: "Websites",
     entries: [
       { id: "site", label: "Website", literal: bare(siteConfig.url), copy: siteConfig.url, href: siteConfig.url },
+      { id: "app", label: "App (in private testing)", literal: bare(links.app), copy: links.app, href: links.app },
       { id: "docs", label: "Docs", literal: bare(origin(links.docs)), copy: origin(links.docs), href: links.docs },
       { id: "audits", label: "Audit reports", literal: bare(links.auditsRepo), copy: links.auditsRepo, href: links.auditsRepo },
     ],
@@ -77,11 +78,7 @@ export function OfficialLinks() {
     <Section
       id="official"
       eyebrow="Official links"
-      title={
-        <>
-          Check it against <em className="text-sand">this list.</em>
-        </>
-      }
+      title="Check it against this list."
       description="Every BLOK Capital domain, handle and address, written out in full, so you can compare them character by character before you click, sign or send."
     >
       <Reveal>
@@ -97,7 +94,7 @@ export function OfficialLinks() {
               <h3 id={`official-group-${g.id}`} className="label-caps">
                 {g.title}
               </h3>
-              <dl className="mt-3 divide-y divide-line/[0.07]">
+              <dl className="mt-3 divide-y divide-subtle">
                 {g.entries.map((e) => {
                   const id = `official-${e.id}`;
                   return (
@@ -148,7 +145,7 @@ export function OfficialLinks() {
           ))}
         </div>
       </Reveal>
-      <p className="mt-6 text-lead font-medium text-fg">Anything else is not us.</p>
+      <p className="mt-6 border-l-2 border-leaf pl-4 text-lead font-medium text-fg">Anything else is not us.</p>
     </Section>
   );
 }

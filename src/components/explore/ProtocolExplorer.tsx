@@ -114,7 +114,7 @@ export function ProtocolExplorer({ steps }: { steps: ExploreStep[] }) {
             onTouchStart={ap.stop}
             onWheel={(e) => Math.abs(e.deltaX) > Math.abs(e.deltaY) && ap.stop()}
             // focus-inset: the phone strip scrolls, and would clip an outside ring.
-            className="focus-inset relative -mx-5 flex gap-2 overflow-x-auto px-5 py-1.5 [scrollbar-width:none] sm:-mx-8 sm:px-8 lg:absolute lg:inset-0 lg:mx-0 lg:block lg:overflow-visible lg:p-0"
+            className="focus-inset relative -mx-gutter flex gap-2 overflow-x-auto px-gutter py-1.5 [scrollbar-width:none] lg:absolute lg:inset-0 lg:mx-0 lg:block lg:overflow-visible lg:p-0"
           >
             {steps.map((st, i) => {
               const on = i === active;
@@ -139,10 +139,10 @@ export function ProtocolExplorer({ steps }: { steps: ExploreStep[] }) {
                     // The selected look changes at --dur-fast; the label travels with its plate.
                     "flex shrink-0 items-center gap-2 rounded-full border px-3.5 py-2 text-left [transition:color_var(--dur-fast)_var(--ease-out),background-color_var(--dur-fast)_var(--ease-out),border-color_var(--dur-fast)_var(--ease-out),translate_var(--dur-slow)_var(--ease-expo)]",
                     "ptab lg:absolute lg:left-[var(--x)] lg:-translate-y-1/2 lg:py-1.5",
-                    on ? "border-leaf/40 bg-card text-fg shadow-[0_10px_30px_-18px_rgb(var(--shadow))]" : "border-line/10 bg-card/60 text-fg-muted hover:border-line/25 hover:text-fg lg:border-transparent lg:bg-transparent",
+                    on ? "border-leaf/40 bg-card text-fg shadow-e1" : "border-line/10 bg-card/60 text-fg-muted hover:border-line/25 hover:text-fg lg:border-transparent lg:bg-transparent",
                   )}
                 >
-                  <span className={cn("font-mono text-[11px] tabular", on ? "text-leaf" : "text-fg-subtle")}>{two(i + 1)}</span>
+                  <span className={cn("font-mono text-label tabular", on ? "text-leaf" : "text-fg-subtle")}>{two(i + 1)}</span>
                   <span className="whitespace-nowrap text-small font-medium">{st.label}</span>
                 </button>
               );
@@ -157,14 +157,14 @@ export function ProtocolExplorer({ steps }: { steps: ExploreStep[] }) {
         role="tabpanel"
         aria-labelledby={`${base}-tab-${s.id}`}
         tabIndex={0}
-        className="relative min-w-0 overflow-hidden rounded-3xl border border-line/[0.08] bg-card lg:col-span-7"
+        className="relative min-w-0 overflow-hidden rounded-panel border border-subtle bg-card lg:col-span-7"
       >
         <div aria-hidden className="grid-lines pointer-events-none absolute inset-0 opacity-60 [mask-image:radial-gradient(ellipse_80%_70%_at_85%_0%,black,transparent)]" />
 
         {/* Where you are, top to bottom */}
         {/* min-h holds the row's height for the toggle, which only appears after hydration. */}
-        <div className="relative flex min-h-16 items-center gap-4 border-b border-line/[0.07] px-6 py-4 sm:px-8">
-          <p className="shrink-0 font-mono text-[11.5px] uppercase tracking-[0.14em] text-fg-subtle">
+        <div className="relative flex min-h-16 items-center gap-4 border-b border-subtle px-6 py-4 sm:px-8">
+          <p className="shrink-0 label-caps">
             Layer <span className="text-leaf">{two(active + 1)}</span> / {two(steps.length)}
           </p>
           <div aria-hidden className="flex flex-1 gap-1.5">
@@ -204,22 +204,22 @@ export function ProtocolExplorer({ steps }: { steps: ExploreStep[] }) {
                 // A plain crossfade on change: no rise, no per-fact stagger.
                 className={cn("relative col-start-1 row-start-1 p-6 sm:p-8", !on ? "invisible" : moved && "animate-swap")}
               >
-                <p className="font-mono text-[11.5px] uppercase tracking-[0.14em] text-leaf">{st.label}</p>
+                <p className="font-mono text-label uppercase tracking-eyebrow text-leaf">{st.label}</p>
                 <h3 className="display mt-2 text-h3 text-fg">{st.title}</h3>
                 <p className="mt-4 max-w-2xl text-body text-fg-muted">{st.body}</p>
 
-                <div className="relative mt-6 overflow-hidden rounded-2xl border border-line/[0.07] bg-canvas/60 p-5 pl-6">
+                <div className="relative mt-6 overflow-hidden rounded-card border border-subtle bg-canvas/60 p-5 pl-6">
                   <span aria-hidden className="absolute inset-y-4 left-0 w-0.5 rounded-full bg-leaf/60" />
-                  <p className="font-mono text-[11px] uppercase tracking-[0.14em] text-fg-subtle">On-chain, behind the scenes</p>
+                  <p className="label-caps">On-chain, behind the scenes</p>
                   <p className="mt-2 text-small text-fg-muted">{st.behind}</p>
                 </div>
 
                 {st.facts && st.facts.length > 0 && (
-                  <dl className="mt-5 grid gap-px overflow-hidden rounded-2xl border border-line/[0.07] bg-line/[0.07] sm:grid-cols-3">
+                  <dl className="mt-5 grid gap-px overflow-hidden rounded-card border border-subtle bg-line/7 sm:grid-cols-3">
                     {st.facts.map((f) => (
                       <div key={f.k} className="bg-card px-4 py-3.5">
                         <dt className="text-caption text-fg-subtle">{f.k}</dt>
-                        <dd className="mt-1 font-mono text-[13px] text-fg">{f.v}</dd>
+                        <dd className="mt-1 font-mono text-caption text-fg">{f.v}</dd>
                       </div>
                     ))}
                   </dl>
@@ -230,7 +230,7 @@ export function ProtocolExplorer({ steps }: { steps: ExploreStep[] }) {
           })}
         </div>
 
-        <div className="relative flex flex-wrap items-center justify-between gap-4 border-t border-line/[0.07] px-6 py-4 sm:px-8">
+        <div className="relative flex flex-wrap items-center justify-between gap-4 border-t border-subtle px-6 py-4 sm:px-8">
           {/* Every layer's link in one cell too, so the row wraps the same way for all of them. */}
           <span className="grid">
             {steps.map((st, i) =>

@@ -14,7 +14,7 @@ export type Social = {
 
 export const socials: Social[] = [
   { id: "discord", label: "Discord", href: "https://discord.com/invite/blokc", desc: "Community, support and private security reports" },
-  { id: "x", label: "X", href: "https://x.com/blok_cap", desc: "Announcements and updates" },
+  { id: "x", label: "X", href: "https://x.com/blok_cap", desc: "Launch news and updates" },
   { id: "telegram", label: "Telegram", href: "https://t.me/BLOKCapital", desc: "Community chat" },
   { id: "farcaster", label: "Farcaster", href: "https://farcaster.xyz/blokc", desc: "Decentralised social" },
   { id: "github", label: "GitHub", href: "https://github.com/BLOKCapital", desc: "Contracts, front-end and audits" },
@@ -29,6 +29,8 @@ export const social = (id: SocialId) => socials.find((s) => s.id === id)!;
  * redirects to the overview page (checked 2026-10-11).
  */
 export const links = {
+  /** The app, in private testing: the navbar's primary action. */
+  app: "https://blokc.app/",
   docs: "https://docs.blokcapital.io/en/concepts/blok-c-overview",
   docsOverview: "https://docs.blokcapital.io/en/concepts/blok-c-overview",
   docsArchitecture: "https://docs.blokcapital.io/en/builders/blok-capital-v1",

@@ -89,7 +89,7 @@ export function ContentsSheet({ headings, watch }: { headings: TocItem[]; watch:
       >
         <div className="flex max-h-[inherit] flex-col">
           <div className="flex items-center justify-between gap-4 border-b border-subtle px-5 py-3">
-            <h2 id="contents-sheet-title" className="text-caption font-semibold uppercase tracking-[0.12em] text-fg-subtle">
+            <h2 id="contents-sheet-title" className="text-caption font-semibold uppercase tracking-caps text-fg-subtle">
               Contents
             </h2>
             <button

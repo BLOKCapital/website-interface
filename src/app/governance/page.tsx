@@ -1,10 +1,11 @@
 import type { Metadata } from "next";
 import { PageHero } from "@/components/ui/PageHero";
+import { FactGrid } from "@/components/ui/FactGrid";
 import { Section } from "@/components/ui/Section";
 import { Button } from "@/components/ui/Button";
 import { Card } from "@/components/ui/Card";
 import { Badge } from "@/components/ui/Badge";
-import { DecisionPipeline } from "@/components/governance/DecisionPipeline";
+import { ProposalMachine } from "@/components/iso/ProposalMachine";
 import { CtaBand } from "@/components/ui/CtaBand";
 import { Reveal } from "@/components/ui/Reveal";
 import { ArrowLink } from "@/components/ui/ArrowLink";
@@ -56,11 +57,22 @@ export default async function GovernancePage() {
             </Button>
           </>
         }
+        aside={
+          <FactGrid
+            items={[
+              ["Votes today", "Core DAO members"],
+              ["After the IDO", "$BLOKC holders"],
+              ["Platform", "Aragon OSx"],
+              ["Network", "Arbitrum One"],
+            ]}
+          />
+        }
       />
 
       <Section id="process" eyebrow="Process" title="How a decision is made.">
+        {/* Fig 4: the same four stages, as a machine (it replaces the DecisionPipeline explainer). */}
         <Reveal>
-          <DecisionPipeline stages={process} />
+          <ProposalMachine stages={process} />
         </Reveal>
         <div className="mt-5 grid gap-5 md:grid-cols-2">
           <Reveal>
@@ -68,9 +80,9 @@ export default async function GovernancePage() {
               <h3 className="text-h4 font-medium text-fg">What the DAO decides</h3>
               <ul className="mt-5 grid gap-2.5 sm:grid-cols-2">
                 {decides.map((d, i) => (
-                  <li key={d} className="flex flex-col gap-3 rounded-2xl border border-line/[0.08] bg-raised/60 p-4">
-                    <span className="font-mono text-[11px] text-leaf">{String(i + 1).padStart(2, "0")}</span>
-                    <span className="text-[15px] text-fg">{d}</span>
+                  <li key={d} className="flex flex-col gap-3 rounded-card border border-subtle bg-raised/60 p-4">
+                    <span className="font-mono text-label text-leaf">{String(i + 1).padStart(2, "0")}</span>
+                    <span className="text-ui text-fg">{d}</span>
                   </li>
                 ))}
               </ul>

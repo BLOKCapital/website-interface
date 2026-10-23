@@ -180,6 +180,10 @@ test.describe("focus", () => {
   test("footer Cookie settings → close returns focus to the footer button", async ({ page }) => {
     await firstVisit(page);
     await rejectAllButton(page).click();
+    // Reject all moves focus to <main> (A11Y-12a) a frame later; let it land
+    // first, or under load it can steal focus back from the footer button.
+    await expect(rejectAllButton(page)).toBeHidden();
+    await expect.poll(() => focused(page)).toBe("main");
     await page.getByRole("button", { name: "Cookie settings" }).focus();
     await page.keyboard.press("Enter");
     await expect(page.getByRole("dialog")).toBeVisible();
@@ -330,7 +334,7 @@ test.describe("events", () => {
     await page.goto("/");
     await waitForHydration(page);
     await stayOnPage(page);
-    await page.locator('body > header a[href*="discord"]').filter({ visible: true }).first().click();
+    await page.locator('body > header a[href*="blokc.app"]').filter({ visible: true }).first().click();
     await fire(page, "blok:track", { name: "cta_click", params: { cta_id: "x" } });
     expect(await page.evaluate(() => (window as unknown as { dataLayer?: unknown }).dataLayer)).toBeUndefined();
     expect(external.google()).toEqual([]);
@@ -339,12 +343,17 @@ test.describe("events", () => {
   test("a Discord click sends join_group with its placement (gtag emulator)", async ({ page }) => {
     await acceptAll(page);
     await stayOnPage(page);
-    await page.locator('body > header > div:not(#announce) a[href*="discord"]').filter({ visible: true }).first().click();
-    await expect.poll(() => events(page)).toContainEqual(["join_group", { group_id: "discord", placement: "header" }]);
     await page.locator('#announce a[href*="discord"]').click();
     await expect.poll(() => events(page)).toContainEqual(["join_group", { group_id: "discord", placement: "announcement_bar" }]);
     await page.locator('footer a[href*="discord"]').first().click();
     await expect.poll(() => events(page)).toContainEqual(["join_group", { group_id: "discord", placement: "footer" }]);
+  });
+
+  test("Launch App in the header sends cta_click to the app (gtag emulator)", async ({ page }) => {
+    await acceptAll(page);
+    await stayOnPage(page);
+    await page.locator('body > header > div:not(#announce) a[href*="blokc.app"]').filter({ visible: true }).first().click();
+    await expect.poll(() => events(page)).toContainEqual(["cta_click", { cta_id: "nav_launch_app", destination: "app", placement: "header" }]);
   });
 
   test("[data-cta] links send cta_click with a destination inferred from the host", async ({ page }) => {

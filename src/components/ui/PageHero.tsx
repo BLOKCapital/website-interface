@@ -28,6 +28,7 @@ export function PageHero({
   description,
   actions,
   aside,
+  asideAlign = "end",
 }: {
   /** Current page name in the breadcrumb. */
   crumb?: string;
@@ -40,6 +41,8 @@ export function PageHero({
   description: ReactNode;
   actions?: ReactNode;
   aside?: ReactNode;
+  /** "start" for an aside taller than the text beside it, so it lines up with the breadcrumb instead of rising above it. */
+  asideAlign?: "start" | "end";
 }) {
   const trail: Crumb[] = crumbs ?? [...(parent ? [parent] : []), ...(crumb ? [{ label: crumb }] : [])];
   return (
@@ -47,7 +50,7 @@ export function PageHero({
       <div aria-hidden className="grid-lines pointer-events-none absolute inset-0 [mask-image:radial-gradient(ellipse_at_top,black,transparent_70%)]" />
       <div aria-hidden className="glow-leaf pointer-events-none absolute -top-40 left-1/2 h-[520px] w-[900px] -translate-x-1/2 opacity-60" />
       <CornerMarks only="bottom" />
-      <Container className="relative grid gap-12 pb-16 pt-32 sm:pb-20 sm:pt-40 lg:grid-cols-12 lg:items-end">
+      <Container className={cn("relative grid gap-12 pb-16 pt-32 sm:pb-20 sm:pt-40 lg:grid-cols-12", asideAlign === "start" ? "lg:items-start" : "lg:items-end")}>
         <div className="lg:col-span-8">
           {trail.length > 0 && <Breadcrumb items={trail} className="animate-fade-in" />}
           <h1 className={cn("display animate-rise text-h1 text-balance text-fg", eyebrow ? "mt-8" : "mt-4")}>

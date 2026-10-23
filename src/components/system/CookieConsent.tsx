@@ -240,7 +240,7 @@ export function CookieConsent() {
           role="region"
           aria-labelledby="cookie-banner-title"
           className={cn(
-            "fixed inset-x-2 bottom-2 z-banner animate-reveal rounded-2xl border border-line/12 bg-card/95 p-3 pb-[max(0.75rem,env(safe-area-inset-bottom))] shadow-e2 backdrop-blur-xl",
+            "fixed inset-x-2 bottom-2 z-banner animate-reveal rounded-card border border-line/12 bg-card/95 p-3 pb-[max(0.75rem,env(safe-area-inset-bottom))] shadow-e2 backdrop-blur-xl",
             "sm:inset-x-auto sm:bottom-5 sm:right-5 sm:max-w-md sm:p-5",
             "[@media(max-height:500px)]:inset-x-0 [@media(max-height:500px)]:bottom-0 [@media(max-height:500px)]:right-0 [@media(max-height:500px)]:max-w-none [@media(max-height:500px)]:rounded-none [@media(max-height:500px)]:border-x-0 [@media(max-height:500px)]:border-b-0 [@media(max-height:500px)]:px-5 [@media(max-height:500px)]:py-2.5 [@media(max-height:500px)]:pb-[max(0.625rem,env(safe-area-inset-bottom))]",
           )}
@@ -297,13 +297,13 @@ export function CookieConsent() {
               aria-describedby="cookie-panel-desc"
               tabIndex={-1}
               className={cn(
-                "relative flex max-h-[86dvh] w-full max-w-lg animate-enter-up flex-col overflow-hidden rounded-2xl border border-line/12 bg-card shadow-e3 focus:outline-none",
+                "relative flex max-h-[86dvh] w-full max-w-lg animate-enter-up flex-col overflow-hidden rounded-card border border-line/12 bg-card shadow-e3 focus:outline-none",
                 "[@media(max-height:500px)]:max-h-[94dvh] [@media(max-height:500px)]:max-w-2xl",
               )}
             >
               <div
                 className={cn(
-                  "flex items-start justify-between gap-4 border-b border-line/[0.08] px-6 pb-5 pt-6",
+                  "flex items-start justify-between gap-4 border-b border-subtle px-6 pb-5 pt-6",
                   "[@media(max-height:500px)]:items-center [@media(max-height:500px)]:px-5 [@media(max-height:500px)]:py-2",
                 )}
               >
@@ -326,11 +326,11 @@ export function CookieConsent() {
               <div className={cn("flex-1 overflow-y-auto overscroll-contain px-6 py-5", "[@media(max-height:500px)]:px-5 [@media(max-height:500px)]:py-3")}>
                 <p id="cookie-panel-desc" className="text-small text-fg-muted">
                   Choose what this site may store on your device. Your choice is kept for six months and applies to{" "}
-                  <span className="font-mono text-[13px] text-fg">blokcapital.io</span> only.
+                  <span className="font-mono text-caption text-fg">blokcapital.io</span> only.
                 </p>
                 <ul
                   className={cn(
-                    "mt-5 divide-y divide-line/[0.08] border-y border-line/[0.08]",
+                    "mt-5 divide-y divide-subtle border-y border-subtle",
                     "[@media(max-height:500px)]:mt-3 [@media(max-height:500px)]:grid [@media(max-height:500px)]:grid-cols-2 [@media(max-height:500px)]:gap-x-6 [@media(max-height:500px)]:divide-y-0",
                   )}
                 >
@@ -341,9 +341,9 @@ export function CookieConsent() {
                     return (
                       <li key={c.key} className={cn("flex items-start justify-between gap-4 py-4", "[@media(max-height:500px)]:py-3")}>
                         <div className="min-w-0">
-                          <p className="flex flex-wrap items-center gap-x-2.5 gap-y-1 text-[15px] font-medium text-fg">
+                          <p className="flex flex-wrap items-center gap-x-2.5 gap-y-1 text-ui font-medium text-fg">
                             {c.label}
-                            <span className="rounded-full bg-raised px-2 py-0.5 text-[11px] font-normal text-fg-muted">{c.summary}</span>
+                            <span className="rounded-full bg-raised px-2 py-0.5 text-label font-normal text-fg-muted">{c.summary}</span>
                           </p>
                           <p id={descId} className="mt-1.5 text-small text-fg-muted">
                             {c.detail}
@@ -385,7 +385,7 @@ export function CookieConsent() {
 
               <div
                 className={cn(
-                  "flex flex-col gap-2.5 border-t border-line/[0.08] px-6 py-5 sm:flex-row sm:items-center sm:justify-between",
+                  "flex flex-col gap-2.5 border-t border-subtle px-6 py-5 sm:flex-row sm:items-center sm:justify-between",
                   "[@media(max-height:500px)]:flex-row [@media(max-height:500px)]:items-center [@media(max-height:500px)]:justify-between [@media(max-height:500px)]:px-5 [@media(max-height:500px)]:py-2.5",
                 )}
               >

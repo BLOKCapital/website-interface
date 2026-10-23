@@ -1,4 +1,4 @@
-import Link from "next/link";
+import { IntentLink } from "@/components/ui/IntentLink";
 import { Icon } from "@/components/ui/Icon";
 import { cn } from "@/lib/utils";
 
@@ -14,14 +14,13 @@ export function RiskNote({ className }: { className?: string }) {
       {/* The space stays in this text node: a lone {" "} after React's text
           marker drops out of Chrome's accessibility tree. */}
       {"Crypto prices fall as well as rise, and code can fail. "}
-      <Link
+      <IntentLink
         href="/protocol#fees"
-        prefetch={false}
         className="group/risk inline-flex items-center gap-1 whitespace-nowrap rounded-xs font-medium text-leaf underline decoration-leaf/40 underline-offset-[3px] transition-colors duration-fast can-hover:hover:decoration-leaf"
       >
         Read what can go wrong
         <Icon name="arrow-right" size="sm" className="transition-transform duration-fast can-hover:group-hover/risk:translate-x-0.5" />
-      </Link>
+      </IntentLink>
     </p>
   );
 }

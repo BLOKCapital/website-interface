@@ -1,8 +1,9 @@
 import type { ReactNode } from "react";
 import { Button } from "@/components/ui/Button";
+import { DiscordIcon } from "@/components/ui/icons";
+import { DISCORD_LABEL } from "@/lib/nav";
 import { Container } from "@/components/ui/Container";
 import { SocialLinks } from "@/components/ui/SocialLinks";
-import { DiscordIcon } from "@/components/ui/icons";
 import { Icon } from "@/components/ui/Icon";
 import { GardenAsset } from "@/components/ui/GardenAsset";
 import { CornerMarks } from "@/components/motion/CornerMarks";
@@ -29,7 +30,7 @@ function copy(context: CtaContext, indexName?: string): { title: ReactNode; lead
             </em>
           </>
         ),
-        lead: "Follow it from your own Garden when Gardens open. The Discord hears first.",
+        lead: "Follow it from your own Garden when Gardens open. Until then, ask the team anything in the Discord.",
       };
     case "protocol":
       return {
@@ -41,7 +42,7 @@ function copy(context: CtaContext, indexName?: string): { title: ReactNode; lead
             </em>
           </>
         ),
-        lead: "Read the code, then ask the people who wrote it.",
+        lead: "Read the code, then ask the people who wrote it in the Discord.",
       };
     default:
       return {
@@ -53,13 +54,13 @@ function copy(context: CtaContext, indexName?: string): { title: ReactNode; lead
             </em>
           </>
         ),
-        lead: "Gardens open to the public after testing. Launch news lands in the Discord first, and the team is there every day.",
+        lead: "The app is open to testers first, and Gardens open to everyone after testing. The community and the team are in the Discord every day.",
       };
   }
 }
 
 /**
- * Closing call to action, shared by every page: join the community. The
+ * Closing call to action, shared by every page: the app and the community. The
  * payoff word decodes into place, over a field of rising signal rings (a
  * canvas that runs at 12 fps and settles; see useFieldLoop). A Night-garden
  * band that closes the page, above the light footer.
@@ -84,19 +85,20 @@ export function CtaBand({ context = "default", indexName }: { context?: CtaConte
           <h2 className="display mt-4 text-h2 text-balance text-fg">{title}</h2>
           <p className="mt-5 max-w-xl text-lead text-fg-muted">{lead}</p>
           <div className="mt-9 flex flex-wrap items-center gap-3">
-            <Button href={social("discord").href} size="lg" data-placement="cta_band">
-              <DiscordIcon /> Join the Discord
+            <Button href={links.app} size="lg" data-cta="cta_band_launch_app" data-placement="cta_band">
+              Launch App
             </Button>
-            <Button href={links.docs} size="lg" variant="secondary">
-              Read the docs
+            <Button href={social("discord").href} size="lg" variant="secondary" data-placement="cta_band">
+              <DiscordIcon /> {DISCORD_LABEL}
             </Button>
           </div>
           <p className="mt-5 text-small text-fg-muted">
-            {"Not on Discord? "}
+            {"Launch news goes out on X and in the Discord. "}
             <a
               href={x.href}
               target="_blank"
               rel="noopener noreferrer"
+              data-cta="cta_band_follow_x"
               data-placement="cta_band"
               className="inline-flex items-center gap-0.5 rounded-xs font-medium text-leaf underline decoration-leaf/40 underline-offset-[3px] transition-colors duration-fast can-hover:hover:decoration-leaf"
             >

@@ -1,8 +1,8 @@
 import type { Metadata } from "next";
 import { PageHero } from "@/components/ui/PageHero";
+import { FactGrid } from "@/components/ui/FactGrid";
 import { Section } from "@/components/ui/Section";
 import { Button } from "@/components/ui/Button";
-import { Card } from "@/components/ui/Card";
 import { CtaBand } from "@/components/ui/CtaBand";
 import { Reveal, Stagger, RevealItem } from "@/components/ui/Reveal";
 import { ExternalIcon } from "@/components/ui/icons";
@@ -56,27 +56,30 @@ export default function AboutPage() {
         // No "or the ability to take it down": a security council can pause
         // new Garden deployments (/security, "Pausing").
         description="The team that shipped BLOK Capital doesn't hold the keys to your money, and every change goes through an on-chain vote."
+        actions={
+          <>
+            <Button href="#team">Meet the team</Button>
+            <Button href="#video" variant="secondary">
+              Watch the intro
+            </Button>
+          </>
+        }
         aside={
-          <dl className="grid grid-cols-2 gap-px overflow-hidden rounded-2xl border border-line/[0.08] bg-line/[0.08] text-small">
-            {[
+          <FactGrid
+            items={[
               ["Founded", "2023"],
               ["Entity", "BLOK Capital DAO LLC"],
               ["Jurisdiction", "Marshall Islands"],
               ["Source", "Public on GitHub"],
-            ].map(([k, v]) => (
-              <div key={k} className="bg-card p-4">
-                <dt className="text-caption text-fg-subtle">{k}</dt>
-                <dd className="mt-1 text-fg">{v}</dd>
-              </div>
-            ))}
-          </dl>
+            ]}
+          />
         }
       />
 
       <Section id="story" eyebrow="Story" title="Why we built it.">
         <div className="grid gap-12 lg:grid-cols-12">
           <Reveal className="lg:col-span-7">
-            <div className="space-y-6 text-[19px] leading-[1.7] text-fg-muted">
+            <div className="space-y-6 text-lead leading-[1.7] text-fg-muted">
               {story.map((p) => (
                 <p key={p.slice(0, 24)}>{p}</p>
               ))}
@@ -130,7 +133,7 @@ export default function AboutPage() {
                   <TeamPhoto member={m} />
                 </span>
                 <span className="mt-3 flex items-center justify-between gap-2 px-1">
-                  <span className="text-[15px] text-fg">{m.name}</span>
+                  <span className="text-ui text-fg">{m.name}</span>
                   {m.href && <ExternalIcon className="text-fg-subtle transition-colors group-hover:text-leaf" />}
                 </span>
                 {m.role && <span className="mt-0.5 block px-1 text-caption text-fg-subtle">{m.role}</span>}
@@ -139,7 +142,7 @@ export default function AboutPage() {
             return (
               <RevealItem as="li" key={m.name}>
                 {m.href ? (
-                  <a href={m.href} target="_blank" rel="noopener noreferrer" className="group block rounded-2xl">
+                  <a href={m.href} target="_blank" rel="noopener noreferrer" className="group block rounded-card">
                     {card}
                     <span className="sr-only"> profile (opens in a new tab)</span>
                   </a>
@@ -156,19 +159,20 @@ export default function AboutPage() {
         <RoadmapTimeline />
       </Section>
 
-      <Section id="press" tone="surface" eyebrow="Press" title="Brand and media kit.">
-        <Reveal>
-          <Card className="flex flex-col items-start justify-between gap-6 md:flex-row md:items-center">
-            <div>
-              <h3 className="text-h4 font-medium text-fg">Logo pack and brand guidelines</h3>
-              <p className="mt-2 text-small text-fg-muted">SVG and PNG logos in light and dark, plus colour, type and usage rules.</p>
-            </div>
-            <Button href={links.brandKit} variant="secondary">
-              Open the brand kit
-            </Button>
-          </Card>
-        </Reveal>
-      </Section>
+      {/* One link, so one compact row: the button sits beside the heading. */}
+      <Section
+        id="press"
+        tone="surface"
+        eyebrow="Press"
+        title="Brand and media kit."
+        description="Logo pack and brand guidelines: SVG and PNG logos in light and dark, plus colour, type and usage rules."
+        actions={
+          <Button href={links.brandKit} variant="secondary">
+            Open the brand kit
+          </Button>
+        }
+        className="py-section-sm"
+      />
       <CtaBand />
     </>
   );

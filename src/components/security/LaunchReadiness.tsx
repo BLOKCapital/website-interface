@@ -1,4 +1,4 @@
-import Link from "next/link";
+import { IntentLink } from "@/components/ui/IntentLink";
 import { Section } from "@/components/ui/Section";
 import { Badge } from "@/components/ui/Badge";
 import { Card } from "@/components/ui/Card";
@@ -32,9 +32,8 @@ function StatusGlyph({ status }: { status: ReadinessStatus }) {
 function Proof({ label, href, cta }: { label: string; href: string; cta?: string }) {
   const external = /^https?:\/\//.test(href);
   return (
-    <Link
+    <IntentLink
       href={href}
-      prefetch={false}
       target={external ? "_blank" : undefined}
       rel={external ? "noopener noreferrer" : undefined}
       data-cta={cta}
@@ -47,7 +46,7 @@ function Proof({ label, href, cta }: { label: string; href: string; cta?: string
         className="transition-transform duration-fast can-hover:group-hover/proof:translate-x-0.5"
       />
       {external && <span className="sr-only"> (opens in a new tab)</span>}
-    </Link>
+    </IntentLink>
   );
 }
 
@@ -63,17 +62,13 @@ export function LaunchReadiness() {
     <Section
       id="readiness"
       eyebrow="Launch readiness"
-      title={
-        <>
-          What&apos;s done, <em className="text-sand">and what isn&apos;t yet.</em>
-        </>
-      }
+      title="What's done, and what isn't yet."
       description="The checks between private testing and a public launch. Each status is what this site already says, with the proof beside it; a date appears only where one is known."
     >
       <Reveal>
         <Card size="sm" radius="panel" className="p-0 sm:p-0">
           <p className="label-caps border-b border-subtle px-5 py-3.5 sm:px-7">{summary}</p>
-          <ul className="divide-y divide-line/[0.07]">
+          <ul className="divide-y divide-subtle">
             {readiness.map((r) => (
               // Phone: shape | text, then the status and the proof under the
               // text. sm: the proof moves to a right-hand column. lg: one row.

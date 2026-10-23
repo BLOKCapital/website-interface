@@ -27,7 +27,7 @@ const exits = [
 
 export default function NotFound() {
   return (
-    <section className="mx-auto grid min-h-[80vh] w-full max-w-page items-center gap-10 px-5 pb-16 pt-32 sm:px-8 lg:grid-cols-2">
+    <section className="mx-auto grid min-h-[80vh] w-full max-w-page items-center gap-10 px-gutter pb-16 pt-32 lg:grid-cols-2">
       <div>
         <p className="eyebrow">Error 404</p>
         <h1 className="display mt-4 text-h1 text-fg">Nothing planted here.</h1>

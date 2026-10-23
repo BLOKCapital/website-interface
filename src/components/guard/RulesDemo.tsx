@@ -15,9 +15,9 @@ import { cn } from "@/lib/utils";
 const holdMs = (s: Scenario) => dwellMs(s.caption, ...s.lines.flatMap((l) => [l.text, l.result]), s.verdict.text);
 
 const look: Record<Verdict, { label: string; stamp: string; mark: string; text: string; border: string; bg: string }> = {
-  allow: { label: "Allow", stamp: "Allowed", mark: "✓", text: "text-leaf", border: "border-leaf/45", bg: "bg-leaf/[0.07]" },
-  block: { label: "Block", stamp: "Blocked", mark: "✕", text: "text-negative", border: "border-negative/45", bg: "bg-negative/[0.07]" },
-  hold: { label: "Hold", stamp: "Held", mark: "‖", text: "text-caution", border: "border-caution/45", bg: "bg-caution/[0.07]" },
+  allow: { label: "Allow", stamp: "Allowed", mark: "✓", text: "text-leaf", border: "border-leaf/45", bg: "bg-leaf/7" },
+  block: { label: "Block", stamp: "Blocked", mark: "✕", text: "text-negative", border: "border-negative/45", bg: "bg-negative/7" },
+  hold: { label: "Hold", stamp: "Held", mark: "‖", text: "text-caution", border: "border-caution/45", bg: "bg-caution/7" },
 };
 
 const toneText: Record<TraceLine["tone"], string> = {
@@ -154,7 +154,7 @@ export function RulesDemo() {
           onTouchStart={ap.stop}
           onWheel={(e) => Math.abs(e.deltaX) > Math.abs(e.deltaY) && ap.stop()}
           // focus-inset: the phone strip scrolls, and would clip an outside ring.
-          className="focus-inset relative -mx-5 flex gap-2 overflow-x-auto px-5 py-1.5 [scrollbar-width:none] sm:-mx-8 sm:px-8 lg:mx-0 lg:block lg:space-y-2 lg:overflow-visible lg:p-0"
+          className="focus-inset relative -mx-gutter flex gap-2 overflow-x-auto px-gutter py-1.5 [scrollbar-width:none] lg:mx-0 lg:block lg:space-y-2 lg:overflow-visible lg:p-0"
         >
           {scenarios.map((s, i) => {
             const on = i === run.i;
@@ -168,20 +168,20 @@ export function RulesDemo() {
                 aria-controls={`${base}-panel`}
                 onClick={() => select(i)}
                 className={cn(
-                  "group/sc relative block shrink-0 overflow-hidden rounded-2xl border px-4 py-3 text-left transition-[background-color,border-color] duration-fast lg:w-full lg:py-3.5",
-                  on ? "border-leaf/30 bg-card" : "border-line/[0.07] hover:border-line/20 hover:bg-card/60",
+                  "group/sc relative block shrink-0 overflow-hidden rounded-card border px-4 py-3 text-left transition-[background-color,border-color] duration-fast lg:w-full lg:py-3.5",
+                  on ? "border-leaf/30 bg-card" : "border-subtle hover:border-line/20 hover:bg-card/60",
                 )}
               >
                 <span className="flex items-center justify-between gap-3">
                   <span className="flex min-w-0 items-center gap-3">
-                    <span className={cn("font-mono text-[11px] tabular", on ? "text-leaf" : "text-fg-subtle")}>
+                    <span className={cn("font-mono text-label tabular", on ? "text-leaf" : "text-fg-subtle")}>
                       {String(i + 1).padStart(2, "0")}
                     </span>
                     <span className={cn("whitespace-nowrap text-small font-medium lg:truncate", on ? "text-fg" : "text-fg-muted group-hover/sc:text-fg")}>
                       {s.label}
                     </span>
                   </span>
-                  <span className={cn("shrink-0 rounded-full border px-2 py-0.5 font-mono text-[11px] uppercase tracking-[0.12em]", sv.border, sv.text)}>
+                  <span className={cn("shrink-0 rounded-full border px-2 py-0.5 font-mono text-label uppercase tracking-caps", sv.border, sv.text)}>
                     {sv.label}
                   </span>
                 </span>
@@ -211,13 +211,13 @@ export function RulesDemo() {
         role="tabpanel"
         aria-labelledby={`${base}-tab-${sc.id}`}
         tabIndex={0}
-        className="relative min-w-0 overflow-hidden rounded-3xl border border-line/[0.08] bg-surface lg:col-span-8"
+        className="relative min-w-0 overflow-hidden rounded-panel border border-subtle bg-surface lg:col-span-8"
       >
         {/* One sweep of light per scenario (re-keyed), then still. */}
         <div key={`scan-${run.i}`} aria-hidden data-loop className="scanlines pointer-events-none absolute inset-0 overflow-hidden" />
 
-        <div className="relative flex items-center justify-between gap-3 border-b border-line/[0.07] px-5 py-3">
-          <p className="flex min-w-0 items-center gap-2 font-mono text-[12px] text-fg-muted">
+        <div className="relative flex items-center justify-between gap-3 border-b border-subtle px-5 py-3">
+          <p className="flex min-w-0 items-center gap-2 font-mono text-label text-fg-muted">
             <span aria-hidden className="size-1.5 shrink-0 rounded-full bg-leaf" />
             <span className="truncate">
               garden.trace <span className="text-fg-subtle">/ {sc.id}</span>
@@ -230,7 +230,7 @@ export function RulesDemo() {
               key={`stamp-${run.i}-${done}`}
               aria-hidden
               className={cn(
-                "hidden rounded-md border-2 px-2 py-0.5 text-center font-mono text-[11px] font-semibold uppercase tracking-[0.2em] sm:inline-grid",
+                "hidden rounded-md border-2 px-2 py-0.5 text-center font-mono text-label font-semibold uppercase tracking-[0.2em] sm:inline-grid",
                 v.border,
                 v.text,
                 done ? !instant && "animate-stamp" : "invisible",
@@ -267,7 +267,7 @@ export function RulesDemo() {
             the terminal is as tall as the longest trace at every width and
             never changes height between scenarios or while one types out;
             only the active one is visible. */}
-        <div aria-hidden className="relative grid px-5 py-5 font-mono text-[12px] leading-relaxed sm:text-[13px]">
+        <div aria-hidden className="relative grid px-5 py-5 font-mono text-label leading-relaxed sm:text-caption">
           {scenarios.map((x, i) => {
             const on = i === run.i;
             const xv = look[x.verdict.kind];
@@ -307,14 +307,14 @@ export function RulesDemo() {
 
                 <div
                   className={cn(
-                    "mt-6 flex flex-col gap-1 rounded-xl border px-4 py-3 sm:flex-row sm:items-baseline sm:gap-4",
+                    "mt-6 flex flex-col gap-1 rounded-control border px-4 py-3 sm:flex-row sm:items-baseline sm:gap-4",
                     xv.border,
                     xv.bg,
                     on && !done && "invisible",
                     on && done && !instant && "animate-swap",
                   )}
                 >
-                  <span className={cn("shrink-0 font-semibold uppercase tracking-[0.14em]", xv.text)}>
+                  <span className={cn("shrink-0 font-semibold uppercase tracking-eyebrow", xv.text)}>
                     {xv.mark} {xv.label}
                   </span>
                   <span className="font-sans text-small text-fg">{x.verdict.text}</span>
@@ -328,14 +328,14 @@ export function RulesDemo() {
           })}
         </div>
 
-        <div className="relative flex flex-wrap items-center justify-between gap-3 border-t border-line/[0.07] px-5 py-3">
+        <div className="relative flex flex-wrap items-center justify-between gap-3 border-t border-subtle px-5 py-3">
           <p className="flex flex-wrap items-center gap-x-2 text-caption text-fg-subtle">
             Rule from{" "}
             {/* Every scenario's source in one cell, so the row wraps the same way for all. */}
             <span className="inline-grid">
               {scenarios.map((x, i) => (
                 <span key={x.id} inert={i !== run.i} className={cn("col-start-1 row-start-1", i !== run.i && "invisible")}>
-                  <ArrowLink href={x.source.href} className="text-[13px]">
+                  <ArrowLink href={x.source.href} className="text-caption">
                     {x.source.label}
                   </ArrowLink>
                 </span>

@@ -77,7 +77,7 @@ export default async function PolicyPage({ params }: { params: Promise<{ slug: s
   const others = getAllPolicies().filter((p) => p.slug !== slug);
 
   return (
-    <article className="mx-auto w-full max-w-page px-5 pb-24 pt-32 sm:px-8 sm:pt-40">
+    <article className="mx-auto w-full max-w-page px-gutter pb-24 pt-32 sm:pt-40">
       <JsonLd
         data={[
           articleSchema({ title: policy.title, description: `${policy.title}, BLOK Capital DAO LLC.`, path: `/legal/${slug}`, datePublished: policy.date }),
@@ -87,7 +87,7 @@ export default async function PolicyPage({ params }: { params: Promise<{ slug: s
       {/* Home / Policy, matching the breadcrumbSchema above (UX-18, SEO-20):
           there's no /legal page for a "Legal" crumb to point at. */}
       <Breadcrumb items={[{ label: policy.title }]} />
-      <header className="mt-8 max-w-3xl border-b border-line/[0.08] pb-10">
+      <header className="mt-8 max-w-3xl border-b border-subtle pb-10">
         <h1 className="display text-h1 text-fg">{policy.title}</h1>
         <p className="mt-5 text-small text-fg-subtle">
           Last updated {updated} · {readingMinutes(policy.html)} min read
@@ -100,7 +100,7 @@ export default async function PolicyPage({ params }: { params: Promise<{ slug: s
             nav (A11Y-25). */}
         <div className="lg:sticky lg:top-28 lg:max-h-[calc(100vh-9rem)] lg:self-start lg:overflow-y-auto">
           {/* Phones: collapsed so the text isn't pushed below a long list. */}
-          <details id="policy-contents" className="rounded-xl border border-line/[0.08] bg-card p-4 lg:hidden">
+          <details id="policy-contents" className="rounded-control border border-subtle bg-card p-4 lg:hidden">
             <summary className="cursor-pointer text-small text-fg">Contents</summary>
             <div className="mt-4">
               {/* The summary already says "Contents". */}
@@ -118,20 +118,20 @@ export default async function PolicyPage({ params }: { params: Promise<{ slug: s
           <div className="prose-legal max-w-prose" dangerouslySetInnerHTML={{ __html: withExternalLinks(policy.html) }} />
 
           {slug === "cookie-policy" && (
-            <div className="mt-12 flex max-w-prose flex-col gap-4 rounded-2xl border border-line/[0.08] bg-card p-6 sm:flex-row sm:items-center sm:justify-between">
+            <div className="mt-12 flex max-w-prose flex-col gap-4 rounded-card border border-subtle bg-card p-6 sm:flex-row sm:items-center sm:justify-between">
               <p className="text-small text-fg-muted">Review, change or withdraw your consent at any time.</p>
               <CookieSettingsButton className="inline-flex h-11 shrink-0 items-center justify-center rounded-full border border-line/15 px-5 text-small text-fg" />
             </div>
           )}
 
-          <div className="mt-14 max-w-prose border-t border-line/[0.08] pt-8">
-            <h2 className="text-caption font-semibold uppercase tracking-[0.12em] text-fg-subtle">Other policies</h2>
+          <div className="mt-14 max-w-prose border-t border-subtle pt-8">
+            <h2 className="text-caption font-semibold uppercase tracking-caps text-fg-subtle">Other policies</h2>
             <ul className="mt-4 grid gap-3 sm:grid-cols-2">
               {others.map((p) => (
                 <li key={p.slug}>
                   <Link
                     href={`/legal/${p.slug}`}
-                    className="block rounded-xl border border-line/[0.08] bg-card px-4 py-3 text-[15px] text-fg transition-colors hover:border-leaf/30"
+                    className="block rounded-control border border-subtle bg-card px-4 py-3 text-ui text-fg transition-colors hover:border-leaf/30"
                   >
                     {p.title}
                   </Link>

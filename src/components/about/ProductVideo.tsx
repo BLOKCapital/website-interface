@@ -33,7 +33,7 @@ export function ProductVideo() {
 
   return (
     <div>
-      <div className="relative aspect-video w-full overflow-hidden rounded-2xl border border-line/[0.08] bg-card">
+      <div className="relative aspect-video w-full overflow-hidden rounded-card border border-subtle bg-card">
         {playing ? (
           // Standard YouTube embed sandbox: allow-same-origin scopes to youtube-nocookie.com.
           // react-doctor-disable-next-line react-doctor/iframe-missing-sandbox
@@ -67,7 +67,7 @@ export function ProductVideo() {
               className="object-cover opacity-80 transition-opacity duration-fast can-hover:group-hover:opacity-95"
             />
             <span className="absolute inset-0 bg-gradient-to-t from-canvas/80 via-canvas/10 to-transparent" />
-            <span className="absolute inset-0 m-auto flex size-16 items-center justify-center rounded-full bg-leaf text-canvas shadow-[0_20px_50px_-15px_rgb(var(--shadow))] transition-transform duration-fast can-hover:group-hover:scale-105 sm:size-20">
+            <span className="absolute inset-0 m-auto flex size-16 items-center justify-center rounded-full bg-leaf text-canvas shadow-e2 transition-transform duration-fast can-hover:group-hover:scale-105 sm:size-20">
               <svg width="24" height="24" viewBox="0 0 22 22" aria-hidden className="ml-1">
                 <polygon points="6,3 19,11 6,19" fill="currentColor" />
               </svg>

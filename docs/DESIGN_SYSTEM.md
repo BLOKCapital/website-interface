@@ -312,7 +312,7 @@ Stagger only on a first reveal, never on repeated UI. Delay = `min(i × stagger,
 | `.split-load`, `[data-split]`, `.split-word` | word ink-and-rise for `SplitText` |
 | `.ink-scope`, `.ink-word` | scroll-linked word ink for `ScrollInk` (CSS view timeline) |
 | `details.smooth` | `<details>` that animates to `height: auto` where supported |
-| `.page-enter` | soft-navigation page entrance (`app/template.tsx`) at base / `--move-sm` |
+| `.page-enter` | marks a soft-navigation page (`app/template.tsx`): no entrance of its own (removed 2026-10-22, it made page changes feel slow); it only stops the hero replaying its load entrance |
 | `.value-tint` | a live value that changed: leaf tint fading over 600 ms, colour only |
 | `.meter-fill`, `.alloc-seg` | bars that fill from the left when their reveal group reveals |
 | `.draw-path` | line icons that draw in on reveal (`pathLength="1"`) |
@@ -384,7 +384,7 @@ After `load`, once the main thread is idle, `RevealScript` keeps `data-inview` o
 | **R4** | JS motion runs only in view, on ≤ 15 fps timers (`useFieldLoop` caps at 15; `Scramble` ticks at 15). |
 | **R5** | Interactions after load respond in under 100 ms. |
 
-`PageHero` and the home `Hero` implement R1: h1, lede, actions and aside use `animate-rise` with no delay; only the breadcrumb and eyebrow fade in (any delay ≤ 150 ms); everything settles by `--dur-slow`, well inside the 700 ms budget. After a client-side navigation the hero doesn't replay its entrance; the whole page eases in once (`.page-enter`).
+`PageHero` and the home `Hero` implement R1: h1, lede, actions and aside use `animate-rise` with no delay; only the breadcrumb and eyebrow fade in (any delay ≤ 150 ms); everything settles by `--dur-slow`, well inside the 700 ms budget. After a client-side navigation the hero doesn't replay its entrance and the page appears at once (`.page-enter`).
 
 ### 3.9 Patterns, and when not to animate
 
@@ -428,6 +428,17 @@ ProtocolExplorer, RulesDemo and DecisionPipeline share one rule set:
 const ap = useAutoplay(rootRef);
 <div ref={rootRef} {...ap.rootProps}>…{ap.eligible && <AutoplayToggle on={ap.on} ended={ap.ended} onClick={ap.toggle} what="the walkthrough" />}</div>
 ```
+
+### 3.12 Machine figures (`components/iso`)
+
+Protocol ideas drawn as small working machines, in the style of an engineering drawing: paper-white parts with three shades and a fine ink outline, bolted to a rounded mounting plate (screws, ruler ticks), labels engraved on the parts they name. Colour is kept for meaning (a lit lamp, a coin's gold, a fill). Each figure sits in one frame (`MachineFigure`): "Fig n" and a title, the drawing, step tabs, a Pause button, a live mono readout, and a caption that says "Illustrative".
+
+- **Built so far:** Fig 1 `GardenMachine` (/protocol#architecture: strategies trade inside, only your key moves funds out) Fig 2 `IndexMachine` (/indices#methodology: Price → Size → Weigh → Floor, the four steps in `methodology`) Fig 3 `ReleaseMachine` (/security#audits: write → test → audit → scan → approve → ship, from the page's `pipeline`), Fig 4 `ProposalMachine` (/governance#process: propose → discuss → vote → execute, from the page's `process`; it replaced DecisionPipeline) and Fig 5 `OpenGardenMachine` (home #how: open → fund → strategy, driven by the How it works scroller instead of tabs; it replaced GardenMock).
+- **Replaced and removed:** CustodyDiagram (by Fig 1), StepFlow (by Fig 3), DecisionPipeline (by Fig 4), GardenMock (by Fig 5).
+- **Not a figure:** home #app shows the BLOKC app's Index Gardens screen, rebuilt in HTML (`home/GardenScreen`) from the app repo's own components and tokens, with example data and an "Example" badge. `ScaledScreen` lays it out at a real window width (1280, or 430 in a narrow frame) and scales it to the frame like a screenshot; its CSS uses container queries, so the layout follows the frame, not the viewport.
+- **Kit:** `geometry.ts` (2:1 projection, rounded plates, iso circles, face transforms for engraved text), `machine.tsx` (Part, Slab, Cyl, Screw, Flat, OnFace/Engrave), `Iso.tsx` (the stage, moving HTML layers, marks), `iso.module.css` (motions; a CSS module, so it ships only with pages that show a figure).
+- **They loop, on purpose** (owner's call, 2026-10-23), unlike the one-pass explainers of §3.11: `useFigureLoop` plays the steps round and round until the visitor presses Pause, and picking a step carries the loop on from there. It never runs with reduced motion or Pause motion (the figure then holds the picked step's still frame), off screen, or in a hidden tab.
+- **Honest data:** the rules and limits in readouts come from `lib/data`; sizes and amounts in the drawing are made up, and the caption says so.
 
 ## 4. Components
 
@@ -572,7 +583,7 @@ A **custom modal** (the mobile menu sheet, the cookie preferences dialog) must:
 
 Every link that opens a new tab has `target="_blank" rel="noopener noreferrer"` and says so twice: a visible ↗ (`<Icon name="external" size="sm" />`) and a screen-reader note, `<span className="sr-only"> (opens in a new tab)</span>` (or the same words in an icon-only link's `aria-label`).
 
-`Button`, `Card`, `ArrowLink`, `FaqList` and `SocialLinks` do this automatically. A linked `Card` with `aria-labelledby` points at the note's id too. Destinations that ask for a wallet also show their host (`<Button host>`). Internal links never get the cue. Low-priority internal links use `prefetch={false}`.
+`Button`, `Card`, `ArrowLink`, `FaqList` and `SocialLinks` do this automatically. A linked `Card` with `aria-labelledby` points at the note's id too. Destinations that ask for a wallet also show their host (`<Button host>`). Internal links never get the cue. Link lists and inline text links (footer, risk and audit notes, FAQ answers) use `IntentLink`: it prefetches on hover, touch or focus instead of on sight, so a click doesn't wait for the network and scrolling doesn't prefetch every route. Don't use a bare `prefetch={false}`.
 
 ### 5.4 Hover only where hover exists
 
@@ -663,6 +674,12 @@ Key sections for `section_view`: `how`, `products`, `indices`, `explore`, `rules
 ## 8. Known gaps and follow-ups
 
 ### 8.1 F-08: the deferred token codemod
+
+> **Done 2026-10-22.** The map below was applied across `src/` (63 files), and `eslint.config.mjs` now has the guard: one-off font sizes under 40px, off-scale radii, two-digit arbitrary z-indexes, the two caps trackings, `border-line/[…]` alphas and elevation `shadow-[…]` fail lint. Section, Nav, AtAGlance and the hand-written page wrappers use `Container` / `px-gutter`; `Section` uses `py-section` and `mb-header`. A new `z-sheet` (49) layer holds the mobile menu sheet.
+>
+> Choices that differ from the table: 11px *text* became `text-label` (12px); only `aria-hidden` art (GardenMock, ProductArt, CustodyDiagram, the easter eggs) keeps `text-micro`. Wordmarks in the ecosystem strip are `text-body`, not `text-lead`. 28/32px panel radii are now `rounded-panel` (24px).
+>
+> Left on purpose: `src/components/roadmap/*` (frozen until the owner re-dates it; the guard ignores it), the decorative 40px and 96px numerals, BasketOrbit's fluid `clamp(12px,1.4vw,16px)`, `z-[1]` in DecisionPipeline, the four one-off trackings, the leaf glow and ring shadows (effects, not elevation), and `.prose-legal`'s px sizes in `globals.css`.
 
 The tokens exist, but most components predate them. When this was written, the code still had **about 190 arbitrary font sizes** (172 `text-[…]` utilities across 46 files, plus px sizes in `.prose-legal` and a few inline styles), alongside 21 `shadow-[…]`, 14 `rounded-[…]`, 6 `z-[…]`, about 125 `line/[0.0x]` alphas, 38 `tracking-[…]` and 71 `rounded-xl/2xl/3xl`. `<Container>` has 6 uses against 9 hand-written `mx-auto … max-w-page px-5 … sm:px-8` copies (Section, Nav, Hero, AtAGlance, the mobile menu, the legal, error and 404 pages). The plan is the migration map from B §3.10, as one codemod after the Tier 2/3 merges, followed by a baseline screenshot comparison at 375 and 1280:
 

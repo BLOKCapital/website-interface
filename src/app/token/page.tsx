@@ -16,7 +16,6 @@ import { breadcrumbSchema } from "@/lib/seo/schema";
 import { milestones } from "@/lib/data/milestones";
 import { protocolStatus } from "@/lib/data/status";
 import { links } from "@/lib/data/socials";
-import { BLOKC_TOKEN } from "@/lib/data/token";
 import { pageMetadata } from "@/lib/seo/metadata";
 
 export const metadata: Metadata = pageMetadata({
@@ -56,15 +55,12 @@ const allocation = [
   { label: "Airdrop", pct: 1 },
 ];
 
-// Key facts (SEO-12): plain text an answer engine can lift, using only
-// what this page already shows (TokenSpec and TokenContract).
-const keyFacts = [
-  { k: "Symbol", v: "$BLOKC, an ERC-20 token" },
-  { k: "Total supply", v: "10,000,000,000 $BLOKC" },
-  { k: "Network", v: "Arbitrum One (chain ID 42161)" },
-  { k: "Decimals", v: "18" },
-  { k: "Contract", v: BLOKC_TOKEN },
-];
+// Key facts (SEO-12): one plain sentence an answer engine can lift, under the
+// heading, using only what this page already shows (TokenSpec and
+// TokenContract). A sentence, not a list: the spec panel below is the list.
+const keyFacts =
+  "$BLOKC is an ERC-20 token on Arbitrum One (chain ID 42161), with a total supply of 10,000,000,000 $BLOKC and 18 " +
+  "decimals. Its contract address is below; always check it against the docs before you send anything.";
 
 const tokenMilestones = milestones.filter((m) => ["staking", "ido", "dao-vote"].includes(m.id));
 
@@ -103,22 +99,10 @@ export default function TokenPage() {
       <Section
         id="facts"
         eyebrow="Token facts"
-        title={
-          <>
-            One token, <em className="text-sand">four numbers.</em>
-          </>
-        }
+        title="One token, four numbers."
+        description={keyFacts}
       >
         <Reveal>
-          <h3 className="font-mono text-[11px] uppercase tracking-[0.14em] text-fg-subtle">Key facts</h3>
-          <ul className="mb-8 mt-3 grid list-disc gap-x-10 gap-y-1.5 pl-5 text-small text-fg-muted marker:text-leaf sm:grid-cols-2">
-            {keyFacts.map((f) => (
-              <li key={f.k}>
-                {`${f.k}: `}
-                <span className={f.k === "Contract" ? "break-all font-mono text-[12.5px] text-fg" : "text-fg"}>{f.v}</span>
-              </li>
-            ))}
-          </ul>
           <TokenSpec />
         </Reveal>
       </Section>
@@ -135,7 +119,7 @@ export default function TokenPage() {
             <RevealItem as="li" key={u.title}>
               <Card tone={u.planned ? "planned" : "default"} className="h-full">
                 <div className="flex h-6 items-center justify-between gap-3">
-                  <span className="font-mono text-[12px] text-leaf">0{i + 1}</span>
+                  <span className="font-mono text-label text-leaf">0{i + 1}</span>
                   {u.planned && <Badge status="planned" />}
                 </div>
                 <h3 className="mt-3 text-h4 font-medium text-fg">{u.title}</h3>

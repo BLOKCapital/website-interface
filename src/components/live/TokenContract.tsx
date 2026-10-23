@@ -28,7 +28,7 @@ function GroupedAddress({ address, id }: { address: string; id: string }) {
   const tail = address.slice(-4);
   const middle = address.slice(6, -4).match(/.{1,4}/g) ?? [];
   return (
-    <span id={id} className="font-mono text-[13px] tracking-[0.02em]">
+    <span id={id} className="font-mono text-caption tracking-[0.02em]">
       <span className={`mr-[0.4em] font-semibold text-fg ${hover}`}>{head}</span>
       {middle.map((g, i) => (
         <Fragment key={i}>
@@ -48,8 +48,8 @@ export function TokenContract() {
   const addressId = useId();
   const live = useLive(readToken, { interval: 60000, staleAfter: 180000, ref });
   return (
-    <div ref={ref} className="rounded-2xl border border-line/[0.08] bg-card">
-      <div className="flex flex-wrap items-center justify-between gap-2 border-b border-line/[0.07] px-5 py-3.5">
+    <div ref={ref} className="rounded-card border border-subtle bg-card">
+      <div className="flex flex-wrap items-center justify-between gap-2 border-b border-subtle px-5 py-3.5">
         <p className="text-small font-medium text-fg">Contract on Arbitrum One</p>
         <LiveStatus state={live.state} updatedAt={live.updatedAt} source="the Arbitrum network" onRetry={live.retry} />
       </div>
@@ -68,12 +68,12 @@ export function TokenContract() {
           </a>
           <div className="mt-2 flex flex-wrap items-center gap-x-3 gap-y-2">
             <CopyButton value={BLOKC_TOKEN} label="Copy address" selectTarget={addressId} />
-            <p className="font-mono text-[11.5px] text-fg-subtle">Arbitrum One · chain ID 42161</p>
+            <p className="font-mono text-label text-fg-subtle">Arbitrum One · chain ID 42161</p>
           </div>
         </div>
         <div>
           <p className="text-caption text-fg-subtle">Total supply, read from chain</p>
-          <p className="mt-1.5 font-mono text-[15px] text-fg tabular">
+          <p className="mt-1.5 font-mono text-ui text-fg tabular">
             {live.data ? (
               `${live.data.supply.toLocaleString("en-GB")} BLOKC`
             ) : live.state === "error" || live.state === "offline" ? (
@@ -86,7 +86,7 @@ export function TokenContract() {
           </p>
         </div>
       </div>
-      <p className="border-t border-line/[0.07] px-5 py-3 text-caption text-fg-subtle">
+      <p className="border-t border-subtle px-5 py-3 text-caption text-fg-subtle">
         {"Address as published in the "}
         {/* Link and full stop stay on one line. */}
         <span className="whitespace-nowrap">

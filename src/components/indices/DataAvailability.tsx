@@ -31,12 +31,12 @@ const rows: Row[] = [
  */
 export function DataAvailability() {
   return (
-    <ul className="divide-y divide-line/[0.06] overflow-hidden rounded-2xl border border-line/[0.08] bg-card">
+    <ul className="divide-y divide-subtle overflow-hidden rounded-card border border-subtle bg-card">
       {rows.map((r) => (
         <li key={r.label} className="grid gap-1.5 px-5 py-4 sm:grid-cols-[190px_150px_1fr] sm:items-center sm:gap-4">
           <p className="text-small font-medium text-fg">{r.label}</p>
           {r.state === "live" ? (
-            <p className="inline-flex items-center gap-1.5 font-mono text-[11px] font-medium uppercase tracking-[0.12em] text-leaf">
+            <p className="inline-flex items-center gap-1.5 font-mono text-label font-medium uppercase tracking-caps text-leaf">
               <span aria-hidden className="size-1.5 rounded-full bg-leaf" /> Available
             </p>
           ) : (

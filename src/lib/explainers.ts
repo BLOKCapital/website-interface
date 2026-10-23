@@ -7,7 +7,7 @@ import { useIsClient } from "./hooks";
 /**
  * Shared rules for the explainers, so they all behave the same way.
  *
- * Autoplay (ProtocolExplorer, RulesDemo, DecisionPipeline):
+ * Autoplay (ProtocolExplorer, RulesDemo):
  * - runs only on wide screens with a real pointer (lg and `(hover: hover)`),
  *   only with motion allowed (reduced motion and the site's Pause-motion
  *   switch both turn it off, live), and only on screen in a visible tab;
@@ -44,7 +44,7 @@ const subscribeVisibility = (cb: () => void) => {
 };
 
 /** Whether the tab is visible. Reactive; true on the server. */
-function usePageVisible() {
+export function usePageVisible() {
   return useSyncExternalStore(subscribeVisibility, () => document.visibilityState === "visible", () => true);
 }
 

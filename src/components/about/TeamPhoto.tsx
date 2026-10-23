@@ -14,7 +14,7 @@ export function TeamPhoto({ member }: { member: TeamMember }) {
   const [failed, setFailed] = useState(false);
   if (!member.image || failed) {
     return (
-      <span className="flex size-full items-center justify-center bg-raised text-[28px] text-fg-muted display">{member.initials}</span>
+      <span className="flex size-full items-center justify-center bg-raised text-h3 text-fg-muted display">{member.initials}</span>
     );
   }
   return (

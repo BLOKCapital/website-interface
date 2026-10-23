@@ -973,7 +973,7 @@ html[data-io] [data-loop]:not([data-inview]) *::after {
 /* ---------- Mobile menu (components/nav/MobileMenu.tsx) ------------------
    Opens as a circle growing from the menu button (top right), while each
    group eases in on a 20 ms stagger (--i, set inline), so the whole sheet
-   is in by 250 ms (MOT-13). The pinned Discord bar has no delay: the circle
+   is in by 250 ms (MOT-13). The pinned Launch App bar has no delay: the circle
    reveals it. Closing shrinks the circle at ~0.75× and visibility flips only
    once it has gone. Under reduced motion or Pause motion the global
    contract makes every part instant, delays included. */
@@ -1040,18 +1040,10 @@ html[data-io] [data-loop]:not([data-inview]) *::after {
 }
 
 /* ---------- Page changes (app/template.tsx) ------------------------------
-   After a client-side navigation the new page eases in, quickly and as one
-   piece: its hero doesn't replay its own load entrance on top. Fill mode
-   "backwards" leaves no transform behind once it ends, so sticky and fixed
-   elements inside the page behave normally. */
-@media (prefers-reduced-motion: no-preference) {
-  html:not([data-motion="paused"]) .page-enter {
-    animation: pageEnter var(--dur-base) var(--ease-out) backwards;
-  }
-}
-@keyframes pageEnter {
-  from { opacity: 0; transform: translate3d(0, var(--move-sm), 0); }
-}
+   After a client-side navigation the new page appears at once: no fade, so
+   a click never waits on an animation (it used to ease in over --dur-base,
+   which read as a slow page change). Its hero doesn't replay its own load
+   entrance either; the page simply swaps. */
 .page-enter > section:first-of-type :is(
   .animate-rise,
   .animate-fade-in,
@@ -1061,6 +1053,26 @@ html[data-io] [data-loop]:not([data-inview]) *::after {
 ) {
   animation: none;
 }
+
+/* ---------- Page-change progress (components/system/NavProgress.tsx) -----
+   Hidden until a page change has taken 120ms; then it runs most of the way
+   and waits there for the new page. Ease-out, so it moves at once and slows. */
+.nav-progress {
+  opacity: 0;
+  transform: scaleX(0);
+}
+.nav-progress[data-state="loading"] {
+  opacity: 1;
+  animation: navProgress 8s var(--ease-out) forwards;
+}
+@keyframes navProgress {
+  from { transform: scaleX(0.1); }
+  to { transform: scaleX(0.9); }
+}
+@media (prefers-reduced-motion: reduce) {
+  .nav-progress[data-state="loading"] { animation: none; transform: scaleX(1); }
+}
+html[data-motion="paused"] .nav-progress[data-state="loading"] { animation: none; transform: scaleX(1); }
 
 /* ---------- Meters (components/governance/ProposalBoard.tsx) -------------
    Bars fill from the left when their card reveals (RevealScript), staggered

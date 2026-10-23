@@ -25,17 +25,17 @@ export function ProposalList({
       {list.map((p) => (
         <li key={p.id}>
           <div className="flex items-start justify-between gap-4">
-            <p className="text-[15px] leading-snug text-fg">{p.title}</p>
+            <p className="text-ui leading-snug text-fg">{p.title}</p>
             <ProposalStatus p={p} />
           </div>
           <div
-            className="mt-3 h-1.5 overflow-hidden rounded-full bg-line/[0.08]"
+            className="mt-3 h-1.5 overflow-hidden rounded-full bg-line/8"
             role="img"
             aria-label={`${p.forPct.toFixed(1)}% voted for`}
           >
             <div className="h-full rounded-full bg-leaf" style={{ width: `${p.forPct}%` }} />
           </div>
-          <p className="mt-2 flex flex-wrap justify-between gap-x-4 gap-y-1 font-mono text-[12px] text-fg-subtle tabular">
+          <p className="mt-2 flex flex-wrap justify-between gap-x-4 gap-y-1 font-mono text-label text-fg-subtle tabular">
             <span>For {p.forPct.toFixed(1)}%</span>
             <span>
               Turnout {p.turnoutPct.toFixed(1)}%{p.endLabel && ` · ${p.active ? "ends" : "ended"} ${p.endLabel}`}

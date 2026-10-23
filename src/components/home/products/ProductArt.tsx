@@ -76,7 +76,7 @@ export function RebalanceArt({ className }: { className?: string }) {
         return (
           <span
             key={s}
-            className={cn("absolute -translate-x-1/2 -translate-y-1/2", i === DRIFTER && "z-10")}
+            className={cn("absolute -translate-x-1/2 -translate-y-1/2", i === DRIFTER && "z-raised")}
             style={{ left: pct(p.x, W1), top: pct(p.y, H1) }}
           >
             <span
@@ -142,7 +142,7 @@ export function RoutesArt({ className }: { className?: string }) {
         className="absolute flex -translate-x-1/2 -translate-y-1/2 flex-col items-center gap-1"
         style={{ left: pct(GARDEN.x, W2), top: pct(GARDEN.y, H2) }}
       >
-        <span className="grid size-12 place-items-center rounded-2xl border border-cobalt/30 bg-card shadow-e1">
+        <span className="grid size-12 place-items-center rounded-card border border-cobalt/30 bg-card shadow-e1">
           <Image src="/brand/mark-96.webp" alt="" width={28} height={28} unoptimized className="size-7 rounded-md" />
         </span>
         <span className="font-mono text-micro uppercase tracking-caps text-fg-subtle">You steer</span>
@@ -150,13 +150,13 @@ export function RoutesArt({ className }: { className?: string }) {
       {venues.map((v, i) => (
         <span
           key={v.name}
-          className="art-chip absolute flex -translate-y-1/2 items-center gap-2 rounded-xl border border-line/10 bg-card py-1 pl-1 pr-3"
+          className="art-chip absolute flex -translate-y-1/2 items-center gap-2 rounded-control border border-line/10 bg-card py-1 pl-1 pr-3"
           style={{ left: pct(VENUE_X, W2), top: pct(v.y, H2), ...delay(0.3 + i * ROUTE_STEP) }}
         >
           <TokenLogo symbol={v.token} size={22} />
           <span className="leading-tight">
-            <span className="block text-[11.5px] font-medium text-fg">{v.name}</span>
-            <span className="block text-[10.5px] text-fg-subtle">{v.use}</span>
+            <span className="block text-micro font-medium text-fg">{v.name}</span>
+            <span className="block text-micro text-fg-subtle">{v.use}</span>
           </span>
         </span>
       ))}
@@ -192,7 +192,7 @@ export function BadgeArt({ className }: { className?: string }) {
         </svg>
         <span className="absolute inset-0 flex flex-col items-center justify-center text-center leading-tight">
           <span className="font-mono text-micro font-medium text-leaf">ERC-5484</span>
-          <span className="text-[10.5px] text-fg-subtle">soulbound</span>
+          <span className="text-micro text-fg-subtle">soulbound</span>
         </span>
       </div>
       <div className="min-w-0 flex-1">
@@ -211,7 +211,7 @@ export function BadgeArt({ className }: { className?: string }) {
             <span className="art-fill absolute inset-0 bg-leaf/80" />
             <span className="art-knob absolute left-0.5 top-0.5 size-4 rounded-full bg-white shadow-sm" />
           </span>
-          <span className="relative text-[12px] text-fg">
+          <span className="relative text-label text-fg">
             <span className="art-on">Access granted</span>
             <span className="art-off absolute inset-0">Revoked</span>
           </span>
