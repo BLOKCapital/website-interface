@@ -82,7 +82,7 @@ Every colour variable holds an `R G B` triplet. Tailwind wraps each one as `rgb(
 
 Prefer the **role** names (`text-success`, `bg-data`) over hue names when the colour carries meaning. Bloom and cobalt are reserved for state and data, never decoration. `positive`, `negative` and `caution` are **deprecated aliases** (use `success`, `danger`, `warning`).
 
-Effect variables, also per theme: `--glow` (garden glow), `--shadow` (elevation colour), `--plate-l` / `--plate-r` (isometric plate sides, LayerStack), `--fx-glow` / `--fx-line` / `--fx-sweep` (effect strengths, stronger on paper so accents don't turn grey) and `--logo-filter` (monochrome partner logos).
+Effect variables, also per theme: `--glow` (garden glow), `--shadow` (elevation colour), `--plate-l` / `--plate-r` (isometric plate sides, LayerStack), `--fx-glow` / `--fx-line` / `--fx-sweep` (effect strengths, stronger on paper so accents don't turn grey). Partner logos show in their own colours (no filter).
 
 ### 2.4 Contrast
 
@@ -215,6 +215,8 @@ All three heights use the per-theme `--shadow` colour (Day ink at 0.16, Night bl
 |---|---|---|
 | `z-raised` | 10 | local stacking inside a component, sticky in-flow buttons |
 | `z-tooltip` | 30 | Hint bubble |
+| `z-subnav` | 40 | a page's sticky section bar (`SectionNav`) |
+| `z-sheet` | 49 | the mobile menu sheet, under the header row |
 | `z-nav` | 50 | header |
 | `z-banner` | 55 | cookie banner |
 | `z-overlay` | 60 | preferences dialog and scrim |
@@ -469,15 +471,26 @@ A toggletip explaining a term (A11Y-11, MOB-06).
 - **States:** click or tap pins it open, a second click closes it; Enter / Space toggle; with a mouse or pen it also shows on hover over the term **or the bubble** (WCAG 1.4.13); keyboard focus shows it; Escape closes it from anywhere; an outside tap or focus leaving closes it. On phones the bubble is a bottom sheet. The text is also part of the button's accessible name; the bubble is `aria-hidden`.
 - **Usage:** `<Hint text="Chainlink posts a new price when it moves past a set threshold…">Oracle last updated</Hint>`
 
+### SectionNav (`ui/SectionNav.tsx`, *client*)
+A long page's sections as a bar that sticks under the header (from Safe's report pages; first on /security, where the Trust menu lands visitors mid-page). Put it right after the `PageHero`; it takes no room in the flow.
+- **Props:** `items` (`{ id, label }[]`, the page's section ids in order), `label` (the nav's name, default "On this page").
+- **Behaviour:** the current section comes from `useScrollSpy` (`lib/scroll-spy.ts`, shared with `PolicyTOC`): the last section whose top has passed the reading line. Its underline fills as you read through it (a CSS variable written per frame, no re-render). Turns dark over dark bands (`useOverDarkBand`), steps aside past the last section, follows the header up on short viewports. Phones scroll the tabs sideways and keep the current one in view. "Copy link" (md and up) copies the current section's URL.
+- **Usage:** `<SectionNav items={[{ id: "readiness", label: "Readiness" }, { id: "controls", label: "Who can change what" }]} />`
+
+### NextReads (`ui/NextReads.tsx`)
+"Keep reading": three next pages above the closing band (Token, Governance, About), for a visitor not ready for the app. Titles, hints and marks come from the nav (`lib/nav.ts`, `NavIcons`), so a card reads like the menu item it leads to.
+- **Usage:** `<NextReads hrefs={["/governance", "/security#controls", "/indices"]} />` (hrefs must be nav links).
+
 ### CopyButton (`ui/CopyButton.tsx`, *client*)
 Copies a value and confirms it.
-- **Props:** `value`, `label` (default "Copy"), `selectTarget` (an element id or ref showing the value).
+- **Props:** `value`, `label` (default "Copy"), `failed` (what to say when the clipboard is refused; default is about an address), `selectTarget` (an element id or ref showing the value).
 - **States:** idle; **copied** (check icon, "Copied", 1.8 s); **failed** (clipboard refused: selects the on-page text and says "Copy failed. Select the address to copy" for 8 s). The label is `aria-live="polite"`.
 - **Usage:** `<CopyButton value={address} selectTarget="token-address" />`
 
 ### FaqList (`ui/FaqList.tsx`)
 FAQ as native `<details class="smooth">`: keyboard, screen-reader and no-JS support, and every answer in the static HTML.
-- **Props:** `items: { question, answer, cta? }[]`. `answer` is plain text (so FAQPage JSON-LD stays clean) and may contain `[text](/path)` or full-URL links. `cta` adds a small secondary button under the answer.
+- **Props:** `items: { question, answer, cta? }[]`, `start` (number on from here, for grouped lists). `answer` is plain text (so FAQPage JSON-LD stays clean) and may contain `[text](/path)` or full-URL links. `cta` adds a small secondary button under the answer.
+- **Links to one answer:** each `<details>` has `id={faqId(question)}` (`faq-who-holds-my-funds`) and a "Link to this answer"; `FaqHash` opens the answer the URL names, on load and on hash change. /contact groups the list by `topic` (`faqTopics` in lib/data/faqs.ts) beside a sticky topic index.
 - **States:** pointer-hover turns the question leaf; open rotates the plus 45° and tints the number.
 - Put it inside `<section id="faq">` so opens are tracked (§6).
 - **Usage:** `<section id="faq"><FaqList items={faqs} /></section>`

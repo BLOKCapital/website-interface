@@ -11,8 +11,9 @@ const projects = ecosystem.flatMap((g) => g.items);
  * Home: the ecosystem as one strip of names (D-08b, UX-04). Every project
  * here is integrated in the code, and /protocol#ecosystem shows the code or
  * docs behind each one, so the strip only names them and links there.
- * Logos render monochrome (--logo-filter) so mixed brand colours read as one
- * calm row; projects without a logo file are set as wordmarks.
+ * Logos show in their own brand colours, always (not only on hover);
+ * projects with only a mark show it beside their name, and the rest are
+ * set as wordmarks.
  */
 export function EcosystemStrip() {
   return (
@@ -49,9 +50,15 @@ export function EcosystemStrip() {
                     fill
                     sizes="112px"
                     unoptimized
-                    className="object-contain object-left opacity-80 [filter:var(--logo-filter)]"
+                    className="object-contain object-left"
                     style={{ transform: `scale(${p.scale ?? 1})`, transformOrigin: "left center" }}
                   />
+                </span>
+              ) : p.mark ? (
+                // The project's own mark (its token icon) beside its name.
+                <span className="flex items-center gap-2">
+                  <Image src={p.mark} alt="" width={24} height={24} unoptimized className="size-6 rounded-full" />
+                  <span className="text-body font-semibold tracking-tight text-fg">{p.name}</span>
                 </span>
               ) : (
                 <span className="text-body font-semibold tracking-tight text-fg/80">{p.name}</span>

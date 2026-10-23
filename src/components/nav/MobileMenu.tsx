@@ -2,7 +2,7 @@
 
 import { useLayoutEffect, useRef, useState, type CSSProperties, type Ref } from "react";
 import { IntentLink } from "@/components/ui/IntentLink";
-import { navGroups, docsLink, securityLink, isCurrent, appLink, type NavLink } from "@/lib/nav";
+import { navGroups, docsLink, isCurrent, appLink, type NavLink } from "@/lib/nav";
 import { indices } from "@/lib/data/indices";
 import { Button } from "@/components/ui/Button";
 import { SocialLinks } from "@/components/ui/SocialLinks";
@@ -154,7 +154,7 @@ export function MobileMenu({
                 </div>
               ))}
               <ul className="sheet-item border-t border-subtle py-5" style={at(navGroups.length)}>
-                {[securityLink, docsLink].map((l) => (
+                {[docsLink].map((l) => (
                   <li key={l.href}>
                     <Row link={l} pathname={pathname} onPick={onClose} />
                   </li>

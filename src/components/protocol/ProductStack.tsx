@@ -7,9 +7,8 @@ import { TermLink } from "@/components/protocol/Glossary";
 import { cn } from "@/lib/utils";
 
 /** Extra detail per product, beyond the home-page tile. */
-const detail: Record<string, { body: ReactNode; audience: string; more?: { label: string; href: string } }> = {
+const detail: Record<string, { body: ReactNode; more?: { label: string; href: string } }> = {
   index: {
-    audience: "For people who want diversified exposure without managing it.",
     more: { label: "Explore BLOKC2, BLOKC5 and BLOKC10", href: "/indices" },
     body: (
       <>
@@ -21,11 +20,9 @@ const detail: Record<string, { body: ReactNode; audience: string; more?: { label
     ),
   },
   yield: {
-    audience: "For people who'd rather steer themselves.",
     body: "A Yield Garden lets you act directly across the venues the protocol composes with: swap on Uniswap V3 and Camelot V3, lend and borrow on Aave V3, take perp exposure on GMX V2, or lock fixed yield with Pendle V2.",
   },
   gardeners: {
-    audience: "For people who want a professional, and for the professionals.",
     body: (
       <>
         A <TermLink id="gardener">Gardener</TermLink> publishes a strategy on-chain and investors authorise it from their own
@@ -115,7 +112,8 @@ export function ProductStack() {
             )}
             style={{
               order: 2 * i + 1,
-              top: pinTop(i),
+              // Below the page's section bar too, when it has one (--subnav).
+              top: `calc(${pinTop(i)}px + var(--subnav, 0px))`,
               // Driven by the next card's view timeline (see above).
               animationTimeline: last ? undefined : `--pstack-${i + 2}`,
             }}
@@ -142,7 +140,7 @@ export function ProductStack() {
                   ))}
                 </ul>
                 <div className="mt-6 flex flex-wrap items-center justify-between gap-3">
-                  <p className="text-caption text-fg-subtle">{d.audience}</p>
+                  <p className="text-caption text-fg-subtle">{p.audience}</p>
                   {d.more && <ArrowLink href={d.more.href}>{d.more.label}</ArrowLink>}
                 </div>
               </div>

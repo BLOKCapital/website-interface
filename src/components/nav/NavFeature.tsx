@@ -6,9 +6,14 @@ import { TokenStack } from "@/components/indices/TokenLogo";
 import { indices } from "@/lib/data/indices";
 import { protocolStatus } from "@/lib/data/status";
 import { social } from "@/lib/data/socials";
+import { audits } from "@/lib/data/audits";
+import { NavIcon } from "./NavIcons";
 import { DISCORD_LABEL, type NavGroup } from "@/lib/nav";
 
 const card = "flex h-full flex-col rounded-card border border-subtle p-5";
+
+// The one published report, named with its scope where the claim is made (INS-01).
+const report = audits.find((a) => a.kind === "report");
 
 /** The featured card on the right of each menu. */
 export function NavFeature({ id }: { id: NavGroup["id"] }) {
@@ -46,6 +51,24 @@ export function NavFeature({ id }: { id: NavGroup["id"] }) {
         <p className="mt-1.5 text-small text-fg-subtle">Token launch planned for {protocolStatus.token}; then holders vote.</p>
         <Link href="/governance#process" className="group/f mt-auto inline-flex items-center gap-1.5 pt-4 text-small font-medium text-leaf">
           How a decision is made <ArrowIcon size={12} className="transition-transform group-hover/f:translate-x-0.5" />
+        </Link>
+      </div>
+    );
+  }
+  if (id === "trust") {
+    return (
+      <div className={`bg-raised ${card}`}>
+        <span className="grid size-12 place-items-center rounded-control bg-leaf/10 text-leaf">
+          <NavIcon href="/security" size={24} />
+        </span>
+        <p className="mt-4 text-body font-medium leading-snug text-fg">Check the work, not our word</p>
+        <p className="mt-1.5 text-small text-fg-subtle">
+          {report
+            ? `${report.partner} audited the ${report.coverage?.covered ?? "Garden contracts"} (${report.auditedOn}). The newer index and rebalancer code gets a published review before launch.`
+            : "Every contract, control and audit, with the proof beside it."}
+        </p>
+        <Link href="/security#readiness" className="group/f mt-auto inline-flex items-center gap-1.5 pt-4 text-small font-medium text-leaf">
+          What&apos;s done, and what isn&apos;t yet <ArrowIcon size={12} className="transition-transform group-hover/f:translate-x-0.5" />
         </Link>
       </div>
     );

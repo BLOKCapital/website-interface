@@ -1,4 +1,8 @@
 import { links } from "@/lib/data/socials";
+import { audits } from "@/lib/data/audits";
+
+/** The one published audit report, for the Trust menu's hint. */
+const report = audits.find((a) => a.kind === "report");
 
 export type NavLink = {
   href: string;
@@ -9,16 +13,16 @@ export type NavLink = {
 };
 
 export type NavGroup = {
-  id: "protocol" | "governance" | "company";
+  id: "protocol" | "governance" | "company" | "trust";
   label: string;
   links: NavLink[];
 };
 
 /**
- * Primary navigation: three groups that open a menu, then Security and Docs
- * as plain top-level links. Shared by the desktop menus and the mobile sheet.
- * The group names (Protocol, Governance, Company) are what the menu triggers
- * say; tests find the triggers by those names.
+ * Primary navigation: four groups that open a menu, then Docs as a plain
+ * top-level link. Shared by the desktop menus and the mobile sheet. The
+ * group names (Protocol, Governance, Company, Trust) are what the menu
+ * triggers say; tests find the triggers by those names.
  */
 export const navGroups: NavGroup[] = [
   {
@@ -49,10 +53,26 @@ export const navGroups: NavGroup[] = [
       { href: links.whitepaper, label: "Whitepaper", hint: "The full paper, hosted on DocSend", external: true },
     ],
   },
+  {
+    // Every way to check us, one step from anywhere (D-13): the security
+    // page's sections, the proof first (audits, then the contracts
+    // themselves), then the controls, the official list and how to report.
+    id: "trust",
+    label: "Trust",
+    links: [
+      { href: "/security", label: "Security overview", hint: "What's done, and what isn't yet" },
+      {
+        href: "/security#audits",
+        label: "Audits",
+        hint: report ? [report.partner, report.coverage?.covered, report.auditedOn].filter(Boolean).join(" · ") : "Who reviewed which code, and when",
+      },
+      { href: "/security#contracts", label: "Contracts and addresses", hint: "Every contract, and where to check it" },
+      { href: "/security#controls", label: "Who can change what", hint: "Every actor against every action" },
+      { href: "/security#official", label: "Official links", hint: "Check a link or address before you use it" },
+      { href: "/security#disclosure", label: "Report a vulnerability", hint: "Privately, in a Discord ticket" },
+    ],
+  },
 ];
-
-/** A top-level link beside Docs (D-13), so the trust page is one step from anywhere. */
-export const securityLink: NavLink = { href: "/security", label: "Security", hint: "Contracts, controls and audits" };
 
 export const docsLink: NavLink = { href: links.docs, label: "Docs", hint: "Guides, contracts and addresses", external: true };
 

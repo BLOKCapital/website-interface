@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { PageHero } from "@/components/ui/PageHero";
-import { FactGrid } from "@/components/ui/FactGrid";
+import { SectionNav } from "@/components/ui/SectionNav";
 import { Section } from "@/components/ui/Section";
 import { Button } from "@/components/ui/Button";
 import { Card } from "@/components/ui/Card";
@@ -11,6 +11,8 @@ import { ControlMap } from "@/components/security/ControlMap";
 import { LaunchReadiness } from "@/components/security/LaunchReadiness";
 import { ContractRegistry } from "@/components/security/ContractRegistry";
 import { AuditCard } from "@/components/security/AuditCard";
+import { FindingsGrid } from "@/components/security/FindingsGrid";
+import { SecurityReadout } from "@/components/security/SecurityReadout";
 import { OfficialLinks } from "@/components/security/OfficialLinks";
 import { SafetyNotice } from "@/components/security/SafetyNotice";
 import { RulesDemo } from "@/components/guard/RulesDemo";
@@ -30,18 +32,6 @@ export const metadata: Metadata = pageMetadata({
   // security/opengraph-image.tsx supplies the card.
   ownImage: true,
 });
-
-/** From the CredShields report's summary table (audits repo). */
-const findings = [
-  { k: "Critical", n: 0, c: "bg-negative" },
-  { k: "High", n: 2, c: "bg-negative/80" },
-  { k: "Medium", n: 12, c: "bg-caution" },
-  { k: "Low", n: 5, c: "bg-sand/70" },
-  { k: "Informational", n: 2, c: "bg-cobalt/70" },
-  { k: "Gas", n: 5, c: "bg-fg-subtle/60" },
-];
-
-const total = findings.reduce((n, f) => n + f.n, 0);
 
 /** The one published report; its dates and scope come from audits.ts (SEC-27, CRO-05). */
 const report = audits.find((a) => a.kind === "report")!;
@@ -76,6 +66,17 @@ const pipeline = [
   { label: "Ship", detail: "To Arbitrum One at public launch" },
 ];
 
+/** The page's sections, in order, for the sticky section bar (the Trust menu links into them). */
+const sections = [
+  { id: "readiness", label: "Readiness" },
+  { id: "controls", label: "Who can change what" },
+  { id: "rules", label: "Simulation" },
+  { id: "audits", label: "Audits" },
+  { id: "contracts", label: "Contracts" },
+  { id: "official", label: "Official links" },
+  { id: "disclosure", label: "Report" },
+];
+
 export default function SecurityPage() {
   return (
     <>
@@ -97,17 +98,11 @@ export default function SecurityPage() {
             </Button>
           </>
         }
-        aside={
-          <FactGrid
-            items={[
-              ["Audit", <>{report.partner}, <span className="whitespace-nowrap">{report.auditedOn}</span></>],
-              ["Upgrades", "Need a DAO vote"],
-              ["Source", "Public on GitHub"],
-              ["Bug reports", "Private Discord ticket"],
-            ]}
-          />
-        }
+        aside={<SecurityReadout release={pipeline.map((p) => p.label)} />}
+        asideAlign="start"
       />
+
+      <SectionNav items={sections} />
 
       <LaunchReadiness />
 
@@ -145,27 +140,10 @@ export default function SecurityPage() {
             </RevealItem>
           ))}
         </Stagger>
-        <Reveal className="mt-5">
-          <Card>
-            <div className="flex flex-wrap items-baseline justify-between gap-3">
-              <h3 className="text-h4 font-medium text-fg">CredShields findings, by severity</h3>
-              <p className="text-caption text-fg-subtle">{`${total} total · all fixed and retested ${report.retestedOn}`}</p>
-            </div>
-            <div className="mt-5 flex h-3 overflow-hidden rounded-full bg-line/7" role="img" aria-label={`${total} findings: ${findings.map((f) => `${f.n} ${f.k.toLowerCase()}`).join(", ")}. All fixed.`}>
-              {findings.filter((f) => f.n).map((f) => (
-                <span key={f.k} className={f.c} style={{ width: `${(f.n / total) * 100}%` }} />
-              ))}
-            </div>
-            <ul className="mt-4 flex flex-wrap gap-x-6 gap-y-2 text-caption text-fg-muted">
-              {findings.map((f) => (
-                <li key={f.k} className="flex items-center gap-2">
-                  <span aria-hidden className={`size-2 rounded-full ${f.c}`} />
-                  {f.k} <span className="font-mono text-fg tabular">{f.n}</span>
-                </li>
-              ))}
-            </ul>
-          </Card>
-        </Reveal>
+        {/* One mark per finding, grouped by severity, each ticking to fixed (data: components/security/findings.ts). */}
+        <div className="mt-5">
+          <FindingsGrid />
+        </div>
         {/* Fig 3: how a change reaches production, as an assembly line (the same six stages). */}
         <Reveal className="mt-5">
           <h3 className="sr-only">How a change reaches production</h3>

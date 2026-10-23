@@ -1,12 +1,10 @@
 import type { CSSProperties } from "react";
 import { IntentLink } from "@/components/ui/IntentLink";
 import { Button } from "@/components/ui/Button";
-import { Badge } from "@/components/ui/Badge";
 import { GardenAsset } from "@/components/ui/GardenAsset";
 import { Icon } from "@/components/ui/Icon";
 import { RiskNote } from "@/components/ui/RiskNote";
 import { CheckIcon } from "@/components/ui/icons";
-import { protocolStatus } from "@/lib/data/status";
 import { audits } from "@/lib/data/audits";
 import { links } from "@/lib/data/socials";
 import { SplitText } from "@/components/motion/SplitText";
@@ -108,7 +106,7 @@ function FlowLines() {
  * Entrance (D-32, PERF-01, MOT-01): the LCP group (h1, lead, CTAs, render)
  * is at full opacity on the first frame. It only rises 8px (`animate-rise`)
  * and the h1 words ink in from a readable grey, with no delay. Secondary
- * items (badge, status, facts, risk line, chips, currents) fade in within
+ * items (status, facts, risk line, chips, currents) fade in within
  * 150ms. The illustration's loops (the light along the currents, the end
  * rings, the float) are composited, pause off screen (data-loop) and settle
  * on a still frame within 5s (D-33, MOT-02/03).
@@ -119,10 +117,7 @@ export function Hero() {
       <div aria-hidden className="grid-lines pointer-events-none absolute inset-0 [mask-image:radial-gradient(ellipse_70%_60%_at_65%_40%,black,transparent)]" />
       <div className="relative mx-auto grid w-full max-w-page items-center gap-12 px-gutter pb-20 pt-24 sm:pt-32 lg:grid-cols-12 lg:gap-8 lg:pb-28 lg:pt-44">
         <div className="lg:col-span-7">
-          <div className="animate-fade-in">
-            <Badge tone="current">{protocolStatus.label} on Arbitrum</Badge>
-          </div>
-          <SplitText as="h1" reveal="load" delay={0} className="display mt-5 text-h1 text-balance text-fg sm:mt-7">
+          <SplitText as="h1" reveal="load" delay={0} className="display text-h1 text-balance text-fg">
             Grow your crypto. <em className="text-sand">Keep the keys.</em>
           </SplitText>
           <p className="mt-5 max-w-xl animate-rise text-lead text-fg-muted sm:mt-7">

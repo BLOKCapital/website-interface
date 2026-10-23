@@ -77,6 +77,11 @@ export function AtAGlance({ governance }: { governance: GovernanceSnapshot }) {
             );
           })}
         </ul>
+        {/* Where the figures come from, and when (after Safe Foundation's "Figures as of …"). */}
+        <p className="border-t border-subtle py-3 text-caption text-fg-subtle">
+          Each figure links to its source.
+          {governance.syncedLabel && <> Proposals as of {governance.syncedLabel}, read from Aragon when this page was built.</>}
+        </p>
       </Container>
     </section>
   );

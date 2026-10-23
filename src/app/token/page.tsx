@@ -6,10 +6,14 @@ import { Button } from "@/components/ui/Button";
 import { Card } from "@/components/ui/Card";
 import { Badge } from "@/components/ui/Badge";
 import { CtaBand } from "@/components/ui/CtaBand";
+import { NextReads } from "@/components/ui/NextReads";
 import { RiskNote } from "@/components/ui/RiskNote";
 import { TokenSpec } from "@/components/token/TokenSpec";
 import { AllocationExplorer } from "@/components/token/AllocationExplorer";
 import { TokenTimeline } from "@/components/token/TokenTimeline";
+import { TokenChecks } from "@/components/token/TokenChecks";
+import { DotField } from "@/components/motion/DotField";
+import { ScrollInk } from "@/components/motion/ScrollInk";
 import { Reveal, Stagger, RevealItem } from "@/components/ui/Reveal";
 import { JsonLd } from "@/components/seo/JsonLd";
 import { breadcrumbSchema } from "@/lib/seo/schema";
@@ -90,11 +94,22 @@ export default function TokenPage() {
         }
         aside={
           <div className="relative mx-auto aspect-square w-full max-w-[260px]">
+            {/* A field of dots behind the coin (after Safe Foundation's token hero), inside the glow's bounds so it never widens a phone. */}
+            <div aria-hidden className="pointer-events-none absolute inset-[-20%] opacity-70 [mask-image:radial-gradient(circle,black_30%,transparent_70%)]">
+              <DotField variant="orb" tone="leaf" gap={9} />
+            </div>
             <div aria-hidden className="glow-leaf pointer-events-none absolute inset-[-20%]" />
             <Image src="/brand/token-front.webp" alt="The $BLOKC token" fill sizes="260px" priority className="animate-float object-contain" />
           </div>
         }
       />
+
+      {/* The point of the token, inked in as it scrolls (the About page's principle, word for word). */}
+      <Section id="say" className="pb-0 sm:pb-0">
+        <ScrollInk className="display max-w-4xl text-display-sm leading-[1.28] text-fg">
+          Today the core members listed on Aragon vote. After the IDO, $BLOKC holders do, and then it stops being up to us.
+        </ScrollInk>
+      </Section>
 
       <Section
         id="facts"
@@ -146,6 +161,8 @@ export default function TokenPage() {
           </Reveal>
         </div>
       </Section>
+      <TokenChecks />
+      <NextReads hrefs={["/governance", "/security#controls", "/indices"]} />
       <CtaBand />
     </>
   );

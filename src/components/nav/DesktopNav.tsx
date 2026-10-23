@@ -2,7 +2,7 @@
 
 import { useEffect, useLayoutEffect, useRef, useState, type KeyboardEvent } from "react";
 import Link from "next/link";
-import { navGroups, docsLink, securityLink, isCurrent, type NavGroup } from "@/lib/nav";
+import { navGroups, docsLink, isCurrent, type NavGroup } from "@/lib/nav";
 import { ExternalIcon } from "@/components/ui/icons";
 import { NavIcon, ChevronIcon } from "./NavIcons";
 import { NavFeature } from "./NavFeature";
@@ -10,8 +10,8 @@ import { cn } from "@/lib/utils";
 
 type Id = NavGroup["id"];
 
-/** Every top-level stop in the row, in tab order: the three menus, then the plain links. */
-const ORDER: string[] = [...navGroups.map((g) => g.id), "security", "docs"];
+/** Every top-level stop in the row, in tab order: the four menus, then Docs. */
+const ORDER: string[] = [...navGroups.map((g) => g.id), "docs"];
 
 /** A click this soon after a hover opened the menu is the same gesture, not a toggle (A11Y-24). */
 const HOVER_CLICK_MS = 400;
@@ -235,7 +235,6 @@ export function DesktopNav({ pathname }: { pathname: string | null }) {
   };
 
   const group = navGroups.find((g) => g.id === shown)!;
-  const securityHere = isCurrent(securityLink.href, pathname);
 
   return (
     <nav
@@ -289,29 +288,6 @@ export function DesktopNav({ pathname }: { pathname: string | null }) {
             </li>
           );
         })}
-        <li className="relative">
-          <Link
-            ref={(el) => {
-              triggers.current.security = el;
-            }}
-            href={securityLink.href}
-            aria-current={securityHere ? "page" : undefined}
-            onPointerEnter={(e) => {
-              if (e.pointerType !== "mouse") return;
-              close();
-              highlight("security");
-            }}
-            onPointerLeave={() => !open && setHover(null)}
-            onFocus={() => onItemFocus("security")}
-            className={cn(
-              "relative inline-flex items-center rounded-full px-3.5 py-2 text-small transition-colors duration-fast",
-              securityHere ? "text-fg" : "text-fg-muted hover:text-fg",
-            )}
-          >
-            {securityLink.label}
-            {securityHere && <span aria-hidden className="absolute bottom-0.5 left-1/2 size-1 -translate-x-1/2 rounded-full bg-leaf" />}
-          </Link>
-        </li>
         <li className="relative">
           <a
             ref={(el) => {

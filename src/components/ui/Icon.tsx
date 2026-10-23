@@ -40,6 +40,8 @@ const glyphs = {
     </>
   ),
   shield: <path d="M10 3.5l5.5 2v4.25c0 3.4-2.3 5.85-5.5 6.75-3.2-.9-5.5-3.35-5.5-6.75V5.5l5.5-2z" />,
+  // Two chain links (the Trust menu's "Official links" mark): a link to this place.
+  link: <path d="M8.6 11.4 11.4 8.6M9.2 6.2l1-1a3 3 0 0 1 4.6 4.6l-1 1M10.8 13.8l-1 1a3 3 0 0 1-4.6-4.6l1-1" />,
 } satisfies Record<string, ReactNode>;
 
 export type IconName = keyof typeof glyphs;

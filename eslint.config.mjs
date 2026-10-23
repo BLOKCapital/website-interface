@@ -17,7 +17,7 @@ const compat = new FlatCompat({ baseDirectory: __dirname });
 const TOKEN_DRIFT = [
   ["text-\\[([0-9]|[1-3][0-9])(\\.[0-9]+)?px\\]", "a font-size token (text-micro, label, caption, small, ui, body, lead, h4, h3 …)"],
   ["rounded(-[tblr]{1,2})?-(\\[[0-9]|xl\\b|2xl\\b|3xl\\b)", "a radius token (rounded-control, card, panel)"],
-  ["\\bz-\\[[0-9]{2,}\\]", "a layer token (z-raised, tooltip, sheet, nav, banner, overlay, toast, skip)"],
+  ["\\bz-\\[[0-9]{2,}\\]", "a layer token (z-raised, tooltip, subnav, sheet, nav, banner, overlay, toast, skip)"],
   ["tracking-\\[0\\.1[24]em\\]", "tracking-caps or tracking-eyebrow"],
   ["(border|divide)-line.\\[", "border-subtle, border or border-strong"],
   ["shadow-\\[0_[0-9]+px_[0-9]+px_-[0-9]+px_rgb\\(var\\(--shadow\\)\\)\\]", "an elevation token (shadow-e1, e2, e3)"],

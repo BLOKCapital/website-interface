@@ -4,6 +4,7 @@ import { FactGrid } from "@/components/ui/FactGrid";
 import { Section } from "@/components/ui/Section";
 import { Button } from "@/components/ui/Button";
 import { CtaBand } from "@/components/ui/CtaBand";
+import { NextReads } from "@/components/ui/NextReads";
 import { Reveal, Stagger, RevealItem } from "@/components/ui/Reveal";
 import { ExternalIcon } from "@/components/ui/icons";
 import { ProductVideo } from "@/components/about/ProductVideo";
@@ -173,6 +174,7 @@ export default function AboutPage() {
         }
         className="py-section-sm"
       />
+      <NextReads hrefs={["/protocol", "/security", "/governance"]} />
       <CtaBand />
     </>
   );

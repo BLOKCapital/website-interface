@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { PageHero } from "@/components/ui/PageHero";
+import { SectionNav } from "@/components/ui/SectionNav";
 import { Section } from "@/components/ui/Section";
 import { Button } from "@/components/ui/Button";
 import { CtaBand } from "@/components/ui/CtaBand";
@@ -38,6 +39,15 @@ const definition =
   `The BLOK Capital indices, ${names.slice(0, -1).join(", ")} and ${names.at(-1)}, are three fixed baskets of tokens on ` +
   `Arbitrum, weighted by market cap, priced by Chainlink and rebalanced on-chain.${shared} Nobody picks the weights by ` +
   "hand; the contract does the maths in public.";
+
+/** The page's sections, in order, for the sticky section bar. */
+const sections = [
+  { id: "explore", label: "Explorer" },
+  { id: "compare", label: "Compare" },
+  { id: "methodology", label: "Methodology" },
+  { id: "rebalancing", label: "Rebalancing" },
+  { id: "data", label: "Data" },
+];
 
 export default function IndicesPage() {
   return (
@@ -84,6 +94,8 @@ export default function IndicesPage() {
         }
       />
 
+      <SectionNav items={sections} />
+
       <Section
         id="explore"
         eyebrow="Explorer"
@@ -102,23 +114,14 @@ export default function IndicesPage() {
         title="Base assets, then the DeFi stack."
         description="BLOKC2 holds Bitcoin and Ether. BLOKC5 holds five DeFi blue chips, and BLOKC10 holds those five plus five more. No token in BLOKC2 appears in the other two."
       >
-        <div className="grid grid-cols-[minmax(0,1fr)] gap-8 lg:grid-cols-12">
-          <Reveal className="min-w-0 lg:col-span-7">
-            <IndexMatrix />
-          </Reveal>
-          <Stagger as="dl" className="grid content-start gap-3 lg:col-span-5">
-            {[
-              { k: "Same method", v: "All three are market-cap weighted with the same guardrails. Only the component lists differ." },
-              { k: "Same data", v: "Every component is priced by a Chainlink USD feed on Arbitrum. Circulating supply, the other input, is posted on-chain by an authorised account." },
-              { k: "Different shape", v: "Fewer components means fewer weights to keep in line. We won't publish volatility or return figures until there's real history to measure." },
-            ].map((x) => (
-              <RevealItem key={x.k} className="rounded-card border border-subtle bg-card p-5">
-                <dt className="text-small font-medium text-fg">{x.k}</dt>
-                <dd className="mt-1.5 text-small text-fg-muted">{x.v}</dd>
-              </RevealItem>
-            ))}
-          </Stagger>
-        </div>
+        {/* The method rows are in the table now (said once across all three); the one note left sits under it. */}
+        <Reveal className="mx-auto max-w-4xl">
+          <IndexMatrix />
+          <p className="mt-4 text-caption text-fg-subtle">
+            Fewer components means fewer weights to keep in line. We won&apos;t publish volatility or return figures until
+            there&apos;s real history to measure.
+          </p>
+        </Reveal>
       </Section>
 
       <Section

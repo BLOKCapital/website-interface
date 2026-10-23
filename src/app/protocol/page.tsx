@@ -2,6 +2,8 @@ import type { Metadata } from "next";
 import type { ReactNode } from "react";
 import { PageHero } from "@/components/ui/PageHero";
 import { FactGrid } from "@/components/ui/FactGrid";
+import { SectionNav } from "@/components/ui/SectionNav";
+import { GardenCompare } from "@/components/protocol/GardenCompare";
 import { GardenMachine } from "@/components/iso/GardenMachine";
 import { Section } from "@/components/ui/Section";
 import { Button } from "@/components/ui/Button";
@@ -66,6 +68,17 @@ const startHere = [
   { label: "Whitepaper", desc: "The full design and the token, on DocSend.", href: links.whitepaper, cta: "protocol_whitepaper" },
 ];
 
+/** The page's sections, in order, for the sticky section bar. */
+const sections = [
+  { id: "explore", label: "Layers" },
+  { id: "products", label: "Products" },
+  { id: "architecture", label: "Architecture" },
+  { id: "fees", label: "Fees & risks" },
+  { id: "ecosystem", label: "Ecosystem" },
+  { id: "builders", label: "Builders" },
+  { id: "glossary", label: "Glossary" },
+];
+
 export default function ProtocolPage() {
   return (
     <>
@@ -106,6 +119,8 @@ export default function ProtocolPage() {
         }
       />
 
+      <SectionNav items={sections} />
+
       {/* The canonical "how" (D-08a, UX-04): the layer-by-layer explorer is the centrepiece, right after the hero. */}
       <ExploreSection />
 
@@ -116,6 +131,17 @@ export default function ProtocolPage() {
         description="Every Garden is the same smart wallet underneath; what changes is who steers it. Scroll through the three."
       >
         <ProductStack />
+        {/* The deck shows one at a time; this sets them side by side so a visitor can choose. */}
+        <div id="compare" className="mt-16 sm:mt-20">
+          <div className="mb-8 max-w-2xl">
+            <p className="label-caps">Compare</p>
+            <h3 className="display mt-3 text-display-sm text-balance text-fg">Side by side.</h3>
+            <p className="mt-3 text-ui text-fg-muted">
+              Same wallet, same custody. What changes is who steers it, what it costs and when it opens.
+            </p>
+          </div>
+          <GardenCompare />
+        </div>
       </Section>
 
       <Section

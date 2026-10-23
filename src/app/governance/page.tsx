@@ -7,8 +7,10 @@ import { Card } from "@/components/ui/Card";
 import { Badge } from "@/components/ui/Badge";
 import { ProposalMachine } from "@/components/iso/ProposalMachine";
 import { CtaBand } from "@/components/ui/CtaBand";
+import { NextReads } from "@/components/ui/NextReads";
 import { Reveal } from "@/components/ui/Reveal";
 import { ArrowLink } from "@/components/ui/ArrowLink";
+import { TakePart } from "@/components/governance/TakePart";
 import { ProposalBoard } from "@/components/governance/ProposalBoard";
 import { JsonLd } from "@/components/seo/JsonLd";
 import { breadcrumbSchema } from "@/lib/seo/schema";
@@ -117,6 +119,8 @@ export default async function GovernancePage() {
       >
         <ProposalBoard governance={governance} />
       </Section>
+      <TakePart />
+      <NextReads hrefs={["/token", "/security#controls", "/about"]} />
       <CtaBand />
     </>
   );

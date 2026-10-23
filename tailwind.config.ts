@@ -136,6 +136,7 @@ const config: Config = {
       zIndex: {
         raised: "10",
         tooltip: "30",
+        subnav: "40", // a page's sticky section bar: over the page, under the header and its menus
         sheet: "49", // the mobile menu sheet: under the header row, over the page
         nav: "50",
         banner: "55",

@@ -12,6 +12,13 @@ import { links } from "@/lib/data/socials";
 
 export type Verdict = "allow" | "block" | "hold";
 
+/**
+ * A window event that runs a scenario in the rules demo as if it were
+ * picked there (detail: the scenario id). /security#controls' moments use it
+ * for their "Watch it" links, which also scroll to the demo.
+ */
+export const RULES_PICK = "blok:rules-pick";
+
 export type TraceLine = {
   kind: "call" | "check";
   text: string;

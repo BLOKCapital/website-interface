@@ -10,8 +10,10 @@ const facet = (name: string) => `${CORE_REPO_URL}/tree/main/src/garden/facets/ut
 
 export type EcoItem = {
   name: string;
-  /** Logo in /public, if we have one; otherwise a text tile. */
+  /** Logo (a full wordmark) in /public, if we have one. */
   logo?: string;
+  /** Otherwise its mark (the project's token icon) beside its name; failing both, a text tile. */
+  mark?: string;
   scale?: number;
   /** What it does for a Garden, in a few words. */
   use: string;
@@ -27,9 +29,9 @@ export const ecosystem: EcoGroup[] = [
     label: "Network and data",
     intro: "Where Gardens live, where their numbers come from, and how USDC moves between chains.",
     items: [
-      { name: "Arbitrum One", use: "The Ethereum L2 every Garden and index runs on", evidence: { label: "Architecture docs", href: links.docsArchitecture } },
+      { name: "Arbitrum One", mark: "/tokens/arb-64.webp", use: "The Ethereum L2 every Garden and index runs on", evidence: { label: "Architecture docs", href: links.docsArchitecture } },
       { name: "Chainlink", logo: "/Socialtrust/chainlink-logo.svg", use: "USD price feeds for every index component", evidence: { label: "IndexComponentRegistry.sol", href: `${CORE_REPO_URL}/blob/main/src/indices/IndexComponentRegistry.sol` } },
-      { name: "The Graph", use: "Indexes the DAO's governance events", evidence: { label: "blokc-graph", href: "https://github.com/BLOKCapital/blokc-graph" } },
+      { name: "The Graph", mark: "/tokens/grt-64.webp", use: "Indexes the DAO's governance events", evidence: { label: "blokc-graph", href: "https://github.com/BLOKCapital/blokc-graph" } },
       { name: "Circle CCTP", use: "Moving USDC across chains", evidence: { label: "cctp facet", href: facet("cctp") } },
     ],
   },
@@ -49,7 +51,7 @@ export const ecosystem: EcoGroup[] = [
     items: [
       { name: "Aave", logo: "/Socialtrust/Aave-logo-240.webp", use: "Lend and borrow (V3)", evidence: { label: "aaveV3 facet", href: facet("aaveV3") } },
       { name: "GMX", logo: "/Socialtrust/gmx-logo-240.webp", use: "Perpetuals (V2)", evidence: { label: "gmxV2 facet", href: facet("gmxV2") } },
-      { name: "Pendle", use: "Fixed yield (V2)", evidence: { label: "pendleV2 facet", href: facet("pendleV2") } },
+      { name: "Pendle", mark: "/tokens/pendle-64.webp", use: "Fixed yield (V2)", evidence: { label: "pendleV2 facet", href: facet("pendleV2") } },
     ],
   },
   {
@@ -61,7 +63,7 @@ export const ecosystem: EcoGroup[] = [
       // The account-abstraction docs page says each investor's Smart Wallet Account is "integrated via
       // ZeroDev". No public BLOKCapital repo contains ZeroDev code, so that page is the evidence.
       { name: "ZeroDev", logo: "/Socialtrust/zerodev-logo.svg", use: "Smart-account (ERC-4337) tooling", evidence: { label: "Account abstraction docs", href: links.docsAccountAbstraction } },
-      { name: "Aragon", use: "On-chain voting for the DAO (OSx)", evidence: { label: "BLOK Capital DAO", href: links.aragon } },
+      { name: "Aragon", logo: "/Socialtrust/aragon-logo.svg", use: "On-chain voting for the DAO (OSx)", evidence: { label: "BLOK Capital DAO", href: links.aragon } },
     ],
   },
 ];

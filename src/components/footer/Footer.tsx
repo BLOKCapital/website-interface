@@ -10,6 +10,7 @@ import { GlyphField } from "@/components/motion/GlyphField";
 import { CornerMarks } from "@/components/motion/CornerMarks";
 import { links, social } from "@/lib/data/socials";
 import { siteConfig } from "@/lib/seo/site";
+import { navGroups, type NavGroup } from "@/lib/nav";
 
 // Server component: resolved at build time and baked into the HTML.
 const YEAR = new Date().getFullYear();
@@ -24,42 +25,27 @@ type Item = {
   file?: boolean;
 };
 
-// The nav's groups (lib/nav.ts: Protocol · Governance · Company), then
-// Resources and Legal (UX-13). Security sits under Protocol here.
+/** Footer-only links, after a nav group's own: pages too small for the menus. */
+const extra: Partial<Record<NavGroup["id"], Item[]>> = {
+  company: [
+    { href: "/about#press", label: "Press kit" },
+    { href: "/contact#faq", label: "FAQ" },
+  ],
+  trust: [{ href: links.auditsRepo, label: "Audit reports" }],
+};
+
+// The nav's own groups (lib/nav.ts), so the two can't drift apart, then
+// Resources and Legal (UX-13).
 const columns: { title: string; items: Item[] }[] = [
-  {
-    title: "Protocol",
-    items: [
-      { href: "/protocol", label: "How it works" },
-      { href: "/indices", label: "Indices" },
-      { href: "/security", label: "Security" },
-    ],
-  },
-  {
-    title: "Governance",
-    items: [
-      { href: "/governance", label: "How the DAO decides" },
-      { href: "/token", label: "$BLOKC token" },
-      { href: links.aragon, label: "The DAO on Aragon" },
-    ],
-  },
-  {
-    title: "Company",
-    items: [
-      { href: "/about", label: "About" },
-      { href: "/about#roadmap", label: "Roadmap" },
-      { href: "/about#press", label: "Press kit" },
-      { href: "/contact", label: "Contact" },
-      { href: "/contact#faq", label: "FAQ" },
-    ],
-  },
+  ...navGroups.map((g) => ({
+    title: g.label,
+    items: [...g.links.map(({ href, label }) => ({ href, label })), ...(extra[g.id] ?? [])],
+  })),
   {
     title: "Resources",
     items: [
       { href: links.docs, label: "Documentation" },
-      { href: links.whitepaper, label: "Whitepaper" },
       { href: social("github").href, label: "GitHub" },
-      { href: links.auditsRepo, label: "Audit reports" },
       { href: "/llms.txt", label: "llms.txt", file: true },
     ],
   },
@@ -145,7 +131,7 @@ export function Footer() {
             <SocialLinks placement="footer" className="mt-6" />
           </div>
 
-          <nav aria-label="Footer" className="grid grid-cols-2 gap-x-8 gap-y-10 sm:grid-cols-3 xl:grid-cols-5 xl:gap-x-5">
+          <nav aria-label="Footer" className="grid grid-cols-2 gap-x-8 gap-y-10 sm:grid-cols-3 xl:grid-cols-6 xl:gap-x-5">
             {columns.map((col) => (
               <div key={col.title}>
                 <h3 className="text-label font-semibold uppercase tracking-caps text-fg-subtle">{col.title}</h3>

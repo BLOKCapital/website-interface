@@ -11,7 +11,7 @@ import { Icon } from "@/components/ui/Icon";
 import { JsonLd } from "@/components/seo/JsonLd";
 import { SafetyNotice } from "@/components/security/SafetyNotice";
 import { breadcrumbSchema, faqSchema } from "@/lib/seo/schema";
-import { faqs } from "@/lib/data/faqs";
+import { faqs, faqTopics } from "@/lib/data/faqs";
 import { links, social, socials } from "@/lib/data/socials";
 import { pageMetadata } from "@/lib/seo/metadata";
 
@@ -21,6 +21,13 @@ export const metadata: Metadata = pageMetadata({
     "Reach the BLOK Capital team and community: Discord for support and security reports, plus answers to common questions.",
   path: "/contact",
 });
+
+/** The FAQ by topic, numbered on across the groups. */
+const faqGroups = faqTopics.reduce<{ id: string; label: string; items: typeof faqs; start: number }[]>((acc, t) => {
+  const start = acc.reduce((n, g) => n + g.items.length, 0);
+  acc.push({ ...t, items: faqs.filter((f) => f.topic === t.id), start });
+  return acc;
+}, []);
 
 export default function ContactPage() {
   const others = socials.filter((s) => s.id !== "discord");
@@ -125,7 +132,33 @@ export default function ContactPage() {
       </Section>
 
       <Section id="faq" tone="surface" eyebrow="FAQ" title="Common questions.">
-        <FaqList items={faqs} />
+        {/* By topic, with a sticky index (after Safe's help centre): each group counts on from the last, and every answer can be linked on its own (FaqList). */}
+        <div className="grid gap-8 lg:grid-cols-12 lg:gap-10">
+          <nav aria-label="FAQ topics" className="lg:sticky lg:top-28 lg:col-span-3 lg:self-start">
+            <p className="label-caps">Topics</p>
+            <ul className="mt-3 flex flex-wrap gap-2 lg:flex-col lg:gap-1">
+              {faqGroups.map((g) => (
+                <li key={g.id}>
+                  <a
+                    href={`#faq-topic-${g.id}`}
+                    className="flex items-center justify-between gap-4 rounded-control border border-subtle px-3 py-2 text-small text-fg-muted transition-colors duration-fast can-hover:hover:bg-card can-hover:hover:text-fg lg:border-transparent"
+                  >
+                    {g.label}
+                    <span className="font-mono text-label tabular-nums text-fg-subtle">{g.items.length}</span>
+                  </a>
+                </li>
+              ))}
+            </ul>
+          </nav>
+          <div className="space-y-10 lg:col-span-9">
+            {faqGroups.map((g) => (
+              <div key={g.id} id={`faq-topic-${g.id}`} className="scroll-mt-6">
+                <h3 className="label-caps mb-3">{g.label}</h3>
+                <FaqList items={g.items} start={g.start} />
+              </div>
+            ))}
+          </div>
+        </div>
 
         {/* The page's next step (UX-20): a question the FAQ didn't answer goes
             to the Discord, or to X for anyone not on it (D-19). */}

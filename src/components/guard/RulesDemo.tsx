@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useId, useRef, useState } from "react";
-import { scenarios, type Scenario, type TraceLine, type Verdict } from "@/lib/data/scenarios";
+import { RULES_PICK, scenarios, type Scenario, type TraceLine, type Verdict } from "@/lib/data/scenarios";
 import { prefersReducedMotion, useMotionAllowed } from "@/lib/motion";
 import { useIsClient } from "@/lib/hooks";
 import { dwellMs, LG_QUERY, trackSelect, useAutoplay } from "@/lib/explainers";
@@ -127,6 +127,19 @@ export function RulesDemo() {
     setStarted(true);
     setRun({ i, shown: 1, typed: scenarios[i].lines[0].text.length, mode: "fast" });
   };
+  // A pick from elsewhere on the page (the moments' "Watch it" links, which
+  // also scroll here): run it exactly as a pick in the list would.
+  const pick = useRef(select);
+  pick.current = select;
+  useEffect(() => {
+    const onPick = (e: Event) => {
+      const i = scenarios.findIndex((s) => s.id === (e as CustomEvent<string>).detail);
+      if (i >= 0) pick.current(i);
+    };
+    window.addEventListener(RULES_PICK, onPick);
+    return () => window.removeEventListener(RULES_PICK, onPick);
+  }, []);
+
   const onToggle = () => {
     // Resuming from the last scenario starts again from the first.
     if (!ap.on && run.i === last) {

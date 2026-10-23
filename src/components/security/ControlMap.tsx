@@ -2,6 +2,7 @@ import { IntentLink } from "@/components/ui/IntentLink";
 import { Reveal } from "@/components/ui/Reveal";
 import { Icon } from "@/components/ui/Icon";
 import { actions, actors, custody, type Cell } from "./controls";
+import { GuardMoments } from "./GuardMoments";
 import { cn } from "@/lib/utils";
 
 const draw = { fill: "none", stroke: "currentColor", strokeWidth: 1.6, strokeLinecap: "round", strokeLinejoin: "round", pathLength: 1, className: "draw-path" } as const;
@@ -104,6 +105,9 @@ export function ControlMap() {
           </div>
         </article>
       </Reveal>
+
+      {/* The short version: each action as a moment, with its guard and a link to watch it run. */}
+      <GuardMoments />
 
       {/* lg and up: the matrix as a table. */}
       <Reveal className="hidden overflow-hidden rounded-panel border border-subtle bg-card lg:block">

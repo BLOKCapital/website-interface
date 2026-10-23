@@ -6,9 +6,8 @@ import { ecosystem, otherChains } from "@/lib/data/ecosystem";
 
 /**
  * Ecosystem map: grouped by the job each project does in a Garden, each
- * tile linking to the code or docs that proves it. Logos render monochrome
- * (black on the light theme, white on the dark) so mixed brand colours read
- * as one calm system; hover restores colour.
+ * tile linking to the code or docs that proves it. Logos show in their own
+ * brand colours, always (not only on hover).
  *
  * Its home is /protocol#ecosystem (D-08b). The tiles are integrations, never
  * endorsements or partnerships, and the copy says so (CRO-22).
@@ -53,9 +52,15 @@ export function Ecosystem({ tone = "canvas" }: { tone?: "canvas" | "surface" }) 
                             fill
                             sizes="112px"
                             unoptimized
-                            className="object-contain object-left opacity-80 transition-[filter,opacity] duration-300 [filter:var(--logo-filter)] group-hover/e:opacity-100 group-hover/e:[filter:none]"
+                            className="object-contain object-left"
                             style={{ transform: `scale(${it.scale ?? 1})`, transformOrigin: "left center" }}
                           />
+                        </span>
+                      ) : it.mark ? (
+                        // The project's own mark (its token icon) beside its name.
+                        <span aria-hidden className="flex items-center gap-2">
+                          <Image src={it.mark} alt="" width={24} height={24} unoptimized className="size-6 rounded-full" />
+                          <span className="text-body font-semibold tracking-tight text-fg">{it.name}</span>
                         </span>
                       ) : (
                         <span aria-hidden className="text-body font-semibold tracking-tight text-fg/80 group-hover/e:text-fg">

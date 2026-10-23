@@ -114,3 +114,50 @@ export const custody = {
   body: "Each Garden is a smart-contract wallet at your own address. You hold the keys; BLOK Capital doesn't hold your funds.",
   source: src.custody,
 };
+
+/**
+ * The same five actions as moments a Garden guards (/security#controls,
+ * between the custody card and the matrix): who can act, and the rule that
+ * limits it. Each line restates a cell above or a check in the rules demo
+ * (lib/data/scenarios.ts); `watch` names the demo scenarios that show the
+ * rule running. Add a claim here only once a cell or a scenario makes it.
+ */
+export type Moment = { id: ActionId; label: string; who: string; rule: string; watch: string[] };
+
+export const moments: Moment[] = [
+  {
+    id: "withdraw",
+    label: "Funds move out",
+    who: "Only you",
+    rule: "Only the owner's signature moves funds out: not a strategy, a Gardener or the team.",
+    watch: ["withdraw"],
+  },
+  {
+    id: "trade",
+    label: "A trade runs",
+    who: "The index rebalancer, or you in a Yield Garden",
+    rule: "Index trades only past 2% drift, at most daily, at ≤ 0.5% value loss. A price over 10% off its average is ignored.",
+    watch: ["rebalance", "slippage", "price"],
+  },
+  {
+    id: "facets",
+    label: "Code changes",
+    who: "Only code the DAO approved",
+    rule: "A facet installs only if its code hash is in the DAO's Facet Registry. Direct diamondCut() is disabled.",
+    watch: ["upgrade"],
+  },
+  {
+    id: "pause",
+    label: "New Gardens pause",
+    who: "The security council",
+    rule: "While paused, the Garden Factory refuses new Gardens.",
+    watch: [],
+  },
+  {
+    id: "fees",
+    label: "Fees change",
+    who: "A DAO vote",
+    rule: "Fee parameters are voted on. A Gardener (2027) sets its own fee, under DAO-set ceilings.",
+    watch: [],
+  },
+];

@@ -114,7 +114,7 @@ export function IndexExplorer({
         <div className="relative min-w-0 border-b border-subtle px-6 py-8 sm:px-10 lg:col-span-5 lg:border-b-0 lg:border-r">
           <div aria-hidden className="grid-lines pointer-events-none absolute inset-0 opacity-50 [mask-image:radial-gradient(circle_at_50%_50%,black,transparent_70%)]" />
           {/* Sticks beside the long detail column on wide screens. */}
-          <div className="relative flex flex-col items-center gap-6 lg:sticky lg:top-28">
+          <div className="relative flex flex-col items-center gap-6 lg:sticky lg:top-[calc(7rem+var(--subnav,0px))]">
             <BasketOrbit index={idx} selected={selected} onSelect={pickComponent} picked={picked} className="max-w-[400px]" />
             <p className="text-center text-caption text-fg-subtle">
               Tap or select a token to inspect it. All drawn the same size: weights are set on-chain by market cap and aren&apos;t shown.

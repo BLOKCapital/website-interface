@@ -104,8 +104,6 @@
   --fx-glow: 0.34;
   --fx-line: 0.8;
   --fx-sweep: 0.16;
-  /* Monochrome partner logos: black on paper. */
-  --logo-filter: grayscale(1) brightness(0);
 }
 
 /**
@@ -154,7 +152,6 @@
     --fx-glow: 0.18;
     --fx-line: 0.5;
     --fx-sweep: 0.09;
-    --logo-filter: grayscale(1) brightness(0) invert(1);
   }
 }
 
@@ -233,6 +230,12 @@
 html {
   scroll-behavior: smooth;
   scroll-padding-top: 88px; /* anchors land below the sticky header */
+}
+/* A page with a sticky section bar (SectionNav): anchors land below it too,
+   and pinned panels (ProductStack, IndexExplorer) pin below it. */
+html:has([data-subnav]) {
+  --subnav: 3.5rem;
+  scroll-padding-top: calc(88px + var(--subnav));
 }
 
 body {
@@ -919,6 +922,116 @@ html[data-io] [data-loop]:not([data-inview]) *::after {
   }
 }
 
+
+/* ---------- Guard scanner (components/guard/GuardScanner.tsx) ------------
+   Still by default: the five stamped chips in a wrapping row (no motion,
+   reduced motion, Pause motion). With motion allowed they slide right to
+   left through the "Garden checks" line, each stamped as it crosses (half
+   way through its cycle), on a loop: paused off screen (data-loop), on
+   hover, and by the strip's own Pause. Each way, the travel is at least 65%
+   of the lane and wide enough that five chips a fifth of a cycle apart
+   never overlap on a phone. */
+.scan-lane {
+  position: relative;
+  container-type: inline-size;
+}
+.scan-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+  padding: 1.25rem;
+}
+/* Still: the five share the row (one line of five on desktop). */
+.scan-chip {
+  --chip-w: 16rem;
+  flex: 1 1 13rem;
+  min-width: 0;
+}
+.scan-line {
+  display: none;
+}
+@media (prefers-reduced-motion: no-preference) {
+  html:not([data-motion="paused"]) .scan-lane {
+    height: 9rem;
+    overflow: hidden;
+    mask-image: linear-gradient(90deg, transparent, #000 8%, #000 92%, transparent);
+  }
+  html:not([data-motion="paused"]) .scan-list {
+    display: block;
+    padding: 0;
+  }
+  html:not([data-motion="paused"]) .scan-line {
+    display: block;
+    position: absolute;
+    inset-block: 0;
+    left: 50%;
+    width: 1px;
+    background: linear-gradient(transparent, rgb(var(--leaf) / 0.9) 30%, rgb(var(--leaf) / 0.9) 70%, transparent);
+    box-shadow: 0 0 14px rgb(var(--leaf) / 0.55);
+  }
+  html:not([data-motion="paused"]) .scan-line-label {
+    position: absolute;
+    top: 0.75rem;
+    left: 0.75rem;
+    white-space: nowrap;
+  }
+  html:not([data-motion="paused"]) .scan-chip {
+    --travel: max(65cqw, (var(--chip-w) + 1rem) * 2.5);
+    width: var(--chip-w);
+    max-width: calc(100cqw - 2.5rem);
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -38%);
+    animation: scanMove 14s linear infinite;
+    animation-delay: calc(var(--i, 0) * -2.8s);
+  }
+  html:not([data-motion="paused"]) .scan-stamp {
+    animation: scanStamp 14s linear infinite;
+    animation-delay: calc(var(--i, 0) * -2.8s);
+  }
+  [data-scan][data-paused] :is(.scan-chip, .scan-stamp),
+  .scan-lane:hover :is(.scan-chip, .scan-stamp) {
+    animation-play-state: paused;
+  }
+}
+@keyframes scanMove {
+  from {
+    translate: var(--travel) 0;
+  }
+  to {
+    translate: calc(var(--travel) * -1) 0;
+  }
+}
+@keyframes scanStamp {
+  0%,
+  49% {
+    opacity: 0;
+    scale: 0.6;
+  }
+  53%,
+  100% {
+    opacity: 1;
+    scale: 1;
+  }
+}
+
+/* ---------- Audit findings (components/security/FindingsGrid.tsx) -------
+   One mark per finding, each ticking to "fixed" in turn as the card
+   reveals. Ticked by default: server HTML, no JS, reduced motion and Pause
+   motion all show every finding fixed. The meter-fill pattern. */
+@media (prefers-reduced-motion: no-preference) {
+  .finding-tick {
+    transition:
+      transform 420ms var(--ease-expo),
+      opacity 200ms var(--ease-out);
+    transition-delay: calc(450ms + min(var(--i, 0) * 45ms, 1200ms));
+  }
+  html.js:not([data-motion="paused"]) [data-reveal]:not([data-revealed]) .finding-tick {
+    opacity: 0;
+    transform: scale(0.3);
+  }
+}
 
 /* ---------- Live values (components/indices/LivePrice.tsx) ---------------
    A price that arrives or changes gets one cue, colour only: a leaf tint

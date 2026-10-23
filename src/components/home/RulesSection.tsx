@@ -1,11 +1,12 @@
 import { Reveal } from "@/components/ui/Reveal";
-import { RulesDemo } from "@/components/guard/RulesDemo";
+import { GuardScanner } from "@/components/guard/GuardScanner";
 
 /**
- * Proof you can touch, inside the "Don't trust us. Check." section (D-08d):
- * after the security properties, the same rules run against situations a
- * Garden might face, ending in a verdict you can trace to the contract that
- * enforces it. The console is a Night-garden panel on the light page.
+ * Proof at a glance, inside the "Don't trust us. Check." section (D-08d):
+ * after the security properties, the five situations from the rules demo
+ * pass through a Garden's checks and come out stamped (GuardScanner). The
+ * full console, with every check traced to its contract, is on /security;
+ * the strip links there, so the home page stays short and ships no demo JS.
  *
  * `id="rules"` keeps every old /#rules link landing here.
  */
@@ -18,12 +19,12 @@ export function RulesSection() {
           Watch a Garden say no.
         </h3>
         <p className="mt-3 text-ui text-fg-muted">
-          Five things that could happen to a Garden, run through the checks its contracts enforce. Each trace links to
-          the rule it comes from.
+          Five things that could happen to a Garden, run through the checks its contracts enforce. Run any of them
+          step by step, traced to the rule it comes from, on the security page.
         </p>
       </div>
-      <Reveal className="theme-dark rounded-panel border border-subtle bg-canvas p-5 sm:p-8">
-        <RulesDemo />
+      <Reveal>
+        <GuardScanner />
       </Reveal>
     </div>
   );

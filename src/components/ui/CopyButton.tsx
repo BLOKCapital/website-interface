@@ -34,11 +34,14 @@ function selectText(target: Target | undefined) {
 export function CopyButton({
   value,
   label = "Copy",
+  failed = "Copy failed. Select the address to copy",
   selectTarget,
   className,
 }: {
   value: string;
   label?: string;
+  /** What to say when the clipboard is refused: how to copy by hand instead. */
+  failed?: string;
   /** The element that shows `value`, selected if copying fails. */
   selectTarget?: Target;
   className?: string;
@@ -73,7 +76,7 @@ export function CopyButton({
     >
       <Icon name={state === "copied" ? "check" : "copy"} size="sm" />
       <span aria-live="polite">
-        {state === "copied" ? "Copied" : state === "failed" ? "Copy failed. Select the address to copy" : label}
+        {state === "copied" ? "Copied" : state === "failed" ? failed : label}
       </span>
     </button>
   );

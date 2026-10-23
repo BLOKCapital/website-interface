@@ -1,6 +1,7 @@
 "use client";
 
-import { useEffect, useState, type MouseEvent } from "react";
+import { useMemo, type MouseEvent } from "react";
+import { useScrollSpy } from "@/lib/scroll-spy";
 import { cn } from "@/lib/utils";
 
 export type TocItem = { id: string; text: string };
@@ -22,38 +23,10 @@ export function PolicyTOC({
   /** Called when a section link is followed; may take over the navigation. */
   onNavigate?: (event: MouseEvent<HTMLAnchorElement>, id: string) => void;
 }) {
-  const [active, setActive] = useState<string | null>(headings[0]?.id ?? null);
-
   // The current section is the last heading above a line 30% down the
-  // viewport. Measured on scroll (once per frame) rather than with an
-  // IntersectionObserver band, so it's also right after a jump that lands
-  // between headings (a TOC link, Home/End, a reload mid-page).
-  useEffect(() => {
-    const els = headings.map((h) => document.getElementById(h.id)).filter((el): el is HTMLElement => !!el);
-    if (els.length === 0) return;
-    let frame = 0;
-    const update = () => {
-      frame = 0;
-      const line = window.innerHeight * 0.3;
-      let current = els[0].id;
-      for (const el of els) {
-        if (el.getBoundingClientRect().top > line) break;
-        current = el.id;
-      }
-      setActive(current);
-    };
-    const schedule = () => {
-      if (!frame) frame = requestAnimationFrame(update);
-    };
-    update();
-    window.addEventListener("scroll", schedule, { passive: true });
-    window.addEventListener("resize", schedule);
-    return () => {
-      cancelAnimationFrame(frame);
-      window.removeEventListener("scroll", schedule);
-      window.removeEventListener("resize", schedule);
-    };
-  }, [headings]);
+  // viewport (useScrollSpy); above the first heading, it's the first.
+  const ids = useMemo(() => headings.map((h) => h.id), [headings]);
+  const active = useScrollSpy(ids) ?? headings[0]?.id ?? null;
 
   if (headings.length === 0) return null;
 

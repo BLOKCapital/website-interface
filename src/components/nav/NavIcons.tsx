@@ -17,6 +17,27 @@ const paths: Record<string, React.ReactNode> = {
   ),
   // Shield
   "/security": <path d="M10 2.8 4 5v4.6c0 3.6 2.6 6.4 6 7.6 3.4-1.2 6-4 6-7.6V5l-6-2.2ZM7.5 10l1.8 1.8 3.4-3.6" {...line} />,
+  // A key: who can change what
+  "/security#controls": <path d="M7.5 12.5a3.5 3.5 0 1 1 3.2-5H17v2.6h-1.6v2h-2.6v-2h-2.1a3.5 3.5 0 0 1-3.2 2.4ZM6.2 9h.01" {...line} />,
+  // A magnifier over a page: the audits
+  "/security#audits": (
+    <>
+      <path d="M5 16.5V3.5h7l3 3v3" {...line} />
+      <circle cx="12.5" cy="13" r="2.6" {...line} />
+      <path d="m14.4 14.9 2.1 2.1M7.5 7.5h3M7.5 10h2" {...line} />
+    </>
+  ),
+  // A page of code: the contracts and their addresses
+  "/security#contracts": (
+    <>
+      <path d="M5 16.5V3.5h7l3 3v10H5Z" {...line} />
+      <path d="m8.6 9.2-1.6 1.6 1.6 1.6M11.4 9.2l1.6 1.6-1.6 1.6" {...line} />
+    </>
+  ),
+  // Two chain links: the official list
+  "/security#official": <path d="M8.6 11.4 11.4 8.6M9.2 6.2l1-1a3 3 0 0 1 4.6 4.6l-1 1M10.8 13.8l-1 1a3 3 0 0 1-4.6-4.6l1-1" {...line} />,
+  // A flag: report a vulnerability
+  "/security#disclosure": <path d="M5 17V3.5M5 4h9.5l-2 3.25 2 3.25H5" {...line} />,
   // Ballot box
   "/governance": <path d="M4 10h12v6.5H4zM7 10V4.5h6V10M8.5 7.2l1 1 2-2.2" {...line} />,
   // Coin
