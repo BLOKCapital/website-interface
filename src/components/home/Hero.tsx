@@ -1,188 +1,48 @@
-import type { CSSProperties } from "react";
-import { IntentLink } from "@/components/ui/IntentLink";
 import { Button } from "@/components/ui/Button";
-import { GardenAsset } from "@/components/ui/GardenAsset";
-import { Icon } from "@/components/ui/Icon";
 import { RiskNote } from "@/components/ui/RiskNote";
-import { CheckIcon } from "@/components/ui/icons";
-import { audits } from "@/lib/data/audits";
 import { links } from "@/lib/data/socials";
 import { SplitText } from "@/components/motion/SplitText";
-
-const d = (ms: number): CSSProperties => ({ animationDelay: `${ms}ms` });
-
-const credShields = audits.find((a) => a.partner === "CredShields");
+import { HeroGarden } from "./HeroGarden";
 
 /**
- * Three facts a first-time visitor should leave with. All sourced
- * (facts.ts). The audit claim names its scope where it's made (INS-01,
- * CRO-05): the review covered the Garden contracts, not the index code.
- */
-const facts: { text: string; href?: string }[] = [
-  { text: "Your assets never leave your wallet" },
-  { text: "No seed phrase with Google sign-in" },
-  { text: `${credShields?.coverage?.covered ?? "Garden contracts"} audited by CredShields`, href: "/security#audits" },
-];
-
-/** The three properties that make a Garden different, pinned around the render. */
-const chips = [
-  { label: "Assets stay at your address", pos: "left-0 top-[18%]", delay: 60 },
-  { label: "Every move written on-chain", pos: "right-0 top-[46%]", delay: 100 },
-  { label: "Upgrades approved by the DAO", pos: "left-[6%] bottom-[12%]", delay: 150 },
-];
-
-/**
- * Dashed currents running into and out of the Garden render: value in from
- * the left, positions out to the right. Drawn under the render, so the
- * island itself appears to take them in.
- */
-const flows = {
-  inA: "M0 150 C 100 150, 150 232, 260 262",
-  inB: "M0 404 C 104 404, 162 318, 260 282",
-  outA: "M260 250 C 360 218, 418 118, 520 118",
-  outB: "M260 292 C 368 322, 410 428, 520 432",
-};
-const lines = [
-  { d: flows.inA, tone: "rgb(var(--leaf) / var(--fx-line))" },
-  { d: flows.inB, tone: "rgb(var(--leaf) / calc(var(--fx-line) * 0.75))" },
-  { d: flows.outA, tone: "rgb(var(--cobalt) / var(--fx-line))" },
-  { d: flows.outB, tone: "rgb(var(--sand) / calc(var(--fx-line) * 0.85))" },
-];
-const ends: [number, number, string][] = [
-  [6, 150, "--leaf"],
-  [6, 404, "--leaf"],
-  [514, 118, "--cobalt"],
-  [514, 432, "--sand"],
-];
-
-/**
- * One light per current, sweeping along its dashes: in from the left
- * first, then out to the right. A gradient band translating under a mask
- * of the dashes, so the motion is a composited transform (MOT-03); it plays
- * twice and rests off the art. The masks (the same paths as `flows`) and
- * the colours are in globals.css, "Hero and product art".
- */
-const sweeps = [
-  { mask: "art-mask-in", delay: 150 },
-  { mask: "art-mask-up", delay: 950 },
-  { mask: "art-mask-down", delay: 1100 },
-];
-
-function FlowLines() {
-  return (
-    <>
-      <svg viewBox="0 0 520 520" aria-hidden className="absolute inset-0 size-full animate-fade-in" style={d(150)} fill="none">
-        {lines.map((f) => (
-          <path key={f.d} d={f.d} stroke={f.tone} strokeWidth="1.5" strokeLinecap="round" strokeDasharray="4 6" />
-        ))}
-        {ends.map(([x, y, c]) => (
-          <circle key={`${x}-${y}`} cx={x} cy={y} r="2.5" fill={`rgb(var(${c}))`} />
-        ))}
-      </svg>
-      {sweeps.map((s) => (
-        <div key={s.mask} aria-hidden className={`art-mask ${s.mask} absolute inset-0 overflow-hidden`}>
-          <div className="art-sweep absolute inset-y-0 left-0 w-1/2" style={d(s.delay)} />
-        </div>
-      ))}
-      {/* Pulse rings at the ends: HTML over the SVG, so they composite. */}
-      {ends.map(([x, y, c], i) => (
-        <span
-          key={`ring-${x}-${y}`}
-          aria-hidden
-          className="absolute size-1.5 -translate-x-1/2 -translate-y-1/2"
-          style={{ left: `${(x / 520) * 100}%`, top: `${(y / 520) * 100}%` }}
-        >
-          <span className="art-ping block size-full rounded-full" style={{ ...d(i < 2 ? 150 : 1000), backgroundColor: `rgb(var(${c}))` }} />
-        </span>
-      ))}
-    </>
-  );
-}
-
-/**
- * Home hero: what BLOK is, in one line; its status; where to go next.
- * Server component, pure CSS, painted with the HTML.
+ * Home hero, clean and minimal: a label, the headline, one sentence, two
+ * actions and the risk line; beside them, one line-art drawing that shows
+ * the single thing an index Garden does (HeroGarden: prices drift, it
+ * rebalances itself). Nothing else competes with them.
  *
- * Entrance (D-32, PERF-01, MOT-01): the LCP group (h1, lead, CTAs, render)
- * is at full opacity on the first frame. It only rises 8px (`animate-rise`)
- * and the h1 words ink in from a readable grey, with no delay. Secondary
- * items (status, facts, risk line, chips, currents) fade in within
- * 150ms. The illustration's loops (the light along the currents, the end
- * rings, the float) are composited, pause off screen (data-loop) and settle
- * on a still frame within 5s (D-33, MOT-02/03).
+ * Entrance (D-32, PERF-01, MOT-01): the LCP group (h1, lead, CTAs) is at
+ * full opacity on the first frame and only rises 8px; the h1 words ink in
+ * from a readable grey. The drawing settles in after it and loops only on
+ * screen, with its own Pause.
  */
 export function Hero() {
   return (
-    <section data-placement="hero" className="relative overflow-hidden">
-      <div aria-hidden className="grid-lines pointer-events-none absolute inset-0 [mask-image:radial-gradient(ellipse_70%_60%_at_65%_40%,black,transparent)]" />
-      <div className="relative mx-auto grid w-full max-w-page items-center gap-12 px-gutter pb-20 pt-24 sm:pt-32 lg:grid-cols-12 lg:gap-8 lg:pb-28 lg:pt-44">
+    <section data-placement="hero" className="paper-ruled relative overflow-hidden">
+      <div aria-hidden className="glow-leaf pointer-events-none absolute right-[-12%] top-[10%] h-[560px] w-[720px] opacity-50" />
+      <div className="relative mx-auto grid w-full max-w-page items-center gap-16 px-gutter pb-24 pt-28 sm:pt-36 lg:grid-cols-12 lg:gap-12 lg:pb-32 lg:pt-44">
         <div className="lg:col-span-7">
-          <SplitText as="h1" reveal="load" delay={0} className="display text-h1 text-balance text-fg">
+          <p className="eyebrow animate-fade-in">Non-custodial index Gardens · Arbitrum One</p>
+          <SplitText as="h1" reveal="load" delay={0} className="display mt-6 text-h1 text-balance text-fg">
             Grow your crypto. <em className="text-sand">Keep the keys.</em>
           </SplitText>
-          <p className="mt-5 max-w-xl animate-rise text-lead text-fg-muted sm:mt-7">
-            BLOK Capital gives you a smart wallet at your own address that follows an on-chain index and rebalances
-            itself. Every trade is a transaction you can read.
+          <p className="mt-8 max-w-md animate-rise text-lead text-fg-muted">
+            A smart wallet at your own address that follows an on-chain index and rebalances itself.
           </p>
-          <div className="mt-7 flex animate-rise flex-wrap items-center gap-3 sm:mt-10">
+          <p className="mt-6 animate-rise">
+            <span className="tag-lime">sign in with Google · no seed phrase</span>
+          </p>
+          <div className="mt-8 flex animate-rise flex-wrap items-center gap-3">
             <Button href={links.app} size="lg" data-cta="hero_launch_app">
-              Launch App
+              Launch your fund
             </Button>
             <Button href="/indices" size="lg" variant="secondary" data-cta="hero_explore_indices">
               Explore the indices
             </Button>
-            <a
-              href="#how"
-              data-cta="hero_how_it_works"
-              className="group/how inline-flex h-12 items-center gap-1.5 rounded-full px-2 text-ui font-medium text-fg-muted transition-colors duration-fast can-hover:hover:text-fg"
-            >
-              How it works
-              <Icon name="arrow-down" size="sm" className="transition-transform duration-fast can-hover:group-hover/how:translate-y-0.5" />
-            </a>
           </div>
-          <ul
-            className="mt-8 flex animate-fade-in flex-col gap-3 text-small text-fg-muted sm:flex-row sm:flex-wrap sm:gap-x-6"
-            style={d(100)}
-          >
-            {facts.map((f) => (
-              <li key={f.text} className="flex items-center gap-2">
-                <CheckIcon className="shrink-0 text-leaf" />
-                {f.href ? (
-                  <IntentLink
-                    href={f.href}
-                    data-cta="hero_audit_scope"
-                    className="rounded-xs underline decoration-line/30 underline-offset-[3px] transition-colors duration-fast can-hover:hover:text-fg can-hover:hover:decoration-leaf"
-                  >
-                    {f.text}
-                  </IntentLink>
-                ) : (
-                  f.text
-                )}
-              </li>
-            ))}
-          </ul>
-          <RiskNote className="mt-4 animate-fade-in [animation-delay:150ms]" />
+          <RiskNote className="mt-10 animate-fade-in [animation-delay:150ms]" />
         </div>
 
-        <div data-loop className="relative mx-auto aspect-square w-full max-w-[520px] animate-rise lg:col-span-5">
-          <div aria-hidden className="glow-leaf absolute inset-[-10%] opacity-90" />
-          <FlowLines />
-          <div className="absolute inset-[6%]">
-            <div className="art-float absolute inset-0">
-              <GardenAsset n={11} priority quality={95} sizes="(max-width: 640px) 80vw, 460px" />
-            </div>
-          </div>
-          {chips.map((c) => (
-            <p
-              key={c.label}
-              className={`absolute ${c.pos} hidden animate-fade-in items-center gap-2 rounded-full border border-subtle bg-card/80 px-3.5 py-2 text-caption text-fg shadow-e1 backdrop-blur-md sm:inline-flex`}
-              style={d(c.delay)}
-            >
-              <span aria-hidden className="size-1.5 rounded-full bg-leaf" />
-              {c.label}
-            </p>
-          ))}
-        </div>
+        <HeroGarden className="mx-auto w-full max-w-[520px] animate-rise lg:col-span-5" />
       </div>
     </section>
   );

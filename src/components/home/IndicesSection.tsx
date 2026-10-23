@@ -9,7 +9,7 @@ import { indices } from "@/lib/data/indices";
 /**
  * Home: what BLOKC2 / BLOKC5 / BLOKC10 are, as three cards that open each
  * index's page (D-08c, UX-09). The explorer, live prices and methodology
- * live on /indices; IndexShowcase is no longer used here but is kept.
+ * live on /indices.
  */
 export function IndicesSection() {
   return (
@@ -38,7 +38,7 @@ export function IndicesSection() {
                 className="flex h-full flex-col"
               >
                 <div className="flex items-start justify-between gap-3">
-                  <h3 id={titleId} className="font-mono text-h4 font-medium text-fg">
+                  <h3 id={titleId} className="font-mono text-h4 font-bold tracking-tight text-fg">
                     {x.name}
                   </h3>
                   <span className="label-caps pt-1">

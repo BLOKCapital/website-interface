@@ -8,7 +8,7 @@ import { cn } from "@/lib/utils";
 export function TokenTimeline({ items }: { items: Milestone[] }) {
   const next = items.findIndex((m) => m.status !== "done");
   return (
-    <div className="h-full rounded-panel border border-subtle bg-card p-6 sm:p-8">
+    <div className="h-full rounded-panel border border-subtle bg-card p-6 sm:p-8 shadow-soft">
       <p className="label-caps">Timeline</p>
       <ol className="relative mt-6">
         <span aria-hidden className="absolute bottom-3 left-[7px] top-2 w-px bg-line/12" />
@@ -25,9 +25,9 @@ export function TokenTimeline({ items }: { items: Milestone[] }) {
               />
               <div className="min-w-0">
                 <p className="flex flex-wrap items-center gap-x-3 gap-y-1">
-                  <span className="font-mono text-label tracking-wide text-leaf">{m.quarter}</span>
+                  <span className="font-mono text-label tracking-wide text-cobalt">{m.quarter}</span>
                   {isNext && (
-                    <span className="rounded-full border border-leaf/30 bg-leaf/10 px-2 py-0.5 font-mono text-label uppercase tracking-caps text-leaf">
+                    <span className="tag-lime !px-2 !py-0.5 !text-label uppercase tracking-caps">
                       Next
                     </span>
                   )}

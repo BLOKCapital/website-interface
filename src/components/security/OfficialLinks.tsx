@@ -4,8 +4,6 @@ import { CopyButton } from "@/components/ui/CopyButton";
 import { Icon } from "@/components/ui/Icon";
 import { Reveal } from "@/components/ui/Reveal";
 import { links, socials } from "@/lib/data/socials";
-import { BLOKC_TOKEN } from "@/lib/data/token";
-import { ARBISCAN } from "@/lib/live/rpc";
 import { siteConfig } from "@/lib/seo/site";
 import { cn } from "@/lib/utils";
 
@@ -27,13 +25,12 @@ const bare = (url: string) => url.replace(/^https?:\/\//, "").replace(/^www\./, 
 const origin = (url: string) => new URL(url).origin;
 
 /** The DAO's address, read from the Aragon link itself so the two can't disagree. */
-const DAO_ADDRESS = links.aragon.match(/0x[0-9a-fA-F]{40}/)![0];
 
 /**
  * Generated from the site's verified sources (siteConfig, socials.ts,
  * token.ts), so the list can't drift from the links used everywhere else
  * (SEC-10, H §3.6). The app is listed too, now that it's the navbar's
- * primary action; it is in private testing.
+ * primary action, and the Contributor Program app beside it.
  */
 const groups: { id: string; title: string; entries: Entry[] }[] = [
   {
@@ -41,9 +38,11 @@ const groups: { id: string; title: string; entries: Entry[] }[] = [
     title: "Websites",
     entries: [
       { id: "site", label: "Website", literal: bare(siteConfig.url), copy: siteConfig.url, href: siteConfig.url },
-      { id: "app", label: "App (in private testing)", literal: bare(links.app), copy: links.app, href: links.app },
+      { id: "app", label: "App", literal: bare(links.app), copy: links.app, href: links.app },
+      { id: "contribute", label: "Contributor app", literal: bare(links.contribute), copy: links.contribute, href: links.contribute },
       { id: "docs", label: "Docs", literal: bare(origin(links.docs)), copy: origin(links.docs), href: links.docs },
-      { id: "audits", label: "Audit reports", literal: bare(links.auditsRepo), copy: links.auditsRepo, href: links.auditsRepo },
+      // Contract addresses: the docs publish them, so the list points there rather than repeating them.
+      { id: "addresses", label: "Contract addresses", literal: bare(links.docsAddresses), copy: links.docsAddresses, href: links.docsAddresses },
     ],
   },
   {
@@ -58,19 +57,12 @@ const groups: { id: string; title: string; entries: Entry[] }[] = [
       note: s.id === "x" ? siteConfig.twitterHandle : undefined,
     })),
   },
-  {
-    id: "chain",
-    title: "On-chain · Arbitrum One",
-    entries: [
-      { id: "blokc", label: "$BLOKC token", literal: BLOKC_TOKEN, copy: BLOKC_TOKEN, href: `${ARBISCAN}/token/${BLOKC_TOKEN}` },
-      { id: "dao", label: "DAO (Aragon OSx)", literal: DAO_ADDRESS, copy: DAO_ADDRESS, href: links.aragon },
-    ],
-  },
 ];
 
 /**
- * Official links (#official): the one list to check a link, handle or
- * address against, written out in full with copy buttons. Ends with
+ * Official links (#official): the one list to check a link or handle
+ * against, written out in full with copy buttons. Contract addresses are
+ * the docs' to publish, so the list links to that page instead. Ends with
  * "Anything else is not us." No "last checked" date: none is kept.
  */
 export function OfficialLinks() {
@@ -79,7 +71,7 @@ export function OfficialLinks() {
       id="official"
       eyebrow="Official links"
       title="Check it against this list."
-      description="Every BLOK Capital domain, handle and address, written out in full, so you can compare them character by character before you click, sign or send."
+      description="Every BLOK Capital domain and handle, written out in full, so you can compare them character by character before you click, sign or send. Contract addresses are in the docs."
     >
       <Reveal>
         <div data-placement="official_links" className="grid gap-5 lg:grid-cols-2">
@@ -89,7 +81,7 @@ export function OfficialLinks() {
               role="group"
               aria-labelledby={`official-group-${g.id}`}
               // Full addresses need the whole width.
-              className={cn("rounded-card border border-subtle bg-card p-5 sm:p-6", g.id === "chain" && "lg:col-span-2")}
+              className={cn("rounded-card border border-subtle bg-card p-5 shadow-soft sm:p-6", g.id === "chain" && "lg:col-span-2")}
             >
               <h3 id={`official-group-${g.id}`} className="label-caps">
                 {g.title}
@@ -145,7 +137,9 @@ export function OfficialLinks() {
           ))}
         </div>
       </Reveal>
-      <p className="mt-6 border-l-2 border-leaf pl-4 text-lead font-medium text-fg">Anything else is not us.</p>
+      <p className="display mt-10 text-h3 text-fg">
+        Anything else is <em>not us.</em>
+      </p>
     </Section>
   );
 }

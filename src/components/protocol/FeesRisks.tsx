@@ -33,7 +33,7 @@ export function FeesRisks({ tone = "surface" }: { tone?: "canvas" | "surface" } 
       <div className="grid gap-5 lg:grid-cols-12">
         <Reveal className="lg:col-span-5">
           <Card className="h-full">
-            <h3 className="text-h4 font-medium text-fg">Fees</h3>
+            <h3 className="text-h4 font-bold tracking-tight text-fg">Fees</h3>
             <dl className="mt-4 divide-y divide-subtle">
               {fees.map((f) => (
                 <div key={f.label} className="py-4 last:pb-0">
@@ -49,7 +49,7 @@ export function FeesRisks({ tone = "surface" }: { tone?: "canvas" | "surface" } 
         </Reveal>
         <Reveal delay={0.08} className="lg:col-span-7">
           <Card className="h-full">
-            <h3 className="text-h4 font-medium text-fg">Risks</h3>
+            <h3 className="text-h4 font-bold tracking-tight text-fg">Risks</h3>
             <ul className="mt-5 grid gap-x-8 gap-y-5 sm:grid-cols-2">
               {risks.map((r) => (
                 <li key={r.label} className="border-l-2 border-negative/50 pl-4">

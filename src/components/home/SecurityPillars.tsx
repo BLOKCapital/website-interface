@@ -15,8 +15,9 @@ import { pillars } from "@/lib/data/pillars";
 const isDocs = (href: string) => /^https?:\/\/docs\./.test(href);
 
 /**
- * "Don't trust us. Check.": six security properties, each linking to where
- * it's shown, then `children` (on home, RulesDemo as hands-on proof; D-08d).
+ * "Don't trust us. Check.": six security properties in plain words, each
+ * linking to where it's shown (the standards behind them are in the docs and
+ * pillars.ts `spec`, not on the cards); then `children`, if any.
  * A property that isn't live yet carries its "Planned" badge, and its copy
  * is in the future tense (pillars.ts).
  *
@@ -34,7 +35,7 @@ export function SecurityPillars({ children }: { children?: ReactNode }) {
           Don&apos;t trust us. <em className="text-sand">Check.</em>
         </>
       }
-      description="Each property maps to a contract, an audit or a line of open-source code. Then watch the rules run."
+      description="Six things that keep your money yours. Each one links to where it's shown: the docs or the code."
       actions={
         <Button href="/security" variant="secondary" data-cta="security_contracts_audits">
           Contracts and audits
@@ -53,12 +54,9 @@ export function SecurityPillars({ children }: { children?: ReactNode }) {
             .join(" ");
           const inner = (
             <>
-              <div className="flex items-center justify-between gap-3">
-                <PillarIcon id={p.id} />
-                <span className="text-right font-mono text-label text-fg-subtle">{p.spec}</span>
-              </div>
+              <PillarIcon id={p.id} />
               <div className="mt-6 flex flex-wrap items-center gap-x-3 gap-y-2">
-                <h3 id={`${id}-title`} className="text-h4 font-medium text-fg">
+                <h3 id={`${id}-title`} className="text-h4 font-bold tracking-tight text-fg">
                   {p.label}
                 </h3>
                 {p.planned && (

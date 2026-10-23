@@ -50,6 +50,7 @@ const rows: { q: string; cells: [string, string, string] }[] = [
 export function Problem() {
   return (
     <Section
+      className="paper-ruled"
       id="why"
       eyebrow="Why BLOK Capital"
       title={
@@ -75,11 +76,12 @@ export function Problem() {
                 key={c}
                 className={
                   i === 2
-                    ? "rounded-t-card border-x border-t border-leaf/25 bg-leaf/6 px-6 pb-5 pt-5 text-caption font-semibold uppercase tracking-caps text-leaf"
+                    ? "rounded-t-card border-x border-t border-leaf/25 bg-leaf/6 px-6 pb-5 pt-5"
                     : "px-6 pb-5 text-caption font-semibold uppercase tracking-caps text-fg-subtle"
                 }
               >
-                {c}
+                {/* Our column carries the lime tag, the posts' highlight. */}
+                {i === 2 ? <span className="tag-lime uppercase tracking-caps">{c}</span> : c}
               </th>
             ))}
           </tr>
@@ -90,7 +92,7 @@ export function Problem() {
               key={r.q}
               className="mb-4 block rounded-card md:mb-0 border border-subtle bg-card p-5 lg:mb-0 lg:table-row lg:rounded-none lg:border-0 lg:border-t lg:border-subtle lg:bg-transparent lg:p-0"
             >
-              <th scope="row" className="display block pb-3 text-h4 font-normal text-fg lg:table-cell lg:py-6 lg:pr-6 lg:align-top">
+              <th scope="row" className="display block pb-3 text-h4 font-bold text-fg lg:table-cell lg:py-6 lg:pr-6 lg:align-top">
                 {r.q}
               </th>
               {r.cells.map((cell, i) => (

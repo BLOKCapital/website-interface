@@ -9,32 +9,25 @@ import { ReleaseMachine } from "@/components/iso/ReleaseMachine";
 import { CtaBand } from "@/components/ui/CtaBand";
 import { ControlMap } from "@/components/security/ControlMap";
 import { LaunchReadiness } from "@/components/security/LaunchReadiness";
-import { ContractRegistry } from "@/components/security/ContractRegistry";
-import { AuditCard } from "@/components/security/AuditCard";
-import { FindingsGrid } from "@/components/security/FindingsGrid";
 import { SecurityReadout } from "@/components/security/SecurityReadout";
 import { OfficialLinks } from "@/components/security/OfficialLinks";
 import { SafetyNotice } from "@/components/security/SafetyNotice";
 import { RulesDemo } from "@/components/guard/RulesDemo";
-import { ArrowLink } from "@/components/ui/ArrowLink";
-import { Reveal, Stagger, RevealItem } from "@/components/ui/Reveal";
+import { Reveal } from "@/components/ui/Reveal";
 import { DiscordIcon } from "@/components/ui/icons";
 import { JsonLd } from "@/components/seo/JsonLd";
 import { breadcrumbSchema } from "@/lib/seo/schema";
-import { audits } from "@/lib/data/audits";
+import { auditStatus } from "@/lib/data/audits";
 import { links, social } from "@/lib/data/socials";
 import { pageMetadata } from "@/lib/seo/metadata";
 
 export const metadata: Metadata = pageMetadata({
   title: "Security: audits, contracts and controls",
-  description: "Who can change the BLOK Capital contracts, who has audited them, and how to report a vulnerability.",
+  description: "Who can change the BLOK Capital contracts, where the audit reports are published, and how to report a vulnerability.",
   path: "/security",
   // security/opengraph-image.tsx supplies the card.
   ownImage: true,
 });
-
-/** The one published report; its dates and scope come from audits.ts (SEC-27, CRO-05). */
-const report = audits.find((a) => a.kind === "report")!;
 
 /**
  * How to report a vulnerability (SEC-15). Each step restates what the site
@@ -60,7 +53,7 @@ const disclosureSteps = [
 const pipeline = [
   { label: "Write", detail: "Solidity ^0.8.31, public on GitHub" },
   { label: "Test", detail: "Foundry unit and end-to-end tests" },
-  { label: "Audit", detail: `${report.partner}: ${report.coverage?.covered ?? "Garden contracts"}, ${report.auditedOn}` },
+  { label: "Audit", detail: "independent audits, in progress · reports in the docs" },
   { label: "Scan", detail: "SolidityScan and Octane on each release" },
   { label: "Approve", detail: "New facets need a DAO vote" },
   { label: "Ship", detail: "To Arbitrum One at public launch" },
@@ -89,10 +82,10 @@ export default function SecurityPage() {
             Check the work, <em className="text-sand">not our word.</em>
           </>
         }
-        description="What the contracts let anyone do, who can change them, who has audited them, and how to report a problem."
+        description="What the contracts let anyone do, who can change them, where the audits are published, and how to report a problem."
         actions={
           <>
-            <Button href="#contracts">Contracts and controls</Button>
+            <Button href="#controls">Who can change what</Button>
             <Button href="#disclosure" variant="secondary">
               Report a vulnerability
             </Button>
@@ -130,20 +123,49 @@ export default function SecurityPage() {
         </Reveal>
       </Section>
 
-      <Section id="audits" eyebrow="Audits & scanning" title="One published audit so far. More before launch."
-        description="The Garden contracts were audited in November 2024. The index and rebalancer contracts are newer; they get a published review before anyone's money depends on them.">
-        {/* Three columns only from lg, so nothing clips at 768 (MOB-09b); the report spans both columns at md. */}
-        <Stagger as="ul" className="grid gap-5 md:grid-cols-2 lg:grid-cols-3">
-          {audits.map((a) => (
-            <RevealItem as="li" key={a.partner} className={a.kind === "report" ? "h-full md:col-span-2 lg:col-span-1" : "h-full"}>
-              <AuditCard audit={a} />
-            </RevealItem>
-          ))}
-        </Stagger>
-        {/* One mark per finding, grouped by severity, each ticking to fixed (data: components/security/findings.ts). */}
-        <div className="mt-5">
-          <FindingsGrid />
-        </div>
+      {/* Audits: their state, and where the reports go (the docs). The old report is no longer shown; data: lib/data/audits.ts. */}
+      <Section
+        id="audits"
+        eyebrow="Audits"
+        title={
+          <>
+            New audits, <em>in progress.</em>
+          </>
+        }
+        description="Independent audits of the contracts are under way. The reports are published in the docs, so you can read each one in full."
+      >
+        <Reveal>
+          <div className="grid overflow-hidden rounded-panel border border-subtle bg-card shadow-soft lg:grid-cols-12">
+            <div className="flex flex-col p-6 sm:p-8 lg:col-span-7">
+              <div className="flex flex-wrap items-center justify-between gap-3">
+                <p className="eyebrow">Status</p>
+                <span className="stamp mr-1 text-progress-text">{auditStatus.label}</span>
+              </div>
+              <h3 className="display mt-4 text-h3 text-fg">
+                Reports go <em>in the docs.</em>
+              </h3>
+              <p className="mt-3 max-w-xl text-ui text-fg-muted">{auditStatus.detail}</p>
+            </div>
+            {/* What to look for once a report is out: general, true of any audit. */}
+            <div className="border-t border-subtle p-6 sm:p-8 lg:col-span-5 lg:border-l lg:border-t-0">
+              <p className="label-caps">When a report is out, check</p>
+              <ol className="mt-5 space-y-4">
+                {[
+                  ["Scope", "Which contracts it covers, and which it doesn't."],
+                  ["Version", "The commit it reviewed, against the code that's deployed."],
+                  ["Findings", "What was found, and whether each one was fixed."],
+                ].map(([k, v], i) => (
+                  <li key={k} className="grid grid-cols-[2rem_1fr] gap-3">
+                    <span className="font-mono text-label text-cobalt">0{i + 1}</span>
+                    <p className="text-small text-fg-muted">
+                      <span className="font-bold text-fg">{k}.</span> {v}
+                    </p>
+                  </li>
+                ))}
+              </ol>
+            </div>
+          </div>
+        </Reveal>
         {/* Fig 3: how a change reaches production, as an assembly line (the same six stages). */}
         <Reveal className="mt-5">
           <h3 className="sr-only">How a change reaches production</h3>
@@ -151,36 +173,23 @@ export default function SecurityPage() {
         </Reveal>
       </Section>
 
-      {/* INS-04: the registry, after the audits. Mainnet addresses are "In progress" (readiness), so every protocol row reads "Not deployed yet"; that's why it no longer leads the page. */}
+      {/* Contract addresses are published in the docs, so this points there instead of listing them (owner, 2026-10-23). */}
       <Section
         id="contracts"
         tone="surface"
         eyebrow="Contracts"
-        title="Every contract, and where to check it."
-        description={
+        title={
           <>
-            Mainnet deployment is in progress. Verified addresses will be published in the documentation and the audits
-            repository. Until then, treat any address claiming to be a BLOK Capital protocol contract with suspicion. The one
-            published exception is the{" "}
-            <Link href="/token#facts" className="text-leaf underline decoration-leaf/40 underline-offset-[3px] can-hover:hover:decoration-leaf">
-              $BLOKC token
-            </Link>
-            .
+            Addresses live <em>in the docs.</em>
           </>
         }
+        description="Mainnet deployment is in progress. The docs are where verified contract addresses are published. Treat any address that claims to be a BLOK Capital contract, and isn't there, with suspicion."
         actions={
-          <>
-            <Button href={links.docsAddresses} variant="secondary" data-cta="security_docs_addresses">
-              Addresses in the docs
-            </Button>
-            <Button href={links.auditsRepo} variant="secondary" data-cta="security_audits_repo">
-              Audits repository
-            </Button>
-          </>
+          <Button href={links.docsAddresses} variant="secondary" data-cta="security_docs_addresses">
+            Addresses in the docs
+          </Button>
         }
-      >
-        <ContractRegistry />
-      </Section>
+      />
 
       {/* SEC-10: the list to check any link, handle or address against. */}
       <OfficialLinks />
@@ -196,7 +205,7 @@ export default function SecurityPage() {
         <div className="grid gap-5 lg:grid-cols-12">
           <Reveal className="min-w-0 lg:col-span-7">
             <Card className="h-full">
-              <h3 className="text-h4 font-medium text-fg">How to report it</h3>
+              <h3 className="text-h4 font-bold tracking-tight text-fg">How to report it</h3>
               {/* TODO(owner): UX-22. Name the ticket channel and the button to press
                   (e.g. "#open-a-ticket → Security") once you confirm them. */}
               <ol className="mt-5 space-y-4">
@@ -235,9 +244,6 @@ export default function SecurityPage() {
                 </Link>
                 .
               </p>
-              <div className="mt-4" data-cta="security_docs_security">
-                <ArrowLink href={links.docsSecurity}>From the security documentation</ArrowLink>
-              </div>
             </Card>
           </Reveal>
         </div>

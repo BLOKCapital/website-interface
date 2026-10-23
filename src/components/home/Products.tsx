@@ -1,11 +1,12 @@
 import { Section } from "@/components/ui/Section";
 import { Card } from "@/components/ui/Card";
-import { Badge, BADGE_STATUS, type Tone } from "@/components/ui/Badge";
+import { BADGE_STATUS, type Tone } from "@/components/ui/Badge";
 import { Stagger } from "@/components/ui/Reveal";
 import { ArrowIcon } from "@/components/ui/icons";
 import { Icon } from "@/components/ui/Icon";
 import { IntentLink } from "@/components/ui/IntentLink";
 import { RebalanceArt, RoutesArt, BadgeArt } from "@/components/home/products/ProductArt";
+import { ArtReplay } from "@/components/home/products/ArtReplay";
 import { protocolStatus } from "@/lib/data/status";
 import { links } from "@/lib/data/socials";
 import { cn } from "@/lib/utils";
@@ -15,21 +16,21 @@ export const products: {
   name: string;
   /** Who steers a Garden of this kind. */
   steer: string;
-  status: { tone: Tone; label: string };
+  /** Only for a product that isn't coming at the public launch (Gardeners). */
+  status?: { tone: Tone; label: string };
   summary: string;
   /** Who it suits, in one line (also on /protocol's product stack). */
   audience: string;
   points: string[];
   /** Where the home tile goes. */
   href: string;
-  /** Its page in the app (blokc.app), once the product is open to testers. */
+  /** Its page in the app (blokc.app), for the products the app already has. */
   app?: string;
 }[] = [
   {
     id: "index",
     name: "Index Gardens",
     steer: "The index",
-    status: BADGE_STATUS.testing,
     // CRO-14: who decides what, in the site's one wording (faqs.ts, /indices).
     summary:
       "Follow a basket that rebalances itself. Components chosen by the team and approved by the DAO; weights set on-chain by market cap.",
@@ -47,7 +48,6 @@ export const products: {
     id: "yield",
     name: "Yield Gardens",
     steer: "You",
-    status: BADGE_STATUS.testing,
     summary: "Steer it yourself across the venues a Garden composes with.",
     audience: "For people who'd rather steer themselves.",
     points: ["Swap on Uniswap V3 and Camelot V3", "Lend and borrow on Aave V3", "Perps on GMX V2, fixed yield on Pendle V2"],
@@ -62,7 +62,7 @@ export const products: {
     summary: "Hire an on-chain manager whose record anyone can verify.",
     audience: "For people who want a professional, and for the professionals.",
     points: [
-      "Track record written to an ERC-5484 soulbound badge",
+      "Track record kept on-chain, on a badge that can't be transferred",
       "Trades within limits you approve; can't hold your funds",
       "Fees capped by DAO-set ceilings; revoke any time",
     ],
@@ -74,12 +74,15 @@ export const products: {
 const art = { index: RebalanceArt, yield: RoutesArt, gardeners: BadgeArt } as const;
 
 /**
- * The three products as a bento. Every Garden is the same wallet; the tiles
- * differ in who steers it, and each shows that in a small picture that plays
- * once: a basket drifting past its 2% band and being pulled back in one
+ * The three products, side by side, each set like one of the brand's
+ * posts: a page number (and, for Gardeners, its "Planned" stamp) across the top; who steers it
+ * as a mono label with the answer handwritten ("STEERED BY the index"); a
+ * heavy title and the one-line summary; the picture on its own ruled sheet,
+ * playing once (a basket drifting past its 2% band and pulled back in one
  * pooled trade; you routing to the venues; a manager's soulbound record,
- * with access you can switch off. Index Gardens, where most people start,
- * gets a full-width dark row; the other two sit side by side beneath it.
+ * with access you can switch off); the points typed on strips of paper; and
+ * the links at the foot. Every Garden is the same wallet; the cards differ
+ * in who steers it.
  *
  * Each tile's main link is its heading, stretched over the card and
  * described by the summary (A11Y-31), so the card reads as its title
@@ -94,9 +97,8 @@ export function Products() {
       title="Three ways to grow a Garden."
       description="Every Garden is the same smart wallet underneath; what changes is who steers it."
     >
-      <Stagger as="ul" className="grid gap-5 md:grid-cols-2">
+      <Stagger as="ul" className="grid gap-5 md:grid-cols-2 lg:grid-cols-3">
         {products.map((p, i) => {
-          const featured = i === 0;
           const Art = art[p.id as keyof typeof art];
           const titleId = `product-${p.id}`;
           return (
@@ -106,65 +108,63 @@ export function Products() {
               data-reveal-item=""
               data-cta={`products_${p.id}`}
               suppressHydrationWarning
-              className={cn("h-full", featured && "md:col-span-2")}
+              className={cn("h-full", i === 2 && "md:col-span-2 lg:col-span-1")}
             >
-              <Card
-                interactive
-                tone={featured ? "feature" : "default"}
-                className={cn(
-                  "group/card relative flex h-full flex-col overflow-hidden p-0 sm:p-0",
-                  featured && "sheen border-leaf/20 lg:grid lg:grid-cols-[1.15fr_1fr]",
-                )}
-              >
-                <div
-                  className={cn(
-                    "relative flex items-center justify-center overflow-hidden border-b border-subtle px-4 py-5",
-                    featured
-                      ? "bg-[radial-gradient(ellipse_at_50%_45%,rgb(var(--leaf)/0.13),transparent_65%)] sm:px-10 sm:py-8 lg:border-b-0 lg:border-r"
-                      : "bg-[radial-gradient(ellipse_at_30%_50%,rgb(var(--glow)/0.16),transparent_70%)]",
-                  )}
-                >
-                  <div aria-hidden className="grid-lines pointer-events-none absolute inset-0 opacity-70 [mask-image:radial-gradient(ellipse_at_center,black,transparent_75%)]" />
-                  <Art className={cn("relative", featured ? "max-w-[560px]" : "max-w-[440px]")} />
+              <Card interactive className="group/card relative flex h-full flex-col overflow-hidden p-0 sm:p-0">
+                {/* Across the top, as on a post: its page, and its status stamped. */}
+                <div className="flex items-center justify-between gap-3 px-6 pt-5">
+                  <span aria-hidden className="font-mono text-label text-cobalt">
+                    {String(i + 1).padStart(2, "0")}/{String(products.length).padStart(2, "0")}
+                  </span>
+                  {p.status && <span className="stamp mr-1 text-fg-muted">{p.status.label}</span>}
                 </div>
-                <div className={cn("flex flex-1 flex-col p-6 sm:p-7", featured && "lg:justify-center lg:p-10")}>
-                  <p className="label-caps">
-                    Steered by <span className="text-leaf">{p.steer}</span>
+
+                <div className="px-6 pt-5">
+                  <p className="leading-none">
+                    <span className="label-caps text-cobalt">{"Steered by "}</span>
+                    <span className="note">{p.steer.toLowerCase()}</span>
                   </p>
-                  <div className="mt-3 flex items-start justify-between gap-3">
-                    <h3 id={titleId} className={cn("display text-fg", featured ? "text-display-md" : "text-h3")}>
-                      {/* The card's one main link, stretched over the whole card; named by the heading, described by the summary. */}
-                      <IntentLink
-                        href={p.href}
-                        aria-describedby={`${titleId}-summary`}
-                        className="after:absolute after:inset-0 after:rounded-[inherit] after:content-['']"
-                      >
-                        {p.name}
-                      </IntentLink>
-                    </h3>
-                    <Badge tone={p.status.tone}>{p.status.label}</Badge>
-                  </div>
-                  <p id={`${titleId}-summary`} className={cn("mt-3 text-fg-muted", featured ? "text-lead" : "text-ui")}>
+                  <h3 id={titleId} className="display mt-3 text-h3 text-fg">
+                    {/* The card's one main link, stretched over the whole card; named by the heading, described by the summary. */}
+                    <IntentLink
+                      href={p.href}
+                      aria-describedby={`${titleId}-summary`}
+                      className="after:absolute after:inset-0 after:rounded-[inherit] after:content-['']"
+                    >
+                      {p.name}
+                    </IntentLink>
+                  </h3>
+                  <p id={`${titleId}-summary`} className="mt-3 text-ui text-fg-muted">
                     {p.summary}
                   </p>
+                </div>
+
+                {/* The picture, on its own ruled sheet. Replays when the card is hovered or focused. */}
+                <div className="paper-ruled relative mx-4 mt-5 flex items-center justify-center overflow-hidden rounded-control border border-subtle bg-canvas px-3 py-5 sm:mx-6 md:min-h-[272px]">
+                  <ArtReplay className="relative w-full max-w-[420px]">
+                    <Art />
+                  </ArtReplay>
+                </div>
+
+                <div className="flex flex-1 flex-col px-6 pb-6 pt-5">
                   {/* Who it's for (after Safenet's "Who is it for?"). */}
-                  <p className="mt-3 flex gap-2 text-small text-fg">
-                    <span aria-hidden className="font-mono text-leaf">
+                  <p className="flex gap-2 text-small text-fg">
+                    <span aria-hidden className="font-mono text-cobalt">
                       →
                     </span>
                     {p.audience}
                   </p>
-                  <ul className="mt-5 flex-1 space-y-2.5 border-t border-subtle pt-5 lg:flex-none">
-                    {p.points.map((pt) => (
-                      <li key={pt} className="flex gap-2.5 text-small text-fg-muted">
-                        <span aria-hidden className="mt-2 size-1 shrink-0 rounded-full bg-leaf" />
+                  {/* The points, typed on strips of paper. */}
+                  <ul className="mt-4 flex flex-col items-start gap-2.5">
+                    {p.points.map((pt, k) => (
+                      <li key={pt} className={cn("strip max-w-full text-fg-muted", k % 2 === 1 && "rotate-1")}>
                         {pt}
                       </li>
                     ))}
                   </ul>
-                  <div className="mt-6 flex flex-wrap items-center justify-between gap-x-5 gap-y-3">
+                  <div className="mt-auto flex flex-wrap items-center justify-between gap-x-5 gap-y-3 pt-6">
                     <span aria-hidden className="inline-flex items-center gap-1.5 text-small font-medium text-leaf">
-                      {featured ? "Explore the indices" : "Learn more"}{" "}
+                      {p.id === "index" ? "Explore the indices" : "Learn more"}{" "}
                       <ArrowIcon size={13} className="transition-transform duration-fast can-hover:group-has-[a:hover]/card:translate-x-0.5" />
                     </span>
                     {p.app && (

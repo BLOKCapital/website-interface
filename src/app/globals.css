@@ -9,43 +9,43 @@
  */
 :root {
   /* Paper: Day surfaces */
-  --p-paper-0: 255 255 255;    /* #FFFFFF */
-  --p-paper-50: 247 248 244;   /* #F7F8F4 */
-  --p-paper-100: 239 242 236;  /* #EFF2EC */
-  --p-paper-150: 236 240 234;  /* #ECF0EA */
-  --p-paper-200: 222 228 220;  /* #DEE4DC plate side, left */
-  --p-paper-250: 208 215 206;  /* #D0D7CE plate side, right */
+  --p-paper-0: 255 255 255; /* #FFFFFF */
+  --p-paper-50: 247 248 244; /* #F7F8F4 */
+  --p-paper-100: 239 242 236; /* #EFF2EC */
+  --p-paper-150: 236 240 234; /* #ECF0EA */
+  --p-paper-200: 222 228 220; /* #DEE4DC plate side, left */
+  --p-paper-250: 208 215 206; /* #D0D7CE plate side, right */
   /* Night surfaces */
-  --p-night-950: 9 13 11;      /* #090D0B */
-  --p-night-900: 15 21 18;     /* #0F1512 */
-  --p-night-850: 21 29 25;     /* #151D19 */
-  --p-night-800: 27 37 32;     /* #1B2520 */
+  --p-night-950: 9 13 11; /* #090D0B */
+  --p-night-900: 15 21 18; /* #0F1512 */
+  --p-night-850: 21 29 25; /* #151D19 */
+  --p-night-800: 27 37 32; /* #1B2520 */
   /* Ink (Day text) and mist (Night text) */
-  --p-ink-900: 17 26 21;       /* #111A15 */
-  --p-ink-700: 67 80 73;       /* #435049 */
-  --p-ink-600: 92 105 98;      /* #5C6962 */
-  --p-mist-50: 236 241 237;    /* #ECF1ED */
-  --p-mist-300: 170 182 175;   /* #AAB6AF */
-  --p-mist-400: 138 152 143;   /* #8A988F */
+  --p-ink-900: 17 26 21; /* #111A15 */
+  --p-ink-700: 67 80 73; /* #435049 */
+  --p-ink-600: 92 105 98; /* #5C6962 */
+  --p-mist-50: 236 241 237; /* #ECF1ED */
+  --p-mist-300: 170 182 175; /* #AAB6AF */
+  --p-mist-400: 138 152 143; /* #8A988F */
   /* Brand and state hues: Day uses the 700/800 steps, Night the 200/300. */
-  --p-leaf-800: 26 92 57;      /* #1A5C39 */
-  --p-leaf-700: 33 112 70;     /* #217046 */
-  --p-leaf-500: 63 138 95;     /* #3F8A5F */
-  --p-leaf-300: 143 214 168;   /* #8FD6A8 */
-  --p-leaf-200: 170 226 189;   /* #AAE2BD */
-  --p-leaf-glow: 120 200 150;  /* #78C896 */
-  --p-bronze-700: 131 97 34;   /* #836122 (was #8A6726: 4.50 → 4.93:1 on raised) */
-  --p-sand-200: 230 216 188;   /* #E6D8BC */
-  --p-bloom-800: 163 50 90;    /* #A3325A */
-  --p-bloom-700: 178 58 98;    /* #B23A62 */
-  --p-bloom-300: 240 163 180;  /* #F0A3B4 */
-  --p-cobalt-600: 37 99 196;   /* #2563C4 */
+  --p-leaf-800: 26 92 57; /* #1A5C39 */
+  --p-leaf-700: 33 112 70; /* #217046 */
+  --p-leaf-500: 63 138 95; /* #3F8A5F */
+  --p-leaf-300: 143 214 168; /* #8FD6A8 */
+  --p-leaf-200: 170 226 189; /* #AAE2BD */
+  --p-leaf-glow: 120 200 150; /* #78C896 */
+  --p-bronze-700: 131 97 34; /* #836122 (was #8A6726: 4.50 → 4.93:1 on raised) */
+  --p-sand-200: 230 216 188; /* #E6D8BC */
+  --p-bloom-800: 163 50 90; /* #A3325A */
+  --p-bloom-700: 178 58 98; /* #B23A62 */
+  --p-bloom-300: 240 163 180; /* #F0A3B4 */
+  --p-cobalt-600: 37 99 196; /* #2563C4 */
   --p-cobalt-300: 125 180 255; /* #7DB4FF */
-  --p-ember-700: 190 62 40;    /* #BE3E28 */
-  --p-ember-300: 242 145 127;  /* #F2917F */
-  --p-amber-800: 122 85 8;     /* #7A5508 */
-  --p-amber-700: 140 98 10;    /* #8C620A */
-  --p-amber-300: 227 192 122;  /* #E3C07A */
+  --p-ember-700: 190 62 40; /* #BE3E28 */
+  --p-ember-300: 242 145 127; /* #F2917F */
+  --p-amber-800: 122 85 8; /* #7A5508 */
+  --p-amber-700: 140 98 10; /* #8C620A */
+  --p-amber-300: 227 192 122; /* #E3C07A */
 }
 
 /**
@@ -64,24 +64,24 @@
 .theme-light {
   color-scheme: light;
 
-  --canvas: var(--p-paper-50);     /* page */
-  --surface: var(--p-paper-100);   /* alternate section band */
-  --card: var(--p-paper-0);        /* cards */
-  --raised: var(--p-paper-150);    /* inputs, nested cards, hover, skeletons */
-  --line: var(--p-ink-900);        /* hairlines, always with an alpha */
+  --canvas: var(--p-paper-50); /* page */
+  --surface: var(--p-paper-100); /* alternate section band */
+  --card: var(--p-paper-0); /* cards */
+  --raised: var(--p-paper-150); /* inputs, nested cards, hover, skeletons */
+  --line: var(--p-ink-900); /* hairlines, always with an alpha */
 
-  --fg: var(--p-ink-900);          /* 16.6:1 on canvas */
-  --fg-muted: var(--p-ink-700);    /* 7.9:1 */
-  --fg-subtle: var(--p-ink-600);   /* 5.4:1 */
+  --fg: var(--p-ink-900); /* 16.6:1 on canvas */
+  --fg-muted: var(--p-ink-700); /* 7.9:1 */
+  --fg-subtle: var(--p-ink-600); /* 5.4:1 */
 
-  --leaf: var(--p-leaf-700);       /* accent, CTAs, positive */
-  --leaf-deep: var(--p-leaf-800);  /* fills behind leaf */
+  --leaf: var(--p-leaf-700); /* accent, CTAs, positive */
+  --leaf-deep: var(--p-leaf-800); /* fills behind leaf */
   --leaf-hover: var(--p-leaf-800); /* primary button hover */
-  --sand: var(--p-bronze-700);     /* warm emphasis (bronze on paper) */
-  --bloom: var(--p-bloom-700);     /* "in progress" state */
-  --cobalt: var(--p-cobalt-600);   /* data / info, echoes the logo */
-  --danger: var(--p-ember-700);    /* losses, risks */
-  --caution: var(--p-amber-700);   /* warnings */
+  --sand: var(--p-bronze-700); /* warm emphasis (bronze on paper) */
+  --bloom: var(--p-bloom-700); /* "in progress" state */
+  --cobalt: var(--p-cobalt-600); /* data / info, echoes the logo */
+  --danger: var(--p-ember-700); /* losses, risks */
+  --caution: var(--p-amber-700); /* warnings */
   /* Small text on a bloom or caution tint (Badge "current" / "example"):
      >= 5.0:1 on every surface, including under the badge's own 10% tint. */
   --bloom-text: var(--p-bloom-800);
@@ -94,7 +94,7 @@
   --a-border: 0.12;
   --a-border-strong: 0.5;
 
-  --glow: var(--p-leaf-glow);      /* soft garden glow behind renders */
+  --glow: var(--p-leaf-glow); /* soft garden glow behind renders */
   --shadow: 17 26 21 / 0.16;
   /* Side faces of isometric plates (LayerStack): darker than any surface. */
   --plate-l: var(--p-paper-200);
@@ -126,9 +126,9 @@
     --raised: var(--p-night-800);
     --line: var(--p-mist-50);
 
-    --fg: var(--p-mist-50);          /* 17:1 on canvas */
-    --fg-muted: var(--p-mist-300);   /* 9.3:1 */
-    --fg-subtle: var(--p-mist-400);  /* 6.5:1 */
+    --fg: var(--p-mist-50); /* 17:1 on canvas */
+    --fg-muted: var(--p-mist-300); /* 9.3:1 */
+    --fg-subtle: var(--p-mist-400); /* 6.5:1 */
 
     --leaf: var(--p-leaf-300);
     --leaf-deep: var(--p-leaf-500);
@@ -143,7 +143,7 @@
 
     --a-border-subtle: 0.08;
     --a-border: 0.12;
-    --a-border-strong: 0.4;          /* 3.5:1 on card */
+    --a-border-strong: 0.4; /* 3.5:1 on card */
 
     --glow: var(--p-leaf-300);
     --shadow: 0 0 0 / 0.6;
@@ -177,12 +177,16 @@
 /* Layout rhythm (Tailwind: py-section, py-section-sm, mb-header, px-gutter,
    p-pad-card, p-pad-panel). Fluid between a 375px phone and ~1300px. */
 :root {
-  --space-section: clamp(5rem, 4.15rem + 3.7vw, 7rem);    /* 80 → 112 */
+  --space-section: clamp(
+    6rem,
+    4.6rem + 5.9vw,
+    9rem
+  ); /* 96 → 144: room to breathe between sections */
   --space-section-sm: clamp(4rem, 3.15rem + 3.7vw, 6rem); /* 64 → 96 */
-  --space-header: clamp(3rem, 2.8rem + 0.6vw, 3.5rem);   /* 48 → 56 */
-  --gutter: clamp(1.25rem, 0.6rem + 2.8vw, 2rem);         /* 20 → 32 */
-  --pad-card: clamp(1.5rem, 1.35rem + 0.6vw, 1.75rem);    /* 24 → 28 */
-  --pad-panel: clamp(1.5rem, 0.9rem + 2.4vw, 2.5rem);     /* 24 → 40 */
+  --space-header: clamp(3rem, 2.4rem + 2.4vw, 4.5rem); /* 48 → 72 */
+  --gutter: clamp(1.25rem, 0.6rem + 2.8vw, 2rem); /* 20 → 32 */
+  --pad-card: clamp(1.5rem, 1.35rem + 0.6vw, 1.75rem); /* 24 → 28 */
+  --pad-panel: clamp(1.5rem, 0.9rem + 2.4vw, 2.5rem); /* 24 → 40 */
 }
 
 /* Text inherits as a computed colour, so each scope sets its own. In the
@@ -200,29 +204,44 @@
    can-hover: variants. Spec: docs/audit/findings/C-motion.md §4. */
 :root {
   /* Duration, by what the motion is for. Exits run at ~0.75× the entrance. */
-  --dur-instant: 90ms;  /* press, toggle, icon swap, copy tick */
-  --dur-fast: 150ms;    /* hover/focus colour, tooltip, selected state */
-  --dur-base: 240ms;    /* panel crossfade, menu open, small morph, page change */
-  --dur-slow: 420ms;    /* entrances, scroll reveals, sheet, explainer stage */
-  --dur-scenic: 700ms;  /* one-off storytelling only; never on repeated UI */
+  --dur-instant: 90ms; /* press, toggle, icon swap, copy tick */
+  --dur-fast: 150ms; /* hover/focus colour, tooltip, selected state */
+  --dur-base: 240ms; /* panel crossfade, menu open, small morph, page change */
+  --dur-slow: 420ms; /* entrances, scroll reveals, sheet, explainer stage */
+  --dur-scenic: 700ms; /* one-off storytelling only; never on repeated UI */
   /* Easing, by intent. Linear only for loops, timers and scroll-linked. */
-  --ease-out: cubic-bezier(0.22, 1, 0.36, 1);   /* settle: entrances, reveals, hovers */
-  --ease-expo: cubic-bezier(0.16, 1, 0.3, 1);   /* snap, then settle: morphs, menus, indicators */
-  --ease-in: cubic-bezier(0.4, 0, 1, 1);        /* leave: exits, header hide */
-  --ease-inout: cubic-bezier(0.65, 0, 0.35, 1); /* travel from A to B on screen */
+  --ease-out: cubic-bezier(
+    0.22,
+    1,
+    0.36,
+    1
+  ); /* settle: entrances, reveals, hovers */
+  --ease-expo: cubic-bezier(
+    0.16,
+    1,
+    0.3,
+    1
+  ); /* snap, then settle: morphs, menus, indicators */
+  --ease-in: cubic-bezier(0.4, 0, 1, 1); /* leave: exits, header hide */
+  --ease-inout: cubic-bezier(
+    0.65,
+    0,
+    0.35,
+    1
+  ); /* travel from A to B on screen */
   /* Distance */
-  --move-xs: 2px;      /* hover lift, arrow nudge, panel swap */
-  --move-sm: 8px;      /* hero rise (LCP-safe), toasts, page change */
-  --move-md: 16px;     /* scroll reveals */
-  --move-lg: 24px;     /* sheets and dialogs on phones */
+  --move-xs: 2px; /* hover lift, arrow nudge, panel swap */
+  --move-sm: 8px; /* hero rise (LCP-safe), toasts, page change */
+  --move-md: 16px; /* scroll reveals */
+  --move-lg: 24px; /* sheets and dialogs on phones */
   --scale-press: 0.98;
-  --scale-pop: 0.96;   /* popover / panel enter */
-  --blur-max: 4px;     /* non-LCP display text only; never on data */
+  --scale-pop: 0.96; /* popover / panel enter */
+  --blur-max: 4px; /* non-LCP display text only; never on data */
   /* Stagger: first reveal only, never on repeated UI.
      Delay = min(i × stagger, cap). */
-  --stagger-tight: 30ms;      /* chips, logos */
-  --stagger: 60ms;            /* cards, list items (Stagger sets its own) */
-  --stagger-words: 35ms;      /* headline words */
+  --stagger-tight: 30ms; /* chips, logos */
+  --stagger: 60ms; /* cards, list items (Stagger sets its own) */
+  --stagger-words: 35ms; /* headline words */
   --stagger-cap: 300ms;
   --stagger-cap-words: 400ms;
 }
@@ -292,26 +311,158 @@ a:not([class*="rounded"]):focus-visible {
 }
 
 @layer components {
-  /* Small uppercase label above headings, set like a code comment: the
-     protocol is software, and the "//" says so. The slashes are decoration,
-     so screen readers get empty alt text for them. */
-  .eyebrow {
-    @apply font-mono text-eyebrow font-normal uppercase text-leaf;
+  /* A linked tile: the hover every card shares (Card's link hover). No lift:
+     a clear leaf outline (the border plus a 1px ring, so nothing shifts) and
+     a deeper ambient shadow. Put it on any <a> that is a card. */
+  .surface-link {
+    transition:
+      border-color var(--dur-base) var(--ease-out),
+      box-shadow var(--dur-base) var(--ease-out);
   }
-  .eyebrow::before {
-    content: "// ";
-    content: "// " / "";
-    color: rgb(var(--leaf) / 0.5);
+  .surface-link:focus-visible {
+    border-color: rgb(var(--leaf) / 0.6);
+  }
+  @media (hover: hover) and (pointer: fine) {
+    .surface-link:hover {
+      border-color: rgb(var(--leaf) / 0.6);
+      box-shadow:
+        0 0 0 1px rgb(var(--leaf) / 0.6),
+        0 0 36px -6px rgb(var(--shadow));
+    }
+  }
+
+  /* The paper-and-ink kit, after the brand's own posts: heavy black
+     headlines with one handwritten payoff, ink-blue mono labels, notebook
+     paper, pinned note cards, caption strips, lime tags and stamps. */
+
+  /* Small uppercase label above headings, in ink blue: the place-and-date
+     line at the top of the posts ("AMSTERDAM · 1774"). */
+  .eyebrow {
+    @apply font-mono text-eyebrow font-normal uppercase text-cobalt;
+    line-height: 1.5;
   }
   /* The one caps label: table heads, meta, chips and data labels. */
   .label-caps {
     @apply font-mono text-label font-normal uppercase tracking-caps text-fg-subtle;
   }
-  /* Serif display type. */
+  /* Headlines: heavy, tight sans. The <em> in a title is its payoff, set by
+     hand: the script face in ink blue over a hand-drawn green underline. */
   .display {
-    font-family: var(--font-display);
-    font-weight: 400;
-    letter-spacing: -0.015em;
+    font-family: var(--font-body);
+    font-weight: 800;
+    letter-spacing: -0.035em;
+    line-height: 1.04;
+  }
+  /* Room under the underline, so it never touches the text below. */
+  .display:has(em) {
+    padding-bottom: 0.16em;
+  }
+  .display em {
+    font-family: var(--font-script), cursive;
+    font-style: normal;
+    font-weight: 600;
+    letter-spacing: 0;
+    color: rgb(var(--cobalt));
+    font-size: 1.08em;
+    padding-bottom: 0.1em;
+    background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 200 12' preserveAspectRatio='none'%3E%3Cpath d='M2 8.5C40 4 90 3 198 6.5' fill='none' stroke='%2384c341' stroke-width='3.2' stroke-linecap='round'/%3E%3C/svg%3E")
+      left bottom / 100% 0.22em no-repeat;
+  }
+  /* "You are here": the headline's hand-drawn green underline, under a
+     nav item or a link. */
+  .hand-underline {
+    padding-bottom: 0.2em;
+    background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 200 12' preserveAspectRatio='none'%3E%3Cpath d='M2 8.5C40 4 90 3 198 6.5' fill='none' stroke='%2384c341' stroke-width='3.2' stroke-linecap='round'/%3E%3C/svg%3E")
+      left bottom / 100% 0.3em no-repeat;
+  }
+  /* A handwritten note: on a figure, or after a mono label ("SMALL SAVERS
+     a little each"). */
+  .note {
+    font-family: var(--font-script), cursive;
+    font-weight: 600;
+    font-size: 1.3rem;
+    line-height: 1.1;
+    letter-spacing: 0;
+    text-transform: none;
+    color: rgb(var(--cobalt));
+  }
+  /* One word by hand, inline (the cookie card's heading): the .display em
+     look without the underline, for text that isn't a .display heading. */
+  .hand {
+    font-family: var(--font-script), cursive;
+    font-weight: 600;
+    font-size: 1.12em;
+    line-height: 1;
+    letter-spacing: 0;
+    color: rgb(var(--cobalt));
+  }
+  /* Notebook paper: faint ink-blue rules every 32px. */
+  .paper-ruled {
+    background-image: repeating-linear-gradient(
+      to bottom,
+      transparent 0 31px,
+      rgb(var(--cobalt) / 0.07) 31px 32px
+    );
+  }
+  /* A note card pinned to the page: dashed edge, a small mono label over a
+     heavy figure (the posts' "brokers 24"). */
+  .note-card {
+    border: 1.5px dashed rgb(var(--line) / 0.32);
+    border-radius: 6px;
+    background-color: rgb(var(--card));
+    box-shadow: 0 8px 18px -12px rgb(var(--shadow));
+  }
+  /* A caption typed on a strip of paper, a little off true. */
+  .strip {
+    display: inline-block;
+    padding: 0.45em 0.8em;
+    background-color: rgb(var(--card));
+    color: rgb(var(--fg));
+    font-family: var(--font-mono);
+    font-size: 0.75rem;
+    line-height: 1.5;
+    box-shadow:
+      0 0 0 1px rgb(var(--line) / 0.08),
+      0 8px 16px -12px rgb(var(--shadow));
+    transform: rotate(-1deg);
+  }
+  /* A lime highlight tag, turned like a sticker. */
+  .tag-lime {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4em;
+    padding: 0.35em 0.75em;
+    background-color: #9be05a;
+    color: #10180f;
+    border: 1.5px dashed rgb(16 24 15 / 0.55);
+    font-family: var(--font-mono);
+    font-size: 0.8125rem;
+    transform: rotate(-2deg);
+    box-shadow: 0 6px 14px -8px rgb(0 0 0 / 0.35);
+  }
+  /* A rubber stamp: outlined caps with a second ring, turned. Colour it with
+     a text colour. */
+  .stamp {
+    display: inline-flex;
+    align-items: center;
+    padding: 0.3em 0.6em;
+    border: 1.5px solid currentColor;
+    border-radius: 3px;
+    outline: 1px solid currentColor;
+    outline-offset: 2px;
+    font-family: var(--font-mono);
+    font-size: 0.6875rem;
+    line-height: 1;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    white-space: nowrap;
+    transform: rotate(-4deg);
+  }
+  /* A cut-out sticker: white edge and a soft lift (for cut-out art). */
+  .sticker {
+    filter: drop-shadow(3px 0 0 #fff) drop-shadow(-3px 0 0 #fff)
+      drop-shadow(0 3px 0 #fff) drop-shadow(0 -3px 0 #fff)
+      drop-shadow(0 14px 18px rgb(0 0 0 / 0.28));
   }
   /* Tabular numbers for data. */
   .tabular {
@@ -319,7 +470,11 @@ a:not([class*="rounded"]):focus-visible {
   }
   /* A soft garden glow behind renders; purely decorative. */
   .glow-leaf {
-    background: radial-gradient(closest-side, rgb(var(--glow) / var(--fx-glow)), transparent);
+    background: radial-gradient(
+      closest-side,
+      rgb(var(--glow) / var(--fx-glow)),
+      transparent
+    );
   }
   /* Faint grid used behind diagrams and the hero. */
   .grid-lines {
@@ -355,38 +510,29 @@ a:not([class*="rounded"]):focus-visible {
     inset-inline: 0;
     top: 0;
     height: 30%;
-    background: linear-gradient(to bottom, transparent, rgb(var(--glow) / calc(var(--fx-sweep) * 0.55)) 85%, rgb(var(--glow) / var(--fx-sweep)));
+    background: linear-gradient(
+      to bottom,
+      transparent,
+      rgb(var(--glow) / calc(var(--fx-sweep) * 0.55)) 85%,
+      rgb(var(--glow) / var(--fx-sweep))
+    );
     transform: translate3d(0, -100%, 0);
     animation: scanSweep 2.4s var(--ease-inout) both;
-  }
-  /* Diagonal light passing over a featured card on hover. */
-  .sheen {
-    isolation: isolate;
-  }
-  .sheen::after {
-    content: "";
-    position: absolute;
-    inset: 0;
-    z-index: -1;
-    border-radius: inherit;
-    background: linear-gradient(115deg, transparent 35%, rgb(var(--leaf) / 0.07) 50%, transparent 65%);
-    background-size: 250% 100%;
-    background-position: 120% 0;
-    transition: background-position 900ms var(--ease-expo);
-    pointer-events: none;
-  }
-  .sheen:hover::after {
-    background-position: -20% 0;
   }
 }
 
 @keyframes scanSweep {
-  to { transform: translate3d(0, 340%, 0); }
+  to {
+    transform: translate3d(0, 340%, 0);
+  }
 }
 /* A word inking in: from readable --fg-subtle, a quarter-em low, to its own
    colour (no `to` frame, so an <em class="text-sand"> payoff ends in sand). */
 @keyframes wordInk {
-  from { color: rgb(var(--fg-subtle)); transform: translate3d(0, 0.25em, 0); }
+  from {
+    color: rgb(var(--fg-subtle));
+    transform: translate3d(0, 0.25em, 0);
+  }
 }
 
 /* An announcement the visitor dismissed stays dismissed (RevealScript sets
@@ -410,17 +556,55 @@ html[data-bar="hidden"] #announce {
 @media (prefers-reduced-motion: no-preference) {
   html:not([data-motion="paused"]) .split-load .split-word {
     animation: wordInk var(--dur-slow) var(--ease-out) both;
-    animation-delay: calc(var(--split-delay, 80ms) + min(var(--w, 0) * var(--stagger-words), var(--stagger-cap-words)));
+    animation-delay: calc(
+      var(--split-delay, 80ms) +
+        min(var(--w, 0) * var(--stagger-words), var(--stagger-cap-words))
+    );
   }
   html.js:not([data-motion="paused"]) [data-split] .split-word {
     transition:
       color var(--dur-slow) var(--ease-out),
       transform var(--dur-slow) var(--ease-out);
-    transition-delay: min(var(--w, 0) * var(--stagger-words), var(--stagger-cap-words));
+    transition-delay: min(
+      var(--w, 0) * var(--stagger-words),
+      var(--stagger-cap-words)
+    );
   }
-  html.js:not([data-motion="paused"]) [data-split]:not([data-revealed]) .split-word {
+  html.js:not([data-motion="paused"])
+    [data-split]:not([data-revealed])
+    .split-word {
     color: rgb(var(--fg-subtle));
     transform: translate3d(0, 0.25em, 0);
+  }
+}
+
+/* ---------- Handwriting (components/motion/Handwrite.tsx) ----------------
+   A script payoff word writes itself in, left to right, then its underline
+   draws under it. The clip overhangs the line box, so ascenders, descenders
+   and the script's swashes are never cut. Handwrite only adds .write-in with
+   motion allowed; the pause switch stops it here too. */
+@media (prefers-reduced-motion: no-preference) {
+  html:not([data-motion="paused"]) .write-in {
+    animation: writeIn 1000ms cubic-bezier(0.45, 0.05, 0.35, 1) both;
+  }
+  html:not([data-motion="paused"]) .display em:has(> .write-in) {
+    animation: underlineIn 420ms var(--ease-out) 900ms both;
+  }
+}
+@keyframes writeIn {
+  from {
+    clip-path: inset(-0.4em 100% -0.4em -0.3em);
+  }
+  to {
+    clip-path: inset(-0.4em -0.3em -0.4em -0.3em);
+  }
+}
+@keyframes underlineIn {
+  from {
+    background-size: 0% 0.22em;
+  }
+  to {
+    background-size: 100% 0.22em;
   }
 }
 
@@ -438,14 +622,15 @@ html[data-bar="hidden"] #announce {
     html:not([data-motion="paused"]) .ink-scope .ink-word {
       animation: inkIn linear both;
       animation-timeline: --ink;
-      animation-range:
-        cover calc(14% + var(--w) / var(--n) * 30%)
-        cover calc(20% + var(--w) / var(--n) * 30%);
+      animation-range: cover calc(14% + var(--w) / var(--n) * 30%) cover
+        calc(20% + var(--w) / var(--n) * 30%);
     }
   }
 }
 @keyframes inkIn {
-  from { color: rgb(var(--fg-subtle)); }
+  from {
+    color: rgb(var(--fg-subtle));
+  }
 }
 
 /* ---------- Disclosures that open smoothly -------------------------------
@@ -477,7 +662,8 @@ html[data-bar="hidden"] #announce {
   line-height: 1.75;
 }
 .prose-legal h2 {
-  font-family: var(--font-display);
+  font-weight: 800;
+  letter-spacing: -0.025em;
   font-size: 24px;
   line-height: 1.25;
   color: rgb(var(--fg));
@@ -489,20 +675,39 @@ html[data-bar="hidden"] #announce {
   color: rgb(var(--fg));
   margin: 1.75rem 0 0.5rem;
 }
-.prose-legal p { margin: 0.75rem 0; }
-.prose-legal strong { color: rgb(var(--fg)); font-weight: 600; }
+.prose-legal p {
+  margin: 0.75rem 0;
+}
+.prose-legal strong {
+  color: rgb(var(--fg));
+  font-weight: 600;
+}
 .prose-legal a {
   color: rgb(var(--leaf));
   text-decoration: underline;
   text-decoration-color: rgb(var(--leaf) / 0.45);
   text-underline-offset: 3px;
 }
-.prose-legal a:hover { text-decoration-color: rgb(var(--leaf)); }
-.prose-legal ul, .prose-legal ol { margin: 0.75rem 0 1rem; padding-left: 1.25rem; }
-.prose-legal ul { list-style: disc; }
-.prose-legal ol { list-style: decimal; }
-.prose-legal li { margin-top: 0.35rem; }
-.prose-legal li::marker { color: rgb(var(--leaf)); }
+.prose-legal a:hover {
+  text-decoration-color: rgb(var(--leaf));
+}
+.prose-legal ul,
+.prose-legal ol {
+  margin: 0.75rem 0 1rem;
+  padding-left: 1.25rem;
+}
+.prose-legal ul {
+  list-style: disc;
+}
+.prose-legal ol {
+  list-style: decimal;
+}
+.prose-legal li {
+  margin-top: 0.35rem;
+}
+.prose-legal li::marker {
+  color: rgb(var(--leaf));
+}
 .prose-legal code {
   font-family: var(--font-mono);
   font-size: 0.86em;
@@ -510,8 +715,16 @@ html[data-bar="hidden"] #announce {
   padding: 0.1em 0.35em;
   border-radius: 4px;
 }
-.prose-legal hr { border: 0; height: 1px; background: rgb(var(--line) / 0.12); margin: 2rem 0; }
-.prose-legal h2:first-child, .prose-legal p:first-child { margin-top: 0; }
+.prose-legal hr {
+  border: 0;
+  height: 1px;
+  background: rgb(var(--line) / 0.12);
+  margin: 2rem 0;
+}
+.prose-legal h2:first-child,
+.prose-legal p:first-child {
+  margin-top: 0;
+}
 /* The all-caps disclosure paragraphs read as set-aside notices. */
 .prose-legal p:has(> strong:only-child) {
   padding: 1rem 1.25rem;
@@ -522,7 +735,9 @@ html[data-bar="hidden"] #announce {
   font-size: 13.5px;
   line-height: 1.65;
 }
-.prose-legal p:has(> strong:only-child) strong { font-weight: 500; }
+.prose-legal p:has(> strong:only-child) strong {
+  font-weight: 500;
+}
 
 /* ---------- Scroll reveals (components/ui/Reveal.tsx + RevealScript) ------
    Targets are hidden only under html.js (set by the inline script before
@@ -537,16 +752,19 @@ html[data-bar="hidden"] #announce {
   transition-delay: var(--reveal-delay, 0s);
 }
 [data-reveal-group] [data-reveal-item] {
-  transition-delay: calc(var(--stagger-delay, 0s) + var(--stagger, 0.07s) * var(--i, 0));
+  transition-delay: calc(
+    var(--stagger-delay, 0s) + var(--stagger, 0.07s) * var(--i, 0)
+  );
 }
 @media (prefers-reduced-motion: no-preference) {
   html.js:not([data-motion="paused"]) [data-reveal]:not([data-revealed]),
-  html.js:not([data-motion="paused"]) [data-reveal-group]:not([data-revealed]) [data-reveal-item] {
+  html.js:not([data-motion="paused"])
+    [data-reveal-group]:not([data-revealed])
+    [data-reveal-item] {
     opacity: 0;
     transform: translate3d(0, 20px, 0);
   }
 }
-
 
 /* ---------- Reduced motion and Pause motion --------------------------------
    One contract for both: prefers-reduced-motion, or the site's Pause-motion
@@ -587,8 +805,11 @@ html[data-motion="paused"] *::after {
    pause (one-shot entrances and reveals are left alone); a [data-loop]
    element pauses everything inside it, so mark new looping illustrations
    with data-loop. A paused loop resumes from the same frame. */
-html[data-io] :is(main > section, main > div > section, main section[id], footer):not([data-inview]) :is(
-    .animate-flow,
+html[data-io]
+  :is(main > section, main > div > section, main section[id], footer):not(
+    [data-inview]
+  )
+  :is(
     .animate-float,
     .animate-pulse-ring,
     .animate-pulse,
@@ -604,13 +825,14 @@ html[data-io] :is(main > section, main > div > section, main section[id], footer
     .art-spin,
     .art-dot,
     .art-knob,
-    .art-switch,
     .art-on,
-    .art-off,
-    .orbit-spin,
-    .orbit-counter
+    .art-off
   ),
-html[data-io] :is(main > section, main > div > section, main section[id], footer):not([data-inview]) .scanlines::after,
+html[data-io]
+  :is(main > section, main > div > section, main section[id], footer):not(
+    [data-inview]
+  )
+  .scanlines::after,
 html[data-io] [data-loop]:not([data-inview]),
 html[data-io] [data-loop]:not([data-inview])::before,
 html[data-io] [data-loop]:not([data-inview])::after,
@@ -620,59 +842,13 @@ html[data-io] [data-loop]:not([data-inview]) *::after {
   animation-play-state: paused !important;
 }
 
-/* ---------- Hero and product art (components/home/Hero.tsx, ---------------
-   components/home/products/ProductArt.tsx). Illustrations that play briefly
-   and settle on a still frame within 5s (D-33, MOT-02). Only transform and
-   opacity on HTML boxes and pseudo-elements, so the compositor runs them
-   (MOT-03); each figure carries data-loop, so it pauses off screen. The base
-   (non-animated) styles are the still frame, shown under reduced motion and
-   Pause motion, so each one still reads.
-
-   Hero: a light travels twice along each current (a gradient band moving
-   under a mask of the dashes), the end rings pulse twice, the render bobs
-   once. Still frame: the dashed currents, no light, no rings, render at rest. */
-.art-mask {
-  mask-size: 100% 100%;
-  mask-repeat: no-repeat;
-}
-/* The dashes of each current (Hero.tsx `flows`, viewBox 520), as masks.
-   Here rather than inline, so the page HTML doesn't carry them twice. */
-.art-mask-in {
-  --sweep: var(--leaf);
-  mask-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 520 520' fill='none' stroke='%23000' stroke-width='3' stroke-dasharray='4 6' stroke-linecap='round'%3E%3Cpath d='M0 150 C 100 150, 150 232, 260 262'/%3E%3Cpath d='M0 404 C 104 404, 162 318, 260 282'/%3E%3C/svg%3E");
-}
-.art-mask-up {
-  --sweep: var(--cobalt);
-  mask-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 520 520' fill='none' stroke='%23000' stroke-width='3' stroke-dasharray='4 6' stroke-linecap='round'%3E%3Cpath d='M260 250 C 360 218, 418 118, 520 118'/%3E%3C/svg%3E");
-}
-.art-mask-down {
-  --sweep: var(--sand);
-  mask-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 520 520' fill='none' stroke='%23000' stroke-width='3' stroke-dasharray='4 6' stroke-linecap='round'%3E%3Cpath d='M260 292 C 368 322, 410 428, 520 432'/%3E%3C/svg%3E");
-}
-.art-sweep {
-  background-image: linear-gradient(90deg, transparent, rgb(var(--sweep)) 50%, transparent);
-  transform: translate3d(200%, 0, 0);
-  animation: artSweep 1.6s var(--ease-inout) 2 both;
-}
-@keyframes artSweep {
-  from { transform: translate3d(-100%, 0, 0); }
-  to { transform: translate3d(200%, 0, 0); }
-}
-.art-ping {
-  opacity: 0;
-  animation: artPing 1.8s var(--ease-out) 2 both;
-}
-@keyframes artPing {
-  from { transform: scale(1); opacity: 0.55; }
-  to { transform: scale(2.4); opacity: 0; }
-}
-.art-float {
-  animation: artFloat 4.8s ease-in-out both;
-}
-@keyframes artFloat {
-  50% { transform: translate3d(0, -10px, 0); }
-}
-
+/* ---------- Product art (components/home/products/ProductArt.tsx) --------
+   Illustrations that play briefly and settle on a still frame within 5s
+   (D-33, MOT-02). Only transform and opacity on HTML boxes and
+   pseudo-elements, so the compositor runs them (MOT-03); each figure carries
+   data-loop, so it pauses off screen. The base (non-animated) styles are the
+   still frame, shown under reduced motion and Pause motion, so each one
+   still reads. */
 /* Product tiles: each plays once, in about 4.5s, then rests. With motion
    allowed they wait, paused, until RevealScript starts watching
    (html[data-io]), so a tile below the fold doesn't spend its play before
@@ -703,23 +879,52 @@ html[data-io] [data-loop]:not([data-inview]) *::after {
   animation: artDriftRing 4.2s var(--ease-expo) both;
 }
 @keyframes artDrift {
-  0%, 12% { transform: translate3d(0, 0, 0); }
-  40%, 52% { transform: translate3d(var(--dx), var(--dy), 0); }
-  66%, 100% { transform: translate3d(0, 0, 0); }
+  0%,
+  12% {
+    transform: translate3d(0, 0, 0);
+  }
+  40%,
+  52% {
+    transform: translate3d(var(--dx), var(--dy), 0);
+  }
+  66%,
+  100% {
+    transform: translate3d(0, 0, 0);
+  }
 }
 @keyframes artDriftRing {
-  0%, 12% { opacity: 0; }
-  40%, 52% { opacity: 1; }
-  66%, 100% { opacity: 0; }
+  0%,
+  12% {
+    opacity: 0;
+  }
+  40%,
+  52% {
+    opacity: 1;
+  }
+  66%,
+  100% {
+    opacity: 0;
+  }
 }
 .art-pulse {
   opacity: 0;
   animation: artPulse 4.2s ease-out both;
 }
 @keyframes artPulse {
-  0%, 56% { transform: scale(1); opacity: 0; }
-  58% { transform: scale(1); opacity: 0.9; }
-  86%, 100% { transform: scale(2.8); opacity: 0; }
+  0%,
+  56% {
+    transform: scale(1);
+    opacity: 0;
+  }
+  58% {
+    transform: scale(1);
+    opacity: 0.9;
+  }
+  86%,
+  100% {
+    transform: scale(2.8);
+    opacity: 0;
+  }
 }
 .art-flag {
   animation:
@@ -727,12 +932,22 @@ html[data-io] [data-loop]:not([data-inview]) *::after {
     artFlagRise 4.2s var(--ease-out) both;
 }
 @keyframes artFlag {
-  0% { opacity: 0; }
-  58% { opacity: 1; }
+  0% {
+    opacity: 0;
+  }
+  58% {
+    opacity: 1;
+  }
 }
 @keyframes artFlagRise {
-  0%, 58% { translate: 0 6px; }
-  72%, 100% { translate: 0 0; }
+  0%,
+  58% {
+    translate: 0 6px;
+  }
+  72%,
+  100% {
+    translate: 0 0;
+  }
 }
 /* Yield tile: each route to a venue lights in turn with its venue chip
    (the chip's glow is a pseudo-element), then all four rest, faintly drawn.
@@ -742,8 +957,14 @@ html[data-io] [data-loop]:not([data-inview]) *::after {
   animation: artRoute 1.4s ease-in-out var(--d, 0s) both;
 }
 @keyframes artRoute {
-  0%, 100% { opacity: 0.25; }
-  25%, 70% { opacity: 1; }
+  0%,
+  100% {
+    opacity: 0.25;
+  }
+  25%,
+  70% {
+    opacity: 1;
+  }
 }
 .art-chip::after {
   content: "";
@@ -757,8 +978,14 @@ html[data-io] [data-loop]:not([data-inview]) *::after {
   animation: artChip 1.4s ease-in-out var(--d, 0s) both;
 }
 @keyframes artChip {
-  0%, 100% { opacity: 0; }
-  25%, 70% { opacity: 1; }
+  0%,
+  100% {
+    opacity: 0;
+  }
+  25%,
+  70% {
+    opacity: 1;
+  }
 }
 /* Gardener tile: the ring turns into place, the record fills in trade by
    trade, then access is switched off with one signature and back on. The
@@ -767,28 +994,49 @@ html[data-io] [data-loop]:not([data-inview]) *::after {
   animation: artSpin 4.5s var(--ease-out) both;
 }
 @keyframes artSpin {
-  from { transform: rotate(-60deg); }
+  from {
+    transform: rotate(-60deg);
+  }
 }
 .art-dot {
   animation: artDot 0.6s var(--ease-expo) var(--d, 0s) both;
 }
 @keyframes artDot {
-  from { opacity: 0; transform: scale(0.2); }
+  from {
+    opacity: 0;
+    transform: scale(0.2);
+  }
 }
 .art-knob {
   transform: translateX(16px);
   animation: artKnob 4.6s var(--ease-expo) both;
 }
 @keyframes artKnob {
-  0%, 48%, 88%, 100% { transform: translateX(16px); }
-  54%, 82% { transform: translateX(0); }
+  0%,
+  48%,
+  88%,
+  100% {
+    transform: translateX(16px);
+  }
+  54%,
+  82% {
+    transform: translateX(0);
+  }
 }
 .art-fill {
   animation: artFill 4.6s var(--ease-expo) both;
 }
 @keyframes artFill {
-  0%, 48%, 88%, 100% { opacity: 1; }
-  54%, 82% { opacity: 0; }
+  0%,
+  48%,
+  88%,
+  100% {
+    opacity: 1;
+  }
+  54%,
+  82% {
+    opacity: 0;
+  }
 }
 .art-on {
   animation: artOn 4.6s step-end both;
@@ -798,14 +1046,26 @@ html[data-io] [data-loop]:not([data-inview]) *::after {
   animation: artOff 4.6s step-end both;
 }
 @keyframes artOn {
-  0% { opacity: 1; }
-  52% { opacity: 0; }
-  86% { opacity: 1; }
+  0% {
+    opacity: 1;
+  }
+  52% {
+    opacity: 0;
+  }
+  86% {
+    opacity: 1;
+  }
 }
 @keyframes artOff {
-  0% { opacity: 0; }
-  52% { opacity: 1; }
-  86% { opacity: 0; }
+  0% {
+    opacity: 0;
+  }
+  52% {
+    opacity: 1;
+  }
+  86% {
+    opacity: 0;
+  }
 }
 
 /* ---------- Basket orbit (components/indices/BasketOrbit.tsx) -----------
@@ -820,9 +1080,18 @@ html[data-io] [data-loop]:not([data-inview]) *::after {
   animation: orbitPulse 1.2s var(--ease-inout) 3;
 }
 @keyframes orbitPulse {
-  0% { opacity: 0; transform: translate3d(0, 0, 0); }
-  20%, 75% { opacity: 1; }
-  100% { opacity: 0; transform: translate3d(var(--dx), var(--dy), 0); }
+  0% {
+    opacity: 0;
+    transform: translate3d(0, 0, 0);
+  }
+  20%,
+  75% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 0;
+    transform: translate3d(var(--dx), var(--dy), 0);
+  }
 }
 
 /* ---------- Protocol explorer (components/explore/*) ----------------------
@@ -841,68 +1110,18 @@ html[data-io] [data-loop]:not([data-inview]) *::after {
     }
   }
 }
-/* The signal: on a change of layer, a dot drops from your signature down
-   the shaft to the active plate, twice, then rests. Like .orbit-pulse, the
-   layer is the size of the map and moves in % of itself. */
-.stack-signal {
-  opacity: 0;
-  animation: stackSignal 1.4s var(--ease-inout) 2;
+/* The active plate's mark pops in when its layer comes up (re-keyed per
+   change), then rests. With motion off it's simply there. */
+@media (prefers-reduced-motion: no-preference) {
+  html:not([data-motion="paused"]) .stack-glyph-in {
+    animation: stackGlyphIn 360ms var(--ease-expo) both;
+  }
 }
-@keyframes stackSignal {
-  0% { opacity: 0; transform: translate3d(0, var(--from), 0); }
-  15%, 80% { opacity: 1; }
-  100% { opacity: 0; transform: translate3d(0, var(--to), 0); }
-}
-
-/* ---------- Rebalance lab sliders (components/indices/RebalanceLab.tsx) ---
-   A 44px-tall hit area around a 6px track and a 28px leaf thumb (the UA
-   thumb is about 16px). Keyboard focus rings the thumb, at once. */
-.lab-range {
-  -webkit-appearance: none;
-  appearance: none;
-  display: block;
-  width: 100%;
-  height: 2.75rem;
-  background: transparent;
-  cursor: pointer;
-}
-.lab-range::-webkit-slider-runnable-track {
-  height: 6px;
-  border-radius: 999px;
-  background: rgb(var(--line) / 0.16);
-}
-.lab-range::-moz-range-track {
-  height: 6px;
-  border-radius: 999px;
-  background: rgb(var(--line) / 0.16);
-}
-.lab-range::-webkit-slider-thumb {
-  -webkit-appearance: none;
-  appearance: none;
-  width: 28px;
-  height: 28px;
-  margin-top: -11px; /* (6 - 28) / 2: centre it on the track */
-  border: 4px solid rgb(var(--card));
-  border-radius: 999px;
-  background: rgb(var(--leaf));
-  box-shadow: 0 0 0 1px rgb(var(--leaf) / 0.5), 0 4px 10px -4px rgb(var(--shadow));
-}
-.lab-range::-moz-range-thumb {
-  width: 20px; /* the border sits outside: 28px overall */
-  height: 20px;
-  border: 4px solid rgb(var(--card));
-  border-radius: 999px;
-  background: rgb(var(--leaf));
-  box-shadow: 0 0 0 1px rgb(var(--leaf) / 0.5), 0 4px 10px -4px rgb(var(--shadow));
-}
-.lab-range:focus-visible {
-  outline: none;
-}
-.lab-range:focus-visible::-webkit-slider-thumb {
-  box-shadow: 0 0 0 var(--focus-width) rgb(var(--focus-ring)), 0 4px 10px -4px rgb(var(--shadow));
-}
-.lab-range:focus-visible::-moz-range-thumb {
-  box-shadow: 0 0 0 var(--focus-width) rgb(var(--focus-ring)), 0 4px 10px -4px rgb(var(--shadow));
+@keyframes stackGlyphIn {
+  from {
+    opacity: 0;
+    transform: scale(0.55);
+  }
 }
 
 /* ---------- Allocation strip (components/token/AllocationExplorer.tsx) ---
@@ -917,119 +1136,10 @@ html[data-io] [data-loop]:not([data-inview]) *::after {
       background-color var(--dur-fast) var(--ease-out);
     transition-delay: min(var(--i, 0) * 45ms, var(--stagger-cap)), 0ms;
   }
-  html.js:not([data-motion="paused"]) [data-reveal-group]:not([data-revealed]) .alloc-seg {
+  html.js:not([data-motion="paused"])
+    [data-reveal-group]:not([data-revealed])
+    .alloc-seg {
     transform: scaleX(0);
-  }
-}
-
-
-/* ---------- Guard scanner (components/guard/GuardScanner.tsx) ------------
-   Still by default: the five stamped chips in a wrapping row (no motion,
-   reduced motion, Pause motion). With motion allowed they slide right to
-   left through the "Garden checks" line, each stamped as it crosses (half
-   way through its cycle), on a loop: paused off screen (data-loop), on
-   hover, and by the strip's own Pause. Each way, the travel is at least 65%
-   of the lane and wide enough that five chips a fifth of a cycle apart
-   never overlap on a phone. */
-.scan-lane {
-  position: relative;
-  container-type: inline-size;
-}
-.scan-list {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 0.75rem;
-  padding: 1.25rem;
-}
-/* Still: the five share the row (one line of five on desktop). */
-.scan-chip {
-  --chip-w: 16rem;
-  flex: 1 1 13rem;
-  min-width: 0;
-}
-.scan-line {
-  display: none;
-}
-@media (prefers-reduced-motion: no-preference) {
-  html:not([data-motion="paused"]) .scan-lane {
-    height: 9rem;
-    overflow: hidden;
-    mask-image: linear-gradient(90deg, transparent, #000 8%, #000 92%, transparent);
-  }
-  html:not([data-motion="paused"]) .scan-list {
-    display: block;
-    padding: 0;
-  }
-  html:not([data-motion="paused"]) .scan-line {
-    display: block;
-    position: absolute;
-    inset-block: 0;
-    left: 50%;
-    width: 1px;
-    background: linear-gradient(transparent, rgb(var(--leaf) / 0.9) 30%, rgb(var(--leaf) / 0.9) 70%, transparent);
-    box-shadow: 0 0 14px rgb(var(--leaf) / 0.55);
-  }
-  html:not([data-motion="paused"]) .scan-line-label {
-    position: absolute;
-    top: 0.75rem;
-    left: 0.75rem;
-    white-space: nowrap;
-  }
-  html:not([data-motion="paused"]) .scan-chip {
-    --travel: max(65cqw, (var(--chip-w) + 1rem) * 2.5);
-    width: var(--chip-w);
-    max-width: calc(100cqw - 2.5rem);
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -38%);
-    animation: scanMove 14s linear infinite;
-    animation-delay: calc(var(--i, 0) * -2.8s);
-  }
-  html:not([data-motion="paused"]) .scan-stamp {
-    animation: scanStamp 14s linear infinite;
-    animation-delay: calc(var(--i, 0) * -2.8s);
-  }
-  [data-scan][data-paused] :is(.scan-chip, .scan-stamp),
-  .scan-lane:hover :is(.scan-chip, .scan-stamp) {
-    animation-play-state: paused;
-  }
-}
-@keyframes scanMove {
-  from {
-    translate: var(--travel) 0;
-  }
-  to {
-    translate: calc(var(--travel) * -1) 0;
-  }
-}
-@keyframes scanStamp {
-  0%,
-  49% {
-    opacity: 0;
-    scale: 0.6;
-  }
-  53%,
-  100% {
-    opacity: 1;
-    scale: 1;
-  }
-}
-
-/* ---------- Audit findings (components/security/FindingsGrid.tsx) -------
-   One mark per finding, each ticking to "fixed" in turn as the card
-   reveals. Ticked by default: server HTML, no JS, reduced motion and Pause
-   motion all show every finding fixed. The meter-fill pattern. */
-@media (prefers-reduced-motion: no-preference) {
-  .finding-tick {
-    transition:
-      transform 420ms var(--ease-expo),
-      opacity 200ms var(--ease-out);
-    transition-delay: calc(450ms + min(var(--i, 0) * 45ms, 1200ms));
-  }
-  html.js:not([data-motion="paused"]) [data-reveal]:not([data-revealed]) .finding-tick {
-    opacity: 0;
-    transform: scale(0.3);
   }
 }
 
@@ -1080,13 +1190,16 @@ html[data-io] [data-loop]:not([data-inview]) *::after {
 }
 /* Dim with a filter, not opacity: cards stay opaque, so nothing behind shows through. */
 @keyframes pstackRecede {
-  to { transform: scale(0.94); filter: brightness(0.86); }
+  to {
+    transform: scale(0.94);
+    filter: brightness(0.86);
+  }
 }
 
 /* ---------- Mobile menu (components/nav/MobileMenu.tsx) ------------------
    Opens as a circle growing from the menu button (top right), while each
    group eases in on a 20 ms stagger (--i, set inline), so the whole sheet
-   is in by 250 ms (MOT-13). The pinned Launch App bar has no delay: the circle
+   is in by 250 ms (MOT-13). The pinned Launch your fund bar has no delay: the circle
    reveals it. Closing shrinks the circle at ~0.75× and visibility flips only
    once it has gone. Under reduced motion or Pause motion the global
    contract makes every part instant, delays included. */
@@ -1147,7 +1260,9 @@ html[data-io] [data-loop]:not([data-inview]) *::after {
     transition: stroke-dashoffset 1.4s var(--ease-expo);
     transition-delay: calc(250ms + var(--i, 0) * 120ms);
   }
-  html.js:not([data-motion="paused"]) [data-reveal-group]:not([data-revealed]) .draw-path {
+  html.js:not([data-motion="paused"])
+    [data-reveal-group]:not([data-revealed])
+    .draw-path {
     stroke-dashoffset: 1;
   }
 }
@@ -1157,13 +1272,15 @@ html[data-io] [data-loop]:not([data-inview]) *::after {
    a click never waits on an animation (it used to ease in over --dur-base,
    which read as a slow page change). Its hero doesn't replay its own load
    entrance either; the page simply swaps. */
-.page-enter > section:first-of-type :is(
-  .animate-rise,
-  .animate-fade-in,
-  .animate-enter-up,
-  .animate-enter-fade,
-  .split-load .split-word
-) {
+.page-enter
+  > section:first-of-type
+  :is(
+    .animate-rise,
+    .animate-fade-in,
+    .animate-enter-up,
+    .animate-enter-fade,
+    .split-load .split-word
+  ) {
   animation: none;
 }
 
@@ -1179,13 +1296,23 @@ html[data-io] [data-loop]:not([data-inview]) *::after {
   animation: navProgress 8s var(--ease-out) forwards;
 }
 @keyframes navProgress {
-  from { transform: scaleX(0.1); }
-  to { transform: scaleX(0.9); }
+  from {
+    transform: scaleX(0.1);
+  }
+  to {
+    transform: scaleX(0.9);
+  }
 }
 @media (prefers-reduced-motion: reduce) {
-  .nav-progress[data-state="loading"] { animation: none; transform: scaleX(1); }
+  .nav-progress[data-state="loading"] {
+    animation: none;
+    transform: scaleX(1);
+  }
 }
-html[data-motion="paused"] .nav-progress[data-state="loading"] { animation: none; transform: scaleX(1); }
+html[data-motion="paused"] .nav-progress[data-state="loading"] {
+  animation: none;
+  transform: scaleX(1);
+}
 
 /* ---------- Meters (components/governance/ProposalBoard.tsx) -------------
    Bars fill from the left when their card reveals (RevealScript), staggered
@@ -1195,10 +1322,9 @@ html[data-motion="paused"] .nav-progress[data-state="loading"] { animation: none
     transition: transform 1.1s var(--ease-expo);
     transition-delay: calc(200ms + var(--i, 0) * 90ms);
   }
-  html.js:not([data-motion="paused"]) [data-reveal-group]:not([data-revealed]) .meter-fill {
+  html.js:not([data-motion="paused"])
+    [data-reveal-group]:not([data-revealed])
+    .meter-fill {
     transform: scaleX(0);
   }
 }
-
-
-

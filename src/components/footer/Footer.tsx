@@ -1,6 +1,5 @@
 import { IntentLink } from "@/components/ui/IntentLink";
 import { Logo } from "@/components/ui/Logo";
-import { Badge } from "@/components/ui/Badge";
 import { Container } from "@/components/ui/Container";
 import { Icon } from "@/components/ui/Icon";
 import { SocialLinks } from "@/components/ui/SocialLinks";
@@ -28,10 +27,8 @@ type Item = {
 /** Footer-only links, after a nav group's own: pages too small for the menus. */
 const extra: Partial<Record<NavGroup["id"], Item[]>> = {
   company: [
-    { href: "/about#press", label: "Press kit" },
     { href: "/contact#faq", label: "FAQ" },
   ],
-  trust: [{ href: links.auditsRepo, label: "Audit reports" }],
 };
 
 // The nav's own groups (lib/nav.ts), so the two can't drift apart, then
@@ -121,13 +118,12 @@ export function Footer() {
       </div>
       <Container className="py-16">
         <h2 className="sr-only">Site footer</h2>
-        <div className="grid gap-12 lg:grid-cols-[18rem_minmax(0,1fr)] lg:gap-16">
+        <div className="grid gap-12 lg:grid-cols-[20.5rem_minmax(0,1fr)] lg:gap-16">
           <div>
             <Logo />
             <p className="mt-5 max-w-xs text-small text-fg-muted">
               Non-custodial wealth management on Arbitrum. Your assets never leave your own wallet.
             </p>
-            <Badge status="testing" className="mt-5" />
             <SocialLinks placement="footer" className="mt-6" />
           </div>
 

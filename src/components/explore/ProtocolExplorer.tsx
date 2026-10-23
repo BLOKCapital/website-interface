@@ -3,9 +3,10 @@
 import { useEffect, useId, useMemo, useRef, useState, type CSSProperties, type ReactNode } from "react";
 import { cn } from "@/lib/utils";
 import { prefersReducedMotion } from "@/lib/motion";
-import { dwellMs, LG_QUERY, trackSelect, useAutoplay } from "@/lib/explainers";
+import { LG_QUERY, trackSelect, useAutoplay } from "@/lib/explainers";
 import { useRovingTabs } from "@/lib/useRovingTabs";
 import { ArrowLink } from "@/components/ui/ArrowLink";
+import { ecosystem } from "@/lib/data/ecosystem";
 import { AutoplayToggle } from "./AutoplayToggle";
 import { LayerStack, stackGeometry } from "./LayerStack";
 
@@ -18,12 +19,40 @@ export type ExploreStep = {
   /** What actually happens on-chain at this layer. */
   behind: string;
   facts?: { k: string; v: string }[];
+  /** The projects this layer works with, by their names in lib/data/ecosystem, shown with their logos. */
+  partners?: string[];
   link?: { label: string; href: string };
   /** Optional live or visual element for this layer. */
   extra?: ReactNode;
 };
 
 const two = (n: number) => String(n).padStart(2, "0");
+
+/** How long the walk stays on each layer. */
+const LAYER_MS = 4000;
+
+const ecoItems = ecosystem.flatMap((g) => g.items);
+
+/** A project's logo as a small tag: its wordmark, or its mark beside its name, or its name. */
+function Partner({ name }: { name: string }) {
+  const it = ecoItems.find((x) => x.name === name);
+  return (
+    <li className="inline-flex h-9 items-center gap-2 rounded-tag border border-subtle bg-card px-3">
+      {it?.logo ? (
+        // eslint-disable-next-line @next/next/no-img-element -- a small static SVG/WebP wordmark; next/image adds nothing here
+        <img src={it.logo} alt={name} className="h-[18px] w-auto max-w-24 object-contain" />
+      ) : (
+        <>
+          {it?.mark && (
+            // eslint-disable-next-line @next/next/no-img-element -- as above
+            <img src={it.mark} alt="" width={18} height={18} className="size-[18px] rounded-full" />
+          )}
+          <span className="text-small font-semibold tracking-tight text-fg">{name}</span>
+        </>
+      )}
+    </li>
+  );
+}
 
 /**
  * "Explore the protocol": the layers from your signature down to the DAO.
@@ -34,7 +63,7 @@ const two = (n: number) => String(n).padStart(2, "0");
  *
  * On wide screens with a mouse it walks itself through the layers once,
  * stopping on the last (lib/explainers.ts has the rules every explainer
- * shares). Each layer stays up long enough to read it. The active segment
+ * shares), briskly: 4 s a layer, holding while you point at it. The active segment
  * of the progress bar is the timer: a CSS animation whose end advances the
  * layer, so pausing it (pointer over the explorer, focus inside, off-screen,
  * or the Pause button) simply freezes the bar. Picking a layer, Prev/Next or
@@ -54,11 +83,9 @@ export function ProtocolExplorer({ steps }: { steps: ExploreStep[] }) {
   const root = useRef<HTMLDivElement>(null);
   const ap = useAutoplay(root, { rootMargin: "-20% 0px -20% 0px" });
   const last = steps.length - 1;
-  // Time to read each layer: everything its panel says.
-  const dwell = useMemo(
-    () => steps.map((st) => dwellMs(st.title, st.body, st.behind, ...(st.facts ?? []).flatMap((f) => [f.k, f.v]))),
-    [steps],
-  );
+  // A brisk walk: 4 s a layer. It holds while the pointer is over the
+  // explorer or focus is inside it, so anyone reading isn't hurried.
+  const dwell = useMemo(() => steps.map(() => LAYER_MS), [steps]);
 
   /** The visitor picked a layer (tab, plate, Prev/Next): go there, and stop the walk. */
   const pick = (i: number) => {
@@ -105,7 +132,7 @@ export function ProtocolExplorer({ steps }: { steps: ExploreStep[] }) {
       <div className="relative min-w-0 lg:col-span-5">
         {/* A size container from lg, so the tabs can follow their plates in cqh. */}
         <div className="relative lg:[aspect-ratio:var(--ar)] lg:[container-type:size]" style={{ "--ar": `${g.width} / ${g.height}` } as CSSProperties}>
-          <LayerStack count={steps.length} active={active} onSelect={pick} className="absolute inset-0 hidden size-full lg:block" />
+          <LayerStack count={steps.length} ids={steps.map((st) => st.id)} active={active} onSelect={pick} className="absolute inset-0 hidden size-full lg:block" />
           <div
             ref={strip}
             {...rt.tablist}
@@ -137,13 +164,13 @@ export function ProtocolExplorer({ steps }: { steps: ExploreStep[] }) {
                   }
                   className={cn(
                     // The selected look changes at --dur-fast; the label travels with its plate.
-                    "flex shrink-0 items-center gap-2 rounded-full border px-3.5 py-2 text-left [transition:color_var(--dur-fast)_var(--ease-out),background-color_var(--dur-fast)_var(--ease-out),border-color_var(--dur-fast)_var(--ease-out),translate_var(--dur-slow)_var(--ease-expo)]",
+                    "flex shrink-0 items-center gap-2 rounded-full border px-3.5 py-2 text-left [transition:color_var(--dur-fast)_var(--ease-out),background-color_var(--dur-fast)_var(--ease-out),border-color_var(--dur-fast)_var(--ease-out),translate_var(--dur-base)_var(--ease-expo)]",
                     "ptab lg:absolute lg:left-[var(--x)] lg:-translate-y-1/2 lg:py-1.5",
-                    on ? "border-leaf/40 bg-card text-fg shadow-e1" : "border-line/10 bg-card/60 text-fg-muted hover:border-line/25 hover:text-fg lg:border-transparent lg:bg-transparent",
+                    on ? "border-cobalt bg-cobalt text-white shadow-e1" : "border-line/10 bg-card/60 text-fg-muted hover:border-line/25 hover:text-fg lg:border-transparent lg:bg-transparent",
                   )}
                 >
-                  <span className={cn("font-mono text-label tabular", on ? "text-leaf" : "text-fg-subtle")}>{two(i + 1)}</span>
-                  <span className="whitespace-nowrap text-small font-medium">{st.label}</span>
+                  <span className={cn("font-mono text-label tabular", on ? "text-white" : "text-fg-subtle")}>{two(i + 1)}</span>
+                  <span className="whitespace-nowrap text-small font-semibold">{st.label}</span>
                 </button>
               );
             })}
@@ -157,7 +184,7 @@ export function ProtocolExplorer({ steps }: { steps: ExploreStep[] }) {
         role="tabpanel"
         aria-labelledby={`${base}-tab-${s.id}`}
         tabIndex={0}
-        className="relative min-w-0 overflow-hidden rounded-panel border border-subtle bg-card lg:col-span-7"
+        className="relative min-w-0 overflow-hidden rounded-panel border border-subtle bg-card lg:col-span-7 shadow-soft"
       >
         <div aria-hidden className="grid-lines pointer-events-none absolute inset-0 opacity-60 [mask-image:radial-gradient(ellipse_80%_70%_at_85%_0%,black,transparent)]" />
 
@@ -165,7 +192,7 @@ export function ProtocolExplorer({ steps }: { steps: ExploreStep[] }) {
         {/* min-h holds the row's height for the toggle, which only appears after hydration. */}
         <div className="relative flex min-h-16 items-center gap-4 border-b border-subtle px-6 py-4 sm:px-8">
           <p className="shrink-0 label-caps">
-            Layer <span className="text-leaf">{two(active + 1)}</span> / {two(steps.length)}
+            Layer <span className="text-cobalt">{two(active + 1)}</span> / {two(steps.length)}
           </p>
           <div aria-hidden className="flex flex-1 gap-1.5">
             {steps.map((st, i) => (
@@ -204,27 +231,39 @@ export function ProtocolExplorer({ steps }: { steps: ExploreStep[] }) {
                 // A plain crossfade on change: no rise, no per-fact stagger.
                 className={cn("relative col-start-1 row-start-1 p-6 sm:p-8", !on ? "invisible" : moved && "animate-swap")}
               >
-                <p className="font-mono text-label uppercase tracking-eyebrow text-leaf">{st.label}</p>
+                <p className="font-mono text-label uppercase tracking-eyebrow text-cobalt">{st.label}</p>
                 <h3 className="display mt-2 text-h3 text-fg">{st.title}</h3>
                 <p className="mt-4 max-w-2xl text-body text-fg-muted">{st.body}</p>
 
-                <div className="relative mt-6 overflow-hidden rounded-card border border-subtle bg-canvas/60 p-5 pl-6">
-                  <span aria-hidden className="absolute inset-y-4 left-0 w-0.5 rounded-full bg-leaf/60" />
-                  <p className="label-caps">On-chain, behind the scenes</p>
+                {st.partners && st.partners.length > 0 && (
+                  <div className="mt-5 flex flex-wrap items-center gap-x-3 gap-y-2">
+                    <p className="font-mono text-label lowercase text-fg-subtle">works with</p>
+                    <ul className="flex flex-wrap gap-2">
+                      {st.partners.map((name) => (
+                        <Partner key={name} name={name} />
+                      ))}
+                    </ul>
+                  </div>
+                )}
+
+                {st.extra && <div className="mt-5">{st.extra}</div>}
+
+                {/* What happens on-chain, as a note on ruled paper. */}
+                <div className="note-card paper-ruled relative mt-6 p-5">
+                  <p className="font-mono text-label lowercase text-cobalt">on-chain, behind the scenes</p>
                   <p className="mt-2 text-small text-fg-muted">{st.behind}</p>
                 </div>
 
                 {st.facts && st.facts.length > 0 && (
-                  <dl className="mt-5 grid gap-px overflow-hidden rounded-card border border-subtle bg-line/7 sm:grid-cols-3">
+                  <dl className="mt-5 grid gap-3 sm:grid-cols-3">
                     {st.facts.map((f) => (
-                      <div key={f.k} className="bg-card px-4 py-3.5">
-                        <dt className="text-caption text-fg-subtle">{f.k}</dt>
-                        <dd className="mt-1 font-mono text-caption text-fg">{f.v}</dd>
+                      <div key={f.k} className="note-card px-4 py-3.5">
+                        <dt className="font-mono text-label lowercase text-fg-subtle">{f.k}</dt>
+                        <dd className="mt-1 text-small font-bold tracking-tight text-fg">{f.v}</dd>
                       </div>
                     ))}
                   </dl>
                 )}
-                {st.extra && <div className="mt-5">{st.extra}</div>}
               </div>
             );
           })}

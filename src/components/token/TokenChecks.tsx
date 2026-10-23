@@ -25,9 +25,9 @@ export function TokenChecks() {
       description="Before you hold, buy or sign for any $BLOKC, check these. Each one is stated elsewhere on this site, with its source."
     >
       <Stagger as="ol" className="grid gap-5 md:grid-cols-3">
-        <RevealItem as="li" className="flex flex-col rounded-card border border-subtle bg-card p-6">
-          <p className="font-mono text-label text-leaf">01 · When</p>
-          <h3 className="mt-3 text-h4 font-medium text-fg">At the IDO, planned for {protocolStatus.token}</h3>
+        <RevealItem as="li" className="flex flex-col rounded-card border border-subtle bg-card p-6 shadow-soft">
+          <p className="font-mono text-label uppercase tracking-caps text-cobalt">01 · When</p>
+          <h3 className="mt-3 text-h4 font-bold tracking-tight text-fg">At the IDO, planned for {protocolStatus.token}</h3>
           <p className="mt-2 text-small text-fg-muted">
             That&apos;s when $BLOKC launches and holders start to vote. Until then, the core members listed on Aragon vote.
           </p>
@@ -35,9 +35,9 @@ export function TokenChecks() {
             The token timeline
           </ArrowLink>
         </RevealItem>
-        <RevealItem as="li" className="flex flex-col rounded-card border border-subtle bg-card p-6">
-          <p className="font-mono text-label text-leaf">02 · Which contract</p>
-          <h3 className="mt-3 text-h4 font-medium text-fg">Only this address, on Arbitrum One</h3>
+        <RevealItem as="li" className="flex flex-col rounded-card border border-subtle bg-card p-6 shadow-soft">
+          <p className="font-mono text-label uppercase tracking-caps text-cobalt">02 · Which contract</p>
+          <h3 className="mt-3 text-h4 font-bold tracking-tight text-fg">Only this address, on Arbitrum One</h3>
           <p className="mt-3 flex flex-wrap items-center gap-2">
             <code id="checks-address" title={BLOKC_TOKEN} className="font-mono text-small text-fg">
               {short(BLOKC_TOKEN)}
@@ -49,9 +49,9 @@ export function TokenChecks() {
             Token docs
           </ArrowLink>
         </RevealItem>
-        <RevealItem as="li" className="flex flex-col rounded-card border border-warning/35 bg-warning/6 p-6">
+        <RevealItem as="li" className="flex flex-col rounded-card border border-warning/35 bg-warning/6 p-6 shadow-soft">
           <p className="font-mono text-label text-warning-text">03 · Who to trust</p>
-          <h3 className="mt-3 text-h4 font-medium text-fg">Not a DM</h3>
+          <h3 className="mt-3 text-h4 font-bold tracking-tight text-fg">Not a DM</h3>
           <p className="mt-2 text-small text-fg-muted">
             The BLOK Capital team will never DM you first, and never asks for your seed phrase, private keys or Google login, or
             for you to sign a transaction or &lsquo;verify&rsquo; a wallet.

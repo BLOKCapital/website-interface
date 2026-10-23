@@ -44,7 +44,8 @@ type Tag = "h1" | "h2" | "h3" | "p" | "span";
  *
  * Screen readers get the heading as one string: the full text sits in an
  * sr-only span, and the per-word inline-block spans are aria-hidden, so
- * VoiceOver can't step through the heading word by word (A11Y-41).
+ * VoiceOver can't step through the heading word by word (A11Y-41). The
+ * sr-only copy can't be selected, so copy and paste gives the words once.
  */
 export function SplitText({
   as = "h2",
@@ -69,7 +70,8 @@ export function SplitText({
       // RevealScript adds data-revealed before React hydrates.
       suppressHydrationWarning
     >
-      <span className="sr-only">{children}</span>
+      {/* Not selectable, so copying the heading gives its words once. */}
+      <span className="sr-only select-none">{children}</span>
       <span aria-hidden>{nodes}</span>
     </El>
   );

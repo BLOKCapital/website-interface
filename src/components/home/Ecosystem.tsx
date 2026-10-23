@@ -2,7 +2,9 @@ import Image from "next/image";
 import { Section } from "@/components/ui/Section";
 import { Stagger, RevealItem, Reveal } from "@/components/ui/Reveal";
 import { ExternalIcon } from "@/components/ui/icons";
+import { Button } from "@/components/ui/Button";
 import { ecosystem, otherChains } from "@/lib/data/ecosystem";
+import { links, social } from "@/lib/data/socials";
 
 /**
  * Ecosystem map: grouped by the job each project does in a Garden, each
@@ -26,12 +28,22 @@ export function Ecosystem({ tone = "canvas" }: { tone?: "canvas" | "surface" }) 
           file or docs page that shows it.
         </>
       }
+      actions={
+        <>
+          <Button href={social("github").href} variant="secondary" data-cta="protocol_github">
+            Code on GitHub
+          </Button>
+          <Button href={links.docs} variant="secondary" data-cta="protocol_docs">
+            Read the docs
+          </Button>
+        </>
+      }
     >
       <div className="divide-y divide-subtle border-y border-subtle">
         {ecosystem.map((g) => (
           <Reveal key={g.id} className="grid gap-5 py-7 lg:grid-cols-12 lg:gap-8">
             <div className="lg:col-span-4">
-              <h3 className="text-h4 font-medium text-fg">{g.label}</h3>
+              <h3 className="text-h4 font-bold tracking-tight text-fg">{g.label}</h3>
               <p className="mt-1.5 max-w-xs text-small text-fg-subtle">{g.intro}</p>
             </div>
             <Stagger as="ul" step={0.05} className="grid grid-cols-2 gap-2 lg:col-span-8 lg:grid-cols-4">
@@ -41,7 +53,7 @@ export function Ecosystem({ tone = "canvas" }: { tone?: "canvas" | "surface" }) 
                     href={it.evidence.href}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="group/e flex h-full flex-col gap-3 rounded-card border border-subtle bg-card p-4 transition-colors hover:border-leaf/30 hover:bg-raised"
+                    className="group/e flex h-full flex-col gap-3 rounded-card border border-subtle bg-card p-4 surface-link shadow-soft"
                   >
                     <span className="flex h-7 items-center">
                       {it.logo ? (

@@ -194,7 +194,7 @@ export function Nav() {
         <Container>
           {/* A fixed-height row: scrolling never changes the layout, only the
               pill surface behind it fades and scales in (MOT-10). */}
-          <div className="relative flex h-16 items-center justify-between gap-4 sm:h-[72px] [@media(max-height:500px)]:h-[52px]">
+          <div className="relative flex h-16 items-center justify-between gap-2 min-[375px]:gap-4 sm:h-[72px] [@media(max-height:500px)]:h-[52px]">
             {/* The pill reaches past the content edges, so the logo and the
                 buttons stay exactly on them. */}
             <div
@@ -208,7 +208,8 @@ export function Nav() {
 
             <Link ref={logoRef} href="/" aria-label="BLOK Capital, home" onClick={onLogo} className="relative shrink-0 rounded-md">
               <span className={cn("block origin-left transition-transform duration-base ease-out", scrolled && "scale-[0.85]")}>
-                <Logo />
+                {/* The narrowest phones (320 px) need the room for the menu button. */}
+                <Logo className="max-[374px]:h-6" />
               </span>
             </Link>
 
@@ -219,6 +220,7 @@ export function Nav() {
             <div className="relative flex items-center gap-2">
               <Button
                 href={appLink.href}
+                variant="solid"
                 data-cta="nav_launch_app"
                 data-placement="header"
                 size="sm"
@@ -236,13 +238,16 @@ export function Nav() {
                 aria-label={appLink.label}
                 aria-describedby="nav-new-tab"
                 className={cn(
-                  "inline-flex h-11 items-center justify-center whitespace-nowrap rounded-full bg-leaf px-3 text-caption font-medium text-canvas transition-[background-color,transform] duration-fast ease-out hover:bg-leaf-hover active:scale-[0.98] sm:hidden",
+                  "inline-flex h-11 items-center justify-center gap-1.5 whitespace-nowrap rounded-full bg-fg px-3 text-caption min-[375px]:px-4 font-medium text-canvas shadow-e1 transition-[background-color,color,transform] duration-fast ease-out can-hover:hover:bg-accent can-hover:hover:text-accent-fg active:scale-[0.98] sm:hidden",
                   open && "invisible",
                 )}
               >
-                {/* "Launch App" fits from 360 px; the narrowest phones get "App". */}
-                <span className="min-[360px]:hidden">App</span>
-                <span className="hidden min-[360px]:inline">{appLink.label}</span>
+                {/* The full label from 430 px; narrower phones, where the logo and the menu button leave no room, get the short one. */}
+                <span className="min-[430px]:hidden">{appLink.short}</span>
+                <span className="hidden min-[430px]:inline">{appLink.label}</span>
+                <svg aria-hidden viewBox="0 0 16 16" className="size-3.5" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
+                  <path d="M5 11 11 5M6 5h5v5" />
+                </svg>
               </a>
               <span id="nav-new-tab" hidden>
                 Opens in a new tab

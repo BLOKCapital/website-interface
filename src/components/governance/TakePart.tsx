@@ -61,14 +61,14 @@ export function TakePart() {
             className={
               w.later
                 ? "flex flex-col rounded-card border border-dashed border-line/30 p-5"
-                : "flex flex-col rounded-card border border-subtle bg-card p-5"
+                : "flex flex-col rounded-card border border-subtle bg-card p-5 shadow-soft"
             }
           >
             <div className="flex h-6 items-center justify-between gap-3">
-              <p className="label-caps text-leaf">{w.verb}</p>
+              <p className="label-caps text-cobalt">{w.verb}</p>
               {w.later && <Badge status="planned" />}
             </div>
-            <h3 className="mt-3 text-h4 font-medium text-fg">{w.title}</h3>
+            <h3 className="mt-3 text-h4 font-bold tracking-tight text-fg">{w.title}</h3>
             <p className="mt-2 text-small text-fg-muted">{w.body}</p>
             <p className="mt-auto flex flex-wrap gap-x-5 gap-y-2 pt-5">
               {w.links.map((l) => (

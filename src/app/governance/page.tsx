@@ -79,11 +79,11 @@ export default async function GovernancePage() {
         <div className="mt-5 grid gap-5 md:grid-cols-2">
           <Reveal>
             <Card className="h-full">
-              <h3 className="text-h4 font-medium text-fg">What the DAO decides</h3>
+              <h3 className="text-h4 font-bold tracking-tight text-fg">What the DAO decides</h3>
               <ul className="mt-5 grid gap-2.5 sm:grid-cols-2">
                 {decides.map((d, i) => (
-                  <li key={d} className="flex flex-col gap-3 rounded-card border border-subtle bg-raised/60 p-4">
-                    <span className="font-mono text-label text-leaf">{String(i + 1).padStart(2, "0")}</span>
+                  <li key={d} className="note-card flex flex-col gap-3 p-4">
+                    <span className="font-mono text-label text-cobalt">{String(i + 1).padStart(2, "0")}</span>
                     <span className="text-ui text-fg">{d}</span>
                   </li>
                 ))}
@@ -93,7 +93,7 @@ export default async function GovernancePage() {
           <Reveal delay={0.08}>
             <Card className="h-full border-bloom/25">
               <Badge tone="current">Current phase</Badge>
-              <h3 className="mt-4 text-h4 font-medium text-fg">Core members vote until the token launches</h3>
+              <h3 className="mt-4 text-h4 font-bold tracking-tight text-fg">Core members vote until the token launches</h3>
               <p className="mt-2 text-small text-fg-muted">
                 Before the public token launch, only the core DAO members listed on Aragon can vote. Public $BLOKC voting follows the
                 IDO. Every member is verifiable on-chain.

@@ -31,7 +31,7 @@ export function GuardMoments() {
         {moments.map((m, i) => {
           const watch = m.watch.map((id) => scenarios.find((s) => s.id === id)).filter((s) => !!s);
           return (
-            <RevealItem as="li" key={m.id} className="flex w-[78%] shrink-0 snap-start flex-col rounded-card border border-subtle bg-card p-5 sm:w-auto">
+            <RevealItem as="li" key={m.id} className="flex w-[78%] shrink-0 snap-start flex-col rounded-card border border-subtle bg-card p-5 sm:w-auto shadow-soft">
               <p className="flex items-center gap-2 font-mono text-label text-fg-subtle">
                 <span className="tabular-nums">{String(i + 1).padStart(2, "0")}</span>
                 <span aria-hidden className="h-px flex-1 bg-leaf/30" />

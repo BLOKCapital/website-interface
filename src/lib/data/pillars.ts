@@ -24,7 +24,7 @@ export const pillars: Pillar[] = [
     label: "Non-custodial by design",
     spec: "Web3Auth · ERC-4337",
     description:
-      "Every Garden lives at your address. Sign in with Google via Web3Auth's MPC, no seed phrase, no custody, no admin key.",
+      "Every Garden lives at your own address. Sign in with Google, no seed phrase, and only you can move your funds.",
     href: "https://docs.blokcapital.io/en/concepts/blok-c-overview",
   },
   {
@@ -32,7 +32,7 @@ export const pillars: Pillar[] = [
     label: "Upgradable without migration",
     spec: "EIP-2535 Diamond",
     description:
-      "Add facets, swap strategies, integrate new DEXs, all without forcing users into new contracts. Storage stays put.",
+      "New features and strategies plug into the Garden you already have, after a DAO vote. You never move to a new wallet.",
     href: "https://docs.blokcapital.io/en/smart-contracts/introduction",
   },
   {
@@ -40,7 +40,7 @@ export const pillars: Pillar[] = [
     label: "On-chain reputation",
     spec: "ERC-5484 soulbound",
     description:
-      "Gardeners arrive in 2027. Each one's track record will be written to a non-transferable badge in their wallet, verifiable from any dapp and owned by no platform.",
+      "Gardeners arrive in 2027. Each one's track record will be kept on-chain, on a badge that can't be transferred, for anyone to check.",
     href: "https://docs.blokcapital.io/en/builders/blok-capital-v1",
     // 2027: protocolStatus.gardeners, facts.ts ("Planned: manager (Gardener) track
     // records will be written to … ERC-5484 soulbound badges"), roadmap "Introduction
@@ -49,17 +49,17 @@ export const pillars: Pillar[] = [
   },
   {
     id: "audited",
-    label: "Audited in the open",
-    spec: "CredShields · SolidityScan · Octane",
-    description: "CredShields audited the Garden contracts: 26 findings, none critical, all fixed. The newer index code isn't covered yet, and the report says exactly what was.",
-    href: "/security",
+    label: "Audits in the open",
+    spec: "Independent audits",
+    description: "New independent audits are under way. Each report will be published in the docs, so anyone can read it.",
+    href: "/security#audits",
   },
   {
     id: "dao",
     label: "DAO-governed",
     spec: "Aragon OSx",
     description:
-      "Every protocol change, fees, indices, new facets, routes through on-chain Aragon votes. Core DAO members vote today; $BLOKC holders after launch.",
+      "Fees, indices and new features change only through on-chain votes. Core members vote today; $BLOKC holders after launch.",
     href: "/governance",
   },
   {
@@ -67,7 +67,7 @@ export const pillars: Pillar[] = [
     label: "Open-source",
     spec: "GitHub · Foundry",
     description:
-      "Read the contracts and their test suite. Every Garden, index and vote is on Arbitrum for anyone to verify.",
+      "The contracts and their tests are public, and every Garden, index and vote is on Arbitrum for anyone to check.",
     href: "https://github.com/BLOKCapital",
   },
 ];

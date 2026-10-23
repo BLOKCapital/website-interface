@@ -1,4 +1,4 @@
-import { audits } from "@/lib/data/audits";
+import { auditStatus } from "@/lib/data/audits";
 import { links } from "@/lib/data/socials";
 
 /**
@@ -23,34 +23,22 @@ export type ReadinessItem = {
   proof: { label: string; href: string; cta?: string };
 };
 
-const credshields = audits.find((a) => a.kind === "report")!;
-/** "26 findings", as the report's own card states it. */
-const findings = credshields.scope.match(/\d+ findings/)?.[0];
-
 export const readiness: ReadinessItem[] = [
   {
-    id: "garden-audit",
-    criterion: "Garden contracts audited",
-    detail: findings ? `By ${credshields.partner}. ${findings}, all fixed and retested.` : `By ${credshields.partner}.`,
-    status: "done",
-    date: credshields.auditedOn ? `Audited ${credshields.auditedOn}` : undefined,
-    proof: { label: "Read the report", href: credshields.url!, cta: "security_readiness_audit_report" },
-  },
-  {
-    // /security#audits: "One published audit so far. More before launch."
-    id: "index-audit",
-    criterion: "Index and rebalancer contracts audited",
-    detail: "Newer than the Garden audit. They get a published review before anyone's money depends on them.",
-    status: "planned",
-    proof: { label: "Audit scope", href: "#audits" },
+    // lib/data/audits.ts: new independent audits, their reports in the docs.
+    id: "audits",
+    criterion: "Independent audits published",
+    detail: auditStatus.detail,
+    status: "progress",
+    proof: { label: "Audit status", href: "#audits" },
   },
   {
     // /security#contracts: "Mainnet deployment is in progress."
     id: "addresses",
     criterion: "Mainnet contract addresses published and verified",
-    detail: "Mainnet deployment is in progress. Verified addresses will be published in the docs and the audits repository.",
+    detail: "Mainnet deployment is in progress. Verified addresses will be published in the docs.",
     status: "progress",
-    proof: { label: "Contract registry", href: "#contracts" },
+    proof: { label: "Addresses in the docs", href: links.docsAddresses, cta: "security_readiness_docs_addresses" },
   },
   {
     // The security docs, as /security#disclosure quotes them: "No dates set yet."
@@ -58,14 +46,14 @@ export const readiness: ReadinessItem[] = [
     criterion: "Public bug bounty",
     detail: "A public programme on Immunefi. No dates set yet.",
     status: "planned",
-    proof: { label: "Security docs", href: links.docsSecurity, cta: "security_readiness_docs" },
+    proof: { label: "How to report", href: "#disclosure" },
   },
   {
     id: "contests",
     criterion: "Open audit contests",
     detail: "On Cantina and Code4rena. No dates set yet.",
     status: "planned",
-    proof: { label: "Security docs", href: links.docsSecurity, cta: "security_readiness_docs" },
+    proof: { label: "How to report", href: "#disclosure" },
   },
   {
     // /governance "Current phase": core members vote until the token launches.

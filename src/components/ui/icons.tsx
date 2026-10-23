@@ -51,9 +51,18 @@ export const GitHubIcon = ({ size = 16, className }: P) =>
 export const YouTubeIcon = ({ size = 16, className }: P) =>
   fill("M23.5 6.2a3.02 3.02 0 0 0-2.13-2.14C19.46 3.5 12 3.5 12 3.5s-7.46 0-9.37.56A3.02 3.02 0 0 0 .5 6.2C0 8.13 0 12 0 12s0 3.87.5 5.8c.27 1.05 1.08 1.86 2.13 2.14 1.91.56 9.37.56 9.37.56s7.46 0 9.37-.56a3.02 3.02 0 0 0 2.13-2.14C24 15.87 24 12 24 12s0-3.87-.5-5.8ZM9.6 15.6V8.4l6.24 3.6L9.6 15.6Z", size, className);
 
+export const InstagramIcon = ({ size = 16, className }: P) => (
+  <svg width={size} height={size} viewBox="0 0 24 24" aria-hidden className={className} fill="none" stroke="currentColor" strokeWidth={2.2}>
+    <rect x="3" y="3" width="18" height="18" rx="5.5" />
+    <circle cx="12" cy="12" r="4.2" />
+    <circle cx="17.4" cy="6.6" r="1.3" fill="currentColor" stroke="none" />
+  </svg>
+);
+
 export const SOCIAL_ICONS = {
   discord: DiscordIcon,
   x: XIcon,
+  instagram: InstagramIcon,
   telegram: TelegramIcon,
   farcaster: FarcasterIcon,
   github: GitHubIcon,

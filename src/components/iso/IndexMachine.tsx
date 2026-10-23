@@ -225,13 +225,19 @@ export function IndexMachine({ className }: { className?: string }) {
 
               {/* Price: the Chainlink mast. */}
               <Part box={ORACLE} />
+              <OnFace face="left" at={project([ORACLE.x, ORACLE.y + ORACLE.d, ORACLE.z + ORACLE.h])}>
+                <Engrave u={ORACLE.w / 2} v={8.6} size={5.6} anchor="middle">
+                  Chainlink
+                </Engrave>
+              </OnFace>
               <Cyl cx={MAST.cx} cy={MAST.cy} z={ORACLE.z + ORACLE.h} r={3.5} h={62} />
               <Cyl cx={MAST.cx} cy={MAST.cy} z={84} r={15} h={3} />
               <Cyl cx={MAST.cx} cy={MAST.cy} z={87} r={3} h={6} />
-              <Flat points={plaque(16, 70, 70, 10)} fill="rgb(var(--plate-l))" />
-              <OnFace face="top" at={project([16, 70, Z])}>
+              {/* In front of the mast, clear of the supply register (which used to cover it) and of the first tube. */}
+              <Flat points={plaque(52, 66, 46, 10)} fill="rgb(var(--plate-l))" />
+              <OnFace face="top" at={project([52, 66, Z])}>
                 <Engrave u={5} v={7.4} size={5.5}>
-                  Price · Chainlink
+                  Price feed
                 </Engrave>
               </OnFace>
 
@@ -242,7 +248,7 @@ export function IndexMachine({ className }: { className?: string }) {
                 {Array.from({ length: 5 }, (_, i) => (
                   <rect key={i} x={10 + i * 8} y={9.5} width={6} height={9} fill="rgb(var(--card))" stroke={INK} strokeWidth={0.5} />
                 ))}
-                <Engrave u={29} v={28} size={5} anchor="middle">
+                <Engrave u={29} v={27.5} size={6} anchor="middle">
                   Supply
                 </Engrave>
               </OnFace>
@@ -319,10 +325,10 @@ export function IndexMachine({ className }: { className?: string }) {
               <Part box={{ x: 406, y: JACK.y + JACK.d, z: Z + 3, w: 6, d: 4, h: 4 }} />
               <Part box={RAIL} />
               <OnFace face="left" at={project([RAIL.x, RAIL.y + RAIL.d, RAIL.z + RAIL.h])}>
-                <Engrave u={3} v={6.2} size={4.6}>
+                <Engrave u={3} v={6.8} size={5.6}>
                   0%
                 </Engrave>
-                <Engrave u={RAIL.w - 3} v={6.2} size={4.6} anchor="end">
+                <Engrave u={RAIL.w - 3} v={6.8} size={5.6} anchor="end">
                   100%
                 </Engrave>
               </OnFace>

@@ -63,7 +63,7 @@ export function LaunchReadiness() {
       id="readiness"
       eyebrow="Launch readiness"
       title="What's done, and what isn't yet."
-      description="The checks between private testing and a public launch. Each status is what this site already says, with the proof beside it; a date appears only where one is known."
+      description="The checks before the public launch. Each status is what this site already says, with the proof beside it; a date appears only where one is known."
     >
       <Reveal>
         <Card size="sm" radius="panel" className="p-0 sm:p-0">

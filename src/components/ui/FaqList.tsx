@@ -17,7 +17,7 @@ export type FaqItem = {
    * links here and read as their text elsewhere.
    */
   answer: string;
-  /** A next step under the answer, e.g. Launch App (CRO-11). */
+  /** A next step under the answer, e.g. Launch your fund (CRO-11). */
   cta?: { label: string; href: string };
 };
 
@@ -69,15 +69,20 @@ function renderAnswer(answer: string): ReactNode[] {
  * action (`cta`), and answers can link (`[text](/path)`). Every answer has
  * an id (faqId) and a "Link to this answer"; FaqHash opens the one the URL
  * names, so support can link a single answer.
+ *
+ * One answer open at a time: every <details> shares `group` as its `name`
+ * (the browser's exclusive accordion), across all the lists on a page, so
+ * opening one closes the last. FaqHash does the same where the browser
+ * doesn't support it yet.
  */
-export function FaqList({ items, start = 0, className }: { items: FaqItem[]; start?: number; className?: string }) {
+export function FaqList({ items, start = 0, group = "faq", className }: { items: FaqItem[]; start?: number; group?: string; className?: string }) {
   return (
     <div className={className}>
       <FaqHash />
       <ul data-faq className="divide-y divide-subtle border-y border-subtle">
         {items.map((f, i) => (
           <li key={f.question}>
-            <details id={faqId(f.question)} className="smooth group scroll-mt-6">
+            <details id={faqId(f.question)} name={group} className="smooth group scroll-mt-6">
               <summary className="flex cursor-pointer list-none items-center justify-between gap-6 py-5 text-left text-lead font-medium text-fg transition-colors duration-fast can-hover:hover:text-leaf [&::-webkit-details-marker]:hidden">
                 <span className="flex items-baseline gap-4">
                   <span aria-hidden className="w-6 shrink-0 font-mono text-label text-fg-subtle tabular transition-colors group-open:text-leaf">

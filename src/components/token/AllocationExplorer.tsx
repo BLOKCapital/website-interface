@@ -51,7 +51,7 @@ export function AllocationExplorer({
   const amount = (pct: number) => fmt.format(Math.round((total * pct) / 100));
 
   return (
-    <figure className="rounded-panel border border-subtle bg-card p-6 sm:p-8">
+    <figure className="rounded-panel border border-subtle bg-card p-6 sm:p-8 shadow-soft">
       <figcaption className="sr-only">{caption}</figcaption>
 
       <div className="flex flex-wrap items-end justify-between gap-6">

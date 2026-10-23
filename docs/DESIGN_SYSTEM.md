@@ -18,10 +18,10 @@ The reference for anyone building UI on the marketing site. It describes **what 
 ## 1. Principles
 
 1. **Two gardens.** The **Day garden** (`:root`, light paper) is the default and the only page theme. The site is light-only (D-31): `colorScheme: "light"`, `themeColor: #F7F8F4`. The **Night garden** exists only as `.theme-dark` *islands*: the announcement bar, consoles, the featured card (`Card tone="feature"`), `Section tone="dark"` and the closing `CtaBand`. The footer stays light (D-21).
-2. **Three typefaces, no more.** Inter for body and UI (`--font-body`, `font-sans`). Newsreader 400, regular and italic, for display (`--font-display`, `font-display` / `font-serif` / `.display`). JetBrains Mono 400 for labels, addresses and figures (`--font-mono`, `font-mono`). The mono is not preloaded and falls back to a mono stack, so the swap never changes width.
-3. **The garden metaphor.** A Garden is the visitor's own wallet. Gardens appear as photographic renders (`GardenAsset`), the `// eyebrow` label reads like a code comment, headings end on an italic sand payoff (`<em className="text-sand">`), and bands carry "+" registration marks (`CornerMarks`) like sheets of one engineering drawing.
+2. **Three typefaces, no more.** Inter for body and UI (`--font-body`, `font-sans`), and at 800 for headlines (`.display`). Dancing Script 600 for the one handwritten word: a headline's payoff and the notes on figures (`--font-script`, `.display em`, `.note`). JetBrains Mono 400 for labels, addresses and figures (`--font-mono`, `font-mono`). The mono is not preloaded and falls back to a mono stack, so the swap never changes width. The social cards use the same three (WOFF copies in `src/app/fonts`).
+3. **The garden metaphor, in paper and ink.** A Garden is the visitor's own wallet. Gardens appear as photographic renders (`GardenAsset`, cut out as stickers) and as line drawings. The look follows the brand's own posts: heavy black headlines that end on a handwritten payoff (`<em>` in a `.display` heading: ink blue, over a hand-drawn green underline), ink-blue mono eyebrows, notebook-ruled paper, pinned note cards, typed caption strips, lime tags and rubber stamps (§2.7, "Paper-and-ink kit"). Bands carry "+" registration marks (`CornerMarks`) like sheets of one drawing.
 4. **Honest data.** Never invent figures, dates, partners, quotes or claims. Anything illustrative carries `<Badge status="example" />` ("Example"). Real figures come from `src/lib/data/*` or the live readers in `src/lib/live/*`. The launch state comes only from `protocolStatus` (`src/lib/data/status.ts`) and never carries a date or quarter (D-02). `CountUp` is for real numbers only.
-5. **CSS-first motion, no motion libraries.** Motion is CSS keyframes, transitions and scroll timelines driven by tokens. JavaScript runs only the few effects CSS can't do (canvases, `Scramble`, explainer timers), always through the helpers in `src/lib/motion.ts`.
+5. **CSS-first motion, no motion libraries.** Motion is CSS keyframes, transitions and scroll timelines driven by tokens. JavaScript runs only the few effects CSS can't do (canvases, starting `Handwrite`, explainer timers), always through the helpers in `src/lib/motion.ts`.
 6. **Accessibility and performance win ties.** When a visual idea conflicts with WCAG 2.2 AA or a performance gate (LCP, idle CPU, INP), the visual idea gives way. The rulings are in `IMPROVEMENT_PLAN.md` §2.
 7. **Evolve, don't replace; nothing on screen without a token.** Variable *names* never change, because canvases and inline styles read them (`DotField`, `GlyphField`). Add semantic names on top; don't hard-code values.
 
@@ -156,10 +156,23 @@ All sizes are in rem, so they follow the reader's browser font size. Display siz
 
 | Class | What it is |
 |---|---|
-| `.display` | Newsreader 400, −0.015em. Pair with `text-h1`…`text-h3` and `text-balance`. |
-| `.eyebrow` | Mono, `text-eyebrow`, uppercase, leaf, with a `// ` prefix hidden from screen readers. |
+| `.display` | Inter 800, −0.035em, line-height 1.04. Pair with `text-h1`…`text-h3` and `text-balance`. Its `<em>` is the handwritten payoff: Dancing Script in `--cobalt` at 1.08em over a green underline; the heading gets room under it. (A `text-sand` left on an `<em>` is now inert.) |
+| `.eyebrow` | Mono, `text-eyebrow`, uppercase, `--cobalt`, line-height 1.5: the post's place line ("AMSTERDAM · 1774"). |
+| `.note` | A handwritten note in `--cobalt`, 1.3rem: on a figure, or after a mono label ("PRICES DRIFT *it rebalances itself.*"). |
+| `.hand-underline` | The headline's green underline under a link or nav item: "you are here". |
 | `.label-caps` | **The one caps label**: mono, `text-label`, uppercase, `tracking-caps` (0.12em), `text-fg-subtle`. Table heads, meta, chips, data labels. |
 | `.tabular` | Tabular figures for data. |
+
+**Paper-and-ink kit** (`globals.css`, components layer)
+
+| Class | What it is | Where |
+|---|---|---|
+| `.paper-ruled` | Notebook paper: a faint ink-blue rule every 32 px. | Heroes (`PageHero`, home), FAQ, figure panels, sheets with no row lines of their own |
+| `.note-card` | A pinned note: dashed edge, `--card` fill, 6 px radius, a soft drop. Small mono label over a heavy value ("brokers 24"). | `FactGrid`, token facts, explorer facts, figure callouts |
+| `.strip` | A caption typed on a strip of paper, mono 12 px, turned −1°. | Product points, step chips, the security readout's release steps, the About quote |
+| `.tag-lime` | The posts' lime highlight, dashed, turned −2°. One per view. | Hero sign-in tag, the compare table's BLOK column, the token timeline's "Next", the announcement bar |
+| `.stamp` | A rubber stamp: outlined caps with a second ring, turned −4°; colour it with a text colour. For the one status a panel is in. | Readouts, factsheets, product cards, nav features |
+| `.sticker` | A cut-out: white edge and a lift, for cut-out art. | CTA Garden, token coin |
 
 Every new font-size name must also be added to `classGroups["font-size"]` in `src/lib/utils.ts`. Otherwise `cn("text-small", "text-fg-muted")` reads `text-small` as a colour and drops it.
 
@@ -300,7 +313,6 @@ Stagger only on a first reveal, never on repeated UI. Delay = `min(i × stagger,
 | `animate-swap` | opacity 0.001 + `--move-xs` | base · out | tab-panel crossfade (never 0, so the panel keeps its box) |
 | `animate-pop-in` | scale from `--scale-pop` | base · expo | popovers |
 | `animate-progress` | `scaleX` 0 → 1, linear 4 s | set `animation-duration` | autoplay step timers (with `origin-left`) |
-| `animate-flow` | dash offset loop, 1.2 s | infinite | connectors with `stroke-dasharray="4 6"` |
 | `animate-pulse-ring` | ring grows and fades, 2 s | infinite | the "live" dot |
 | `animate-blink` | caret blink | infinite | terminal caret |
 | `animate-float` | 10 px bob, 9 s | infinite | legacy; see §8 |
@@ -320,7 +332,7 @@ Stagger only on a first reveal, never on repeated UI. Delay = `min(i × stagger,
 | `.draw-path` | line icons that draw in on reveal (`pathLength="1"`) |
 | `.art-*`, `.art-tile` | hero and product illustrations that play once and settle |
 | `.orbit-pulse`, `.stack-signal` | a selection pulse that runs 2–3 times, then rests |
-| `.scanlines`, `.sheen` | monitor texture with one sweep; diagonal sheen on hover |
+| `.scanlines` | monitor texture with one sweep |
 | `.mobile-sheet`, `.sheet-item` | the mobile menu's circular reveal and item stagger |
 | `.pstack` | sticky product deck that recedes via scroll timeline (lg, no JS) |
 
@@ -339,7 +351,6 @@ className="animate-spin motion-off:animate-none"                       // no mot
 | Helper | Returns |
 |---|---|
 | `useMotionAllowed()` | `true` while motion may run (no reduced-motion preference **and** Pause motion off). Reactive (`useSyncExternalStore` over `matchMedia` and `data-motion`), so use it as an effect dependency. `true` on the server. |
-| `useReducedMotion()` | the inverse; `false` on the server |
 | `useMotionPaused()` | whether the Pause-motion switch is on |
 | `prefersReducedMotion()` | one-off, non-reactive read (e.g. choosing `behavior: "smooth"` for a scroll) |
 | `useInView(ref, { once, rootMargin, threshold })` | whether an element is on screen; `true` without IntersectionObserver |
@@ -371,7 +382,7 @@ Wrap a block in `<Reveal>`, or a cascade in `<Stagger as="ul"><RevealItem as="li
 
 After `load`, once the main thread is idle, `RevealScript` keeps `data-inview` on every page band (`main > section`, `main > div > section`, `main section[id]`), the footer and every `[data-loop]` element while it is within 300 px of the viewport, and then sets `html[data-io]`. CSS then:
 
-- inside a band without `data-inview`, pauses the known loop utilities (`animate-flow`, `-float`, `-pulse-ring`, `-pulse`, `-ping`, `-spin`, `-bounce`, `-blink`, the `.art-*` and `.orbit-*` classes, the `.scanlines` sweep);
+- inside a band without `data-inview`, pauses the known loop utilities (`animate-float`, `-pulse-ring`, `-pulse`, `-ping`, `-spin`, `-bounce`, `-blink`, the `.art-*` classes, the `.scanlines` sweep);
 - pauses **everything** inside a `[data-loop]` element that is away.
 
 **Mark every new looping illustration with `data-loop`.** A paused loop resumes from the same frame. `.art-tile` illustrations also wait, paused, until `html[data-io]` exists, so a tile below the fold doesn't spend its play before it's seen.
@@ -383,7 +394,7 @@ After `load`, once the main thread is idle, `RevealScript` keeps `data-inview` o
 | **R1** | The LCP candidate is fully visible at first paint: opacity 1, no delay, no clip, no blur. Transform-only motion from opacity 1 (`animate-rise`) is allowed. Gate: LCP − FCP ≤ 50 ms. |
 | **R2** | Word-split h1s are LCP-safe: every word starts readable in `--fg-subtle` (≥ 5:1) at full opacity, rises 0.25em and inks to its own colour. No opacity-0 start, no blur. |
 | **R3** | Loops animate composited properties only (transform, opacity), pause off-screen, run ≤ 4 at once in view, and keep the idle main thread under 5 % at 4× CPU throttling. |
-| **R4** | JS motion runs only in view, on ≤ 15 fps timers (`useFieldLoop` caps at 15; `Scramble` ticks at 15). |
+| **R4** | JS motion runs only in view, on ≤ 15 fps timers (`useFieldLoop` caps at 15; `Handwrite` only adds a class, then CSS runs it). |
 | **R5** | Interactions after load respond in under 100 ms. |
 
 `PageHero` and the home `Hero` implement R1: h1, lede, actions and aside use `animate-rise` with no delay; only the breadcrumb and eyebrow fade in (any delay ≤ 150 ms); everything settles by `--dur-slow`, well inside the 700 ms budget. After a client-side navigation the hero doesn't replay its entrance and the page appears at once (`.page-enter`).
@@ -413,7 +424,7 @@ After `load`, once the main thread is idle, `RevealScript` keeps `data-inview` o
 - **CSS:** one block for both `prefers-reduced-motion: reduce` and `html[data-motion="paused"]` sets, on every element and pseudo-element, `animation-duration: 0.001ms`, `animation-iteration-count: 1`, `animation-delay: 0s`, `transition-duration: 0.001ms`, `transition-delay: 0s` and `scroll-behavior: auto`. Everything jumps to its end state and stays there.
 - **Still frames:** every keyframed component's base style is a meaningful still frame.
 - **Hidden states** (reveal targets, collapsed meters, undrawn paths, uninked words) exist only under `html.js` + no-preference + not paused. Never hide content with `opacity: 0` or `scaleX(0)` in the server HTML.
-- **JS:** depend on `useMotionAllowed()`. With motion off: no autoplay, canvases hold a still frame, `Scramble` shows the real text, smooth scrolls become instant. Controls that exist only for motion become plain content, not disabled buttons.
+- **JS:** depend on `useMotionAllowed()`. With motion off: no autoplay, canvases hold a still frame, `Handwrite` shows the word at rest, smooth scrolls become instant. Controls that exist only for motion become plain content, not disabled buttons.
 - *Differs from C §4.6:* the proposal allowed colour fades of ≤ 150 ms under reduce; the code makes every transition instant.
 
 ### 3.11 Explainer autoplay rule (`useAutoplay`, `lib/explainers.ts`)
@@ -435,10 +446,10 @@ const ap = useAutoplay(rootRef);
 
 Protocol ideas drawn as small working machines, in the style of an engineering drawing: paper-white parts with three shades and a fine ink outline, bolted to a rounded mounting plate (screws, ruler ticks), labels engraved on the parts they name. Colour is kept for meaning (a lit lamp, a coin's gold, a fill). Each figure sits in one frame (`MachineFigure`): "Fig n" and a title, the drawing, step tabs, a Pause button, a live mono readout, and a caption that says "Illustrative".
 
-- **Built so far:** Fig 1 `GardenMachine` (/protocol#architecture: strategies trade inside, only your key moves funds out) Fig 2 `IndexMachine` (/indices#methodology: Price → Size → Weigh → Floor, the four steps in `methodology`) Fig 3 `ReleaseMachine` (/security#audits: write → test → audit → scan → approve → ship, from the page's `pipeline`), Fig 4 `ProposalMachine` (/governance#process: propose → discuss → vote → execute, from the page's `process`; it replaced DecisionPipeline) and Fig 5 `OpenGardenMachine` (home #how: open → fund → strategy, driven by the How it works scroller instead of tabs; it replaced GardenMock).
+- **Built so far:** Fig 1 `GardenMachine` (/protocol#architecture: strategies trade inside, only your key moves funds out) Fig 2 `IndexMachine` (/indices#methodology: Price → Size → Weigh → Floor, the four steps in `methodology`) Fig 3 `ReleaseMachine` (/security#audits: write → test → audit → scan → approve → ship, from the page's `pipeline`), Fig 4 `ProposalMachine` (/governance#process: propose → discuss → vote → execute, from the page's `process`; it replaced DecisionPipeline) and Fig 5 `OpenGardenMachine` (home #how: open → fund → strategy, driven by the How it works scroller instead of tabs; it replaced GardenMock). One per index page (`indices/IndexFigure`, in #methodology), each telling the 2% band and one pooled trade its own way: Fig 6 `BalanceMachine` (BLOKC2: a balance, BTC on one pan and ETH on the other), Fig 7 `PriceRingMachine` (BLOKC5: five tokens on status rings round a Chainlink price mast) and Fig 8 `DriftScanMachine` (BLOKC10: a gantry sweeps ten stacks, ticks eight, flags two). These three loop without a seam: the last step ends exactly where the first begins (a price that runs ahead is matched by one that falls behind, or by the move back), so the loop never jumps.
 - **Replaced and removed:** CustodyDiagram (by Fig 1), StepFlow (by Fig 3), DecisionPipeline (by Fig 4), GardenMock (by Fig 5).
 - **Not a figure:** home #app shows the BLOKC app's Index Gardens screen, rebuilt in HTML (`home/GardenScreen`) from the app repo's own components and tokens, with example data and an "Example" badge. `ScaledScreen` lays it out at a real window width (1280, or 430 in a narrow frame) and scales it to the frame like a screenshot; its CSS uses container queries, so the layout follows the frame, not the viewport.
-- **Kit:** `geometry.ts` (2:1 projection, rounded plates, iso circles, face transforms for engraved text), `machine.tsx` (Part, Slab, Cyl, Screw, Flat, OnFace/Engrave), `Iso.tsx` (the stage, moving HTML layers, marks), `iso.module.css` (motions; a CSS module, so it ships only with pages that show a figure).
+- **Kit:** `geometry.ts` (2:1 projection, rounded plates, iso circles, face transforms for engraved text), `machine.tsx` (Part, Slab, Cyl, Screw, Flat, OnFace/Engrave, CoinFace: a token's logo on a coin's top), `coins.tsx` (each token's coin colour, Coin and Coins stacks), `Iso.tsx` (the stage, moving HTML layers, marks), `iso.module.css` (motions; a CSS module, so it ships only with pages that show a figure).
 - **They loop, on purpose** (owner's call, 2026-10-23), unlike the one-pass explainers of §3.11: `useFigureLoop` plays the steps round and round until the visitor presses Pause, and picking a step carries the loop on from there. It never runs with reduced motion or Pause motion (the figure then holds the picked step's still frame), off screen, or in a hidden tab.
 - **Honest data:** the rules and limits in readouts come from `lib/data`; sizes and amounts in the drawing are made up, and the caption says so.
 
@@ -456,13 +467,13 @@ A button, or a link styled as one when `href` is set.
 ### Card (`ui/Card.tsx`)
 The one card surface (VIS-09).
 - **Props:** `tone` `default` · `feature` (a Night island with `shadow-e3`) · `tint-cobalt` · `tint-sand` · `planned` (dashed, no fill); `size` `sm` (p-5) · `md` (`p-pad-card`) · `lg` (`p-pad-panel`); `radius` `card` · `panel`; `href` makes the whole card a link; `aria-labelledby` (the heading's id, so the link reads as its title); `aria-describedby`; `interactive` for a card that contains its own stretched link; `as`.
-- **States:** linked cards lift 2 px with a leaf border and raised fill on pointer hover; `interactive` cards do the same while their inner link is hovered or focus-visible.
+- **States:** linked cards don't lift: on pointer hover the border turns leaf with a 1 px leaf ring and a deeper `shadow-soft-hover`; `interactive` cards do the same while their inner link is hovered or focus-visible.
 - **Usage:** `<Card href="/security" aria-labelledby="sec-h"><h3 id="sec-h" className="text-h3">Security</h3>…</Card>`
 
 ### Badge (`ui/Badge.tsx`)
 A status chip with one wording and one tone per meaning, site-wide (CRO-26, 27).
-- **Props:** `status` `live` · `testing` (the protocol's launch state) · `progress` · `planned` · `done` · `example` · `voting`. The older `tone` + children form (`live` · `current` · `done` · `soon` · `example` · `neutral`) is kept while pages move over.
-- Only `live` / `voting` pulse. `example` marks illustrative content and has no dot.
+- **Props:** `status` `live` · `progress` · `planned` · `done` · `example` · `voting`. The older `tone` + children form (`live` · `current` · `done` · `soon` · `example` · `neutral`) is kept while pages move over.
+- Set as a small square tag in mono caps (`rounded-tag`, `tracking-wide`), not a pill. Only `live` / `voting` pulse. `example` marks illustrative content and has no dot.
 - **Usage:** `<Badge status="example" />`
 
 ### Hint (`ui/Hint.tsx`, *client*)
@@ -496,7 +507,7 @@ FAQ as native `<details class="smooth">`: keyboard, screen-reader and no-JS supp
 - **Usage:** `<section id="faq"><FaqList items={faqs} /></section>`
 
 ### CtaBand (`ui/CtaBand.tsx`)
-The closing call to action on every page: a Night band (`data-band="dark"`) with a `DotField` of rings, a `Scramble` payoff, Discord (primary) and docs (secondary) buttons, a "Not on Discord? Follow us on X" fallback and `SocialLinks`.
+The closing call to action on every page: a Night band (`data-band="dark"`) with a `DotField` of rings, a `Handwrite` payoff, the Garden cut out as a sticker, Discord (primary) and docs (secondary) buttons, a "Not on Discord? Follow us on X" fallback and `SocialLinks`.
 - **Props:** `context` `default` · `index` (pass `indexName`) · `protocol` (protocol and security pages). The Discord button, the X link and the social links carry `data-placement="cta_band"`; states come from `Button`.
 - **Usage:** `<CtaBand context="index" indexName="BLOKC5" />`
 
@@ -504,7 +515,7 @@ The closing call to action on every page: a Night band (`data-band="dark"`) with
 The inner-page header: breadcrumb, h1, lede, optional actions and aside, LCP-safe (R1).
 - **Props:** `title`, `description` (required); `eyebrow` (rendered as the h1's first line, so the topic keyword is part of the heading, SEO-11); `crumb` + optional `parent`, or a full `crumbs` trail; `actions`; `aside`.
 - Pair it with `breadcrumbSchema()` JSON-LD using the same labels.
-- **Usage:** `<PageHero crumb="Security" eyebrow="Security" title={<>… <em className="text-sand">…</em></>} description="…" actions={<Button href="…">…</Button>} />`
+- **Usage:** `<PageHero crumb="Security" eyebrow="Security" title={<>… <em>…</em></>} description="…" actions={<Button href="…">…</Button>} />` The band is ruled paper, fading toward its foot; an `aside` of facts is a `FactGrid` of note cards.
 
 ### Breadcrumb (`ui/Breadcrumb.tsx`)
 The one trail (UX-18, SEO-20). Home comes first unless `home={false}`; the last crumb is the current page (`aria-current="page"`, never a link). Labels match `lib/nav.ts` and the page's JSON-LD word for word. Links brighten to `fg` on pointer hover.
@@ -513,10 +524,6 @@ The one trail (UX-18, SEO-20). Home comes first unless `home={false}`; the last 
 ### RiskNote (`ui/RiskNote.tsx`)
 One-line risk statement linking to `/protocol#fees`, for the places a newcomer weighs the product (hero facts, index pages, token page). The wording is pending counsel review (SEC-13, D-03). **Place it; don't restyle or reword it.**
 - **Usage:** `<RiskNote className="mt-6" />`
-
-### StatusLine (`ui/StatusLine.tsx`)
-The launch state in one plain sentence under a hero's CTAs ("Not open yet: Gardens are in private testing."). It reads `protocolStatus`, so it can't drift from the badges, and never carries a date.
-- **Usage:** `<StatusLine className="mt-4" />`
 
 ### Icon (`ui/Icon.tsx`)
 The site's line icons on one grid (VIS-18): 20 × 20, 1.5 px non-scaling stroke, round caps, `currentColor`.
@@ -548,8 +555,8 @@ An inline "learn more" link in leaf with an arrow that nudges 2 px on hover (sti
 | Component | Purpose · key props | Usage |
 |---|---|---|
 | `CountUp` | A real figure, formatted (`en-GB`) in tabular digits. **Doesn't animate** (D-34); the name stays for compatibility and `duration` is ignored. `value`, `prefix`, `suffix`. Never on an invented number. | `<CountUp value={supply} suffix=" BLOK" />` |
-| `Scramble` (*client*) | Text that decodes from glyphs into the real words, once, when it scrolls into view, at 15 fps. The real text is the only DOM copy (an `aria-hidden` overlay paints the glyphs), so the accessible name never changes. `text`, `duration` (1100 ms). | `<em className="text-sand"><Scramble text="Garden." /></em>` |
-| `SplitText` | A heading whose words ink in and rise (R2). `as` (`h1`…`span`), `reveal` `scroll` (default, via RevealScript) · `load` (above-the-fold heroes), `delay` (ms). The full text sits in an `sr-only` span; the word spans are `aria-hidden`. `splitWords()` is the shared splitter. | `<SplitText as="h2" className="display text-h2">…</SplitText>` |
+| `Handwrite` (*client*) | A script payoff word that writes itself in, left to right (a clip), the first time it scrolls into view; then its underline draws. Pure CSS once started; the text is the only DOM copy. Off with reduced motion or Pause motion. `text`. | `<em><Handwrite text="Garden." /></em>` |
+| `SplitText` | A heading whose words ink in and rise (R2). `as` (`h1`…`span`), `reveal` `scroll` (default, via RevealScript) · `load` (above-the-fold heroes), `delay` (ms). The full text sits in an `sr-only` span (unselectable, so copying the heading gives it once); the word spans are `aria-hidden`. `splitWords()` is the shared splitter. | `<SplitText as="h2" className="display text-h2">…</SplitText>` |
 | `ScrollInk` | A paragraph whose words darken from `fg-subtle` to full ink as it scrolls through the viewport (CSS view timeline, no JS; plain text where unsupported). | `<ScrollInk className="text-h3">…</ScrollInk>` |
 | `DotField` (*client*) | Halftone dot-matrix canvas art. `variant` `orb` · `wave` · `rings` · `drift`; `tone` `leaf` · `sand` · `cobalt` · `mute`; `gap`. 12 fps via `useFieldLoop`. Decorative; wrap it in an `aria-hidden`, sized box. | `<DotField variant="rings" tone="leaf" gap={11} />` |
 | `GlyphField` (*client*) | A canvas of hex glyphs with falling leaf columns, drawn from a pre-rendered atlas, redrawing changed cells only. 12 fps. | `<GlyphField className="opacity-60" />` |
@@ -741,8 +748,6 @@ F-08 also adds the ESLint guard (`no-restricted-syntax` on class literals matchi
 | Scrims and white chips | `bg-black` and `backdrop:bg-black/40` scrims; `bg-white` behind token logos. B proposed a `--scrim` token that doesn't exist. | add `--scrim`; decide whether logo chips stay white |
 | Deprecated aliases | about 22 uses of `positive` / `negative` / `caution` remain. | `success` / `danger` / `warning` |
 | Two icon sets | `ArrowLink` and others use `ui/icons.tsx` (16 grid, 1.6 stroke) beside `Icon` (20 grid, 1.5 stroke). `ArrowLink` also has `text-[14.5px]`. | move line icons to `Icon`; keep `icons.tsx` for brand glyphs |
-| `GardenAsset` | `interactive` uses dead classes and bare `hover:`; `blend` is legacy. | remove the unused props |
-| `lib/motion.ts` | `useCanvasLoop` is unused, and its 30 fps default breaks R4. | delete, or cap at 15 |
 | `.prose-legal` | px font sizes (15.5, 24, 17, 13.5) and a 10 px radius. | `text-ui`, `text-h3`, `text-h4`, `text-caption`, `rounded-control` |
 | Analytics | `cta_band` is a key section, but `CtaBand`'s `<section>` has no `id`, so its `section_view` never fires. Nothing dispatches `blok:error` yet (live hooks don't report). Two `track()` / `slug()` helpers exist (`explainers.ts` uses hyphens, `analytics.ts` snake_case; the second re-slugs, so output is consistent). `rebalance_lab_use` is missing from the table in `lib/analytics.ts`. | add `id="cta_band"`; emit `blok:error` from `useLive`; consolidate helpers; update the table |
 | Targets | `SocialLinks` (40 px) sit in the CtaBand key flow; `CopyButton` and `AutoplayToggle` are 32 px. All clear 24 px. | consider 44 px on CtaBand socials |

@@ -1,8 +1,27 @@
+import Link from "next/link";
 import { Section } from "@/components/ui/Section";
+import { TokenStack } from "@/components/indices/TokenLogo";
 import { Reveal } from "@/components/ui/Reveal";
 import { ProtocolExplorer, type ExploreStep } from "./ProtocolExplorer";
 import { links } from "@/lib/data/socials";
-import { sources } from "@/lib/data/indices";
+import { indices, sources } from "@/lib/data/indices";
+
+/** The index layer's three indices, each with its tokens' logos, to its page. */
+const indexTags = (
+  <ul className="flex flex-wrap gap-2">
+    {indices.map((idx) => (
+      <li key={idx.id}>
+        <Link
+          href={`/indices/${idx.id}`}
+          className="surface-link inline-flex h-9 items-center gap-2 rounded-tag border border-subtle bg-card px-3 font-mono text-caption text-fg"
+        >
+          {idx.name}
+          <TokenStack symbols={idx.components} size={16} max={5} />
+        </Link>
+      </li>
+    ))}
+  </ul>
+);
 
 /**
  * The protocol as layers you can walk through, top to bottom. Every claim
@@ -20,6 +39,7 @@ const steps: ExploreStep[] = [
       { k: "Ownership", v: "ERC-721 token" },
       { k: "Per user", v: "Up to 10 Gardens" },
     ],
+    partners: ["Web3Auth", "ZeroDev"],
     link: { label: "User journey in the docs", href: links.docsOverview },
   },
   {
@@ -33,7 +53,8 @@ const steps: ExploreStep[] = [
       { k: "Base facets", v: "4, immutable" },
       { k: "Upgrades", v: "DAO-approved only" },
     ],
-    link: { label: "Facets in the docs", href: links.docsContracts },
+    partners: ["Aave", "GMX", "Uniswap", "Pendle"],
+    link: { label: "How features plug in, in the docs", href: links.docsContracts },
   },
   {
     id: "index",
@@ -46,6 +67,7 @@ const steps: ExploreStep[] = [
       { k: "Weighting", v: "Market cap" },
       { k: "Max components", v: "250 per index" },
     ],
+    extra: indexTags,
     link: { label: "Explore the indices", href: "/indices" },
   },
   {
@@ -59,7 +81,8 @@ const steps: ExploreStep[] = [
       { k: "Heartbeat", v: "30 min – 26 h" },
       { k: "Sanity band", v: "±10% vs average" },
     ],
-    link: { label: "IndexComponentRegistry.sol", href: sources.componentRegistry },
+    partners: ["Chainlink", "Arbitrum One"],
+    link: { label: "Where prices come from, on GitHub", href: sources.componentRegistry },
   },
   {
     id: "rebalance",
@@ -72,7 +95,8 @@ const steps: ExploreStep[] = [
       { k: "Slippage cap", v: "0.5%" },
       { k: "Cadence", v: "At most daily" },
     ],
-    link: { label: "Rebalancer network docs", href: sources.docsRebalancer },
+    partners: ["Uniswap", "Camelot"],
+    link: { label: "How rebalancing works, in the docs", href: sources.docsRebalancer },
   },
   {
     id: "dao",
@@ -85,6 +109,7 @@ const steps: ExploreStep[] = [
       { k: "Network", v: "Arbitrum One" },
       { k: "Token", v: "$BLOKC, 10B supply" },
     ],
+    partners: ["Aragon", "Arbitrum One"],
     link: { label: "How governance works", href: "/governance" },
   },
 ];

@@ -5,10 +5,10 @@ import { Section } from "@/components/ui/Section";
 import { Button } from "@/components/ui/Button";
 import { CtaBand } from "@/components/ui/CtaBand";
 import { NextReads } from "@/components/ui/NextReads";
-import { Reveal, Stagger, RevealItem } from "@/components/ui/Reveal";
+import { Reveal } from "@/components/ui/Reveal";
 import { ExternalIcon } from "@/components/ui/icons";
 import { ProductVideo } from "@/components/about/ProductVideo";
-import { TeamPhoto } from "@/components/about/TeamPhoto";
+import { TeamWall } from "@/components/about/TeamWall";
 import { Principles } from "@/components/about/Principles";
 import { RoadmapTimeline, roadmapUpdated } from "@/components/roadmap/Roadmap";
 import { JsonLd } from "@/components/seo/JsonLd";
@@ -51,7 +51,7 @@ export default function AboutPage() {
         eyebrow="About"
         title={
           <>
-            A protocol, <em className="text-sand">governed in the open.</em>
+            A protocol, <em>governed in the open.</em>
           </>
         }
         // No "or the ability to take it down": a security council can pause
@@ -77,103 +77,89 @@ export default function AboutPage() {
         }
       />
 
-      <Section id="story" eyebrow="Story" title="Why we built it.">
-        <div className="grid gap-12 lg:grid-cols-12">
+      {/* The story as a letter, signed; beside it, its one line that sums it up and the introduction video. */}
+      <Section
+        id="story"
+        eyebrow="Story"
+        title={
+          <>
+            Why we <em>built it.</em>
+          </>
+        }
+      >
+        <div className="grid gap-8 lg:grid-cols-12 lg:gap-10">
           <Reveal className="lg:col-span-7">
-            <div className="space-y-6 text-lead leading-[1.7] text-fg-muted">
-              {story.map((p) => (
-                <p key={p.slice(0, 24)}>{p}</p>
-              ))}
-            </div>
-            <p className="mt-8 text-small text-fg-subtle">BLOK Capital</p>
+            <article className="paper-ruled relative rounded-panel border border-subtle bg-card px-6 pb-8 pt-10 shadow-soft sm:px-10 sm:pb-10 sm:pt-12">
+              <span className="tag-lime absolute -top-3 left-6 sm:left-10">why BLOK exists</span>
+              <div className="space-y-5 text-body leading-[1.85] text-fg-muted">
+                {story.map((p, i) => (
+                  <p key={p.slice(0, 24)} className={i === 0 ? "text-lead leading-[1.6] text-fg" : undefined}>
+                    {p}
+                  </p>
+                ))}
+              </div>
+              <p className="note mt-8 text-h3">BLOK Capital</p>
+            </article>
           </Reveal>
-          <Reveal delay={0.1} className="lg:col-span-5">
-            <blockquote className="display border-l-2 border-leaf/50 pl-6 text-h3 italic text-fg">
-              &ldquo;We didn&apos;t invent any of the primitives, but we put them together in a way no one else had.&rdquo;
-            </blockquote>
-          </Reveal>
+          <div className="flex flex-col gap-8 lg:col-span-5">
+            <Reveal delay={0.08}>
+              <blockquote className="display text-h3 text-fg">
+                &ldquo;We didn&apos;t invent any of the primitives, but we put them together in a way <em>no one else had.</em>&rdquo;
+              </blockquote>
+            </Reveal>
+            <Reveal delay={0.14} id="video" className="scroll-mt-28">
+              <p className="mb-3 flex items-baseline justify-between gap-3">
+                <span className="font-mono text-label uppercase tracking-caps text-cobalt">Introduction</span>
+                <span className="note text-[1.15rem]">BLOK Capital in a few minutes</span>
+              </p>
+              <ProductVideo />
+              <a
+                href={links.video}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="mt-2 inline-flex items-center gap-1.5 text-small font-medium text-leaf transition-colors duration-fast can-hover:hover:text-fg"
+              >
+                Watch on YouTube <ExternalIcon />
+                <span className="sr-only"> (opens in a new tab)</span>
+              </a>
+            </Reveal>
+          </div>
         </div>
       </Section>
 
-      <Section id="video" tone="surface" eyebrow="Introduction" title="BLOK Capital in a few minutes.">
-        <Reveal className="mx-auto max-w-4xl">
-          <ProductVideo />
-          <a
-            href={links.video}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="mt-4 inline-flex items-center gap-1.5 text-small text-fg-muted hover:text-fg"
-          >
-            Watch on YouTube <ExternalIcon />
-            <span className="sr-only"> (opens in a new tab)</span>
-          </a>
-        </Reveal>
-      </Section>
-
-      <Section id="values" tone="dark" eyebrow="Principles" title="What we won't trade away.">
+      {/* The principles, as a short manifesto of pinned cards. */}
+      <Section
+        id="values"
+        tone="surface"
+        className="paper-ruled"
+        eyebrow="Principles"
+        title={
+          <>
+            What we <em>won&apos;t trade away.</em>
+          </>
+        }
+      >
         <Principles items={values} />
       </Section>
 
       <Section
         id="team"
-        tone="surface"
         eyebrow="Team"
-        title="The people tending it."
+        title={
+          <>
+            The people <em>tending it.</em>
+          </>
+        }
         description="Core DAO members, listed on-chain in the Aragon token-voting plugin."
         actions={<Button href={links.aragonMembers} variant="secondary">Verify on Aragon</Button>}
       >
-        {/* 2 then 5 columns: ten members divide evenly at every width (MOB-18). */}
-        <Stagger as="ul" step={0.05} className="grid grid-cols-2 gap-4 md:grid-cols-5">
-          {team.map((m) => {
-            const card = (
-              <>
-                {/* One frame for every tile (VIS-20): the photos are square, so
-                    a square tile shows each one whole, on the same raised
-                    backdrop and hairline edge. */}
-                <span className="relative isolate block aspect-square overflow-hidden rounded-card bg-raised after:pointer-events-none after:absolute after:inset-0 after:rounded-[inherit] after:ring-1 after:ring-inset after:ring-line/8">
-                  <TeamPhoto member={m} />
-                </span>
-                <span className="mt-3 flex items-center justify-between gap-2 px-1">
-                  <span className="text-ui text-fg">{m.name}</span>
-                  {m.href && <ExternalIcon className="text-fg-subtle transition-colors group-hover:text-leaf" />}
-                </span>
-                {m.role && <span className="mt-0.5 block px-1 text-caption text-fg-subtle">{m.role}</span>}
-              </>
-            );
-            return (
-              <RevealItem as="li" key={m.name}>
-                {m.href ? (
-                  <a href={m.href} target="_blank" rel="noopener noreferrer" className="group block rounded-card">
-                    {card}
-                    <span className="sr-only"> profile (opens in a new tab)</span>
-                  </a>
-                ) : (
-                  <div className="group">{card}</div>
-                )}
-              </RevealItem>
-            );
-          })}
-        </Stagger>
+        <TeamWall team={team} />
       </Section>
 
-      <Section id="roadmap" eyebrow="Roadmap" title="Every milestone since 2023." description={`Last updated ${roadmapUpdated}.`}>
+      <Section id="roadmap" tone="surface" eyebrow="Roadmap" title="Every milestone since 2023." description={`Last updated ${roadmapUpdated}.`}>
         <RoadmapTimeline />
       </Section>
 
-      {/* One link, so one compact row: the button sits beside the heading. */}
-      <Section
-        id="press"
-        tone="surface"
-        eyebrow="Press"
-        title="Brand and media kit."
-        description="Logo pack and brand guidelines: SVG and PNG logos in light and dark, plus colour, type and usage rules."
-        actions={
-          <Button href={links.brandKit} variant="secondary">
-            Open the brand kit
-          </Button>
-        }
-        className="py-section-sm"
-      />
       <NextReads hrefs={["/protocol", "/security", "/governance"]} />
       <CtaBand />
     </>

@@ -1,8 +1,10 @@
 import type { CSSProperties } from "react";
 import { type Box, bounds, project, roundRect } from "./geometry";
 import { IsoScene, Layer } from "./Iso";
-import { Cyl, Engrave, Flat, INK, OnFace, Part, Screw, Slab } from "./machine";
+import { CoinFace, Cyl, Engrave, Flat, INK, OnFace, Part, Screw, Slab } from "./machine";
 import css from "./iso.module.css";
+import { TokenStack } from "@/components/indices/TokenLogo";
+import { indices, type ComponentSymbol } from "@/lib/data/indices";
 
 /*
  * Fig. 5, how a Garden starts, as a machine, for the home "How it works"
@@ -10,7 +12,8 @@ import css from "./iso.module.css";
  * 0 Open: the Garden factory stamps out your Garden at your address, and the
  *   ownership NFT lights beside your Google sign-in key.
  * 1 Fund: the on-ramp kiosk (card or bank) drops USDC into it.
- * 2 Strategy: a BLOKC5 cartridge docks, and the USDC becomes the index's five tokens.
+ * 2 Strategy: a BLOKC5 cartridge docks, and the USDC becomes the index's five
+ *   tokens, each stack with its token's logo on top; the caption names them.
  * No tabs of its own: the scroller is the control. Illustrative: no real amounts.
  */
 
@@ -24,17 +27,20 @@ const FACTORY: Box = { x: 18, y: 18, z: Z, w: 62, d: 50, h: 46 };
 const KIOSK: Box = { x: 16, y: 148, z: Z, w: 46, d: 42, h: 42 };
 const STAND: Box = { x: 96, y: 10, z: Z, w: 44, d: 36, h: 8 };
 const KEY: Box = { x: 108, y: 24, z: Z + 8, w: 16, d: 3, h: 24 };
-// The cartridge docks against the Garden's back edge, clear of the scroller's notes on the right.
-const CART: Box = { x: 150, y: 52, z: Z, w: 40, d: 16, h: 18 };
+// The cartridge docks against the Garden's back edge, right of the "You · Google"
+// plaque (at x 150 it covered "Google").
+const CART: Box = { x: 172, y: 52, z: Z, w: 40, d: 16, h: 18 };
 
-// USDC first, then the index's five tokens (the app's token colours; PENDLE its grey).
+// USDC first, then BLOKC5's five tokens (the app's token colours; PENDLE its grey).
 const USDC = { x: 150, y: 118, coins: 6, color: "#2775CA" };
-const TOKENS = [
-  { x: 126, y: 98, n: 3, color: "#2A5ADA" },
-  { x: 160, y: 98, n: 2, color: "#FF007A" },
-  { x: 126, y: 132, n: 2, color: "#2EBAC6" },
-  { x: 160, y: 132, n: 2, color: "#28A0F0" },
-  { x: 143, y: 150, n: 1, color: "#71717A" },
+const BASKET = indices.find((i) => i.id === "blokc5")!.components;
+const TOKENS: { symbol: ComponentSymbol; x: number; y: number; n: number; color: string }[] = [
+  // Set back from the tray's front edge, so none sits on "Your Garden · 0x…" engraved there.
+  { symbol: "LINK", x: 126, y: 90, n: 3, color: "#2A5ADA" },
+  { symbol: "UNI", x: 160, y: 90, n: 2, color: "#FF007A" },
+  { symbol: "AAVE", x: 126, y: 122, n: 2, color: "#2EBAC6" },
+  { symbol: "ARB", x: 160, y: 122, n: 2, color: "#28A0F0" },
+  { symbol: "PENDLE", x: 143, y: 140, n: 1, color: "#71717A" },
 ];
 const COIN = { r: 10, h: 4.5 };
 
@@ -174,6 +180,7 @@ export function OpenGardenMachine({ stage, animate = true, className }: { stage:
               Array.from({ length: t.n }, (_, i) => (
                 <g key={`${ti}-${i}`} className={play(2) ? css.lampOn : undefined} style={play(2) ? at(800 + ti * 90) : undefined}>
                   <Cyl cx={t.x} cy={t.y} z={TOP + i * COIN.h} r={COIN.r - 2} h={COIN.h} {...coinTint(t.color)} />
+                  {i === t.n - 1 && <CoinFace cx={t.x} cy={t.y} z={TOP + (i + 1) * COIN.h} r={COIN.r - 2} symbol={t.symbol} />}
                 </g>
               )),
             )}
@@ -194,7 +201,18 @@ export function OpenGardenMachine({ stage, animate = true, className }: { stage:
           )}
         </Layer>
       </IsoScene>
-      <figcaption className="mt-2 text-center font-mono text-label text-fg-subtle">Illustration · no real amounts</figcaption>
+      <figcaption className="mt-2 flex flex-wrap items-center justify-center gap-x-3 gap-y-1.5 font-mono text-label text-fg-subtle">
+        {/* At step 3, which tokens the stacks are. */}
+        {stage === 2 && (
+          <span className="inline-flex items-center gap-2 text-fg-muted">
+            <TokenStack symbols={BASKET} size={18} />
+            <span>
+              <span className="text-cobalt">BLOKC5</span> · {BASKET.join(" · ")}
+            </span>
+          </span>
+        )}
+        <span>Illustration · no real amounts</span>
+      </figcaption>
     </figure>
   );
 }

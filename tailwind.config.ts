@@ -126,6 +126,8 @@ const config: Config = {
       },
       // Three heights plus two rings, all on the per-theme --shadow colour.
       boxShadow: {
+        soft: "0 0 24px -4px rgb(var(--shadow))", // resting cards: an ambient lift on every side
+        "soft-hover": "0 0 36px -6px rgb(var(--shadow))", // a card under the pointer
         e1: "0 10px 30px -16px rgb(var(--shadow))", // resting raised tiles, tooltips, chips
         e2: "0 24px 60px -24px rgb(var(--shadow))", // menus, cookie banner, scrolled nav, hover lift
         e3: "0 32px 80px -28px rgb(var(--shadow))", // dialog, sticky product deck, featured tile
@@ -176,7 +178,6 @@ const config: Config = {
         },
         enterFade: { "0%": { opacity: "0" }, "100%": { opacity: "1" } },
         // Traffic along a connector: pair with stroke-dasharray "4 6" (period 10).
-        flow: { "0%": { strokeDashoffset: "20" }, "100%": { strokeDashoffset: "0" } },
         float: {
           "0%, 100%": { transform: "translate3d(0,0,0)" },
           "50%": { transform: "translate3d(0,-10px,0)" },
@@ -204,7 +205,6 @@ const config: Config = {
         // Retired by the motion codemod (use rise / fade-in / pop-in).
         "enter-up": "enterUp 700ms cubic-bezier(0.22,1,0.36,1) both",
         "enter-fade": "enterFade 600ms cubic-bezier(0.22,1,0.36,1) both",
-        flow: "flow 1.2s linear infinite",
         float: "float 4.5s ease-in-out 1 both", // one gentle bob, then rest (D-33: loops settle within 5 s)
         "pulse-ring": "pulseRing 2s cubic-bezier(0.22,1,0.36,1) infinite",
         blink: "blink 1.05s steps(1) infinite",

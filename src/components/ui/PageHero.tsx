@@ -47,7 +47,8 @@ export function PageHero({
   const trail: Crumb[] = crumbs ?? [...(parent ? [parent] : []), ...(crumb ? [{ label: crumb }] : [])];
   return (
     <section className="relative overflow-hidden border-b border-subtle">
-      <div aria-hidden className="grid-lines pointer-events-none absolute inset-0 [mask-image:radial-gradient(ellipse_at_top,black,transparent_70%)]" />
+      {/* Notebook paper, fading out toward the foot (as the home hero). */}
+      <div aria-hidden className="paper-ruled pointer-events-none absolute inset-0 [mask-image:linear-gradient(to_bottom,black_55%,transparent)]" />
       <div aria-hidden className="glow-leaf pointer-events-none absolute -top-40 left-1/2 h-[520px] w-[900px] -translate-x-1/2 opacity-60" />
       <CornerMarks only="bottom" />
       <Container className={cn("relative grid gap-12 pb-16 pt-32 sm:pb-20 sm:pt-40 lg:grid-cols-12", asideAlign === "start" ? "lg:items-start" : "lg:items-end")}>

@@ -1,7 +1,7 @@
 import { siteConfig, BASE } from "./site";
 import { brandFacts, feeText, tokenFacts, governanceFacts, DAO_ADDRESS } from "./facts";
 import { pillars } from "@/lib/data/pillars";
-import { audits } from "@/lib/data/audits";
+import { auditStatus } from "@/lib/data/audits";
 import { faqs } from "@/lib/data/faqs";
 import { milestones } from "@/lib/data/milestones";
 import { components, indices, methodology, CORE_REPO_URL } from "@/lib/data/indices";
@@ -35,13 +35,13 @@ const PAGES: { title: string; path: string; desc: string }[] = [
   ...indices.map((i) => ({
     title: i.name,
     path: `/indices/${i.id}`,
-    desc: `${i.tagline}: ${i.components.join(", ")}. Market-cap weighted. ${i.status}.`,
+    desc: `${i.tagline}: ${i.components.join(", ")}. Market-cap weighted.`,
   })),
-  { title: "Security", path: "/security", desc: "Who can change the contracts, audits and scanning, official links, and how to report a vulnerability." },
+  { title: "Security", path: "/security", desc: "Who can change the contracts, where audit reports are published, the official links list, and how to report a vulnerability." },
   { title: "Token", path: "/token", desc: "$BLOKC utility, allocation of the 10B supply, the official contract address and launch timing." },
   { title: "Governance", path: "/governance", desc: "How the DAO decides, the current phase, and on-chain proposals." },
-  { title: "About", path: "/about", desc: "Story, principles, team, roadmap and press kit." },
-  { title: "Contact", path: "/contact", desc: "Community channels, security reports, and FAQs." },
+  { title: "About", path: "/about", desc: "Story, principles, team and roadmap." },
+  { title: "Contact", path: "/contact", desc: "The Discord for support, partnerships, press and security reports; every other official channel; how to spot a fake support DM; and FAQs." },
 ];
 
 /** Who operates the site, and the links and addresses to check impersonators against. */
@@ -52,7 +52,7 @@ function identityLines(): string[] {
     `- Jurisdiction: ${legal.jurisdiction}`,
     `- Registration number: ${legal.registration}`,
     `- Registered address: ${legal.addressText}`,
-    `- Official domains: ${host(siteConfig.url)} (website), ${host(new URL(links.docs).origin)} (documentation)`,
+    `- Official domains: ${host(siteConfig.url)} (website), ${host(links.app)} (the app, where users launch a Garden), ${host(links.contribute)} (the Contributor Program app), ${host(new URL(links.docs).origin)} (documentation)`,
     `- Official $BLOKC contract: ${tokenFacts.contract} on ${tokenFacts.network}`,
     `- DAO (Aragon OSx) on Arbitrum One: ${DAO_ADDRESS}`,
     `- Official channels: ${socials.map((s) => `${s.label} ${host(s.href)}`).join(", ")}`,
@@ -68,7 +68,7 @@ export function buildLlmsTxt(): string {
   lines.push("");
   lines.push(`> ${brandFacts.oneLiner}`);
   lines.push("");
-  lines.push(`Last updated: ${BUILT}. Category: ${brandFacts.category}. Chain: ${brandFacts.chain}. Status: ${protocolStatus.label}.`);
+  lines.push(`Last updated: ${BUILT}. Category: ${brandFacts.category}. Chain: ${brandFacts.chain}. Status: ${protocolStatus.access}`);
   lines.push("");
   lines.push(`Token: ${brandFacts.token}`);
   lines.push("");
@@ -94,9 +94,8 @@ export function buildLlmsTxt(): string {
   lines.push(`- [Protocol overview](${links.docsOverview}): What BLOK Capital is and how Gardens work.`);
   lines.push(`- [Architecture](${links.docsArchitecture}): The V1 contract system.`);
   lines.push(`- [Smart contract addresses](${links.docsAddresses}): Deployed contract addresses, as the docs publish them.`);
-  lines.push(`- [Audits and security](${links.docsSecurity}): Audit coverage and security practices.`);
-  lines.push(`- [Audit reports](${links.auditsRepo}): The published reports on GitHub.`);
   lines.push(`- [Source code](${CORE_REPO_URL}): The core contracts and their tests.`);
+  lines.push(`- [Contributor Program](${links.contribute}): Earn $BLOKC for posts about BLOK Capital on X and for quests (a DAO vote, a repost or a one-off task). Rewards are held in each contributor's own on-chain vault, transferable from 1 May 2027.`);
   lines.push("");
 
   lines.push("## Legal");
@@ -128,7 +127,7 @@ export async function buildLlmsFullTxt(): Promise<string> {
   lines.push(`- Category: ${brandFacts.category}`);
   lines.push(`- Chain: ${brandFacts.chain}`);
   lines.push(`- Founded: ${brandFacts.foundingYear}`);
-  lines.push(`- Status: ${protocolStatus.label}. ${protocolStatus.detail}`);
+  lines.push(`- Status: not yet public. ${protocolStatus.access}`);
   lines.push(`- Token: ${brandFacts.token}`);
   lines.push(`- Website: ${BASE}`);
   lines.push("");
@@ -148,7 +147,7 @@ export async function buildLlmsFullTxt(): Promise<string> {
   lines.push("");
   for (const i of indices) {
     lines.push(`### ${i.name}: ${i.tagline}`);
-    lines.push(`Status: ${i.status}. ${i.forWho} ${i.summary}`);
+    lines.push(`${i.forWho} ${i.summary}`);
     for (const n of i.notes) lines.push(`- ${n}`);
     lines.push(`Components (${i.components.length}):`);
     for (const s of i.components) {
@@ -209,13 +208,7 @@ export async function buildLlmsFullTxt(): Promise<string> {
   lines.push("");
 
   lines.push("## Security audits");
-  for (const a of audits) {
-    const when =
-      a.auditedOn && a.reportDate && a.retestedOn
-        ? `audited ${a.auditedOn}; report dated ${a.reportDate}; fixes retested ${a.retestedOn}`
-        : a.date;
-    lines.push(`- **${a.partner}** (${when}): ${a.scope}${a.kind === "report" && a.url ? ` Report: ${a.url}` : ""}`);
-  }
+  lines.push(auditStatus.detail);
   lines.push("");
 
   lines.push("## Roadmap");
@@ -238,7 +231,6 @@ export async function buildLlmsFullTxt(): Promise<string> {
   lines.push("## Authoritative resources");
   for (const r of brandFacts.resources) lines.push(`- ${r.label}: ${r.url}`);
   lines.push(`- Documentation for agents: https://docs.blokcapital.io/llms.txt`);
-  lines.push(`- Audit reports: ${links.auditsRepo}`);
   lines.push("");
 
   return lines.join("\n");

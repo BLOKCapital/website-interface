@@ -125,7 +125,7 @@ export function ProductStack() {
                     <span className={l.accent}>{two(i + 1)}</span> / {two(products.length)} · Steered by{" "}
                     <span className={l.accent}>{p.steer}</span>
                   </p>
-                  <Badge tone={p.status.tone}>{p.status.label}</Badge>
+                  {p.status && <Badge tone={p.status.tone}>{p.status.label}</Badge>}
                 </div>
                 <h3 id={`product-${p.id}`} className="display mt-6 text-display-md text-fg">
                   {p.name}

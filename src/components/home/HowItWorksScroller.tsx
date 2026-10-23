@@ -19,19 +19,16 @@ export type ScrollStep = {
 
 type Stage = 0 | 1 | 2;
 
-/** A note pinned beside the mock while its step is active. */
+/** A note card pinned in the empty corner of the drawing while its step is active. */
 function Callout({ on, className, children }: { on: boolean; className: string; children: ReactNode }) {
   return (
     <p
       className={cn(
-        "absolute right-0 hidden w-[180px] rounded-card border border-line/10 bg-card px-3.5 py-2.5 text-label leading-snug text-fg-muted shadow-e2 transition-[opacity,transform] duration-slow ease-expo xl:block",
+        "note-card absolute right-0 hidden w-[180px] rotate-1 px-3.5 py-2.5 font-mono text-label leading-snug text-fg transition-[opacity,transform] duration-slow ease-expo xl:block",
         on ? "translate-y-0 opacity-100" : "translate-y-2 opacity-0",
         className,
       )}
     >
-      {/* Connector back to the card. */}
-      <span aria-hidden className="absolute right-full top-4 w-6 border-t border-dashed border-leaf/50" />
-      <span className="mb-1 block size-1.5 rounded-full bg-leaf" />
       {children}
     </p>
   );
@@ -128,7 +125,7 @@ export function HowItWorksScroller({ steps }: { steps: ScrollStep[] }) {
                   <p className={cn("mt-3 text-ui leading-relaxed transition-colors duration-slow", dim ? "text-fg-subtle" : "text-fg-muted")}>
                     {s.body}
                   </p>
-                  <p className="mt-4 inline-flex rounded-full border border-line/12 bg-card/70 px-3 py-1 font-mono text-label text-fg-muted">
+                  <p className="strip mt-4 text-fg-muted">
                     {s.chain}
                   </p>
                 </div>
@@ -145,7 +142,7 @@ export function HowItWorksScroller({ steps }: { steps: ScrollStep[] }) {
 
       <div className="hidden lg:col-span-7 lg:block">
         <div className="sticky top-28">
-          <div className="relative overflow-hidden rounded-panel border border-subtle bg-canvas/70 px-6 pb-6 pt-6 xl:px-8">
+          <div className="relative overflow-hidden rounded-panel border border-subtle bg-canvas/70 px-6 pb-6 pt-6 xl:px-8 shadow-soft">
             <div aria-hidden className="grid-lines pointer-events-none absolute inset-0 [mask-image:radial-gradient(ellipse_at_center,black,transparent_75%)]" />
             {/* Progress through the three steps */}
             <div aria-hidden className="relative flex gap-3">
@@ -173,7 +170,8 @@ export function HowItWorksScroller({ steps }: { steps: ScrollStep[] }) {
               <div className="relative mt-8">
                 <OpenGardenMachine stage={stage} />
                 {steps.map((s, i) => (
-                  <Callout key={s.tag} on={i === stage} className={["top-[72px]", "top-[46%]", "bottom-[118px]"][i]}>
+                  // One place for all three: the empty space top right, above the plate's edge, so a note never covers the drawing.
+                  <Callout key={s.tag} on={i === stage} className="top-[56px]">
                     {s.callout}
                   </Callout>
                 ))}

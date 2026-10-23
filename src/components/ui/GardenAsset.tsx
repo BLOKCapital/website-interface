@@ -16,18 +16,6 @@ type Props = {
    * call-site if you need to optimize bandwidth.
    */
   quality?: number;
-  /**
-   * Black-background composite mode. The PNGs are on pure black; we drop the
-   * black so the subject sits cleanly on bg-paper.
-   *  - "none" (default): the assets ship as RGBA with alpha — no blend needed
-   *    on cream paper. Use this everywhere.
-   *  - "lighten" / "screen": legacy modes for renders that have a black
-   *    background. Only useful on dark surfaces; will produce black blobs on
-   *    cream so prefer "none".
-   */
-  blend?: "lighten" | "screen" | "none";
-  /** Subtle hover lift / parallax wrap container. Default false. */
-  interactive?: boolean;
   /** Alt text. Renders are decorative by default (empty alt). */
   alt?: string;
 };
@@ -37,10 +25,10 @@ type Props = {
  * Lives inside a relative-positioned container; pass dimensions via the
  * wrapper class.
  *
- * Only the renders in use ship in public/gardens: 4 (CtaBand), 7 (404) and
- * 11 (home hero), plus garden-06-480 for the easter egg. The rest (and 06's
- * other widths) are kept in design/archive/public/gardens (D-24): `git mv` a
- * render's four files back into public/gardens before passing its `n`.
+ * Only the renders in use ship in public/gardens: 4 (CtaBand) and 7 (404),
+ * plus garden-06-480 for the easter egg. Any other render must be added to
+ * public/gardens (its master and -480/-720/-960 widths) before passing its
+ * `n`; the unused ones were removed and are in git history.
  *
  * Performance:
  *   - The sources are pre-compressed 1440×1440 WebP (~210-320KB), which is 2×
@@ -60,26 +48,12 @@ export function GardenAsset({
   className,
   priority = false,
   quality = 92,
-  blend = "none",
-  interactive = false,
   alt = "",
 }: Props) {
   const meta = getGarden(((n - 1) % GARDENS_TOTAL + GARDENS_TOTAL) % GARDENS_TOTAL + 1);
-  const blendClass =
-    blend === "lighten"
-      ? "[mix-blend-mode:lighten]"
-      : blend === "screen"
-        ? "[mix-blend-mode:screen]"
-        : "";
 
   return (
-    <div
-      className={cn(
-        "relative size-full",
-        interactive && "transition-transform duration-700 ease-out hover:-translate-y-1",
-        className,
-      )}
-    >
+    <div className={cn("relative size-full", className)}>
       <Image
         src={meta.src}
         alt={alt}
@@ -87,10 +61,7 @@ export function GardenAsset({
         sizes={sizes}
         priority={priority}
         quality={quality}
-        className={cn(
-          "pointer-events-none select-none object-contain",
-          blendClass,
-        )}
+        className="pointer-events-none select-none object-contain"
         draggable={false}
       />
     </div>

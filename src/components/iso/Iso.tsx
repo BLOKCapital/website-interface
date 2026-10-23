@@ -97,28 +97,33 @@ export function Layer({
   );
 }
 
-/** A small round mark (a check or a stop) pinned to a scene point, popping in at `delay`. */
-export function IsoMark({ view, at: p, delay, kind }: { view: Rect; at: Pt; delay?: number; kind: "stop" | "ok" }) {
+/**
+ * A small round mark (a check, a stop, or a caution flag) pinned to a scene
+ * point, popping in at `delay`. `size` (scene units) scales it with the
+ * drawing, so on a phone it stays in proportion to the parts it marks.
+ */
+export function IsoMark({ view, at: p, delay, kind, size }: { view: Rect; at: Pt; delay?: number; kind: "stop" | "ok" | "flag"; size?: number }) {
   return (
     <span
       aria-hidden
       className={cn(
-        "absolute grid size-5 place-items-center rounded-full border-2 bg-card shadow-e1 [transform:translate(-50%,-50%)] sm:size-7",
-        kind === "stop" ? "border-danger text-danger" : "border-leaf text-leaf",
+        "absolute grid place-items-center rounded-full border-2 bg-card shadow-e1 [transform:translate(-50%,-50%)]",
+        size ? "aspect-square" : "size-5 sm:size-7",
+        kind === "stop" ? "border-danger text-danger" : kind === "flag" ? "border-caution text-caution" : "border-leaf text-leaf",
         s.pop,
       )}
-      style={{ ...at(p, view), "--delay": `${delay ?? 0}ms` } as CSSProperties}
+      style={{ ...at(p, view), ...(size ? { width: pct(size / view.w) } : {}), "--delay": `${delay ?? 0}ms` } as CSSProperties}
     >
       <svg
         viewBox="0 0 16 16"
-        className="size-2.5 sm:size-3.5"
+        className={size ? "size-[55%]" : "size-2.5 sm:size-3.5"}
         fill="none"
         stroke="currentColor"
         strokeWidth="2.2"
         strokeLinecap="round"
         strokeLinejoin="round"
       >
-        {kind === "stop" ? <path d="M4 4l8 8M12 4l-8 8" /> : <path d="M3.5 8.5l3 3 6-7" />}
+        {kind === "stop" ? <path d="M4 4l8 8M12 4l-8 8" /> : kind === "flag" ? <path d="M8 3.5v5.5M8 12.2v.3" /> : <path d="M3.5 8.5l3 3 6-7" />}
       </svg>
     </span>
   );

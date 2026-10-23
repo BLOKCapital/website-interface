@@ -58,7 +58,7 @@ const window_ = (p: ProposalView) =>
 /** The newest proposal, in full. */
 function Featured({ p, n }: { p: ProposalView; n: number }) {
   return (
-    <article className="theme-dark relative flex h-full flex-col overflow-hidden rounded-panel border border-leaf/20 bg-card p-6 sm:p-8">
+    <article className="theme-dark relative flex h-full flex-col overflow-hidden rounded-panel border border-leaf/20 bg-card p-6 sm:p-8 shadow-soft">
       <div aria-hidden className="glow-leaf pointer-events-none absolute -right-28 -top-28 size-96 opacity-80" />
       <div aria-hidden className="grid-lines pointer-events-none absolute inset-0 opacity-50 [mask-image:radial-gradient(ellipse_at_85%_0%,black,transparent_65%)]" />
 
@@ -116,7 +116,7 @@ function Compact({ p, n }: { p: ProposalView; n: number }) {
       href={links.aragon}
       target="_blank"
       rel="noopener noreferrer"
-      className="group/p flex h-full flex-col rounded-panel border border-subtle bg-card p-5 transition-[border-color,transform,box-shadow] duration-base ease-expo hover:-translate-y-0.5 hover:border-leaf/30 hover:shadow-e1 sm:p-6"
+      className="group/p flex h-full flex-col rounded-panel border border-subtle bg-card p-5 surface-link sm:p-6 shadow-soft"
     >
       <div className="flex items-center justify-between gap-3">
         <span className="label-caps">Proposal {two(n)}</span>
@@ -164,7 +164,7 @@ export function ProposalBoard({ governance }: { governance: GovernanceSnapshot }
   return (
     <div className="space-y-5">
       {/* Summary strip */}
-      <div className="flex flex-col gap-5 rounded-panel border border-subtle bg-card p-5 sm:p-6 lg:flex-row lg:items-center lg:justify-between">
+      <div className="flex flex-col gap-5 rounded-panel border border-subtle bg-card p-5 sm:p-6 lg:flex-row lg:items-center lg:justify-between shadow-soft">
         <dl className="grid grid-cols-2 gap-x-8 gap-y-4 sm:grid-cols-4 lg:gap-x-12">
           {stats.map((s) => (
             <div key={s.k}>

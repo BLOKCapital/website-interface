@@ -4,7 +4,7 @@ import { ExternalIcon } from "@/components/ui/icons";
 import { Icon } from "@/components/ui/Icon";
 import { cn } from "@/lib/utils";
 
-type Variant = "primary" | "secondary" | "ghost";
+type Variant = "primary" | "solid" | "secondary" | "ghost";
 type Size = "sm" | "md" | "lg";
 
 // States, for every variant: hover only with a real pointer (can-hover, so a
@@ -21,6 +21,10 @@ const base = cn(
 const variants: Record<Variant, string> = {
   // On-accent text on leaf: 5.7:1 Day, 11.5:1 Night.
   primary: "bg-accent text-accent-fg can-hover:hover:bg-accent-hover",
+  // Ink on paper (about 17:1, both themes: it flips to a light fill over a
+  // dark band): the header's one action, high contrast without a loud
+  // colour. Leaf under the pointer.
+  solid: "bg-fg text-canvas shadow-e1 can-hover:hover:bg-accent can-hover:hover:text-accent-fg",
   secondary: "border border-line/15 bg-card text-fg can-hover:hover:border-line/30 can-hover:hover:bg-raised",
   ghost: "text-fg-muted can-hover:hover:text-fg",
 };
@@ -29,6 +33,7 @@ const variants: Record<Variant, string> = {
 // the leaf fill (that would drop under 4.5:1).
 const hostTone: Record<Variant, string> = {
   primary: "",
+  solid: "",
   secondary: "text-fg-muted",
   ghost: "text-fg-subtle",
 };

@@ -33,7 +33,9 @@ import {
  * Layout (MOB-01, MOB-14): on phones a compact card (about 120 px) with an
  * inline heading, one sentence and one row of three buttons; on short or
  * landscape screens (max-height 500 px) a full-width bottom bar; otherwise a
- * card at the bottom right. The banner is first in the DOM (layout.tsx), so
+ * card at the bottom right, set like a ticket: a "Privacy · cookies" stub,
+ * a heavy heading with its last word by hand, and the two choices as the
+ * same ink buttons (equal prominence holds: they share one class). The banner is first in the DOM (layout.tsx), so
  * it is the first Tab stop, and while it shows, the page's scroll padding
  * keeps focused elements clear of it (A11Y-03).
  */
@@ -240,16 +242,27 @@ export function CookieConsent() {
           role="region"
           aria-labelledby="cookie-banner-title"
           className={cn(
-            "fixed inset-x-2 bottom-2 z-banner animate-reveal rounded-card border border-line/12 bg-card/95 p-3 pb-[max(0.75rem,env(safe-area-inset-bottom))] shadow-e2 backdrop-blur-xl",
-            "sm:inset-x-auto sm:bottom-5 sm:right-5 sm:max-w-md sm:p-5",
-            "[@media(max-height:500px)]:inset-x-0 [@media(max-height:500px)]:bottom-0 [@media(max-height:500px)]:right-0 [@media(max-height:500px)]:max-w-none [@media(max-height:500px)]:rounded-none [@media(max-height:500px)]:border-x-0 [@media(max-height:500px)]:border-b-0 [@media(max-height:500px)]:px-5 [@media(max-height:500px)]:py-2.5 [@media(max-height:500px)]:pb-[max(0.625rem,env(safe-area-inset-bottom))]",
+            "fixed inset-x-2 bottom-2 z-banner animate-reveal overflow-hidden rounded-card border border-line/12 bg-card/95 p-3 pb-[max(0.75rem,env(safe-area-inset-bottom))] shadow-e3 backdrop-blur-xl",
+            "sm:inset-x-auto sm:bottom-5 sm:right-5 sm:w-[25rem] sm:p-0 sm:pb-0",
+            "[@media(max-height:500px)]:inset-x-0 [@media(max-height:500px)]:bottom-0 [@media(max-height:500px)]:right-0 [@media(max-height:500px)]:w-auto [@media(max-height:500px)]:max-w-none [@media(max-height:500px)]:rounded-none [@media(max-height:500px)]:border-x-0 [@media(max-height:500px)]:border-b-0 [@media(max-height:500px)]:px-5 [@media(max-height:500px)]:py-2.5 [@media(max-height:500px)]:pb-[max(0.625rem,env(safe-area-inset-bottom))]",
           )}
           style={{ animationDelay: "600ms" }}
         >
-          <div className={cn("flex flex-col gap-3 sm:gap-4", "[@media(max-height:500px)]:mx-auto [@media(max-height:500px)]:max-w-page [@media(max-height:500px)]:flex-row [@media(max-height:500px)]:items-center [@media(max-height:500px)]:gap-5")}>
+          {/* The ticket's stub (from tablets up; not in the short bar). */}
+          <div aria-hidden className={cn("hidden items-center justify-between gap-3 border-b border-dashed border-line/20 bg-surface/70 px-5 py-2.5 sm:flex", "[@media(max-height:500px)]:hidden")}>
+            <span className="font-mono text-label uppercase tracking-caps text-cobalt">Privacy · cookies</span>
+            <span className="font-mono text-label text-fg-subtle">blokcapital.io</span>
+          </div>
+          <div className={cn("flex flex-col gap-3 sm:gap-4 sm:p-5", "[@media(max-height:500px)]:mx-auto [@media(max-height:500px)]:max-w-page [@media(max-height:500px)]:flex-row [@media(max-height:500px)]:items-center [@media(max-height:500px)]:gap-5 [@media(max-height:500px)]:p-0")}>
             <div className={cn("text-caption text-fg-muted sm:text-small", "[@media(max-height:500px)]:min-w-0 [@media(max-height:500px)]:flex-1 [@media(max-height:500px)]:text-caption")}>
-              <h2 id="cookie-banner-title" className="inline font-medium text-fg">
-                Cookies, kept to a minimum.
+              <h2
+                id="cookie-banner-title"
+                className={cn(
+                  "inline font-semibold text-fg sm:mb-1.5 sm:block sm:text-h4 sm:font-extrabold sm:tracking-tight",
+                  "[@media(max-height:500px)]:mb-0 [@media(max-height:500px)]:inline [@media(max-height:500px)]:text-caption [@media(max-height:500px)]:font-semibold [@media(max-height:500px)]:tracking-normal",
+                )}
+              >
+                Cookies, kept to a <span className="sm:hand">minimum.</span>
               </h2>{" "}
               <p className="inline">
                 <span className={cn("hidden sm:inline", "[@media(max-height:500px)]:hidden")}>Strictly necessary cookies keep the site working. </span>
@@ -260,10 +273,10 @@ export function CookieConsent() {
               </p>
             </div>
             <div className={cn("grid grid-cols-3 gap-2 sm:flex sm:flex-wrap", "[@media(max-height:500px)]:flex [@media(max-height:500px)]:shrink-0 [@media(max-height:500px)]:flex-nowrap")}>
-              <Button size="md" className={choice} onClick={() => decideFromBanner(DENY_ALL)}>
+              <Button size="md" variant="solid" className={choice} onClick={() => decideFromBanner(DENY_ALL)}>
                 Reject all
               </Button>
-              <Button size="md" className={choice} onClick={() => decideFromBanner(ALLOW_ALL)}>
+              <Button size="md" variant="solid" className={choice} onClick={() => decideFromBanner(ALLOW_ALL)}>
                 Accept all
               </Button>
               <Button
@@ -310,7 +323,7 @@ export function CookieConsent() {
                 <div>
                   <p className={cn("eyebrow", "[@media(max-height:500px)]:hidden")}>Privacy</p>
                   <h2 id="cookie-panel-title" className={cn("display mt-2.5 text-h3 text-fg", "[@media(max-height:500px)]:mt-0 [@media(max-height:500px)]:text-h4")}>
-                    Cookie preferences
+                    Cookie <em>preferences</em>
                   </h2>
                 </div>
                 <button
@@ -343,7 +356,7 @@ export function CookieConsent() {
                         <div className="min-w-0">
                           <p className="flex flex-wrap items-center gap-x-2.5 gap-y-1 text-ui font-medium text-fg">
                             {c.label}
-                            <span className="rounded-full bg-raised px-2 py-0.5 text-label font-normal text-fg-muted">{c.summary}</span>
+                            <span className="rounded-tag border border-subtle px-1.5 py-0.5 font-mono text-label font-normal uppercase tracking-wide text-fg-muted">{c.summary}</span>
                           </p>
                           <p id={descId} className="mt-1.5 text-small text-fg-muted">
                             {c.detail}
@@ -397,7 +410,7 @@ export function CookieConsent() {
                     Accept all
                   </Button>
                 </div>
-                <Button size="md" onClick={() => decideFromPanel(draft)}>
+                <Button size="md" variant="solid" onClick={() => decideFromPanel(draft)}>
                   Save preferences
                 </Button>
               </div>

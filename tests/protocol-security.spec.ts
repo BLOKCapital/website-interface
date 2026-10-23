@@ -14,15 +14,7 @@ const ANCHORS: Record<string, string[]> = {
     "yield",
     "gardeners",
     "architecture",
-    "glossary",
-    "term-garden",
-    "term-smart-account",
-    "term-diamond",
-    "term-facet",
-    "term-index",
-    "term-gardener",
     "ecosystem",
-    "builders",
     "fees",
   ],
   "/security": ["readiness", "contracts", "controls", "rules", "audits", "official", "disclosure"],
@@ -60,13 +52,13 @@ test.describe("UX-02 @1280", () => {
   }
 });
 
-test("/security shows only published addresses, and not the app domain", async ({ page }) => {
+test("/security lists no contract addresses (the docs publish them), and not the app domain", async ({ page }) => {
   await page.goto("/security");
   await waitForHydration(page);
   const text = await page.locator("main").innerText();
-  const addresses = new Set(text.match(/0x[0-9a-fA-F]{40}/g) ?? []);
-  // The $BLOKC token (token.ts) and the DAO (from the Aragon link). Nothing else.
-  expect([...addresses].sort()).toEqual(["0x003a7E96B48Ee318DE5200Fcc9504480643237f3", "0xBC4d9D3Dfe6AB1D36Ede90050ce96FCB937469f0"]);
+  // Addresses are published in the docs, and this page points there (owner, 2026-10-23).
+  expect(text.match(/0x[0-9a-fA-F]{40}/g) ?? []).toEqual([]);
+  await expect(page.locator("#contracts a[href*='smart-contract-address']").first()).toBeVisible();
   expect(text).not.toContain("private.blokcapital.io");
   await expect(page.locator("#official")).toContainText("Anything else is not us.");
 });

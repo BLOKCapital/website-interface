@@ -12,9 +12,9 @@ export type FigureStep = {
   /** The tab's label. */
   tab: string;
   /** What the drawing shows at this step, for screen readers. */
-  scene: string;
+  scene: string | ((lap: number) => string);
   /** The readout under the drawing (mono): the machine's state, in a few words. */
-  readout: ReactNode;
+  readout: ReactNode | ((lap: number) => ReactNode);
 };
 
 /**
@@ -43,25 +43,29 @@ export function MachineFigure({
   view: Rect;
   caption: ReactNode;
   className?: string;
-  children: (state: { step: number; k: string; uid: string }) => ReactNode;
+  /** `lap`: passes completed (useFigureLoop), for figures that vary each pass. */
+  children: (state: { step: number; lap: number; k: string; uid: string }) => ReactNode;
 }) {
   const uid = useId().replace(/:/g, "");
   const root = useRef<HTMLDivElement>(null);
   const loop = useFigureLoop(root, steps.length, dwell);
   const rt = useRovingTabs({ count: steps.length, selected: loop.step, onSelect: loop.go });
   const s = steps[loop.step];
+  // A step's words can depend on the pass (which tokens are moving this time).
+  const scene = typeof s.scene === "function" ? s.scene(loop.lap) : s.scene;
+  const readout = typeof s.readout === "function" ? s.readout(loop.lap) : s.readout;
 
   return (
     <figure className={className}>
-      <div ref={root} className="overflow-hidden rounded-panel border border-subtle bg-canvas">
+      <div ref={root} className="overflow-hidden rounded-panel border border-subtle bg-canvas shadow-soft">
         <div className="flex items-center justify-between gap-4 px-5 pt-4 sm:px-6">
-          <span className="font-mono text-label text-fg-subtle">Fig {n}</span>
+          <span className="font-mono text-label uppercase tracking-caps text-cobalt">Fig {n}</span>
           <span className="label-caps text-right">{title}</span>
         </div>
 
         <div role="tabpanel" id={`${uid}-panel`} aria-labelledby={`${uid}-tab-${loop.step}`} className="px-2 pb-2 pt-1 sm:px-8">
-          <IsoScene view={view} label={s.scene} className="mx-auto max-w-4xl">
-            {children({ step: loop.step, k: loop.key, uid })}
+          <IsoScene view={view} label={scene} className="mx-auto max-w-4xl">
+            {children({ step: loop.step, lap: loop.lap, k: loop.key, uid })}
           </IsoScene>
         </div>
 
@@ -88,12 +92,12 @@ export function MachineFigure({
             {loop.canPlay && <AutoplayToggle on={loop.playing} ended={false} onClick={loop.toggle} what={`figure ${n}`} />}
           </div>
           <p aria-live="polite" className="font-mono text-label text-fg-muted lg:text-right">
-            {s.readout}
+            {readout}
           </p>
         </div>
       </div>
       <figcaption className="mt-3 text-caption text-fg-muted">
-        <span className="mr-2 font-mono text-label text-leaf">Fig {n}</span>
+        <span className="mr-2 font-mono text-label uppercase tracking-caps text-cobalt">Fig {n}</span>
         {caption}
       </figcaption>
     </figure>

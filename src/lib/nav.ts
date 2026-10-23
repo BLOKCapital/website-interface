@@ -1,8 +1,5 @@
 import { links } from "@/lib/data/socials";
-import { audits } from "@/lib/data/audits";
 
-/** The one published audit report, for the Trust menu's hint. */
-const report = audits.find((a) => a.kind === "report");
 
 export type NavLink = {
   href: string;
@@ -39,6 +36,7 @@ export const navGroups: NavGroup[] = [
     links: [
       { href: "/governance", label: "How the DAO decides", hint: "The process, and its proposals" },
       { href: "/token", label: "$BLOKC token", hint: "Supply, utility and allocation" },
+      { href: links.contribute, label: "Contributor Program", hint: "Earn $BLOKC for posts and quests", external: true },
       // Not "Vote on Aragon": only core members vote until the token launches (CRO-17).
       { href: links.aragon, label: "The DAO on Aragon", hint: "Proposals, votes and members", external: true },
     ],
@@ -64,7 +62,7 @@ export const navGroups: NavGroup[] = [
       {
         href: "/security#audits",
         label: "Audits",
-        hint: report ? [report.partner, report.coverage?.covered, report.auditedOn].filter(Boolean).join(" · ") : "Who reviewed which code, and when",
+        hint: "New audits in progress · reports in the docs",
       },
       { href: "/security#contracts", label: "Contracts and addresses", hint: "Every contract, and where to check it" },
       { href: "/security#controls", label: "Who can change what", hint: "Every actor against every action" },
@@ -79,8 +77,8 @@ export const docsLink: NavLink = { href: links.docs, label: "Docs", hint: "Guide
 /** The one label for every Discord button (CRO-10). Discord is the community's home. */
 export const DISCORD_LABEL = "Join the Discord";
 
-/** The app (in private testing): the header's and mobile menu's primary action. */
-export const appLink: NavLink = { href: links.app, label: "Launch App", external: true };
+/** The app: the header's and mobile menu's primary action. `short` is its label on narrow phones. */
+export const appLink: NavLink & { short: string } = { href: links.app, label: "Launch your fund", short: "Launch", external: true };
 
 const pathOf = (href: string) => href.split("#")[0];
 

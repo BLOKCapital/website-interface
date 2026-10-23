@@ -39,7 +39,7 @@ export function IndexMatrix() {
   ];
   const cols = indices.length;
   return (
-    <div className="relative max-w-full overflow-x-auto rounded-card border border-subtle bg-card">
+    <div className="relative max-w-full overflow-x-auto rounded-card border border-subtle bg-card shadow-soft">
       <table className="w-full border-collapse text-left sm:min-w-[520px]">
         <caption className="sr-only">Which tokens each of the BLOK Capital indices holds, and the method all three share</caption>
         <thead>

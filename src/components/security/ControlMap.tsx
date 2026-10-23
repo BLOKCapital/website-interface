@@ -80,7 +80,7 @@ export function ControlMap() {
     <div className="flex flex-col gap-5">
       {/* The headline guarantee, laid out wide so it isn't half empty (VIS-22). */}
       <Reveal>
-        <article className="theme-dark relative grid gap-6 overflow-hidden rounded-panel border border-leaf/20 bg-card p-7 sm:p-9 lg:grid-cols-12 lg:items-center lg:gap-10">
+        <article className="theme-dark relative grid gap-6 overflow-hidden rounded-panel border border-leaf/20 bg-card p-7 sm:p-9 lg:grid-cols-12 lg:items-center lg:gap-10 shadow-soft">
           <div aria-hidden className="glow-leaf pointer-events-none absolute -right-24 -top-24 size-80 opacity-80" />
           <div aria-hidden className="grid-lines pointer-events-none absolute inset-0 opacity-50 [mask-image:radial-gradient(ellipse_at_80%_0%,black,transparent_70%)]" />
           <div className="relative flex items-center gap-5 lg:col-span-5">
@@ -110,7 +110,7 @@ export function ControlMap() {
       <GuardMoments />
 
       {/* lg and up: the matrix as a table. */}
-      <Reveal className="hidden overflow-hidden rounded-panel border border-subtle bg-card lg:block">
+      <Reveal className="hidden overflow-hidden rounded-panel border border-subtle bg-card lg:block shadow-soft">
         <table className="w-full table-fixed border-collapse text-left text-small">
           <caption className="sr-only">Who can do what with a Garden: each actor against each action</caption>
           <colgroup>
@@ -155,7 +155,7 @@ export function ControlMap() {
       {/* Below lg: one card per actor. */}
       <ul className="grid gap-4 md:grid-cols-2 lg:hidden">
         {actors.map((actor) => (
-          <li key={actor.id} className="rounded-card border border-subtle bg-card p-5">
+          <li key={actor.id} className="rounded-card border border-subtle bg-card p-5 shadow-soft">
             <h3 className="text-ui font-medium text-fg">{actor.name}</h3>
             <p className="mt-1 text-caption text-fg-subtle">{actor.note}</p>
             <dl className="mt-4 divide-y divide-subtle border-t border-subtle text-small">

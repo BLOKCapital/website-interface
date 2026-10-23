@@ -1,4 +1,15 @@
-Copyright 2020 The Newsreader Project Authors (http://github.com/productiontype/Newsreader)
+The fonts in this folder are used by the social cards (src/lib/seo/og.tsx):
+
+Inter-Regular.woff, Inter-ExtraBold.woff:
+Copyright 2016 The Inter Project Authors (https://github.com/rsms/inter)
+
+DancingScript-SemiBold.woff:
+Copyright 2016 The Dancing Script Project Authors (https://github.com/googlefonts/DancingScript), with Reserved Font Name "Dancing Script".
+
+JetBrainsMono-Regular.woff:
+Copyright 2020 The JetBrains Mono Project Authors (https://github.com/JetBrains/JetBrainsMono)
+
+Each is the Latin subset published by Fontsource (https://fontsource.org).
 
 This Font Software is licensed under the SIL Open Font License, Version 1.1.
 This license is copied below, and is also available with a FAQ at:

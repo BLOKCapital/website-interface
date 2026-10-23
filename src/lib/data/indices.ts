@@ -82,7 +82,6 @@ export type IndexDef = {
   /** Plain-language notes that follow from the method (not predictions). */
   notes: string[];
   components: ComponentSymbol[];
-  status: string;
   /** Official deployment — null until published in the docs. */
   deployment: null | { address: `0x${string}`; indexId: number };
 };
@@ -100,7 +99,6 @@ export const indices: IndexDef[] = [
       "Market-cap weighting follows the market; it doesn't try to beat it.",
     ],
     components: ["BTC", "ETH"],
-    status: "In private testing",
     deployment: null,
   },
   {
@@ -116,7 +114,6 @@ export const indices: IndexDef[] = [
       "Every component is in BLOKC10 too; BLOKC10 adds five more.",
     ],
     components: ["LINK", "UNI", "AAVE", "ARB", "PENDLE"],
-    status: "In private testing",
     deployment: null,
   },
   {
@@ -132,7 +129,6 @@ export const indices: IndexDef[] = [
       "No BTC or ETH: this index is about the application layer, not the base assets.",
     ],
     components: ["LINK", "DAI", "UNI", "AAVE", "ARB", "CRV", "ZRO", "PENDLE", "GRT", "GMX"],
-    status: "In private testing",
     deployment: null,
   },
 ];

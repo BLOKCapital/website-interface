@@ -5,7 +5,6 @@ import { PageHero } from "@/components/ui/PageHero";
 import { Card } from "@/components/ui/Card";
 import { Section } from "@/components/ui/Section";
 import { Button } from "@/components/ui/Button";
-import { Badge } from "@/components/ui/Badge";
 import { CtaBand } from "@/components/ui/CtaBand";
 import { Reveal, Stagger, RevealItem } from "@/components/ui/Reveal";
 import { ArrowIcon, CheckIcon } from "@/components/ui/icons";
@@ -13,6 +12,7 @@ import { IndexExplorer } from "@/components/indices/IndexExplorer";
 import { TokenLogo, TokenStack } from "@/components/indices/TokenLogo";
 import { ArrowLink } from "@/components/ui/ArrowLink";
 import { IndexCaveats } from "@/components/indices/IndexCaveats";
+import { IndexFigure } from "@/components/indices/IndexFigure";
 import { JsonLd } from "@/components/seo/JsonLd";
 import { breadcrumbSchema } from "@/lib/seo/schema";
 import { BASE } from "@/lib/seo/site";
@@ -32,11 +32,11 @@ const holds: Record<IndexId, string> = {
  * The answer first (SEO-12): one sentence an answer engine can lift whole,
  * built from the index data. E.g. "BLOKC5 is a BLOK Capital index of five
  * DeFi tokens (LINK, UNI, AAVE, ARB, PENDLE), weighted by market cap and
- * priced by Chainlink on Arbitrum. In private testing."
+ * priced by Chainlink on Arbitrum."
  */
 const definition = (idx: IndexDef) =>
   `${idx.name} is a BLOK Capital index of ${holds[idx.id]} (${idx.components.join(", ")}), weighted by market cap and ` +
-  `priced by Chainlink on Arbitrum. ${idx.status}.`;
+  "priced by Chainlink on Arbitrum.";
 
 export function generateStaticParams() {
   return indices.map((i) => ({ id: i.id }));
@@ -46,11 +46,9 @@ export async function generateMetadata({ params }: { params: Promise<{ id: strin
   const idx = indexById((await params).id);
   if (!idx) return {};
   const base = `${idx.name}: a market-cap-weighted index of ${idx.components.length} assets on Arbitrum (${idx.components.join(", ")}), priced by Chainlink.`;
-  // The status goes in when it fits the 155-character snippet (BLOKC10's list doesn't leave room).
-  const withStatus = `${base} ${idx.status}.`;
   return pageMetadata({
     title: `${idx.name}: ${idx.tagline}`,
-    description: withStatus.length <= 155 ? withStatus : base,
+    description: base,
     path: `/indices/${idx.id}`,
     // indices/[id]/opengraph-image.tsx supplies a card per index.
     ownImage: true,
@@ -117,29 +115,30 @@ export default async function IndexPage({ params }: { params: Promise<{ id: stri
           </>
         }
         aside={
-          <div className="rounded-card border border-subtle bg-card">
-            <div className="flex items-center justify-between gap-3 border-b border-subtle px-5 py-3.5">
+          // The factsheet as one sheet (as the /security readout): its tokens, then the figures, heavy.
+          <div className="rounded-panel border border-subtle bg-card shadow-soft">
+            <div className="flex items-center justify-between gap-3 px-5 pb-1 pt-5">
               <TokenStack symbols={idx.components} size={24} />
-              <Badge tone="current">{idx.status}</Badge>
+              <span className="font-mono text-label text-cobalt">{idx.components.length} tokens</span>
             </div>
-            <dl className="grid grid-cols-2">
-              {stats.map((s, i) => (
-                <div key={s.k} className={`px-5 py-4 ${i % 2 ? "border-l border-subtle" : ""} ${i > 1 ? "border-t border-subtle" : ""}`}>
-                  <dt className="text-caption text-fg-subtle">{s.k}</dt>
-                  <dd className="mt-1 text-lead text-fg">{s.v}</dd>
+            <dl className="grid grid-cols-2 gap-x-5 gap-y-4 px-5 py-4">
+              {stats.map((s) => (
+                <div key={s.k}>
+                  <dt className="font-mono text-label lowercase text-fg-subtle">{s.k}</dt>
+                  <dd className="mt-1 text-h4 font-extrabold leading-tight tracking-tight text-fg">{s.v}</dd>
                 </div>
               ))}
             </dl>
-            <dl className="divide-y divide-subtle border-t border-subtle">
+            <dl className="divide-y divide-subtle border-t border-subtle px-5 pb-2">
               {rules.map((r) => (
-                <div key={r.k} className="px-5 py-3.5">
-                  <dt className="text-caption text-fg-subtle">{r.k}</dt>
-                  <dd className="mt-1 text-small text-fg">{r.v}</dd>
+                <div key={r.k} className="grid grid-cols-[6.5rem_minmax(0,1fr)] gap-3 py-2.5">
+                  <dt className="label-caps pt-0.5">{r.k}</dt>
+                  <dd className="text-small font-semibold text-fg">{r.v}</dd>
                 </div>
               ))}
-              <div className="px-5 py-3.5">
-                <dt className="text-caption text-fg-subtle">Index value</dt>
-                <dd className="mt-1 text-small text-fg-muted">Not published yet: an index has no value until Gardens follow it publicly.</dd>
+              <div className="grid grid-cols-[6.5rem_minmax(0,1fr)] gap-3 py-2.5">
+                <dt className="label-caps pt-0.5">Index value</dt>
+                <dd className="text-small text-fg-muted">Not published yet: an index has no value until Gardens follow it publicly.</dd>
               </div>
             </dl>
           </div>
@@ -165,7 +164,7 @@ export default async function IndexPage({ params }: { params: Promise<{ id: stri
           </Reveal>
           <Stagger as="ul" className="space-y-3 lg:col-span-7">
             {idx.notes.map((n) => (
-              <RevealItem as="li" key={n} className="flex gap-3 rounded-card border border-subtle bg-card p-5 text-small text-fg-muted">
+              <RevealItem as="li" key={n} className="flex gap-3 rounded-card border border-subtle bg-card p-5 text-small text-fg-muted shadow-soft">
                 <CheckIcon className="mt-0.5 shrink-0 text-leaf" />
                 {n}
               </RevealItem>
@@ -182,10 +181,22 @@ export default async function IndexPage({ params }: { params: Promise<{ id: stri
         </div>
       </Section>
 
-      {/* The method in brief (UX-08, SEO-09): the full Methodology,
-          RebalanceLab and data ledger live once, on /indices. The ids keep
-          old /indices/<id>#methodology, #rebalancing and #data links landing here. */}
-      <Section id="methodology" eyebrow="Methodology" title="How its weights are set.">
+      {/* The method in brief (UX-08, SEO-09): the full method lives once, on
+          /indices, and in the docs. The ids keep old /indices/<id>#methodology,
+          #rebalancing and #data links landing here. */}
+      <Section
+        id="methodology"
+        eyebrow="Methodology"
+        title={
+          <>
+            How it stays <em>on target.</em>
+          </>
+        }
+      >
+        {/* This index's own machine (Fig 6, 7 or 8): drift past the band, then one pooled trade. */}
+        <Reveal className="mb-12">
+          <IndexFigure id={idx.id} />
+        </Reveal>
         <div className="grid gap-8 lg:grid-cols-12">
           <Reveal className="space-y-4 lg:col-span-7">
             <p className="text-body text-fg">
@@ -198,11 +209,7 @@ export default async function IndexPage({ params }: { params: Promise<{ id: stri
             <ArrowLink href="/indices#methodology">Same method as every BLOK Capital index</ArrowLink>
           </Reveal>
           <Reveal id="data" delay={0.08} className="lg:col-span-5">
-            <IndexCaveats>
-              <ArrowLink href="/indices#data" className="mt-4">
-                What&apos;s live, and what isn&apos;t yet
-              </ArrowLink>
-            </IndexCaveats>
+            <IndexCaveats />
           </Reveal>
         </div>
       </Section>

@@ -5,7 +5,8 @@ import { type Box, type V3, bounds, boxBounds, faces, project, roundRect, shift 
 import { IsoMark, Layer } from "./Iso";
 import { type FigureStep, MachineFigure } from "./MachineFigure";
 import css from "./iso.module.css";
-import { Cyl, Engrave, Flat, INK, OnFace, Part, Screw, Slab } from "./machine";
+import { CoinFace, Cyl, Engrave, Flat, INK, OnFace, Part, Screw, Slab, logoSrc } from "./machine";
+import type { ComponentSymbol } from "@/lib/data/indices";
 
 /*
  * Fig. 1, the Garden, drawn as a machine. A mounting plate carries:
@@ -17,6 +18,8 @@ import { Cyl, Engrave, Flat, INK, OnFace, Part, Screw, Slab } from "./machine";
  * rebalances (a coin hops between stacks: allowed); it tries to send a coin
  * out (the coin hits the shut gate: blocked); you put your key in (the gate
  * lifts and the coin leaves: allowed). Illustrative: no real amounts.
+ * The holdings carry their tokens' logos, and each facet the mark of what it
+ * plugs into (the index: BLOK's own; swap: Uniswap; lend: Aave; perps: GMX).
  */
 
 const Z = 10; // the plate's top
@@ -25,10 +28,10 @@ const PLATE = { x: 0, y: 0, w: 420, d: 230, h: Z, r: 14 };
 // Holdings: three stacks on a tray. The rebalance moves the top coin of a onto c.
 const TRAY = { x: 20, y: 108, w: 110, d: 60, h: 6, r: 6 };
 const COIN = { r: 11, h: 5, z: Z + TRAY.h };
-const STACKS = [
-  { x: 45, n: 4 }, // a: 5 before the rebalance; its fifth coin is the hopping one
-  { x: 75, n: 3 },
-  { x: 105, n: 2 }, // c: 3 after, the third is the hopping one
+const STACKS: { x: number; n: number; symbol: ComponentSymbol }[] = [
+  { x: 42, n: 4, symbol: "LINK" }, // a: 5 before the rebalance; its fifth coin is the hopping one
+  { x: 75, n: 3, symbol: "UNI" },
+  { x: 108, n: 2, symbol: "AAVE" }, // c: 3 after, the third is the hopping one
 ];
 const STACK_Y = 138;
 const HOP_REST: V3 = [STACKS[2].x, STACK_Y, COIN.z + 2 * COIN.h];
@@ -37,7 +40,13 @@ const HOP_VIA: V3 = [HOP_FROM[0] / 2, 0, HOP_FROM[2] + 30];
 
 // The Diamond core and its facet bays (on its front-left face, y = CORE.y + CORE.d).
 const CORE: Box = { x: 160, y: 30, z: Z, w: 160, d: 65, h: 90 };
-const FACETS = ["Index", "Swap", "Lend", "Perps"];
+/** Each facet and the mark of what it plugs into. */
+const FACETS: { name: string; mark: string }[] = [
+  { name: "Index", mark: "/brand/mark-96.webp" },
+  { name: "Swap", mark: logoSrc("UNI") },
+  { name: "Lend", mark: logoSrc("AAVE") },
+  { name: "Perps", mark: logoSrc("GMX") },
+];
 
 // The rail, the gate, the lamp.
 const RAIL = { x0: 140, x1: 410, y0: 188, y1: 200 };
@@ -171,45 +180,42 @@ export function GardenMachine({ className }: { className?: string }) {
               <Slab id={`${uid}-tray`} {...TRAY} z={Z} />
               <Flat points={plaque(22, 174, 56, 10)} fill="rgb(var(--plate-l))" />
               <OnFace face="top" at={project([22, 174, Z])}>
-                <Engrave u={5} v={7.4} size={5.5}>
+                <Engrave u={5} v={7.6} size={6.2}>
                   Holdings
                 </Engrave>
               </OnFace>
-              {STACKS.map((st) =>
+              {STACKS.map((st, s) =>
                 Array.from({ length: st.n }, (_, i) => (
-                  <Cyl
-                    key={`${st.x}-${i}`}
-                    cx={st.x}
-                    cy={STACK_Y}
-                    z={COIN.z + i * COIN.h}
-                    r={COIN.r}
-                    h={COIN.h}
-                    top={GOLD.top}
-                    side={GOLD.side}
-                  />
+                  <g key={`${st.x}-${i}`}>
+                    <Cyl cx={st.x} cy={STACK_Y} z={COIN.z + i * COIN.h} r={COIN.r} h={COIN.h} top={GOLD.top} side={GOLD.side} />
+                    {/* The top coin carries the token's logo (stack c's top coin is the hopping one). */}
+                    {i === st.n - 1 && s < 2 && <CoinFace cx={st.x} cy={STACK_Y} z={COIN.z + (i + 1) * COIN.h} r={COIN.r} symbol={st.symbol} />}
+                  </g>
                 )),
               )}
 
               {/* The Diamond core. */}
               <Part box={CORE} />
               <OnFace face="left" at={coreFace}>
-                {FACETS.map((name, i) => {
+                {FACETS.map(({ name, mark }, i) => {
                   const u = 8 + i * 38;
                   const on = name === "Index" && caller;
                   return (
                     <g key={name}>
                       <rect x={u} y={16} width={32} height={60} fill="rgb(var(--plate-r))" stroke={INK} strokeWidth={0.8} />
                       <rect x={u + 2.5} y={18.5} width={27} height={55} fill="rgb(var(--card))" stroke={INK} strokeWidth={0.8} />
+                      {/* What it plugs into, printed on the cartridge; the lamp sits beside it. */}
+                      <image href={mark} x={u + 8} y={21} width={12} height={12} />
                       <circle
-                        cx={u + 16}
-                        cy={27}
-                        r={3}
+                        cx={u + 24.5}
+                        cy={24.5}
+                        r={2.4}
                         fill={on ? "rgb(var(--leaf))" : "rgb(var(--plate-l))"}
                         stroke={INK}
                         strokeWidth={0.6}
                         style={fade(240)}
                       />
-                      <g transform={`translate(${u + 18.2} 54) rotate(-90)`}>
+                      <g transform={`translate(${u + 18.2} 51) rotate(-90)`}>
                         <Engrave u={0} v={0} size={7} anchor="middle">
                           {name}
                         </Engrave>
@@ -243,16 +249,16 @@ export function GardenMachine({ className }: { className?: string }) {
               />
               <Flat points={plaque(338, 206, 66, 10)} fill="rgb(var(--plate-l))" />
               <OnFace face="top" at={project([338, 206, Z])}>
-                <Engrave u={5} v={7.4} size={5.5}>
+                <Engrave u={5} v={7.6} size={6.2}>
                   Transfer out
                 </Engrave>
               </OnFace>
 
               {/* The key's stand, the lock and its slot. */}
               <Part box={STAND} />
-              <Flat points={plaque(376, 90, 36, 9)} fill="rgb(var(--plate-l))" />
-              <OnFace face="top" at={project([376, 90, Z])}>
-                <Engrave u={3.5} v={6.6} size={5}>
+              <Flat points={plaque(372, 90, 42, 9)} fill="rgb(var(--plate-l))" />
+              <OnFace face="top" at={project([372, 90, Z])}>
+                <Engrave u={3.5} v={6.8} size={6}>
                   Your key
                 </Engrave>
               </OnFace>
@@ -267,7 +273,7 @@ export function GardenMachine({ className }: { className?: string }) {
                 fill="rgb(var(--line) / 0.55)"
               />
               <OnFace face="left" at={project([LOCK.x, LOCK.y + LOCK.d, LOCK.z + LOCK.h])}>
-                <Engrave u={15} v={14} size={5} anchor="middle">
+                <Engrave u={15} v={15} size={6.2} anchor="middle">
                   Owner
                 </Engrave>
               </OnFace>
@@ -284,6 +290,7 @@ export function GardenMachine({ className }: { className?: string }) {
               motion={step === 0 ? { anim: "hop", from: HOP_FROM, via: HOP_VIA, delay: 120, dur: 650 } : undefined}
             >
               <Cyl cx={HOP_REST[0]} cy={HOP_REST[1]} z={HOP_REST[2]} r={COIN.r} h={COIN.h} top={GOLD.top} side={GOLD.side} />
+              <CoinFace cx={HOP_REST[0]} cy={HOP_REST[1]} z={HOP_REST[2] + COIN.h} r={COIN.r} symbol={STACKS[2].symbol} />
             </Layer>
 
             {/* The key: on its stand, or (step 3) lifted into the lock. */}
@@ -351,9 +358,9 @@ export function GardenMachine({ className }: { className?: string }) {
             </Layer>
 
             {step === 1 && (
-              <IsoMark key={`stop-${k}`} view={VIEW} kind="stop" at={project([GATE.x - 8, RAIL_Y + 14, Z + 40])} delay={370} />
+              <IsoMark key={`stop-${k}`} view={VIEW} kind="stop" size={18} at={project([GATE.x - 8, RAIL_Y + 14, Z + 40])} delay={370} />
             )}
-            {open && <IsoMark key={`ok-${k}`} view={VIEW} kind="ok" at={project([GATE.x - 8, RAIL_Y + 14, Z + 40])} delay={700} />}
+            {open && <IsoMark key={`ok-${k}`} view={VIEW} kind="ok" size={18} at={project([GATE.x - 8, RAIL_Y + 14, Z + 40])} delay={700} />}
           </>
         );
       }}

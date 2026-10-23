@@ -118,7 +118,7 @@ export default async function PolicyPage({ params }: { params: Promise<{ slug: s
           <div className="prose-legal max-w-prose" dangerouslySetInnerHTML={{ __html: withExternalLinks(policy.html) }} />
 
           {slug === "cookie-policy" && (
-            <div className="mt-12 flex max-w-prose flex-col gap-4 rounded-card border border-subtle bg-card p-6 sm:flex-row sm:items-center sm:justify-between">
+            <div className="mt-12 flex max-w-prose flex-col gap-4 rounded-card border border-subtle bg-card p-6 sm:flex-row sm:items-center sm:justify-between shadow-soft">
               <p className="text-small text-fg-muted">Review, change or withdraw your consent at any time.</p>
               <CookieSettingsButton className="inline-flex h-11 shrink-0 items-center justify-center rounded-full border border-line/15 px-5 text-small text-fg" />
             </div>

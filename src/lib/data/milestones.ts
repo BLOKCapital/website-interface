@@ -35,10 +35,10 @@ export const milestones: Milestone[] = [
     description: "Smart-wallet UX via ERC-4337 + EIP-7702. Pay gas in any token, sign once for batched actions." },
 
   // 2026 — Opening the Gates (indices launch, DAO live, gardeners open)
-  { id: "first-launch", label: "Private Testing", quarter: "Q2 '26", status: "current", pin: "green",
-    description: "Gardens running in private testing on Arbitrum ahead of the public launch." },
+  { id: "first-launch", label: "First Gardens on Arbitrum", quarter: "Q2 '26", status: "current", pin: "green",
+    description: "The first Gardens running on Arbitrum, ahead of the public launch." },
   { id: "indices", label: "Curated Index Gardens", quarter: "Q2 '26", status: "current", pin: "blue",
-    description: "Three curated indices, BLOKC2, BLOKC5 and BLOKC10, in private testing. Auto-rebalancing, on-chain receipts." },
+    description: "Three curated indices, BLOKC2, BLOKC5 and BLOKC10, ahead of the public launch. Auto-rebalancing, on-chain receipts." },
   { id: "dao-vote", label: "DAO Voting Live", quarter: "Q3 '26", status: "future", pin: "yellow",
     description: "Aragon OSX module activated. BLOKC holders steer every protocol change, fees, indices, new facets." },
   { id: "index-expansion", label: "Index Expansion", quarter: "Q3 '26", status: "future", pin: "green",

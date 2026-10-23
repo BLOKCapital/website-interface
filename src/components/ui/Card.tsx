@@ -7,7 +7,7 @@ export type CardSize = "sm" | "md" | "lg";
 export type CardRadius = "card" | "panel";
 
 const tones: Record<CardTone, string> = {
-  default: "border-subtle bg-card",
+  default: "border-subtle bg-card shadow-soft",
   // A Night-garden island (the featured tile): re-declares every token inside.
   feature: "theme-dark border-subtle bg-card shadow-e3",
   "tint-cobalt": "border-data/20 bg-data/6",
@@ -27,13 +27,15 @@ const radii: Record<CardRadius, string> = {
   panel: "rounded-panel", // 24
 };
 
-// Hover only with a real pointer, so a tap never leaves a card lifted.
+// Hover only with a real pointer. No lift: the card stays put, a clear leaf
+// outline (its border plus a 1px ring, so nothing shifts) and a deeper
+// ambient shadow say it's the target.
 const hover =
-  "transition-[border-color,background-color,transform] duration-base ease-expo can-hover:hover:-translate-y-0.5 can-hover:hover:border-leaf/30 can-hover:hover:bg-raised";
-// For a card that holds its own stretched link: the same lift while that
+  "transition-[border-color,box-shadow] duration-base ease-out can-hover:hover:border-leaf/60 can-hover:hover:shadow-soft-hover can-hover:hover:ring-1 can-hover:hover:ring-leaf/60";
+// For a card that holds its own stretched link: the same outline while that
 // link is hovered or focused.
 const within =
-  "transition-[border-color,background-color,transform] duration-base ease-expo can-hover:has-[a:hover]:-translate-y-0.5 can-hover:has-[a:hover]:border-leaf/30 has-[a:focus-visible]:border-leaf/30";
+  "transition-[border-color,box-shadow] duration-base ease-out can-hover:has-[a:hover]:border-leaf/60 can-hover:has-[a:hover]:shadow-soft-hover can-hover:has-[a:hover]:ring-1 can-hover:has-[a:hover]:ring-leaf/60 has-[a:focus-visible]:border-leaf/60";
 
 type Props = {
   tone?: CardTone;
@@ -67,8 +69,9 @@ type Props = {
 /**
  * The one card surface (VIS-09): `tone` × `size` × `radius`, on the
  * Foundation tokens. The defaults (default · md · card) render exactly the
- * old card: rounded-card, a subtle hairline, bg-card, p-pad-card. With
- * `href`, the whole card is a link with a hover lift (pointer only).
+ * card: rounded-card, a subtle hairline, bg-card with a soft ambient shadow,
+ * p-pad-card. With `href`, the whole card is a link: on pointer hover it
+ * gains a leaf outline and a deeper shadow, without moving.
  */
 export function Card({
   tone = "default",

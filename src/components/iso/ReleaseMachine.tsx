@@ -30,10 +30,13 @@ const cartAt = (i: number): Box => ({ x: STATIONS[i] - CART.w / 2, y: LANE - CAR
 
 // Stations.
 const DESK: Box = { x: 30, y: 26, z: Z, w: 46, d: 36, h: 34 };
+// An arch over the belt. Its front post stands well forward of the belt
+// (y 116, the belt ends at 100), so in the drawing it sits clear to the left
+// of a cartridge under the arch instead of in front of it.
 const arch = (x: number) => ({
   back: { x, y: 62, z: Z, w: 8, d: 6, h: 44 } as Box,
-  front: { x, y: 102, z: Z, w: 8, d: 6, h: 44 } as Box,
-  bar: { x, y: 62, z: Z + 44, w: 8, d: 46, h: 6 } as Box,
+  front: { x, y: 116, z: Z, w: 8, d: 6, h: 44 } as Box,
+  bar: { x, y: 62, z: Z + 44, w: 8, d: 60, h: 6 } as Box,
 });
 const TEST = arch(121);
 const SCAN = arch(271);
@@ -150,8 +153,8 @@ export function ReleaseMachine({ stages, className }: { stages: Stage[]; classNa
               {/* Station plaques, along the front. */}
               {stages.map((s, i) => (
                 <g key={s.label}>
-                  <Flat points={plaque(STATIONS[i] - 22, 110, 44, 10)} fill="rgb(var(--plate-l))" />
-                  <OnFace face="top" at={project([STATIONS[i] - 22, 110, Z])}>
+                  <Flat points={plaque(STATIONS[i] - 22, 128, 44, 10)} fill="rgb(var(--plate-l))" />
+                  <OnFace face="top" at={project([STATIONS[i] - 22, 128, Z])}>
                     <Engrave u={4} v={7.4} size={5.4}>
                       {`0${i + 1} ${s.label}`}
                     </Engrave>
@@ -211,7 +214,7 @@ export function ReleaseMachine({ stages, className }: { stages: Stage[]; classNa
               <Cyl cx={STAMP.x + STAMP.w / 2} cy={STAMP.y + STAMP.d / 2} z={STAMP.z + STAMP.h} r={2} h={44} />
               <Part box={STAMP} tint={{ left: "rgb(var(--leaf) / 0.18)", right: "rgb(var(--leaf-deep) / 0.45)" }} />
               <OnFace face="left" at={project([STAMP.x, STAMP.y + STAMP.d, STAMP.z + STAMP.h])}>
-                <Engrave u={8} v={9} size={4.6} anchor="middle">
+                <Engrave u={8} v={9.5} size={5.6} anchor="middle">
                   DAO
                 </Engrave>
               </OnFace>
@@ -227,10 +230,10 @@ export function ReleaseMachine({ stages, className }: { stages: Stage[]; classNa
               <Part box={PRESS_ARM} />
               <Part box={BAY} />
               <OnFace face="left" at={project([BAY.x, BAY.y + BAY.d, BAY.z + BAY.h])}>
-                <Engrave u={19} v={20} size={4.6} anchor="middle">
+                <Engrave u={19} v={19} size={5.8} anchor="middle">
                   Arbitrum
                 </Engrave>
-                <Engrave u={19} v={27} size={4.6} anchor="middle">
+                <Engrave u={19} v={28} size={5.8} anchor="middle">
                   One
                 </Engrave>
               </OnFace>
@@ -282,7 +285,7 @@ export function ReleaseMachine({ stages, className }: { stages: Stage[]; classNa
             </Layer>
 
             {step === 2 && (
-              <IsoMark key={`ok-${k}`} view={VIEW} kind="ok" at={project([LENS.cx + 2, LENS.cy - 18, LENS.z + 14])} delay={900} />
+              <IsoMark key={`ok-${k}`} view={VIEW} kind="ok" size={18} at={project([LENS.cx + 2, LENS.cy - 18, LENS.z + 14])} delay={900} />
             )}
           </>
         );

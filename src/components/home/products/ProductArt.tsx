@@ -6,7 +6,8 @@ import { cn } from "@/lib/utils";
 
 /**
  * Small pictures of what each product does, for the product tiles (home
- * Products and /protocol ProductStack). Pure SVG + CSS (globals.css, "Hero
+ * Products and /protocol ProductStack). Tokens and venues carry their
+ * logos and names, so each picture says what it shows. Pure SVG + CSS (globals.css, "Hero
  * and product art"), so they cost no JavaScript.
  *
  * Each one plays once, in about 4.5s, when it first comes into view, then
@@ -25,9 +26,11 @@ const delay = (s: number) => ({ "--d": `${s}s` }) as CSSProperties;
 /* ---------- Index Gardens: drift past 2%, then a pooled rebalance ---------- */
 
 const BASKET = indices.find((i) => i.id === "blokc5")!.components;
+// Taller than the orbit needs, so the token symbols and the caption under it
+// never meet, even at a narrow card's width (the text doesn't scale down).
 const W1 = 400;
-const H1 = 250;
-const C1 = { x: 200, y: 125 };
+const H1 = 280;
+const C1 = { x: 200, y: 132 };
 const ORBIT = 80;
 const THRESHOLD = 100;
 /** Which token drifts out and gets pulled back. */
@@ -41,7 +44,7 @@ export function RebalanceArt({ className }: { className?: string }) {
     return { x: C1.x + Math.cos(a) * ORBIT, y: C1.y + Math.sin(a) * ORBIT, dx: Math.cos(a), dy: Math.sin(a) };
   };
   return (
-    <div aria-hidden data-loop className={cn("art-tile relative aspect-[16/10] w-full", className)}>
+    <div aria-hidden data-loop className={cn("art-tile relative aspect-[10/7] w-full", className)}>
       <svg viewBox={`0 0 ${W1} ${H1}`} className="absolute inset-0 size-full" fill="none">
         <circle cx={C1.x} cy={C1.y} r={THRESHOLD} stroke="rgb(var(--caution) / 0.45)" strokeDasharray="3 6" />
         <circle cx={C1.x} cy={C1.y} r={ORBIT} stroke="rgb(var(--leaf) / 0.35)" strokeDasharray="2 5" />
@@ -84,19 +87,25 @@ export function RebalanceArt({ className }: { className?: string }) {
               style={{ "--dx": `${p.dx * 26}px`, "--dy": `${p.dy * 26}px` } as CSSProperties}
             >
               <TokenLogo symbol={s} size={30} className="ring-2 ring-card" />
+              {/* Its symbol, under it (moves with it). */}
+              <span className="absolute left-1/2 top-full mt-0.5 -translate-x-1/2 whitespace-nowrap font-mono text-micro text-fg-muted">{s}</span>
             </span>
           </span>
         );
       })}
 
+      {/* Which index this is, top left, as a post's place line. */}
+      <span className="absolute left-0 top-0 whitespace-nowrap font-mono text-micro uppercase tracking-caps text-cobalt">BLOKC5 · {BASKET.length} tokens</span>
       <span
         className="absolute whitespace-nowrap font-mono text-micro uppercase tracking-eyebrow text-caution"
         style={{ left: pct(C1.x + 70, W1), top: pct(C1.y - 98, H1) }}
       >
         ┄ 2% band
       </span>
-      <span className="art-flag absolute bottom-[6%] left-1/2 -translate-x-1/2 whitespace-nowrap rounded-full border border-leaf/35 bg-leaf/10 px-2.5 py-1 font-mono text-micro text-leaf">
-        Past 2% → one pooled rebalance
+      {/* The caption as the posts set it: a mono label, then the rest by hand. */}
+      <span className="art-flag absolute bottom-[3%] left-1/2 -translate-x-1/2 whitespace-nowrap">
+        <span className="font-mono text-micro uppercase tracking-caps text-cobalt">{"Past 2% → "}</span>
+        <span className="note text-[1.05rem]">one pooled rebalance</span>
       </span>
     </div>
   );
@@ -145,12 +154,12 @@ export function RoutesArt({ className }: { className?: string }) {
         <span className="grid size-12 place-items-center rounded-card border border-cobalt/30 bg-card shadow-e1">
           <Image src="/brand/mark-96.webp" alt="" width={28} height={28} unoptimized className="size-7 rounded-md" />
         </span>
-        <span className="font-mono text-micro uppercase tracking-caps text-fg-subtle">You steer</span>
+        <span className="font-mono text-micro uppercase tracking-caps text-cobalt">You steer</span>
       </span>
       {venues.map((v, i) => (
         <span
           key={v.name}
-          className="art-chip absolute flex -translate-y-1/2 items-center gap-2 rounded-control border border-line/10 bg-card py-1 pl-1 pr-3"
+          className="art-chip note-card absolute flex -translate-y-1/2 items-center gap-2 py-1 pl-1 pr-3"
           style={{ left: pct(VENUE_X, W2), top: pct(v.y, H2), ...delay(0.3 + i * ROUTE_STEP) }}
         >
           <TokenLogo symbol={v.token} size={22} />
@@ -192,11 +201,11 @@ export function BadgeArt({ className }: { className?: string }) {
         </svg>
         <span className="absolute inset-0 flex flex-col items-center justify-center text-center leading-tight">
           <span className="font-mono text-micro font-medium text-leaf">ERC-5484</span>
-          <span className="text-micro text-fg-subtle">soulbound</span>
+          <span className="note text-[1.05rem]">soulbound</span>
         </span>
       </div>
       <div className="min-w-0 flex-1">
-        <p className="whitespace-nowrap font-mono text-micro uppercase tracking-caps text-fg-subtle">On-chain record</p>
+        <p className="whitespace-nowrap font-mono text-micro uppercase tracking-caps text-cobalt">On-chain record</p>
         {/* The track record: each trade lands on the badge's line. */}
         <div className="relative mt-3 flex items-center justify-between px-1">
           <span className="absolute inset-x-0 top-1/2 h-px bg-leaf/30" />

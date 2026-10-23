@@ -134,10 +134,10 @@ export default function TokenPage() {
             <RevealItem as="li" key={u.title}>
               <Card tone={u.planned ? "planned" : "default"} className="h-full">
                 <div className="flex h-6 items-center justify-between gap-3">
-                  <span className="font-mono text-label text-leaf">0{i + 1}</span>
+                  <span className="font-mono text-label text-cobalt">0{i + 1}</span>
                   {u.planned && <Badge status="planned" />}
                 </div>
-                <h3 className="mt-3 text-h4 font-medium text-fg">{u.title}</h3>
+                <h3 className="mt-3 text-h4 font-bold tracking-tight text-fg">{u.title}</h3>
                 <p className="mt-2 text-small text-fg-muted">{u.body}</p>
               </Card>
             </RevealItem>

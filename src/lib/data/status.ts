@@ -4,11 +4,8 @@
  * Update when the launch state changes.
  */
 export const protocolStatus = {
-  /** Short label for badges. */
-  label: "In private testing",
-  /** One sentence for heroes and callouts. */
-  detail:
-    "Gardens and curated indices are being tested privately on Arbitrum ahead of the public launch.",
+  /** Who can use it, in one sentence: the FAQ, the CTA band, the announcement bar and llms.txt. */
+  access: "Gardens open to everyone at the public launch.",
   /** When Gardeners (on-chain managers) open. */
   gardeners: "2027",
   /** Token generation / IDO. */

@@ -1,5 +1,6 @@
 import type { ReactNode } from "react";
 import { Stagger, RevealItem } from "@/components/ui/Reveal";
+import { cn } from "@/lib/utils";
 
 export type Principle = { title: string; body: string; where: string };
 
@@ -30,37 +31,29 @@ const marks: ReactNode[] = [
 ];
 
 /**
- * The principles, each a card with its own drawn mark: the line draws itself
- * in as the card reveals (globals.css, "Drawn marks"), a large CSS-drawn
- * numeral sits behind, and the place each principle is proven is pinned at
- * the foot.
- * Server component; the drawing is pure CSS and fully drawn without JS or
- * with reduced motion.
+ * The principles, as a short manifesto: four pinned note cards, each with
+ * its number, its drawn mark (the line draws itself in as the card reveals;
+ * globals.css, "Drawn marks"), the principle and why, and a stamp for where
+ * it's proven. Server component; fully drawn without JS or with reduced
+ * motion.
  */
 export function Principles({ items }: { items: Principle[] }) {
   return (
-    <Stagger as="ul" step={0.1} className="grid gap-5 sm:grid-cols-2 lg:grid-cols-4">
+    <Stagger as="ul" step={0.1} className="grid gap-4 md:grid-cols-2">
       {items.map((v, i) => (
         <RevealItem as="li" key={v.title} className="h-full">
-          <article className="group/p relative flex h-full flex-col overflow-hidden rounded-panel border border-subtle bg-card p-7 transition-[border-color,transform] duration-base ease-expo hover:-translate-y-1 hover:border-leaf/30">
-            {/* Decorative numeral, drawn from CSS so it isn't text: axe doesn't
-                contrast-check pseudo-element content (A11Y-15). */}
-            <span
-              aria-hidden
-              data-n={String(i + 1).padStart(2, "0")}
-              className="pointer-events-none absolute -right-2 -top-6 font-mono text-[96px] leading-none text-line/5 transition-colors duration-base before:content-[attr(data-n)] group-hover/p:text-leaf/10"
-            />
-            <span aria-hidden className="relative grid size-14 place-items-center rounded-card border border-leaf/25 bg-leaf/7 text-leaf">
-              <svg width="34" height="34" viewBox="0 0 48 48">
+          <article className="note-card flex h-full gap-5 p-6 sm:p-7">
+            <span aria-hidden className="grid size-14 shrink-0 place-items-center rounded-tag bg-cobalt/10 text-cobalt">
+              <svg width="32" height="32" viewBox="0 0 48 48">
                 {marks[i % marks.length]}
               </svg>
             </span>
-            <h3 className="display relative mt-8 text-h3 text-fg">{v.title}</h3>
-            <p className="relative mt-3 flex-1 text-ui text-fg-muted">{v.body}</p>
-            <p className="relative mt-7 inline-flex items-center gap-2 self-start rounded-full border border-leaf/25 bg-leaf/6 px-3 py-1 font-mono text-label uppercase tracking-[0.1em] text-leaf">
-              <span aria-hidden className="size-1.5 rounded-full bg-leaf" />
-              {v.where}
-            </p>
+            <div className="flex min-w-0 flex-1 flex-col">
+              <p className="font-mono text-label text-cobalt">{String(i + 1).padStart(2, "0")}</p>
+              <h3 className="mt-1.5 text-h4 font-extrabold tracking-tight text-fg">{v.title}</h3>
+              <p className="mt-2 flex-1 text-ui text-fg-muted">{v.body}</p>
+              <span className={cn("stamp mt-5 self-start text-leaf", i % 2 ? "rotate-2" : "")}>{v.where}</span>
+            </div>
           </article>
         </RevealItem>
       ))}

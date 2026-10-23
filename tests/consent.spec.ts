@@ -343,13 +343,20 @@ test.describe("events", () => {
   test("a Discord click sends join_group with its placement (gtag emulator)", async ({ page }) => {
     await acceptAll(page);
     await stayOnPage(page);
-    await page.locator('#announce a[href*="discord"]').click();
-    await expect.poll(() => events(page)).toContainEqual(["join_group", { group_id: "discord", placement: "announcement_bar" }]);
     await page.locator('footer a[href*="discord"]').first().click();
     await expect.poll(() => events(page)).toContainEqual(["join_group", { group_id: "discord", placement: "footer" }]);
   });
 
-  test("Launch App in the header sends cta_click to the app (gtag emulator)", async ({ page }) => {
+  test("the announcement bar's Contributor Program link sends cta_click to the contributor app (gtag emulator)", async ({ page }) => {
+    await acceptAll(page);
+    await stayOnPage(page);
+    await page.locator('#announce a[href*="contribute.blokc.app"]').click();
+    await expect
+      .poll(() => events(page))
+      .toContainEqual(["cta_click", { cta_id: "announcement_contribute", destination: "contributor", placement: "announcement_bar" }]);
+  });
+
+  test("The header's launch button sends cta_click to the app (gtag emulator)", async ({ page }) => {
     await acceptAll(page);
     await stayOnPage(page);
     await page.locator('body > header > div:not(#announce) a[href*="blokc.app"]').filter({ visible: true }).first().click();

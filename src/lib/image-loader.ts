@@ -28,10 +28,9 @@ type LoaderArgs = {
  * the variants if a master changes.
  *
  * Small art is pre-sized at about 2× its display size instead (PERF-06) and
- * referenced by that file's path: the wordmark (-340), the mark (-96),
- * the ecosystem logos (-240), the home team strip (teamgrid/*-96) and token
- * logos (tokens/*-64; BasketOrbit's ~50px discs keep the 128px originals).
- * Unused masters live in design/archive/public/.
+ * referenced by that file's path: the wordmark (-340), the mark (-96), the
+ * ecosystem logos (-240) and token logos (tokens/*-64; BasketOrbit's ~50px
+ * discs keep the 128px originals).
  */
 const GARDEN = /^\/gardens\/garden-(\d{2})\.webp$/;
 const GARDEN_WIDTHS = [480, 720, 960];

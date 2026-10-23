@@ -10,7 +10,7 @@
  * these can't drift from the pages that show them (SEO-04).
  */
 import { faqs } from "@/lib/data/faqs";
-import { audits } from "@/lib/data/audits";
+import { auditStatus } from "@/lib/data/audits";
 import { protocolStatus } from "@/lib/data/status";
 import { BLOKC_TOKEN } from "@/lib/data/token";
 import { CORE_REPO_URL } from "@/lib/data/indices";
@@ -26,10 +26,6 @@ function faqAnswer(question: string) {
 /** The fee answer, exactly as the FAQ gives it (JSON-LD Offer, llms-full Fees). */
 export const feeText = faqAnswer("What does it cost?");
 
-/** The published audit report and its three dates, labelled (audits.ts). */
-const report = audits.find((a) => a.kind === "report" && a.auditedOn && a.reportDate && a.retestedOn);
-if (!report) throw new Error("facts.ts: no audit report with auditedOn, reportDate and retestedOn in lib/data/audits.ts");
-export const auditReport = report;
 
 /** The DAO's address, read from the Aragon link itself (as /security#official does). */
 export const DAO_ADDRESS = links.aragon.match(/0x[0-9a-fA-F]{40}/)![0];
@@ -54,7 +50,7 @@ export const governanceFacts = {
 } as const;
 
 export const brandFacts = {
-  oneLiner: `BLOK Capital is a non-custodial, decentralised wealth-management protocol on Arbitrum where users follow curated on-chain indices and yield strategies while their assets stay in their own smart-contract wallet. The protocol is currently in private testing; manager-run Gardens are planned for ${protocolStatus.gardeners}.`,
+  oneLiner: `BLOK Capital is a non-custodial, decentralised wealth-management protocol on Arbitrum where users follow curated on-chain indices and yield strategies while their assets stay in their own smart-contract wallet. Manager-run Gardens are planned for ${protocolStatus.gardeners}.`,
 
   category: "Decentralised (non-custodial) wealth-management protocol (DeFi)",
   chain: "Arbitrum (Ethereum Layer 2)",
@@ -85,8 +81,8 @@ export const brandFacts = {
     "Gardens are ERC-4337 smart accounts. Signing in with Google uses Web3Auth MPC, so there is no seed phrase; users who bring their own wallet keep that wallet's seed phrase. BLOK Capital can't restore an account, so users add recovery guardians.",
     "Contracts use the EIP-2535 Diamond pattern, so strategies and integrations can be upgraded without forcing users to migrate to new contracts.",
     `Planned for ${protocolStatus.gardeners}: manager (Gardener) track records will be written to non-transferable ERC-5484 soulbound badges, verifiable from any dapp.`,
-    `The protocol is ${protocolStatus.label.toLowerCase()}; it is not yet open to the public.`,
-    `${report.partner} audited the Garden smart contracts in ${report.auditedOn} (report dated ${report.reportDate}; fixes retested ${report.retestedOn}): 26 findings, none critical, all fixed and retested. The later index and rebalancer contracts are not covered by a published audit yet.`,
+    `The protocol is not yet open to the public. ${protocolStatus.access}`,
+    `Audits: ${auditStatus.detail}`,
     `Governance runs on-chain through Aragon OSx. Until the $BLOKC token launches, only the core DAO members listed on Aragon vote; public $BLOKC voting follows the IDO, planned for ${protocolStatus.token}.`,
     `${tokenFacts.name} is the governance token, an ${tokenFacts.standard} on Arbitrum One at ${tokenFacts.contract}. The BLOKC2, BLOKC5 and BLOKC10 indices are not tokens: a Garden following one holds the component tokens itself.`,
     `Contracts are public on GitHub (${CORE_REPO_URL.replace(/^https:\/\//, "")}) and protocol state lives on Arbitrum, readable by anyone.`,

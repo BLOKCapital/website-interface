@@ -115,3 +115,61 @@
     opacity: 0;
   }
 }
+
+/* The index figures (BalanceMachine, PriceRingMachine, DriftScanMachine). */
+
+/* A beam or a pan tipping from one whole transform to another, set inline
+   as --level (from) and --tilt (to). */
+.tipIn {
+  animation: isoTipIn 560ms var(--ease-inout) var(--delay, 0ms) both;
+}
+@keyframes isoTipIn {
+  from {
+    transform: var(--level);
+  }
+  to {
+    transform: var(--tilt);
+  }
+}
+/* A gantry sweeping along its rail, by --sx/--sy (user units). */
+.sweep {
+  animation: isoSweep var(--dur, 1500ms) var(--ease-inout) var(--delay, 0ms) both;
+}
+@keyframes isoSweep {
+  from {
+    transform: translate(0, 0);
+  }
+  to {
+    transform: translate(var(--sx), var(--sy));
+  }
+}
+
+/* A ring of signal going out from a point, and gone (its own box is the origin). */
+.ping {
+  transform-box: fill-box;
+  transform-origin: center;
+  animation: isoPing 900ms var(--ease-out) var(--delay, 0ms) both;
+}
+@keyframes isoPing {
+  from {
+    transform: scale(0.15);
+    opacity: 0.9;
+  }
+  to {
+    transform: scale(1);
+    opacity: 0;
+  }
+}
+
+/* A part gliding between two whole transforms, --from and --to, over --dur. */
+.tween {
+  animation: isoTween var(--dur, 800ms) var(--ease-inout) var(--delay, 0ms) both;
+}
+@keyframes isoTween {
+  from {
+    transform: var(--from);
+  }
+  to {
+    transform: var(--to);
+  }
+}

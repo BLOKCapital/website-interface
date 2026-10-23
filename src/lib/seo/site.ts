@@ -14,7 +14,7 @@ export const siteConfig = {
   /** X / Twitter handle (with @) — used for the twitter:site card tag. */
   twitterHandle: "@blok_cap",
   description:
-    "Non-custodial, on-chain wealth management on Arbitrum. Curated indices and yield strategies that run from your own smart-contract wallet. Currently in private testing.",
+    "Non-custodial, on-chain wealth management on Arbitrum. Curated indices and yield strategies that run from your own smart-contract wallet.",
   locale: "en_GB",
   /**
    * Organization logo in structured data: the square app icon (the BLOK mark

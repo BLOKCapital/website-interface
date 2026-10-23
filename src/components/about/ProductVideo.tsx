@@ -33,7 +33,8 @@ export function ProductVideo() {
 
   return (
     <div>
-      <div className="relative aspect-video w-full overflow-hidden rounded-card border border-subtle bg-card">
+      <div className="rounded-card bg-card p-2 shadow-soft ring-1 ring-line/8">
+      <div className="relative aspect-video w-full overflow-hidden rounded-control bg-raised">
         {playing ? (
           // Standard YouTube embed sandbox: allow-same-origin scopes to youtube-nocookie.com.
           // react-doctor-disable-next-line react-doctor/iframe-missing-sandbox
@@ -67,13 +68,14 @@ export function ProductVideo() {
               className="object-cover opacity-80 transition-opacity duration-fast can-hover:group-hover:opacity-95"
             />
             <span className="absolute inset-0 bg-gradient-to-t from-canvas/80 via-canvas/10 to-transparent" />
-            <span className="absolute inset-0 m-auto flex size-16 items-center justify-center rounded-full bg-leaf text-canvas shadow-e2 transition-transform duration-fast can-hover:group-hover:scale-105 sm:size-20">
+            <span className="absolute inset-0 m-auto flex size-16 items-center justify-center rounded-full bg-fg text-canvas shadow-e2 ring-4 ring-card/60 transition-[transform,background-color] duration-fast can-hover:group-hover:scale-105 can-hover:group-hover:bg-accent sm:size-20">
               <svg width="24" height="24" viewBox="0 0 22 22" aria-hidden className="ml-1">
                 <polygon points="6,3 19,11 6,19" fill="currentColor" />
               </svg>
             </span>
           </button>
         )}
+      </div>
       </div>
       <p id={noteId} className="mt-3 text-caption text-fg-muted">
         Plays from YouTube (Google), which may set its own cookies.{" "}

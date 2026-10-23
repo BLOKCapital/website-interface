@@ -1,5 +1,5 @@
 import type { Metadata, Viewport } from "next";
-import { Inter, Newsreader, JetBrains_Mono } from "next/font/google";
+import { Inter, Dancing_Script, JetBrains_Mono } from "next/font/google";
 import { Fragment } from "react";
 import "./globals.css";
 import { Nav } from "@/components/nav/Nav";
@@ -15,17 +15,11 @@ import { siteConfig } from "@/lib/seo/site";
 
 const inter = Inter({ subsets: ["latin"], display: "swap", variable: "--font-body" });
 
-// Display serif: 400 regular + italic only. Every headline renders at 400,
-// and a second weight makes Google serve the heavier variable files
-// (preloads 171 → 95 kB). Both styles stay preloaded: the italic <em>
-// payoff is in the first-screen h1 on every page.
-const newsreader = Newsreader({
-  subsets: ["latin"],
-  weight: ["400"],
-  style: ["normal", "italic"],
-  display: "swap",
-  variable: "--font-display",
-});
+// The handwritten accent: the <em> payoff in every headline (globals.css,
+// `.display em`) and the notes on figures (`.note`). One weight, preloaded,
+// since the payoff is in the first-screen h1 on every page. Headlines
+// themselves are Inter at 800, so no display serif is loaded.
+const script = Dancing_Script({ subsets: ["latin"], weight: ["600"], display: "swap", variable: "--font-script" });
 
 // Mono for labels, addresses and figures. Not preloaded (it is small and
 // requested at first layout anyway), and it falls back to a system mono
@@ -97,7 +91,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
       data-scroll-behavior="smooth"
       // RevealScript adds the `js` class before hydration.
       suppressHydrationWarning
-      className={`${inter.variable} ${newsreader.variable} ${mono.variable}`}
+      className={`${inter.variable} ${script.variable} ${mono.variable}`}
     >
       <head>
         {/* Print rules, loaded off the critical path (see public/print.css).

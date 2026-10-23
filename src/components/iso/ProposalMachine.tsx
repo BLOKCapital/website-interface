@@ -112,7 +112,7 @@ export function ProposalMachine({ stages, className }: { stages: Stage[]; classN
                 fill="rgb(var(--line) / 0.55)"
               />
               <OnFace face="left" at={project([PRINTER.x, PRINTER.y + PRINTER.d, PRINTER.z + PRINTER.h])}>
-                <Engrave u={22} v={14} size={5} anchor="middle">
+                <Engrave u={22} v={14} size={5.8} anchor="middle">
                   Aragon OSx
                 </Engrave>
               </OnFace>
@@ -123,7 +123,7 @@ export function ProposalMachine({ stages, className }: { stages: Stage[]; classN
                 {["Discord", "Telegram", "Forum"].map((name, i) => (
                   <g key={name}>
                     <circle cx={8} cy={10 + i * 12} r={3.2} fill="rgb(var(--plate-l))" stroke={INK} strokeWidth={0.6} />
-                    <Engrave u={14} v={12 + i * 12} size={4.6}>
+                    <Engrave u={13.5} v={12 + i * 12} size={5.4}>
                       {name}
                     </Engrave>
                   </g>
@@ -133,7 +133,7 @@ export function ProposalMachine({ stages, className }: { stages: Stage[]; classN
               {/* Vote: the ballot base, its two tubes' sockets and the quorum mark. */}
               <Part box={BALLOT} />
               <OnFace face="left" at={project([BALLOT.x, BALLOT.y + BALLOT.d, BALLOT.z + BALLOT.h])}>
-                <Engrave u={30} v={11} size={5} anchor="middle">
+                <Engrave u={30} v={13.5} size={6} anchor="middle">
                   $BLOKC vote
                 </Engrave>
               </OnFace>
@@ -153,8 +153,8 @@ export function ProposalMachine({ stages, className }: { stages: Stage[]; classN
                 {[0, 1, 2, 3].map((i) => (
                   <rect key={i} x={6 + i * 11.5} y={8} width={9} height={14} fill="rgb(var(--card))" stroke={INK} strokeWidth={0.6} />
                 ))}
-                <Engrave u={27} v={32} size={4.8} anchor="middle">
-                  Protocol · facets
+                <Engrave u={27} v={33} size={6} anchor="middle">
+                  Registry
                 </Engrave>
               </OnFace>
 
@@ -216,8 +216,9 @@ export function ProposalMachine({ stages, className }: { stages: Stage[]; classN
                       strokeWidth={1}
                       strokeDasharray="2 2"
                     />
-                    <OnFace face="top" at={project([t.cx - 9, TUBE.cy + 16, BALLOT.z + BALLOT.h])}>
-                      <Engrave u={0} v={0} size={4.4}>
+                    {/* On the base's front strip, clear of the tube's foot. */}
+                    <OnFace face="top" at={project([t.cx - 9, BALLOT.y + BALLOT.d - 2, BALLOT.z + BALLOT.h])}>
+                      <Engrave u={0} v={0} size={5}>
                         {t.label}
                       </Engrave>
                     </OnFace>

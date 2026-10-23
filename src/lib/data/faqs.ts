@@ -1,4 +1,6 @@
 import { links, social } from "./socials";
+import { protocolStatus } from "./status";
+import { auditStatus } from "./audits";
 
 /** The /contact FAQ's groups; the home page keeps the list order and ignores them. */
 export const faqTopics = [
@@ -33,7 +35,7 @@ export const faqs: Faq[] = [
     question: "What is BLOK Capital?",
     topic: "basics",
     answer:
-      "A non-custodial wealth-management protocol on Arbitrum. You follow an on-chain index (components chosen by the team and approved by the DAO; weights set on-chain by market cap) or, from 2027, hire an on-chain manager, and your assets never leave your own smart-contract wallet. It's currently in private testing.",
+      "A non-custodial wealth-management protocol on Arbitrum. You follow an on-chain index (components chosen by the team and approved by the DAO; weights set on-chain by market cap) or, from 2027, hire an on-chain manager, and your assets never leave your own smart-contract wallet.",
   },
   {
     question: "Who holds my funds?",
@@ -42,18 +44,18 @@ export const faqs: Faq[] = [
       "You do. Your Garden is a smart-contract wallet at your own address. A strategy can rebalance inside it, but only you can move funds out: not BLOK Capital, and not a manager you follow.",
   },
   {
-    // Same message as lib/announce.ts, the StatusLine and the CTA band.
+    // Same message as the CTA band (protocolStatus.access).
     question: "When can I use it?",
     topic: "basics",
     answer:
-      "Not for everyone yet. The app is in private testing and open to testers first; Gardens open to the public after testing. Launch news goes out on X and in the Discord.",
+      `Not for everyone yet: ${protocolStatus.access} Launch news goes out on X and in the Discord.`,
     cta: { label: "Join the Discord", href: discord },
   },
   {
     question: "Is it audited?",
     topic: "safety",
     answer:
-      "CredShields audited the Garden contracts in November 2024: 26 findings, none critical, all fixed and retested. The newer index and rebalancer contracts haven't had a published audit yet, and SolidityScan and Octane scan the code on release. Audits reduce risk; they don't remove it. Only deposit what you can afford to lose.",
+      `${auditStatus.detail} Audits reduce risk; they don't remove it. Only deposit what you can afford to lose.`,
   },
   {
     question: "What does it cost?",
@@ -66,8 +68,8 @@ export const faqs: Faq[] = [
     question: "How do I get started?",
     topic: "basics",
     answer:
-      "Once Gardens open: sign in with Google (no seed phrase) or your own wallet to open a Garden, fund it with USDC by card or bank or with crypto you already hold, then choose an index to follow. The app is in private testing until then and open to testers first.",
-    cta: { label: "Launch App", href: links.app },
+      "Once Gardens open: sign in with Google (no seed phrase) or your own wallet to open a Garden, fund it with USDC by card or bank or with crypto you already hold, then choose an index to follow.",
+    cta: { label: "Launch your fund", href: links.app },
   },
   {
     question: "Do I need a seed phrase?",

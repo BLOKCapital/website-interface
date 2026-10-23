@@ -70,7 +70,7 @@ export function organizationSchema() {
 
 /**
  * WebApplication: the product *as software*, for "is there an app" and "what
- * does it cost" questions. It says what the site says: in private testing,
+ * does it cost" questions. It says what the site says: not yet public,
  * limited availability, and the FAQ's own fee answer (SEO-03). No
  * AggregateRating/Review or price: there's no verifiable rating, and fees
  * after launch are set by DAO vote. `isAccessibleForFree` returns at the
@@ -85,7 +85,7 @@ export function softwareApplicationSchema() {
     applicationCategory: "FinanceApplication",
     operatingSystem: "Web (any modern browser); runs on Arbitrum (EVM)",
     url: BASE,
-    description: `${protocolStatus.label}. A non-custodial wealth-management app on Arbitrum: follow market-cap-weighted on-chain indices from a smart-contract wallet at your own address.`,
+    description: `A non-custodial wealth-management app on Arbitrum: follow market-cap-weighted on-chain indices from a smart-contract wallet at your own address. ${protocolStatus.access}`,
     browserRequirements: "A modern web browser. Sign in with Google (Web3Auth MPC, no seed phrase) or your own wallet.",
     offers: {
       "@type": "Offer",
@@ -94,7 +94,7 @@ export function softwareApplicationSchema() {
       availability: "https://schema.org/LimitedAvailability",
     },
     featureList: [
-      `${protocolStatus.label}: market-cap-weighted on-chain indices (BLOKC2, BLOKC5, BLOKC10) that rebalance automatically`,
+      "Market-cap-weighted on-chain indices (BLOKC2, BLOKC5, BLOKC10) that rebalance automatically",
       `Planned for ${protocolStatus.gardeners}: on-chain managers (Gardeners) with a verifiable soulbound track record`,
       "Non-custodial smart-contract wallet: assets stay at your own address",
       "Buy USDC by card or bank through an on-ramp such as Transak, which runs its own KYC",

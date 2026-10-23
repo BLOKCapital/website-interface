@@ -1,6 +1,6 @@
 "use client";
 
-import { useCallback, useEffect, useState, type RefObject } from "react";
+import { useCallback, useEffect, useRef, useState, type RefObject } from "react";
 import { usePageVisible } from "@/lib/explainers";
 import { useInView, useMotionAllowed } from "@/lib/motion";
 
@@ -16,6 +16,11 @@ import { useInView, useMotionAllowed } from "@/lib/motion";
  *
  * `dwell` must be stable (define it outside the component): how long step i
  * stays up, which covers its motion and a read of its readout.
+ *
+ * `lap` counts the times the loop has come round to the first step, so a
+ * figure can vary what each pass shows (another set of tokens) while every
+ * pass still starts from the same still frame. It only changes on arriving
+ * at step 1, never in the middle of a pass.
  */
 export function useFigureLoop(root: RefObject<HTMLElement | null>, count: number, dwell: (i: number) => number) {
   const motion = useMotionAllowed();
@@ -24,8 +29,12 @@ export function useFigureLoop(root: RefObject<HTMLElement | null>, count: number
   const [step, setStep] = useState(0);
   const [run, setRun] = useState(0); // re-keys the moving parts, so a step always replays
   const [playing, setPlaying] = useState(true);
+  const [lap, setLap] = useState(0);
+  const at = useRef(0);
 
   const go = useCallback((i: number) => {
+    if (i === 0 && at.current !== 0) setLap((l) => l + 1);
+    at.current = i;
     setStep(i);
     setRun((r) => r + 1);
   }, []);
@@ -39,6 +48,8 @@ export function useFigureLoop(root: RefObject<HTMLElement | null>, count: number
 
   return {
     step,
+    /** Passes completed: changes only on arriving at the first step. */
+    lap,
     /** Changes on every step change, to re-key the moving parts. */
     key: `${step}-${run}`,
     go,

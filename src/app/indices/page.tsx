@@ -11,8 +11,6 @@ import { IndexExplorer } from "@/components/indices/IndexExplorer";
 import { IndexMatrix } from "@/components/indices/IndexMatrix";
 import { TokenStack } from "@/components/indices/TokenLogo";
 import { Methodology } from "@/components/indices/Methodology";
-import { RebalanceLab } from "@/components/indices/RebalanceLab";
-import { DataAvailability } from "@/components/indices/DataAvailability";
 import { IndexCaveats } from "@/components/indices/IndexCaveats";
 import { JsonLd } from "@/components/seo/JsonLd";
 import { breadcrumbSchema } from "@/lib/seo/schema";
@@ -27,8 +25,6 @@ export const metadata: Metadata = pageMetadata({
 });
 
 const names = indices.map((i) => i.name);
-// Every index shares one launch state today; say it once, from the data.
-const shared = indices.every((i) => i.status === indices[0].status) ? ` All three are ${indices[0].status.toLowerCase()}.` : "";
 
 /**
  * The answer first (SEO-12), from the index data: what the BLOK Capital
@@ -37,7 +33,7 @@ const shared = indices.every((i) => i.status === indices[0].status) ? ` All thre
  */
 const definition =
   `The BLOK Capital indices, ${names.slice(0, -1).join(", ")} and ${names.at(-1)}, are three fixed baskets of tokens on ` +
-  `Arbitrum, weighted by market cap, priced by Chainlink and rebalanced on-chain.${shared} Nobody picks the weights by ` +
+  `Arbitrum, weighted by market cap, priced by Chainlink and rebalanced on-chain. Nobody picks the weights by ` +
   "hand; the contract does the maths in public.";
 
 /** The page's sections, in order, for the sticky section bar. */
@@ -45,8 +41,6 @@ const sections = [
   { id: "explore", label: "Explorer" },
   { id: "compare", label: "Compare" },
   { id: "methodology", label: "Methodology" },
-  { id: "rebalancing", label: "Rebalancing" },
-  { id: "data", label: "Data" },
 ];
 
 export default function IndicesPage() {
@@ -76,7 +70,7 @@ export default function IndicesPage() {
               <RevealItem as="li" key={i.id}>
                 <Link
                   href={`/indices/${i.id}`}
-                  className="group/i flex items-center justify-between gap-4 rounded-card border border-subtle bg-card px-5 py-4 transition-colors hover:border-leaf/30 hover:bg-raised"
+                  className="group/i flex items-center justify-between gap-4 rounded-card border border-subtle bg-card px-5 py-4 surface-link shadow-soft"
                 >
                   <span>
                     <span className="block font-mono text-small font-medium text-fg">{i.name}</span>
@@ -128,49 +122,13 @@ export default function IndicesPage() {
         id="methodology"
         eyebrow="Methodology"
         title="How the weights are set."
-        description="Four steps, all on-chain. Open the guardrails for the limits the contracts enforce, or the technical details for the code."
+        description="Four steps, all on-chain. Because weights follow market caps, a price move changes a holding and its target together, so an index rarely needs to trade."
       >
         <Methodology />
-      </Section>
-
-      <Section
-        id="rebalancing"
-        tone="surface"
-        eyebrow="Rebalancing"
-        title="Why a market-cap index rarely trades."
-        description="Move the sliders. When a price moves, the holding and its target move together. Trades happen when something else shifts, like a token's circulating supply."
-      >
-        <div className="grid gap-8 lg:grid-cols-12">
-          <Reveal className="lg:col-span-7">
-            <RebalanceLab />
-          </Reveal>
-          <Stagger as="ol" className="space-y-3 lg:col-span-5">
-            {[
-              ["Weights refresh", "Anyone can ask an index to recompute its weights, at most once an hour."],
-              ["Drift is checked", "For every Garden on the index, each asset is compared with its target value."],
-              ["One pooled trade", "Assets beyond 2% are netted across all those Gardens and swapped in one batch, at most daily."],
-              ["Slippage capped", "If the batch would lose more than 0.5% of value, it reverts and nothing moves."],
-            ].map(([t, b], i) => (
-              <RevealItem as="li" key={t} className="flex gap-4 rounded-card border border-subtle bg-card p-5">
-                <span className="font-mono text-label text-leaf">0{i + 1}</span>
-                <span>
-                  <span className="block text-small font-medium text-fg">{t}</span>
-                  <span className="mt-1 block text-small text-fg-muted">{b}</span>
-                </span>
-              </RevealItem>
-            ))}
-          </Stagger>
-        </div>
-      </Section>
-
-      <Section
-        id="data"
-        eyebrow="Data"
-        title="What's live, and what isn't yet."
-        description="The indices are in private testing. Here's exactly what this page can show today, and what arrives with the public launch."
-      >
-        <IndexCaveats className="mb-5" />
-        <DataAvailability />
+        {/* The two caveats every index page carries; #data keeps old links landing here. */}
+        <Reveal id="data" className="mt-10 max-w-3xl">
+          <IndexCaveats />
+        </Reveal>
       </Section>
 
       <CtaBand />

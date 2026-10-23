@@ -6,16 +6,12 @@ import { Problem } from "@/components/home/Problem";
 import { HowItWorks } from "@/components/home/HowItWorks";
 import { Products } from "@/components/home/Products";
 import { SecurityPillars } from "@/components/home/SecurityPillars";
+import { Contribute } from "@/components/home/Contribute";
 import { IndicesSection } from "@/components/home/IndicesSection";
-import { HappeningNow } from "@/components/home/HappeningNow";
-import { BuiltInOpen } from "@/components/home/BuiltInOpen";
-import { EcosystemStrip } from "@/components/home/EcosystemStrip";
-import { RulesSection } from "@/components/home/RulesSection";
 import { Section } from "@/components/ui/Section";
 import { Button } from "@/components/ui/Button";
 import { FaqList } from "@/components/ui/FaqList";
 import { CtaBand } from "@/components/ui/CtaBand";
-import { RoadmapNowNext, roadmapUpdated } from "@/components/roadmap/Roadmap";
 import { JsonLd } from "@/components/seo/JsonLd";
 import { serviceSchema, softwareApplicationSchema } from "@/lib/seo/schema";
 import { getGovernance } from "@/lib/data/proposals";
@@ -32,16 +28,14 @@ export const metadata: Metadata = pageMetadata({
 });
 
 /**
- * Home, problem → how → proof → act (UI_UX_SUGGESTIONS §3.1, D-08 a–e): what
- * is it → the facts → why does it exist → how does it work → what can I do
- * → what are the indices → can I check it (the security properties, then
- * the rules running) → what has the DAO decided → what is it built on → who
- * builds it → where is it going → questions → how do I join.
+ * Home, kept to what a first visit needs (one idea per section, the depth on
+ * its own page or in the docs): what it is → the facts → the app → why it
+ * exists → how it works → what you can do → the indices → why it's safe →
+ * how to earn $BLOKC (the Contributor Program) → questions → how to join.
  *
- * Moved, not deleted: the six-layer explorer and the full ecosystem go to
- * /protocol, the proposal board to /governance, the index explorer stays on
- * /indices. Old anchors still land: #explore (the How it works teaser
- * line), #rules (the demo inside #security), #now, #ecosystem.
+ * Moved off home, not deleted: the rules console to /security#rules, the
+ * DAO's proposals to /governance, the ecosystem to /protocol#ecosystem, the
+ * team to /about and the roadmap to /about#roadmap.
  */
 export default async function HomePage() {
   const governance = await getGovernance();
@@ -55,26 +49,10 @@ export default async function HomePage() {
       <HowItWorks />
       <Products />
       <IndicesSection />
-      <SecurityPillars>
-        <RulesSection />
-      </SecurityPillars>
-      <HappeningNow governance={governance} />
-      <EcosystemStrip />
-      <BuiltInOpen />
+      <SecurityPillars />
+      <Contribute />
       <Section
-        id="roadmap"
-        eyebrow="Roadmap"
-        title={
-          <>
-            Where things <em className="text-sand">stand.</em>
-          </>
-        }
-        description={`Last updated ${roadmapUpdated}.`}
-        actions={<Button href="/about#roadmap" variant="secondary">Full roadmap</Button>}
-      >
-        <RoadmapNowNext />
-      </Section>
-      <Section
+        className="paper-ruled"
         id="faq"
         tone="surface"
         eyebrow="FAQ"

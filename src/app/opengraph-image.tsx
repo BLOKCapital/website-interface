@@ -1,6 +1,5 @@
 import { ogCard, OG_CONTENT_TYPE, OG_SIZE } from "@/lib/seo/og";
 import { OG_DEFAULT } from "@/lib/seo/metadata";
-import { protocolStatus } from "@/lib/data/status";
 
 // The site-wide social card: the home page's, and every page without a card
 // of its own (pageMetadata() points those at /opengraph-image). Rendered once
@@ -15,7 +14,6 @@ export default function OpengraphImage() {
     eyebrow: "Non-custodial wealth management",
     title: "Grow your crypto.",
     italic: "Keep the keys.",
-    badge: protocolStatus.label,
     footer: "Curated on-chain indices · Arbitrum One",
   });
 }

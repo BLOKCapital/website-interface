@@ -8,7 +8,7 @@ import { Icon } from "@/components/ui/Icon";
 import { GardenAsset } from "@/components/ui/GardenAsset";
 import { CornerMarks } from "@/components/motion/CornerMarks";
 import { DotField } from "@/components/motion/DotField";
-import { Scramble } from "@/components/motion/Scramble";
+import { Handwrite } from "@/components/motion/Handwrite";
 import { protocolStatus } from "@/lib/data/status";
 import { links, social } from "@/lib/data/socials";
 
@@ -26,7 +26,7 @@ function copy(context: CtaContext, indexName?: string): { title: ReactNode; lead
           <>
             {`${indexName ?? "This index"} opens with the `}
             <em className="text-sand">
-              <Scramble text="public launch." />
+              <Handwrite text="public launch." />
             </em>
           </>
         ),
@@ -38,7 +38,7 @@ function copy(context: CtaContext, indexName?: string): { title: ReactNode; lead
           <>
             {"Be first to plant a "}
             <em className="text-sand">
-              <Scramble text="Garden." />
+              <Handwrite text="Garden." />
             </em>
           </>
         ),
@@ -50,18 +50,18 @@ function copy(context: CtaContext, indexName?: string): { title: ReactNode; lead
           <>
             {"Be first to plant a "}
             <em className="text-sand">
-              <Scramble text="Garden." />
+              <Handwrite text="Garden." />
             </em>
           </>
         ),
-        lead: "The app is open to testers first, and Gardens open to everyone after testing. The community and the team are in the Discord every day.",
+        lead: `${protocolStatus.access} The community and the team are in the Discord every day.`,
       };
   }
 }
 
 /**
  * Closing call to action, shared by every page: the app and the community. The
- * payoff word decodes into place, over a field of rising signal rings (a
+ * payoff word writes itself in by hand, over a field of rising signal rings (a
  * canvas that runs at 12 fps and settles; see useFieldLoop). A Night-garden
  * band that closes the page, above the light footer.
  *
@@ -81,12 +81,12 @@ export function CtaBand({ context = "default", indexName }: { context?: CtaConte
       </div>
       <Container className="relative grid items-center gap-10 py-section-sm lg:grid-cols-12">
         <div className="lg:col-span-7">
-          <p className="eyebrow">{protocolStatus.label}</p>
+          <p className="eyebrow">Join in</p>
           <h2 className="display mt-4 text-h2 text-balance text-fg">{title}</h2>
           <p className="mt-5 max-w-xl text-lead text-fg-muted">{lead}</p>
           <div className="mt-9 flex flex-wrap items-center gap-3">
             <Button href={links.app} size="lg" data-cta="cta_band_launch_app" data-placement="cta_band">
-              Launch App
+              Launch your fund
             </Button>
             <Button href={social("discord").href} size="lg" variant="secondary" data-placement="cta_band">
               <DiscordIcon /> {DISCORD_LABEL}
@@ -108,11 +108,11 @@ export function CtaBand({ context = "default", indexName }: { context?: CtaConte
             </a>
             .
           </p>
-          <SocialLinks only={["x", "telegram", "farcaster", "github", "youtube"]} placement="cta_band" className="mt-6" />
+          <SocialLinks only={["x", "instagram", "telegram", "farcaster", "github", "youtube"]} placement="cta_band" className="mt-6" />
         </div>
         <div className="relative mx-auto hidden aspect-square w-full max-w-[420px] lg:col-span-5 lg:block">
           <div className="absolute inset-0 animate-float">
-            <GardenAsset n={4} sizes="420px" />
+            <GardenAsset n={4} sizes="420px" className="sticker" />
           </div>
         </div>
       </Container>

@@ -224,7 +224,7 @@ export function RulesDemo() {
         role="tabpanel"
         aria-labelledby={`${base}-tab-${sc.id}`}
         tabIndex={0}
-        className="relative min-w-0 overflow-hidden rounded-panel border border-subtle bg-surface lg:col-span-8"
+        className="relative min-w-0 overflow-hidden rounded-panel border border-subtle bg-surface lg:col-span-8 shadow-soft"
       >
         {/* One sweep of light per scenario (re-keyed), then still. */}
         <div key={`scan-${run.i}`} aria-hidden data-loop className="scanlines pointer-events-none absolute inset-0 overflow-hidden" />

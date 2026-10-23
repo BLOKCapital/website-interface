@@ -73,9 +73,10 @@ const groups: { title: string; rows: Row[] }[] = [
     ],
   },
   {
-    title: "Status",
+    title: "When",
     rows: [
-      { k: "Status", each: each((p) => <Badge tone={p.status.tone}>{p.status.label}</Badge>) },
+      // When each opens: at the public launch, or (Gardeners) later.
+      { k: "Opens", each: each((p) => (p.status ? <Badge tone={p.status.tone}>{p.status.label}</Badge> : "At the public launch")) },
       { k: "In the app", each: each(appLink) },
     ],
   },
@@ -107,7 +108,7 @@ export function GardenCompare() {
   return (
     <Reveal>
       {/* md and up: one table, grouped rows. */}
-      <div className="hidden overflow-hidden rounded-panel border border-subtle bg-card md:block">
+      <div className="hidden overflow-hidden rounded-panel border border-subtle bg-card md:block shadow-soft">
         <table className="w-full table-fixed border-collapse text-left text-small">
           <caption className="sr-only">The three kinds of Garden compared: steering, custody, costs and status</caption>
           <colgroup>
@@ -167,7 +168,7 @@ export function GardenCompare() {
         {ids.map((id) => {
           const p = byId[id];
           return (
-            <li key={id} className="rounded-card border border-subtle bg-card p-5">
+            <li key={id} className="rounded-card border border-subtle bg-card p-5 shadow-soft">
               <h4 className="display text-h4 text-fg">{p.name}</h4>
               <p className="mt-1 text-caption text-fg-muted">{p.audience}</p>
               {groups.map((g) => (

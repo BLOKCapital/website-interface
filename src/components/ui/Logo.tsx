@@ -3,7 +3,7 @@ import { cn } from "@/lib/utils";
 
 /**
  * BLOK Capital wordmark, 340×67 WebP (2× its 32–34px display height; the
- * 520px masters are in design/archive). Dark lettering on the light theme;
+ * 520px masters are in git history). Dark lettering on the light theme;
  * inside a `.theme-dark` scope (the dark footer, or the header over a dark
  * band) CSS swaps in the light-lettered version, so no JS decides which one
  * shows.

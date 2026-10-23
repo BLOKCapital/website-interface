@@ -1,19 +1,18 @@
 "use client";
 
-import { Badge } from "@/components/ui/Badge";
 import { CrossIcon } from "@/components/ui/icons";
 import { announcement, BAR_KEY } from "@/lib/announce";
-import { social } from "@/lib/data/socials";
 import { cn } from "@/lib/utils";
 
 /**
- * A thin dark strip above the header: what's coming next, and one action.
+ * A thin paper strip above the header: what's coming next, on a lime tag (the
+ * brand posts' highlight), and one action.
  * It folds away once the page scrolls, and stays gone once dismissed:
  * RevealScript hides it before first paint on later visits, so it never
  * flashes. `inert` while folded keeps its link out of the tab order.
  *
  * - Below 640 px, and in short (landscape) viewports, it isn't shown at all
- *   (D-05): the phone header carries the Launch App button instead.
+ *   (D-05): the phone header carries the Launch your fund button instead.
  * - Only the descriptive text truncates; the Discord link keeps its whole
  *   label and the bar's full height as its hit area. Rings are drawn inset
  *   (`focus-inset`), so the fold wrapper's overflow can't clip them.
@@ -41,14 +40,13 @@ export function AnnouncementBar({ collapsed, onDismiss }: { collapsed: boolean; 
       )}
     >
       <div className="min-h-0 overflow-hidden">
-        <div className="theme-dark focus-inset relative border-b border-subtle bg-canvas">
+        <div className="focus-inset relative border-b border-dashed border-line/20 bg-surface">
           <div className="mx-auto flex h-11 w-full max-w-page items-center justify-center gap-3 px-14 text-caption">
-            <Badge tone="soon" className="self-center py-0.5 font-mono text-label uppercase tracking-caps">
-              {announcement.label}
-            </Badge>
+            <span className="tag-lime shrink-0 !py-0.5 !text-label uppercase tracking-caps">{announcement.label}</span>
             <p className="hidden min-w-0 truncate text-fg-muted md:block">{announcement.text}</p>
             <a
-              href={social("discord").href}
+              href={announcement.cta.href}
+              data-cta="announcement_contribute"
               data-placement="announcement_bar"
               target="_blank"
               rel="noopener noreferrer"

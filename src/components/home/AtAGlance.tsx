@@ -1,5 +1,4 @@
 import { IntentLink } from "@/components/ui/IntentLink";
-import { audits } from "@/lib/data/audits";
 import { indices } from "@/lib/data/indices";
 import { links } from "@/lib/data/socials";
 import type { GovernanceSnapshot } from "@/lib/data/proposals";
@@ -8,12 +7,11 @@ import { CornerMarks } from "@/components/motion/CornerMarks";
 import { cn } from "@/lib/utils";
 import { Container } from "@/components/ui/Container";
 
-const credShields = audits.find((a) => a.partner === "CredShields");
 
 /**
  * The protocol at a glance: only figures with a source, each linking to it.
- * No TVL or user counts: the protocol is in private testing and those numbers
- * aren't public, so they aren't shown (and never invented). Figures are data
+ * No TVL or user counts: the protocol isn't public yet and those numbers
+ * aren't published, so they aren't shown (and never invented). Figures are data
  * being read, so they're simply there (D-34).
  *
  * A list of links, each read label first ("Network: Arbitrum One", A11Y-07);
@@ -23,13 +21,8 @@ export function AtAGlance({ governance }: { governance: GovernanceSnapshot }) {
   const executed = governance.proposals.filter((p) => p.statusLabel === "Executed").length;
   const items = [
     { id: "network", value: "Arbitrum One", label: "Network", href: "/protocol#architecture" },
-    {
-      id: "audit",
-      // When the review ran, labelled with what it covered (CRO-05).
-      value: credShields?.auditedOn ?? credShields?.date ?? "—",
-      label: `CredShields audit · ${credShields?.coverage?.covered ?? "Garden contracts"}`,
-      href: credShields?.url ?? "/security#audits",
-    },
+    // Where every index price comes from (the methodology says so, with the contracts' rules).
+    { id: "prices", value: "Chainlink", label: "Price feeds · every index", href: "/indices#methodology" },
     { id: "proposals", value: governance.proposals.length ? String(executed) : "—", label: "DAO proposals executed", href: links.aragon },
     { id: "indices", value: String(indices.length), label: "On-chain indices", href: "/indices" },
     { id: "supply", value: "10B", label: "$BLOKC supply", href: "/token" },

@@ -1,5 +1,4 @@
 import type { ReactNode } from "react";
-import { protocolStatus } from "@/lib/data/status";
 import { cn } from "@/lib/utils";
 
 export type Tone = "live" | "current" | "done" | "soon" | "example" | "neutral";
@@ -24,8 +23,6 @@ const tones: Record<Tone, string> = {
 export const BADGE_STATUS = {
   /** Real data updating now; the only badge that pulses. */
   live: { tone: "live", label: "Live" },
-  /** The protocol's launch state (lib/data/status.ts). */
-  testing: { tone: "current", label: protocolStatus.label },
   progress: { tone: "current", label: "In progress" },
   planned: { tone: "soon", label: "Planned" },
   done: { tone: "done", label: "Done" },
@@ -45,10 +42,13 @@ type Props = { className?: string } & (
 /**
  * Status chip with fixed meanings, site-wide:
  *   live / voting open — real, happening now (pulses)
- *   in private testing / in progress — current · done — shipped · planned
+ *   in progress — current · done — shipped · planned
  *   example — illustrative, never real accounts or figures
  * `status` picks the tone and the wording; `tone` with your own label is the
  * older form, kept while pages move over.
+ *
+ * Set as a small square tag in mono caps (the labels on the brand's posts),
+ * so status reads as a label on the paper, not a button.
  */
 export function Badge(props: Props) {
   const { className } = props;
@@ -57,7 +57,7 @@ export function Badge(props: Props) {
   return (
     <span
       className={cn(
-        "inline-flex shrink-0 items-center gap-1.5 self-start whitespace-nowrap rounded-full border px-2.5 py-1 text-label font-medium leading-none",
+        "inline-flex shrink-0 items-center gap-1.5 self-start whitespace-nowrap rounded-tag border px-2 py-[5px] font-mono text-label uppercase leading-none tracking-wide",
         tones[tone],
         className,
       )}

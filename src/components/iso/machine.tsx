@@ -1,4 +1,5 @@
 import type { ReactNode } from "react";
+import { components, type ComponentSymbol } from "@/lib/data/indices";
 import { type Box, type Pt, faces, hull, isoCircle, onFace, project, pts, roundRect } from "./geometry";
 
 /**
@@ -110,6 +111,33 @@ export function Cyl({
       <path d={body} fill={side} stroke={stroke} strokeWidth={W} strokeLinejoin="round" />
       <ellipse {...t} fill={PAPER.top} />
       <ellipse {...t} fill={top} stroke={stroke} strokeWidth={W} />
+    </g>
+  );
+}
+
+/** A token's round logo, from its listing in lib/data/indices (the 64px cut). */
+export const logoSrc = (symbol: ComponentSymbol) => components[symbol].logo.replace(/\.webp$/, "-64.webp");
+
+/**
+ * A logo printed on a round face lying in the plane z: a coin's top. It's
+ * the logo squashed 2:1 to sit in the face's ellipse, on a white disc (some
+ * logos are open in the middle), inset so the coin's rim still shows. `src`
+ * is any round image; `symbol` a listed token.
+ */
+export function CoinFace({ cx, cy, z, r, symbol, src }: { cx: number; cy: number; z: number; r: number } & ({ symbol: ComponentSymbol; src?: never } | { src: string; symbol?: never })) {
+  const t = isoCircle(cx, cy, z, r);
+  const R = t.rx * 0.8;
+  return (
+    <g>
+      <ellipse cx={t.cx} cy={t.cy} rx={R} ry={R / 2} fill="#fff" />
+      <image
+        href={src ?? logoSrc(symbol!)}
+        x={-R}
+        y={-R}
+        width={R * 2}
+        height={R * 2}
+        transform={`translate(${+t.cx.toFixed(2)} ${+t.cy.toFixed(2)}) scale(1 0.5)`}
+      />
     </g>
   );
 }

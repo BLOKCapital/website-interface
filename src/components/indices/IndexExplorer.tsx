@@ -10,7 +10,6 @@ import { ARBISCAN } from "@/lib/live/rpc";
 import { LiveStatus } from "@/components/live/LiveStatus";
 import { CopyButton } from "@/components/ui/CopyButton";
 import { Hint } from "@/components/ui/Hint";
-import { Badge } from "@/components/ui/Badge";
 import { ArrowIcon, ExternalIcon } from "@/components/ui/icons";
 import { BasketOrbit } from "./BasketOrbit";
 import { TokenLogo, TokenStack } from "./TokenLogo";
@@ -69,7 +68,7 @@ export function IndexExplorer({
   return (
     // A dark console on either theme: the component colours are tuned for it.
     // overflow-clip (not hidden) rounds the corners without breaking the sticky basket.
-    <div ref={root} className="theme-dark overflow-clip rounded-panel border border-subtle bg-card">
+    <div ref={root} className="theme-dark overflow-clip rounded-panel border border-subtle bg-card shadow-soft">
       {/* Selector */}
       <div className="flex flex-col gap-4 border-b border-subtle p-4 sm:flex-row sm:items-center sm:justify-between sm:p-5">
         {fixed ? (
@@ -128,7 +127,6 @@ export function IndexExplorer({
           <div key={id} className={cn(picked && "animate-swap")}>
             <div className="flex flex-wrap items-center gap-3">
               <h3 className="font-mono text-h3 font-medium tracking-wide text-fg">{idx.name}</h3>
-              <Badge tone="current">{idx.status}</Badge>
             </div>
             <p className="mt-1 text-body text-fg">{idx.tagline}</p>
             <p className="mt-3 max-w-xl text-small text-fg-muted">{idx.summary}</p>

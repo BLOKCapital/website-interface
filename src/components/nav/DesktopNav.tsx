@@ -18,14 +18,17 @@ const HOVER_CLICK_MS = 400;
 
 const FOCUSABLE = "a[href], button:not([disabled])";
 
-/** Every panel is this wide (Panel's grid), so it can be placed before its contents exist. */
-const PANEL_W = 720;
+/** Every panel is this wide, so it can be placed before its contents exist. */
+const PANEL_W = 400;
 
-/** One menu's contents: its links with a line each, and a featured card. */
+/**
+ * One menu's contents, kept small: its links in one column (a solid icon
+ * tile, the label and its line), then a one-line footer (NavFeature).
+ */
 function Panel({ group, pathname, onPick }: { group: NavGroup; pathname: string | null; onPick: () => void }) {
   return (
-    <div className="grid grid-cols-[1fr_272px] gap-3 p-3" style={{ width: PANEL_W }}>
-      <ul className="py-1">
+    <div className="p-2" style={{ width: PANEL_W }}>
+      <ul>
         {group.links.map((l) => {
           const current = !l.href.includes("#") && isCurrent(l.href, pathname);
           return (
@@ -36,23 +39,22 @@ function Panel({ group, pathname, onPick }: { group: NavGroup; pathname: string 
                 target={l.external ? "_blank" : undefined}
                 rel={l.external ? "noopener noreferrer" : undefined}
                 aria-current={current ? "page" : undefined}
-                className="group/nl flex items-start gap-4 rounded-card p-4 transition-colors duration-fast hover:bg-line/5 focus-visible:bg-line/5"
+                className="group/nl flex items-center gap-3 rounded-control px-3 py-2.5 transition-colors duration-fast hover:bg-line/5 focus-visible:bg-line/5"
               >
                 <span
                   className={cn(
-                    "grid size-11 shrink-0 place-items-center rounded-control border transition-colors duration-fast",
-                    current ? "border-leaf/40 bg-leaf/10 text-leaf" : "border-line/10 bg-canvas text-fg-muted group-hover/nl:text-leaf",
+                    "grid size-9 shrink-0 place-items-center rounded-tag transition-colors duration-fast",
+                    current ? "bg-leaf text-accent-fg" : "bg-cobalt/10 text-cobalt group-hover/nl:bg-cobalt group-hover/nl:text-white",
                   )}
                 >
-                  <NavIcon href={l.href} size={20} />
+                  <NavIcon href={l.href} size={18} />
                 </span>
-                <span className="min-w-0 pt-0.5">
-                  <span className="flex items-center gap-1.5 text-body font-medium text-fg">
-                    {l.label}
+                <span className="min-w-0 flex-1">
+                  <span className="flex items-center gap-1.5 text-small font-semibold text-fg">
+                    <span className={cn(current && "hand-underline")}>{l.label}</span>
                     {l.external && <ExternalIcon size={10} className="text-fg-subtle" />}
-                    {current && <span className="size-1.5 rounded-full bg-leaf" aria-hidden />}
                   </span>
-                  <span className="mt-1 block text-small text-fg-subtle">{l.hint}</span>
+                  <span className="block truncate text-caption text-fg-subtle">{l.hint}</span>
                   {l.external && <span className="sr-only"> (opens in a new tab)</span>}
                 </span>
               </Link>
@@ -281,9 +283,9 @@ export function DesktopNav({ pathname }: { pathname: string | null }) {
                   on || here ? "text-fg" : "text-fg-muted hover:text-fg",
                 )}
               >
-                {g.label}
+                {/* The section you're in is underlined by hand, as the headlines are. */}
+                <span className={cn(here && "hand-underline")}>{g.label}</span>
                 <ChevronIcon className={cn("transition-transform duration-base ease-expo", on && "rotate-180")} />
-                {here && <span aria-hidden className="absolute bottom-0.5 left-1/2 size-1 -translate-x-1/2 rounded-full bg-leaf" />}
               </button>
             </li>
           );
