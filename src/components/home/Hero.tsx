@@ -33,7 +33,7 @@ export function Hero() {
           </p>
           <div className="mt-8 flex animate-rise flex-wrap items-center gap-3">
             <Button href={links.app} size="lg" data-cta="hero_launch_app">
-              Launch your fund
+              Launch your Fund
             </Button>
             <Button href="/indices" size="lg" variant="secondary" data-cta="hero_explore_indices">
               Explore the indices

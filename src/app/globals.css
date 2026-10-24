@@ -1199,7 +1199,7 @@ html[data-io] [data-loop]:not([data-inview]) *::after {
 /* ---------- Mobile menu (components/nav/MobileMenu.tsx) ------------------
    Opens as a circle growing from the menu button (top right), while each
    group eases in on a 20 ms stagger (--i, set inline), so the whole sheet
-   is in by 250 ms (MOT-13). The pinned Launch your fund bar has no delay: the circle
+   is in by 250 ms (MOT-13). The pinned Launch your Fund bar has no delay: the circle
    reveals it. Closing shrinks the circle at ~0.75× and visibility flips only
    once it has gone. Under reduced motion or Pause motion the global
    contract makes every part instant, delays included. */

@@ -78,7 +78,7 @@ export const docsLink: NavLink = { href: links.docs, label: "Docs", hint: "Guide
 export const DISCORD_LABEL = "Join the Discord";
 
 /** The app: the header's and mobile menu's primary action. `short` is its label on narrow phones. */
-export const appLink: NavLink & { short: string } = { href: links.app, label: "Launch your fund", short: "Launch", external: true };
+export const appLink: NavLink & { short: string } = { href: links.app, label: "Launch your Fund", short: "Launch", external: true };
 
 const pathOf = (href: string) => href.split("#")[0];
 

@@ -86,7 +86,7 @@ export function CtaBand({ context = "default", indexName }: { context?: CtaConte
           <p className="mt-5 max-w-xl text-lead text-fg-muted">{lead}</p>
           <div className="mt-9 flex flex-wrap items-center gap-3">
             <Button href={links.app} size="lg" data-cta="cta_band_launch_app" data-placement="cta_band">
-              Launch your fund
+              Launch your Fund
             </Button>
             <Button href={social("discord").href} size="lg" variant="secondary" data-placement="cta_band">
               <DiscordIcon /> {DISCORD_LABEL}

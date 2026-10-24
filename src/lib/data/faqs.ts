@@ -69,7 +69,7 @@ export const faqs: Faq[] = [
     topic: "basics",
     answer:
       "Once Gardens open: sign in with Google (no seed phrase) or your own wallet to open a Garden, fund it with USDC by card or bank or with crypto you already hold, then choose an index to follow.",
-    cta: { label: "Launch your fund", href: links.app },
+    cta: { label: "Launch your Fund", href: links.app },
   },
   {
     question: "Do I need a seed phrase?",

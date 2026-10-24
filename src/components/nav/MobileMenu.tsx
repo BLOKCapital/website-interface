@@ -60,7 +60,7 @@ function Row({ link, pathname, onPick }: { link: NavLink; pathname: string | nul
  *
  * - The links scroll in their own region, starting under the header row, and
  *   overscroll stays inside it.
- * - "Launch your fund" is pinned to the bottom edge, in the thumb zone, with
+ * - "Launch your Fund" is pinned to the bottom edge, in the thumb zone, with
  *   a second close button beside it: the menu button sits outside the dialog,
  *   where aria-modal hides it from some screen readers.
  * - Internal links close the sheet as well as navigating, so a same-page or

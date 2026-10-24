@@ -17,7 +17,7 @@ export type FaqItem = {
    * links here and read as their text elsewhere.
    */
   answer: string;
-  /** A next step under the answer, e.g. Launch your fund (CRO-11). */
+  /** A next step under the answer, e.g. Launch your Fund (CRO-11). */
   cta?: { label: string; href: string };
 };
 

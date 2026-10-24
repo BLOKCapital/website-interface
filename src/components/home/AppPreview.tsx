@@ -30,7 +30,7 @@ export function AppPreview() {
       actions={
         <div className="flex flex-wrap items-center justify-center gap-x-6 gap-y-3">
           <Button href={links.app} size="lg" data-cta="home_app_launch" data-placement="app_preview">
-            Launch your fund
+            Launch your Fund
           </Button>
           <ArrowLink href="#how">How it works</ArrowLink>
         </div>
