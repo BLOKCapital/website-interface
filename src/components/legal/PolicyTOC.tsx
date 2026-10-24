@@ -1,92 +1,54 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useMemo, type MouseEvent } from "react";
+import { useScrollSpy } from "@/lib/scroll-spy";
 import { cn } from "@/lib/utils";
 
 export type TocItem = { id: string; text: string };
 
 /**
- * Sticky table of contents for legal pages.
- *
- * - Each anchor in `headings` is observed via IntersectionObserver. The
- *   item closest to the top-third of the viewport is highlighted.
- * - Clicking a link jumps to the section with smooth scroll (CSS-level,
- *   already global). Hash updates the URL.
- * - Renders nothing if `headings.length === 0`.
+ * Table of contents with scroll-spy for the legal pages: the sticky column
+ * on desktop, the collapsed list at the top on phones, and the list inside
+ * the phone Contents sheet (ContentsSheet), which passes `onNavigate` and
+ * hides the label because the sheet has its own heading.
  */
-export function PolicyTOC({ headings }: { headings: TocItem[] }) {
-  const [active, setActive] = useState<string | null>(headings[0]?.id ?? null);
-
-  useEffect(() => {
-    if (typeof IntersectionObserver === "undefined") return;
-
-    const observer = new IntersectionObserver(
-      (entries) => {
-        // Pick the topmost intersecting heading.
-        const intersecting = entries
-          .filter((e) => e.isIntersecting)
-          .sort((a, b) => a.boundingClientRect.top - b.boundingClientRect.top);
-        if (intersecting[0]) {
-          setActive(intersecting[0].target.id);
-        }
-      },
-      { rootMargin: "-20% 0px -65% 0px", threshold: [0, 1] },
-    );
-
-    const nodes: HTMLElement[] = [];
-    for (const h of headings) {
-      const el = document.getElementById(h.id);
-      if (el) {
-        observer.observe(el);
-        nodes.push(el);
-      }
-    }
-    return () => {
-      for (const el of nodes) observer.unobserve(el);
-      observer.disconnect();
-    };
-  }, [headings]);
+export function PolicyTOC({
+  headings,
+  label = true,
+  onNavigate,
+}: {
+  headings: TocItem[];
+  /** Show the "Contents" label above the list. */
+  label?: boolean;
+  /** Called when a section link is followed; may take over the navigation. */
+  onNavigate?: (event: MouseEvent<HTMLAnchorElement>, id: string) => void;
+}) {
+  // The current section is the last heading above a line 30% down the
+  // viewport (useScrollSpy); above the first heading, it's the first.
+  const ids = useMemo(() => headings.map((h) => h.id), [headings]);
+  const active = useScrollSpy(ids) ?? headings[0]?.id ?? null;
 
   if (headings.length === 0) return null;
 
   return (
-    <nav aria-label="Contents" className="text-[13px]">
-      <p className="eyebrow mb-4 text-moss">Contents</p>
-      <ol className="space-y-1.5">
-        {headings.map((h, i) => {
-          const isActive = active === h.id;
-          return (
-            <li key={h.id} className="leading-snug">
-              <a
-                href={`#${h.id}`}
-                className={cn(
-                  "group/t inline-flex items-baseline gap-2 py-0.5 transition-colors duration-200",
-                  isActive
-                    ? "text-moss-deep"
-                    : "text-ink-muted hover:text-ink",
-                )}
-              >
-                <span
-                  aria-hidden
-                  className={cn(
-                    "shrink-0 font-mono text-[10.5px] tracking-wider transition-colors",
-                    isActive ? "text-clay" : "text-ink-subtle",
-                  )}
-                >
-                  {String(i + 1).padStart(2, "0")}
-                </span>
-                <span
-                  className={cn(
-                    "transition-all duration-200",
-                    isActive && "font-medium",
-                  )}
-                >
-                  {h.text}
-                </span>
-              </a>
-            </li>
-          );
-        })}
+    <nav aria-label="Contents">
+      {label && <p className="text-caption font-semibold uppercase tracking-caps text-fg-subtle">Contents</p>}
+      <ol className={cn("space-y-1 border-l border-line/10", label && "mt-4")}>
+        {headings.map((h) => (
+          <li key={h.id}>
+            <a
+              href={`#${h.id}`}
+              aria-current={active === h.id ? "location" : undefined}
+              onClick={onNavigate ? (e) => onNavigate(e, h.id) : undefined}
+              className={cn(
+                "-ml-px block border-l py-1.5 pl-4 text-small transition-colors",
+                active === h.id ? "border-leaf text-fg" : "border-transparent text-fg-subtle hover:text-fg-muted",
+              )}
+            >
+              {h.text}
+            </a>
+          </li>
+        ))}
       </ol>
     </nav>
   );

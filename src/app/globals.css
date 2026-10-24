@@ -3,305 +3,1328 @@
 @tailwind utilities;
 
 /**
- * Garden Journal theme — warm cream paper, cocoa ink, moss + clay.
- *
- * Tokens are space-separated R G B channels so Tailwind opacity modifiers
- * (`bg-moss/10`, `text-ink/70`) generate `rgb(var(--moss) / 0.1)` correctly.
- * For inline styles wrap with `rgb(var(--moss))` or
- * `rgba(var(--moss) / 0.2)` (CSS Color Level 4 syntax).
+ * Colour primitives: theme-independent R G B triplets. Components never use
+ * these directly; the semantic tokens below point at them, and Tailwind
+ * (tailwind.config.ts) only knows the semantic names.
  */
 :root {
-  /* Paper — warm cream stack. Never pure white. */
-  --paper: 250 247 240;        /* #FAF7F0 — page */
-  --paper-warm: 244 238 224;   /* #F4EEE0 — raised sheet (envelope) */
-  --paper-deep: 234 224 204;   /* #EAE0CC — index card / inset */
+  /* Paper: Day surfaces */
+  --p-paper-0: 255 255 255; /* #FFFFFF */
+  --p-paper-50: 247 248 244; /* #F7F8F4 */
+  --p-paper-100: 239 242 236; /* #EFF2EC */
+  --p-paper-150: 236 240 234; /* #ECF0EA */
+  --p-paper-200: 222 228 220; /* #DEE4DC plate side, left */
+  --p-paper-250: 208 215 206; /* #D0D7CE plate side, right */
+  /* Night surfaces */
+  --p-night-950: 9 13 11; /* #090D0B */
+  --p-night-900: 15 21 18; /* #0F1512 */
+  --p-night-850: 21 29 25; /* #151D19 */
+  --p-night-800: 27 37 32; /* #1B2520 */
+  /* Ink (Day text) and mist (Night text) */
+  --p-ink-900: 17 26 21; /* #111A15 */
+  --p-ink-700: 67 80 73; /* #435049 */
+  --p-ink-600: 92 105 98; /* #5C6962 */
+  --p-mist-50: 236 241 237; /* #ECF1ED */
+  --p-mist-300: 170 182 175; /* #AAB6AF */
+  --p-mist-400: 138 152 143; /* #8A988F */
+  /* Brand and state hues: Day uses the 700/800 steps, Night the 200/300. */
+  --p-leaf-800: 26 92 57; /* #1A5C39 */
+  --p-leaf-700: 33 112 70; /* #217046 */
+  --p-leaf-500: 63 138 95; /* #3F8A5F */
+  --p-leaf-300: 143 214 168; /* #8FD6A8 */
+  --p-leaf-200: 170 226 189; /* #AAE2BD */
+  --p-leaf-glow: 120 200 150; /* #78C896 */
+  --p-bronze-700: 131 97 34; /* #836122 (was #8A6726: 4.50 → 4.93:1 on raised) */
+  --p-sand-200: 230 216 188; /* #E6D8BC */
+  --p-bloom-800: 163 50 90; /* #A3325A */
+  --p-bloom-700: 178 58 98; /* #B23A62 */
+  --p-bloom-300: 240 163 180; /* #F0A3B4 */
+  --p-cobalt-600: 37 99 196; /* #2563C4 */
+  --p-cobalt-300: 125 180 255; /* #7DB4FF */
+  --p-ember-700: 190 62 40; /* #BE3E28 */
+  --p-ember-300: 242 145 127; /* #F2917F */
+  --p-amber-800: 122 85 8; /* #7A5508 */
+  --p-amber-700: 140 98 10; /* #8C620A */
+  --p-amber-300: 227 192 122; /* #E3C07A */
+}
 
-  /* Ink — cocoa stack. Never pure black. */
-  --ink: 31 26 20;             /* #1F1A14 — primary text */
-  --ink-2: 71 60 48;           /* #473C30 — body muted */
-  --ink-3: 122 108 90;         /* #7A6C5A — captions / subtle */
+/**
+ * BLOK Capital's two gardens. Semantic tokens are R G B triplets for
+ * Tailwind's alpha modifiers, so every utility follows whichever set is in
+ * scope. Every variable name here is read by canvases and inline styles
+ * (DotField, GlyphField), so names never change, only what they point at.
+ *
+ * Day garden (default): a warm, faintly green paper that lets the
+ * photographic Garden renders and the blue mark carry the colour; one deep
+ * leaf accent; bronze for the italic payoff. Text tokens on the four
+ * surfaces (measured): fg 15.4–17.8, fg-muted 7.3–8.5, fg-subtle 5.0–5.8,
+ * leaf 5.3–6.1, sand 4.9–5.7, bloom/cobalt/danger/caution 4.7–5.7.
+ */
+:root,
+.theme-light {
+  color-scheme: light;
 
-  /* Garden palette — moss + clay + sage + cream. */
-  --moss: 79 111 79;           /* #4F6F4F — primary (Turf, reframed) */
-  --moss-deep: 50 78 56;       /* #324E38 — pressed / link hover */
-  --moss-soft: 138 169 138;    /* #8AA98A — chip / wash */
-  --sage: 168 181 160;         /* #A8B5A0 — supporting */
-  --clay: 198 123 92;          /* #C67B5C — accent / call-out warmth */
-  --clay-deep: 154 91 65;      /* #9A5B41 — pressed */
-  --ochre: 196 156 71;         /* #C49C47 — quiet highlight */
+  --canvas: var(--p-paper-50); /* page */
+  --surface: var(--p-paper-100); /* alternate section band */
+  --card: var(--p-paper-0); /* cards */
+  --raised: var(--p-paper-150); /* inputs, nested cards, hover, skeletons */
+  --line: var(--p-ink-900); /* hairlines, always with an alpha */
 
-  /* Borders / surfaces */
-  --rule: 31 26 20;            /* used with alpha — e.g. rgb(var(--rule) / 0.10) */
+  --fg: var(--p-ink-900); /* 16.6:1 on canvas */
+  --fg-muted: var(--p-ink-700); /* 7.9:1 */
+  --fg-subtle: var(--p-ink-600); /* 5.4:1 */
 
-  /* Fonts — Newsreader serif display + Inter body. Mono only for tx data. */
-  --font-display: "Newsreader", "Source Serif 4", "Calistoga", Georgia, serif;
-  --font-body: "Inter", system-ui, -apple-system, "Segoe UI", sans-serif;
-  --font-script: "Caveat", "Reenie Beanie", "Homemade Apple", cursive;
-  --font-mono: "JetBrains Mono", ui-monospace, "SF Mono", Menlo, monospace;
+  --leaf: var(--p-leaf-700); /* accent, CTAs, positive */
+  --leaf-deep: var(--p-leaf-800); /* fills behind leaf */
+  --leaf-hover: var(--p-leaf-800); /* primary button hover */
+  --sand: var(--p-bronze-700); /* warm emphasis (bronze on paper) */
+  --bloom: var(--p-bloom-700); /* "in progress" state */
+  --cobalt: var(--p-cobalt-600); /* data / info, echoes the logo */
+  --danger: var(--p-ember-700); /* losses, risks */
+  --caution: var(--p-amber-700); /* warnings */
+  /* Small text on a bloom or caution tint (Badge "current" / "example"):
+     >= 5.0:1 on every surface, including under the badge's own 10% tint. */
+  --bloom-text: var(--p-bloom-800);
+  --caution-text: var(--p-amber-800);
+
+  /* Borders are --line at a role alpha (Tailwind: border-subtle, border,
+     border-strong). Hairlines are decorative; use strong where the border
+     is the only thing that identifies a control (>= 3:1). */
+  --a-border-subtle: 0.08;
+  --a-border: 0.12;
+  --a-border-strong: 0.5;
+
+  --glow: var(--p-leaf-glow); /* soft garden glow behind renders */
+  --shadow: 17 26 21 / 0.16;
+  /* Side faces of isometric plates (LayerStack): darker than any surface. */
+  --plate-l: var(--p-paper-200);
+  --plate-r: var(--p-paper-250);
+  /* Effect strengths. On paper a low-alpha accent turns grey, so glows,
+     decorative accent lines and scan sweeps run stronger than on night. */
+  --fx-glow: 0.34;
+  --fx-line: 0.8;
+  --fx-sweep: 0.16;
+}
+
+/**
+ * Night garden: the dark theme, kept for the components that read best on
+ * black (the announcement bar, consoles, the featured tile and the closing
+ * call to action). Add .theme-dark to a band or a component; it re-declares
+ * every token, so everything inside, including canvases (they read colours
+ * from their own element), renders dark. Bands that should also flip the
+ * sticky header carry data-band="dark". On paper there are no dark islands:
+ * outside `screen`-like media the rule doesn't apply, so a .theme-dark
+ * scope inherits the Day tokens and prints dark-on-light.
+ */
+@media not print {
+  .theme-dark {
+    color-scheme: dark;
+
+    --canvas: var(--p-night-950);
+    --surface: var(--p-night-900);
+    --card: var(--p-night-850);
+    --raised: var(--p-night-800);
+    --line: var(--p-mist-50);
+
+    --fg: var(--p-mist-50); /* 17:1 on canvas */
+    --fg-muted: var(--p-mist-300); /* 9.3:1 */
+    --fg-subtle: var(--p-mist-400); /* 6.5:1 */
+
+    --leaf: var(--p-leaf-300);
+    --leaf-deep: var(--p-leaf-500);
+    --leaf-hover: var(--p-leaf-200);
+    --sand: var(--p-sand-200);
+    --bloom: var(--p-bloom-300);
+    --cobalt: var(--p-cobalt-300);
+    --danger: var(--p-ember-300);
+    --caution: var(--p-amber-300);
+    --bloom-text: var(--p-bloom-300);
+    --caution-text: var(--p-amber-300);
+
+    --a-border-subtle: 0.08;
+    --a-border: 0.12;
+    --a-border-strong: 0.4; /* 3.5:1 on card */
+
+    --glow: var(--p-leaf-300);
+    --shadow: 0 0 0 / 0.6;
+    --plate-l: var(--p-night-800);
+    --plate-r: var(--p-night-900);
+    --fx-glow: 0.18;
+    --fx-line: 0.5;
+    --fx-sweep: 0.09;
+  }
+}
+
+/* Semantic roles. A var() resolves on the element that declares it, so the
+   aliases are declared on every scope root: inside a .theme-dark island
+   --accent then follows that island's --leaf instead of keeping the Day
+   value it would inherit from :root. */
+:root,
+.theme-light,
+.theme-dark {
+  --accent: var(--leaf);
+  --accent-hover: var(--leaf-hover);
+  --on-accent: var(--canvas);
+  --emphasis: var(--sand);
+  --data: var(--cobalt);
+  --progress: var(--bloom);
+  --progress-text: var(--bloom-text);
+  --success: var(--leaf);
+  --warning: var(--caution);
+  --warning-text: var(--caution-text);
+}
+
+/* Layout rhythm (Tailwind: py-section, py-section-sm, mb-header, px-gutter,
+   p-pad-card, p-pad-panel). Fluid between a 375px phone and ~1300px. */
+:root {
+  --space-section: clamp(
+    6rem,
+    4.6rem + 5.9vw,
+    9rem
+  ); /* 96 → 144: room to breathe between sections */
+  --space-section-sm: clamp(4rem, 3.15rem + 3.7vw, 6rem); /* 64 → 96 */
+  --space-header: clamp(3rem, 2.4rem + 2.4vw, 4.5rem); /* 48 → 72 */
+  --gutter: clamp(1.25rem, 0.6rem + 2.8vw, 2rem); /* 20 → 32 */
+  --pad-card: clamp(1.5rem, 1.35rem + 0.6vw, 1.75rem); /* 24 → 28 */
+  --pad-panel: clamp(1.5rem, 0.9rem + 2.4vw, 2.5rem); /* 24 → 40 */
+}
+
+/* Text inherits as a computed colour, so each scope sets its own. In the
+   base layer, so a text utility on the same element still wins. */
+@layer base {
+  .theme-dark,
+  .theme-light {
+    color: rgb(var(--fg));
+  }
+}
+
+/* ---------- Motion tokens ------------------------------------------------
+   Tailwind mirrors these: duration-instant…scenic, ease-out/expo/in/inout,
+   animate-rise/reveal/fade-in/swap/pop-in/progress, and the motion-off: and
+   can-hover: variants. Spec: docs/audit/findings/C-motion.md §4. */
+:root {
+  /* Duration, by what the motion is for. Exits run at ~0.75× the entrance. */
+  --dur-instant: 90ms; /* press, toggle, icon swap, copy tick */
+  --dur-fast: 150ms; /* hover/focus colour, tooltip, selected state */
+  --dur-base: 240ms; /* panel crossfade, menu open, small morph, page change */
+  --dur-slow: 420ms; /* entrances, scroll reveals, sheet, explainer stage */
+  --dur-scenic: 700ms; /* one-off storytelling only; never on repeated UI */
+  /* Easing, by intent. Linear only for loops, timers and scroll-linked. */
+  --ease-out: cubic-bezier(
+    0.22,
+    1,
+    0.36,
+    1
+  ); /* settle: entrances, reveals, hovers */
+  --ease-expo: cubic-bezier(
+    0.16,
+    1,
+    0.3,
+    1
+  ); /* snap, then settle: morphs, menus, indicators */
+  --ease-in: cubic-bezier(0.4, 0, 1, 1); /* leave: exits, header hide */
+  --ease-inout: cubic-bezier(
+    0.65,
+    0,
+    0.35,
+    1
+  ); /* travel from A to B on screen */
+  /* Distance */
+  --move-xs: 2px; /* hover lift, arrow nudge, panel swap */
+  --move-sm: 8px; /* hero rise (LCP-safe), toasts, page change */
+  --move-md: 16px; /* scroll reveals */
+  --move-lg: 24px; /* sheets and dialogs on phones */
+  --scale-press: 0.98;
+  --scale-pop: 0.96; /* popover / panel enter */
+  --blur-max: 4px; /* non-LCP display text only; never on data */
+  /* Stagger: first reveal only, never on repeated UI.
+     Delay = min(i × stagger, cap). */
+  --stagger-tight: 30ms; /* chips, logos */
+  --stagger: 60ms; /* cards, list items (Stagger sets its own) */
+  --stagger-words: 35ms; /* headline words */
+  --stagger-cap: 300ms;
+  --stagger-cap-words: 400ms;
 }
 
 html {
   scroll-behavior: smooth;
+  scroll-padding-top: 88px; /* anchors land below the sticky header */
+}
+/* A page with a sticky section bar (SectionNav): anchors land below it too,
+   and pinned panels (ProductStack, IndexExplorer) pin below it. */
+html:has([data-subnav]) {
+  --subnav: 3.5rem;
+  scroll-padding-top: calc(88px + var(--subnav));
 }
 
-html,
 body {
-  background: rgb(var(--paper));
-  color: rgb(var(--ink));
+  background: rgb(var(--canvas));
+  color: rgb(var(--fg));
   font-family: var(--font-body);
   -webkit-font-smoothing: antialiased;
   text-rendering: optimizeLegibility;
 }
 
 ::selection {
-  background: rgb(var(--clay) / 0.35);
-  color: rgb(var(--ink));
+  background: rgb(var(--leaf) / 0.3);
+  color: rgb(var(--fg));
 }
 
-/* Focus ring — clay reads warmly on cream. */
+/* ---------- Focus ----------------------------------------------------------
+   One ring everywhere. No border-radius here: an outline follows the
+   element's own corners, and setting one reshaped every pill on focus. */
+:root,
+.theme-light,
+.theme-dark {
+  --focus-ring: var(--leaf); /* 5.7:1 Day / 11.5:1 Night on canvas */
+}
+:root {
+  --focus-width: 2px;
+  --focus-offset: 3px;
+}
 :focus-visible {
-  outline: 2px solid rgb(var(--clay));
-  outline-offset: 3px;
-  border-radius: 4px;
+  outline: var(--focus-width) solid rgb(var(--focus-ring));
+  outline-offset: var(--focus-offset);
+}
+/* Bare text links have no corners of their own; soften the ring slightly. */
+a:not([class*="rounded"]):focus-visible {
+  border-radius: 0.25rem;
+}
+/* A Night-garden element sitting on a Day page draws its ring outside
+   itself, over the light page, so it takes the Day ring (the Night one is
+   1.6:1 on paper). Inside another dark scope, or with an inset ring drawn
+   on its own dark fill, it keeps the Night ring. */
+.theme-dark:focus-visible {
+  --focus-ring: var(--p-leaf-700);
+}
+.theme-dark .theme-dark:focus-visible,
+.theme-dark.focus-inset:focus-visible,
+.focus-inset .theme-dark:focus-visible {
+  --focus-ring: var(--p-leaf-300);
+}
+/* Inset ring for items inside clipping (overflow hidden/auto) containers,
+   where an outside ring would be cut off. Put it on the item, or on the
+   container to cover everything focusable inside it. */
+.focus-inset:focus-visible,
+.focus-inset :focus-visible {
+  outline-offset: calc(-1 * (var(--focus-width) + 1px));
 }
 
-/* Paper grain — a soft botanical noise instead of synthetic neon noise. */
-.paper {
-  position: relative;
-  isolation: isolate;
-}
-.paper::after {
-  content: "";
-  position: absolute;
-  inset: 0;
-  pointer-events: none;
-  z-index: 0;
-  opacity: 0.06;
-  mix-blend-mode: multiply;
-  background-image: url("/textures/noise.svg");
-  background-size: 220px 220px;
+@layer components {
+  /* A linked tile: the hover every card shares (Card's link hover). No lift:
+     a clear leaf outline (the border plus a 1px ring, so nothing shifts) and
+     a deeper ambient shadow. Put it on any <a> that is a card. */
+  .surface-link {
+    transition:
+      border-color var(--dur-base) var(--ease-out),
+      box-shadow var(--dur-base) var(--ease-out);
+  }
+  .surface-link:focus-visible {
+    border-color: rgb(var(--leaf) / 0.6);
+  }
+  @media (hover: hover) and (pointer: fine) {
+    .surface-link:hover {
+      border-color: rgb(var(--leaf) / 0.6);
+      box-shadow:
+        0 0 0 1px rgb(var(--leaf) / 0.6),
+        0 0 36px -6px rgb(var(--shadow));
+    }
+  }
+
+  /* The paper-and-ink kit, after the brand's own posts: heavy black
+     headlines with one handwritten payoff, ink-blue mono labels, notebook
+     paper, pinned note cards, caption strips, lime tags and stamps. */
+
+  /* Small uppercase label above headings, in ink blue: the place-and-date
+     line at the top of the posts ("AMSTERDAM · 1774"). */
+  .eyebrow {
+    @apply font-mono text-eyebrow font-normal uppercase text-cobalt;
+    line-height: 1.5;
+  }
+  /* The one caps label: table heads, meta, chips and data labels. */
+  .label-caps {
+    @apply font-mono text-label font-normal uppercase tracking-caps text-fg-subtle;
+  }
+  /* Headlines: heavy, tight sans. The <em> in a title is its payoff, set by
+     hand: the script face in ink blue over a hand-drawn green underline. */
+  .display {
+    font-family: var(--font-body);
+    font-weight: 800;
+    letter-spacing: -0.035em;
+    line-height: 1.04;
+  }
+  /* Room under the underline, so it never touches the text below. */
+  .display:has(em) {
+    padding-bottom: 0.16em;
+  }
+  .display em {
+    font-family: var(--font-script), cursive;
+    font-style: normal;
+    font-weight: 600;
+    letter-spacing: 0;
+    color: rgb(var(--cobalt));
+    font-size: 1.08em;
+    padding-bottom: 0.1em;
+    background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 200 12' preserveAspectRatio='none'%3E%3Cpath d='M2 8.5C40 4 90 3 198 6.5' fill='none' stroke='%2384c341' stroke-width='3.2' stroke-linecap='round'/%3E%3C/svg%3E")
+      left bottom / 100% 0.22em no-repeat;
+  }
+  /* "You are here": the headline's hand-drawn green underline, under a
+     nav item or a link. */
+  .hand-underline {
+    padding-bottom: 0.2em;
+    background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 200 12' preserveAspectRatio='none'%3E%3Cpath d='M2 8.5C40 4 90 3 198 6.5' fill='none' stroke='%2384c341' stroke-width='3.2' stroke-linecap='round'/%3E%3C/svg%3E")
+      left bottom / 100% 0.3em no-repeat;
+  }
+  /* A handwritten note: on a figure, or after a mono label ("SMALL SAVERS
+     a little each"). */
+  .note {
+    font-family: var(--font-script), cursive;
+    font-weight: 600;
+    font-size: 1.3rem;
+    line-height: 1.1;
+    letter-spacing: 0;
+    text-transform: none;
+    color: rgb(var(--cobalt));
+  }
+  /* One word by hand, inline (the cookie card's heading): the .display em
+     look without the underline, for text that isn't a .display heading. */
+  .hand {
+    font-family: var(--font-script), cursive;
+    font-weight: 600;
+    font-size: 1.12em;
+    line-height: 1;
+    letter-spacing: 0;
+    color: rgb(var(--cobalt));
+  }
+  /* Notebook paper: faint ink-blue rules every 32px. */
+  .paper-ruled {
+    background-image: repeating-linear-gradient(
+      to bottom,
+      transparent 0 31px,
+      rgb(var(--cobalt) / 0.07) 31px 32px
+    );
+  }
+  /* A note card pinned to the page: dashed edge, a small mono label over a
+     heavy figure (the posts' "brokers 24"). */
+  .note-card {
+    border: 1.5px dashed rgb(var(--line) / 0.32);
+    border-radius: 6px;
+    background-color: rgb(var(--card));
+    box-shadow: 0 8px 18px -12px rgb(var(--shadow));
+  }
+  /* A caption typed on a strip of paper, a little off true. */
+  .strip {
+    display: inline-block;
+    padding: 0.45em 0.8em;
+    background-color: rgb(var(--card));
+    color: rgb(var(--fg));
+    font-family: var(--font-mono);
+    font-size: 0.75rem;
+    line-height: 1.5;
+    box-shadow:
+      0 0 0 1px rgb(var(--line) / 0.08),
+      0 8px 16px -12px rgb(var(--shadow));
+    transform: rotate(-1deg);
+  }
+  /* A lime highlight tag, turned like a sticker. */
+  .tag-lime {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4em;
+    padding: 0.35em 0.75em;
+    background-color: #9be05a;
+    color: #10180f;
+    border: 1.5px dashed rgb(16 24 15 / 0.55);
+    font-family: var(--font-mono);
+    font-size: 0.8125rem;
+    transform: rotate(-2deg);
+    box-shadow: 0 6px 14px -8px rgb(0 0 0 / 0.35);
+  }
+  /* A rubber stamp: outlined caps with a second ring, turned. Colour it with
+     a text colour. */
+  .stamp {
+    display: inline-flex;
+    align-items: center;
+    padding: 0.3em 0.6em;
+    border: 1.5px solid currentColor;
+    border-radius: 3px;
+    outline: 1px solid currentColor;
+    outline-offset: 2px;
+    font-family: var(--font-mono);
+    font-size: 0.6875rem;
+    line-height: 1;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    white-space: nowrap;
+    transform: rotate(-4deg);
+  }
+  /* A cut-out sticker: white edge and a soft lift (for cut-out art). */
+  .sticker {
+    filter: drop-shadow(3px 0 0 #fff) drop-shadow(-3px 0 0 #fff)
+      drop-shadow(0 3px 0 #fff) drop-shadow(0 -3px 0 #fff)
+      drop-shadow(0 14px 18px rgb(0 0 0 / 0.28));
+  }
+  /* Tabular numbers for data. */
+  .tabular {
+    font-variant-numeric: tabular-nums;
+  }
+  /* A soft garden glow behind renders; purely decorative. */
+  .glow-leaf {
+    background: radial-gradient(
+      closest-side,
+      rgb(var(--glow) / var(--fx-glow)),
+      transparent
+    );
+  }
+  /* Faint grid used behind diagrams and the hero. */
+  .grid-lines {
+    background-image:
+      linear-gradient(rgb(var(--line) / 0.045) 1px, transparent 1px),
+      linear-gradient(90deg, rgb(var(--line) / 0.045) 1px, transparent 1px);
+    background-size: 56px 56px;
+  }
+  /* A "+" registration mark, like the corners of an engineering drawing
+     (components/motion/CornerMarks.tsx places them). */
+  .corner-mark {
+    width: 11px;
+    height: 11px;
+    color: rgb(var(--line) / 0.32);
+    background:
+      linear-gradient(currentColor, currentColor) center / 1px 100% no-repeat,
+      linear-gradient(currentColor, currentColor) center / 100% 1px no-repeat;
+  }
+  /* Monitor texture: faint horizontal scanlines plus one sweep of light, which
+     runs once and settles (re-key the layer to sweep again, as RulesDemo
+     does for each new scenario). Put it on an absolutely positioned,
+     aria-hidden layer. */
+  .scanlines {
+    background-image: repeating-linear-gradient(
+      to bottom,
+      rgb(var(--line) / 0.025) 0 1px,
+      transparent 1px 4px
+    );
+  }
+  .scanlines::after {
+    content: "";
+    position: absolute;
+    inset-inline: 0;
+    top: 0;
+    height: 30%;
+    background: linear-gradient(
+      to bottom,
+      transparent,
+      rgb(var(--glow) / calc(var(--fx-sweep) * 0.55)) 85%,
+      rgb(var(--glow) / var(--fx-sweep))
+    );
+    transform: translate3d(0, -100%, 0);
+    animation: scanSweep 2.4s var(--ease-inout) both;
+  }
 }
 
-/* Editorial small-caps eyebrow — quieter, no mono. */
-.eyebrow {
-  font-family: var(--font-body);
-  font-size: 11px;
-  line-height: 1;
-  font-weight: 600;
-  letter-spacing: 0.18em;
-  text-transform: uppercase;
-  color: rgb(var(--ink-3));
+@keyframes scanSweep {
+  to {
+    transform: translate3d(0, 340%, 0);
+  }
+}
+/* A word inking in: from readable --fg-subtle, a quarter-em low, to its own
+   colour (no `to` frame, so an <em class="text-sand"> payoff ends in sand). */
+@keyframes wordInk {
+  from {
+    color: rgb(var(--fg-subtle));
+    transform: translate3d(0, 0.25em, 0);
+  }
 }
 
-/* Mono — kept for actual tx hashes, addresses, and code only. */
-.mono {
-  font-family: var(--font-mono);
-  font-variant-numeric: tabular-nums;
+/* An announcement the visitor dismissed stays dismissed (RevealScript sets
+   the attribute before first paint, so it never flashes). */
+html[data-bar="hidden"] #announce {
+  display: none;
 }
 
-/* Serif display — warm and literary. */
-.display {
-  font-family: var(--font-display);
-  font-weight: 500;
-  letter-spacing: -0.012em;
-  line-height: 1.02;
+/* ---------- Word reveals (components/motion/SplitText.tsx) ---------------
+   Headings split into word spans that ink in, in sequence: each word starts
+   readable in --fg-subtle (>= 5:1) at full opacity, rises 0.25em and ends
+   in its own colour, 35ms apart (capped at 400ms). There's no opacity or
+   blur, so the whole headline is painted, and counted for LCP, on the first
+   frame. Hero titles (.split-load) run on load; section titles
+   ([data-split]) run when RevealScript marks them revealed, so no client
+   JS. Only with motion allowed and not paused; otherwise, and without JS,
+   words simply sit in their final state. */
+.split-word {
+  display: inline-block;
+}
+@media (prefers-reduced-motion: no-preference) {
+  html:not([data-motion="paused"]) .split-load .split-word {
+    animation: wordInk var(--dur-slow) var(--ease-out) both;
+    animation-delay: calc(
+      var(--split-delay, 80ms) +
+        min(var(--w, 0) * var(--stagger-words), var(--stagger-cap-words))
+    );
+  }
+  html.js:not([data-motion="paused"]) [data-split] .split-word {
+    transition:
+      color var(--dur-slow) var(--ease-out),
+      transform var(--dur-slow) var(--ease-out);
+    transition-delay: min(
+      var(--w, 0) * var(--stagger-words),
+      var(--stagger-cap-words)
+    );
+  }
+  html.js:not([data-motion="paused"])
+    [data-split]:not([data-revealed])
+    .split-word {
+    color: rgb(var(--fg-subtle));
+    transform: translate3d(0, 0.25em, 0);
+  }
 }
 
-/* Hand-script accents — signatures, margin notes. Use sparingly. */
-.script {
-  font-family: var(--font-script);
-  font-weight: 400;
-  letter-spacing: 0;
+/* ---------- Handwriting (components/motion/Handwrite.tsx) ----------------
+   A script payoff word writes itself in, left to right, then its underline
+   draws under it. The clip overhangs the line box, so ascenders, descenders
+   and the script's swashes are never cut. Handwrite only adds .write-in with
+   motion allowed; the pause switch stops it here too. */
+@media (prefers-reduced-motion: no-preference) {
+  html:not([data-motion="paused"]) .write-in {
+    animation: writeIn 1000ms cubic-bezier(0.45, 0.05, 0.35, 1) both;
+  }
+  html:not([data-motion="paused"]) .display em:has(> .write-in) {
+    animation: underlineIn 420ms var(--ease-out) 900ms both;
+  }
+}
+@keyframes writeIn {
+  from {
+    clip-path: inset(-0.4em 100% -0.4em -0.3em);
+  }
+  to {
+    clip-path: inset(-0.4em -0.3em -0.4em -0.3em);
+  }
+}
+@keyframes underlineIn {
+  from {
+    background-size: 0% 0.22em;
+  }
+  to {
+    background-size: 100% 0.22em;
+  }
 }
 
-/* Drop cap — first paragraph of a letter. */
-.drop-cap::first-letter {
-  font-family: var(--font-display);
-  font-weight: 600;
-  float: left;
-  font-size: 3.4em;
-  line-height: 0.85;
-  padding-right: 0.08em;
-  padding-top: 0.06em;
-  color: rgb(var(--moss));
+/* ---------- Scroll ink (components/motion/ScrollInk.tsx) -----------------
+   Each word darkens from subtle to full ink as the paragraph scrolls through
+   the viewport, tied to scroll position by a CSS view timeline. It starts
+   at full --fg-subtle (5.4:1 on the Day canvas, 6.5:1 in the Night garden;
+   no alpha, VIS-17), so the text is readable before it inks, and it's plain
+   static text in browsers without scroll timelines. */
+@supports (animation-timeline: view()) {
+  @media (prefers-reduced-motion: no-preference) {
+    .ink-scope {
+      view-timeline-name: --ink;
+    }
+    html:not([data-motion="paused"]) .ink-scope .ink-word {
+      animation: inkIn linear both;
+      animation-timeline: --ink;
+      animation-range: cover calc(14% + var(--w) / var(--n) * 30%) cover
+        calc(20% + var(--w) / var(--n) * 30%);
+    }
+  }
+}
+@keyframes inkIn {
+  from {
+    color: rgb(var(--fg-subtle));
+  }
 }
 
-/* Paper card — replaces glass. Warm cream surface, soft natural shadow. */
-.paper-card {
-  background: rgb(var(--paper-warm));
-  border: 1px solid rgb(var(--rule) / 0.08);
-  border-radius: 14px;
-  box-shadow:
-    0 1px 0 rgb(255 255 255 / 0.5) inset,
-    0 1px 2px rgb(var(--rule) / 0.06),
-    0 18px 36px -28px rgb(var(--rule) / 0.18);
-}
-.paper-card-deep {
-  background: rgb(var(--paper-deep));
-  border-color: rgb(var(--rule) / 0.10);
-}
-
-/* Blind-embossed wordmark — display type pressed into the paper: a faint
-   ink fill with a hairline letterpress highlight along the lower edge.
-   (Not -webkit-text-stroke: stroking variable-font glyphs draws every
-   overlapping inner contour and litters the letters with artifacts.) */
-.wordmark-emboss {
-  color: rgb(var(--ink) / 0.07);
-  text-shadow: 0 1px 0 rgb(255 255 255 / 0.45);
+/* ---------- Disclosures that open smoothly -------------------------------
+   Native <details> keeps keyboard and no-JS support; where the browser can
+   animate to height:auto, the answer slides open instead of popping. */
+@supports selector(::details-content) {
+  @media (prefers-reduced-motion: no-preference) {
+    details.smooth {
+      interpolate-size: allow-keywords;
+    }
+    details.smooth::details-content {
+      height: 0;
+      overflow: clip;
+      transition:
+        height var(--dur-base) var(--ease-expo),
+        content-visibility var(--dur-base) allow-discrete;
+    }
+    details.smooth[open]::details-content {
+      height: auto;
+    }
+  }
 }
 
-/* Hand-drawn rule — a sketchy hairline divider. */
-.rule-hand {
-  background-image: linear-gradient(
-    to right,
-    transparent 0,
-    rgb(var(--ink) / 0.16) 6%,
-    rgb(var(--ink) / 0.22) 50%,
-    rgb(var(--ink) / 0.16) 94%,
-    transparent 100%
-  );
-  height: 1px;
+/* ---------- Long-form legal prose ---------------------------------------- */
+.prose-legal {
+  max-width: theme(maxWidth.measure); /* about 74 characters per line */
+  color: rgb(var(--fg-muted));
+  font-size: 15.5px;
+  line-height: 1.75;
 }
-
-/* Long-form policy / legal page prose. Styled to read like a printed
-   document on cream paper: serif h2, ink body, clay accents on emphasis
-   and links. Authored HTML may include <h2>, <p>, <ul>, <ol>, <li>,
-   <strong>, <em>, <a>, <br>, <code>, <hr>. */
-.policy-prose {
-  color: rgb(var(--ink-2));
-  font-size: 15px;
-  line-height: 1.7;
-}
-.policy-prose h2 {
-  font-family: var(--font-display);
-  font-weight: 600;
-  font-size: 22px;
+.prose-legal h2 {
+  font-weight: 800;
+  letter-spacing: -0.025em;
+  font-size: 24px;
   line-height: 1.25;
-  letter-spacing: -0.01em;
-  color: rgb(var(--ink));
-  margin-top: 2.5rem;
-  margin-bottom: 0.75rem;
-  scroll-margin-top: 5rem;
+  color: rgb(var(--fg));
+  margin: 2.5rem 0 0.75rem;
 }
-.policy-prose h3 {
-  font-family: var(--font-display);
+.prose-legal h3 {
+  font-size: 17px;
   font-weight: 600;
-  font-size: 18px;
-  line-height: 1.3;
-  color: rgb(var(--ink));
-  margin-top: 1.75rem;
-  margin-bottom: 0.5rem;
+  color: rgb(var(--fg));
+  margin: 1.75rem 0 0.5rem;
 }
-.policy-prose p {
-  margin-top: 0.75rem;
-  margin-bottom: 0.75rem;
+.prose-legal p {
+  margin: 0.75rem 0;
 }
-.policy-prose strong {
-  color: rgb(var(--ink));
+.prose-legal strong {
+  color: rgb(var(--fg));
   font-weight: 600;
 }
-.policy-prose em {
-  font-family: var(--font-display);
-  font-style: italic;
-  color: rgb(var(--moss-deep));
-}
-.policy-prose a {
-  color: rgb(var(--ink));
-  font-weight: 500;
+.prose-legal a {
+  color: rgb(var(--leaf));
   text-decoration: underline;
-  text-decoration-color: rgb(var(--clay) / 0.55);
-  text-decoration-thickness: 1.5px;
-  text-underline-offset: 4px;
-  transition: text-decoration-color 200ms ease, color 200ms ease;
+  text-decoration-color: rgb(var(--leaf) / 0.45);
+  text-underline-offset: 3px;
 }
-.policy-prose a:hover {
-  color: rgb(var(--clay-deep));
-  text-decoration-color: rgb(var(--clay));
+.prose-legal a:hover {
+  text-decoration-color: rgb(var(--leaf));
 }
-.policy-prose ul,
-.policy-prose ol {
-  margin-top: 0.75rem;
-  margin-bottom: 1rem;
+.prose-legal ul,
+.prose-legal ol {
+  margin: 0.75rem 0 1rem;
   padding-left: 1.25rem;
 }
-.policy-prose ul {
-  list-style: none;
+.prose-legal ul {
+  list-style: disc;
 }
-.policy-prose ul li {
-  position: relative;
-  padding-left: 1rem;
-  margin-top: 0.35rem;
-}
-.policy-prose ul li::before {
-  content: "";
-  position: absolute;
-  left: 0;
-  top: 0.7em;
-  width: 6px;
-  height: 6px;
-  border-radius: 9999px;
-  background: rgb(var(--moss));
-  opacity: 0.7;
-}
-.policy-prose ol {
+.prose-legal ol {
   list-style: decimal;
 }
-.policy-prose ol li {
+.prose-legal li {
   margin-top: 0.35rem;
-  padding-left: 0.25rem;
 }
-.policy-prose ol li::marker {
-  color: rgb(var(--moss-deep));
-  font-weight: 600;
+.prose-legal li::marker {
+  color: rgb(var(--leaf));
 }
-.policy-prose code {
+.prose-legal code {
   font-family: var(--font-mono);
   font-size: 0.86em;
-  background: rgb(var(--paper-deep));
+  background: rgb(var(--raised));
   padding: 0.1em 0.35em;
   border-radius: 4px;
-  color: rgb(var(--ink));
 }
-.policy-prose hr {
-  border: none;
+.prose-legal hr {
+  border: 0;
   height: 1px;
-  background: rgb(var(--ink) / 0.12);
+  background: rgb(var(--line) / 0.12);
   margin: 2rem 0;
 }
-.policy-prose h2:first-child,
-.policy-prose h3:first-child,
-.policy-prose p:first-child {
+.prose-legal h2:first-child,
+.prose-legal p:first-child {
   margin-top: 0;
 }
-
-/* "Notice" callout — paragraphs that contain only a <strong> (the
-   all-caps disclosure blocks at the top of legal documents) get a soft
-   clay-tinted card so they read as set-aside notices rather than walls
-   of bold body text. */
-.policy-prose p:has(> strong:only-child) {
-  margin-top: 1.25rem;
-  margin-bottom: 1.25rem;
+/* The all-caps disclosure paragraphs read as set-aside notices. */
+.prose-legal p:has(> strong:only-child) {
   padding: 1rem 1.25rem;
-  background: rgb(var(--paper-deep));
-  border-left: 3px solid rgb(var(--clay) / 0.7);
-  border-radius: 0 8px 8px 0;
+  background: rgb(var(--card));
+  border: 1px solid rgb(var(--line) / 0.1);
+  border-left: 3px solid rgb(var(--caution) / 0.8);
+  border-radius: 10px;
   font-size: 13.5px;
   line-height: 1.65;
-  letter-spacing: 0.005em;
 }
-.policy-prose p:has(> strong:only-child) strong {
+.prose-legal p:has(> strong:only-child) strong {
   font-weight: 500;
-  color: rgb(var(--ink));
 }
 
-/* Reduced-motion — keep static, calm. */
+/* ---------- Scroll reveals (components/ui/Reveal.tsx + RevealScript) ------
+   Targets are hidden only under html.js (set by the inline script before
+   first paint), only when motion is allowed and only while Pause motion is
+   off. Without JS, before the script runs, with reduced motion or paused,
+   content is simply visible. */
+[data-reveal],
+[data-reveal-item] {
+  transition:
+    opacity 700ms var(--ease-out),
+    transform 700ms var(--ease-out);
+  transition-delay: var(--reveal-delay, 0s);
+}
+[data-reveal-group] [data-reveal-item] {
+  transition-delay: calc(
+    var(--stagger-delay, 0s) + var(--stagger, 0.07s) * var(--i, 0)
+  );
+}
+@media (prefers-reduced-motion: no-preference) {
+  html.js:not([data-motion="paused"]) [data-reveal]:not([data-revealed]),
+  html.js:not([data-motion="paused"])
+    [data-reveal-group]:not([data-revealed])
+    [data-reveal-item] {
+    opacity: 0;
+    transform: translate3d(0, 20px, 0);
+  }
+}
+
+/* ---------- Reduced motion and Pause motion --------------------------------
+   One contract for both: prefers-reduced-motion, or the site's Pause-motion
+   switch (html[data-motion="paused"], applied before first paint). Every
+   animation jumps to its end and stops, transitions and their delays are
+   instant, and smooth scrolling is off. Keyframed components keep a
+   meaningful still frame as their base style. */
 @media (prefers-reduced-motion: reduce) {
   *,
   *::before,
   *::after {
     animation-duration: 0.001ms !important;
     animation-iteration-count: 1 !important;
+    animation-delay: 0s !important;
     transition-duration: 0.001ms !important;
+    transition-delay: 0s !important;
     scroll-behavior: auto !important;
+  }
+}
+html[data-motion="paused"],
+html[data-motion="paused"] *,
+html[data-motion="paused"] *::before,
+html[data-motion="paused"] *::after {
+  animation-duration: 0.001ms !important;
+  animation-iteration-count: 1 !important;
+  animation-delay: 0s !important;
+  transition-duration: 0.001ms !important;
+  transition-delay: 0s !important;
+  scroll-behavior: auto !important;
+}
+
+/* ---------- Off-screen pausing (RevealScript) ------------------------------
+   Looping animations stop while they're off screen. RevealScript keeps
+   data-inview on every page band, the footer and any [data-loop] element
+   while it's within 300px of the viewport (selectors mirrored from its
+   LOOP_TARGETS), and sets html[data-io] once it's watching, so nothing is
+   paused before then. Inside a band that's away, the known loop utilities
+   pause (one-shot entrances and reveals are left alone); a [data-loop]
+   element pauses everything inside it, so mark new looping illustrations
+   with data-loop. A paused loop resumes from the same frame. */
+html[data-io]
+  :is(main > section, main > div > section, main section[id], footer):not(
+    [data-inview]
+  )
+  :is(
+    .animate-float,
+    .animate-pulse-ring,
+    .animate-pulse,
+    .animate-ping,
+    .animate-spin,
+    .animate-bounce,
+    .animate-blink,
+    .art-drift,
+    .art-pulse,
+    .art-flag,
+    .art-route,
+    .art-chip,
+    .art-spin,
+    .art-dot,
+    .art-knob,
+    .art-on,
+    .art-off
+  ),
+html[data-io]
+  :is(main > section, main > div > section, main section[id], footer):not(
+    [data-inview]
+  )
+  .scanlines::after,
+html[data-io] [data-loop]:not([data-inview]),
+html[data-io] [data-loop]:not([data-inview])::before,
+html[data-io] [data-loop]:not([data-inview])::after,
+html[data-io] [data-loop]:not([data-inview]) *,
+html[data-io] [data-loop]:not([data-inview]) *::before,
+html[data-io] [data-loop]:not([data-inview]) *::after {
+  animation-play-state: paused !important;
+}
+
+/* ---------- Product art (components/home/products/ProductArt.tsx) --------
+   Illustrations that play briefly and settle on a still frame within 5s
+   (D-33, MOT-02). Only transform and opacity on HTML boxes and
+   pseudo-elements, so the compositor runs them (MOT-03); each figure carries
+   data-loop, so it pauses off screen. The base (non-animated) styles are the
+   still frame, shown under reduced motion and Pause motion, so each one
+   still reads. */
+/* Product tiles: each plays once, in about 4.5s, then rests. With motion
+   allowed they wait, paused, until RevealScript starts watching
+   (html[data-io]), so a tile below the fold doesn't spend its play before
+   it's seen; from then the data-loop rule pauses it while it's off screen.
+   Text only ever changes opacity in a single step (step-end), so it's
+   never part-transparent and its contrast holds on every frame. */
+@media (prefers-reduced-motion: no-preference) {
+  html.js:not([data-io]):not([data-motion="paused"]) .art-tile *,
+  html.js:not([data-io]):not([data-motion="paused"]) .art-tile *::before,
+  html.js:not([data-io]):not([data-motion="paused"]) .art-tile *::after {
+    animation-play-state: paused;
+  }
+}
+/* Index tile: one token drifts past the 2% band (its caution ring is a
+   pseudo-element that fades in), snaps back in one pooled rebalance, the
+   Garden sends out one ring and the caption lands and stays. */
+.art-drift {
+  animation: artDrift 4.2s var(--ease-expo) both;
+}
+.art-drift::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: 9999px;
+  box-shadow: 0 0 0 3px rgb(var(--caution) / 0.75);
+  opacity: 0;
+  pointer-events: none;
+  animation: artDriftRing 4.2s var(--ease-expo) both;
+}
+@keyframes artDrift {
+  0%,
+  12% {
+    transform: translate3d(0, 0, 0);
+  }
+  40%,
+  52% {
+    transform: translate3d(var(--dx), var(--dy), 0);
+  }
+  66%,
+  100% {
+    transform: translate3d(0, 0, 0);
+  }
+}
+@keyframes artDriftRing {
+  0%,
+  12% {
+    opacity: 0;
+  }
+  40%,
+  52% {
+    opacity: 1;
+  }
+  66%,
+  100% {
+    opacity: 0;
+  }
+}
+.art-pulse {
+  opacity: 0;
+  animation: artPulse 4.2s ease-out both;
+}
+@keyframes artPulse {
+  0%,
+  56% {
+    transform: scale(1);
+    opacity: 0;
+  }
+  58% {
+    transform: scale(1);
+    opacity: 0.9;
+  }
+  86%,
+  100% {
+    transform: scale(2.8);
+    opacity: 0;
+  }
+}
+.art-flag {
+  animation:
+    artFlag 4.2s step-end both,
+    artFlagRise 4.2s var(--ease-out) both;
+}
+@keyframes artFlag {
+  0% {
+    opacity: 0;
+  }
+  58% {
+    opacity: 1;
+  }
+}
+@keyframes artFlagRise {
+  0%,
+  58% {
+    translate: 0 6px;
+  }
+  72%,
+  100% {
+    translate: 0 0;
+  }
+}
+/* Yield tile: each route to a venue lights in turn with its venue chip
+   (the chip's glow is a pseudo-element), then all four rest, faintly drawn.
+   --d staggers them. */
+.art-route {
+  opacity: 0.25;
+  animation: artRoute 1.4s ease-in-out var(--d, 0s) both;
+}
+@keyframes artRoute {
+  0%,
+  100% {
+    opacity: 0.25;
+  }
+  25%,
+  70% {
+    opacity: 1;
+  }
+}
+.art-chip::after {
+  content: "";
+  position: absolute;
+  inset: -1px;
+  border-radius: inherit;
+  border: 1px solid rgb(var(--cobalt) / 0.5);
+  box-shadow: 0 10px 24px -14px rgb(var(--cobalt) / 0.7);
+  opacity: 0;
+  pointer-events: none;
+  animation: artChip 1.4s ease-in-out var(--d, 0s) both;
+}
+@keyframes artChip {
+  0%,
+  100% {
+    opacity: 0;
+  }
+  25%,
+  70% {
+    opacity: 1;
+  }
+}
+/* Gardener tile: the ring turns into place, the record fills in trade by
+   trade, then access is switched off with one signature and back on. The
+   switch's leaf fill is a layer that fades over the grey track. */
+.art-spin {
+  animation: artSpin 4.5s var(--ease-out) both;
+}
+@keyframes artSpin {
+  from {
+    transform: rotate(-60deg);
+  }
+}
+.art-dot {
+  animation: artDot 0.6s var(--ease-expo) var(--d, 0s) both;
+}
+@keyframes artDot {
+  from {
+    opacity: 0;
+    transform: scale(0.2);
+  }
+}
+.art-knob {
+  transform: translateX(16px);
+  animation: artKnob 4.6s var(--ease-expo) both;
+}
+@keyframes artKnob {
+  0%,
+  48%,
+  88%,
+  100% {
+    transform: translateX(16px);
+  }
+  54%,
+  82% {
+    transform: translateX(0);
+  }
+}
+.art-fill {
+  animation: artFill 4.6s var(--ease-expo) both;
+}
+@keyframes artFill {
+  0%,
+  48%,
+  88%,
+  100% {
+    opacity: 1;
+  }
+  54%,
+  82% {
+    opacity: 0;
+  }
+}
+.art-on {
+  animation: artOn 4.6s step-end both;
+}
+.art-off {
+  opacity: 0;
+  animation: artOff 4.6s step-end both;
+}
+@keyframes artOn {
+  0% {
+    opacity: 1;
+  }
+  52% {
+    opacity: 0;
+  }
+  86% {
+    opacity: 1;
+  }
+}
+@keyframes artOff {
+  0% {
+    opacity: 0;
+  }
+  52% {
+    opacity: 1;
+  }
+  86% {
+    opacity: 0;
+  }
+}
+
+/* ---------- Basket orbit (components/indices/BasketOrbit.tsx) -----------
+   The basket stands still; motion is only for selection. When the visitor
+   picks a token, a pulse runs down its spoke into the core three times
+   (about 3.6 s) and the spoke rests, dashed. The pulse layer is the size of
+   the orbit, so translating it by --dx/--dy (% of itself) moves the dot by
+   that share of the orbit: transform and opacity only, composited. Its
+   resting state is invisible, which is also the reduced-motion frame. */
+.orbit-pulse {
+  opacity: 0;
+  animation: orbitPulse 1.2s var(--ease-inout) 3;
+}
+@keyframes orbitPulse {
+  0% {
+    opacity: 0;
+    transform: translate3d(0, 0, 0);
+  }
+  20%,
+  75% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 0;
+    transform: translate3d(var(--dx), var(--dy), 0);
+  }
+}
+
+/* ---------- Protocol explorer (components/explore/*) ----------------------
+   From lg each layer's tab sits beside its plate. Plates above the active
+   one lift; their tabs follow with `translate` in container-height units
+   (the map is a size container), not by animating `top`. Browsers without
+   container units get the lifted `top` directly, without the glide. */
+@media (min-width: 1024px) {
+  .ptab {
+    top: var(--y);
+  }
+  @supports (height: 1cqh) {
+    .ptab {
+      top: var(--y0);
+      translate: 0 var(--lift);
+    }
+  }
+}
+/* The active plate's mark pops in when its layer comes up (re-keyed per
+   change), then rests. With motion off it's simply there. */
+@media (prefers-reduced-motion: no-preference) {
+  html:not([data-motion="paused"]) .stack-glyph-in {
+    animation: stackGlyphIn 360ms var(--ease-expo) both;
+  }
+}
+@keyframes stackGlyphIn {
+  from {
+    opacity: 0;
+    transform: scale(0.55);
+  }
+}
+
+/* ---------- Allocation strip (components/token/AllocationExplorer.tsx) ---
+   Drawn full width by default: server HTML, no JS, reduced motion and Pause
+   motion all show the whole strip. Only under html.js with motion allowed
+   does it start collapsed, growing in segment by segment (capped stagger)
+   when RevealScript marks the strip revealed. The meter-fill pattern. */
+@media (prefers-reduced-motion: no-preference) {
+  .alloc-seg {
+    transition:
+      transform 600ms var(--ease-expo),
+      background-color var(--dur-fast) var(--ease-out);
+    transition-delay: min(var(--i, 0) * 45ms, var(--stagger-cap)), 0ms;
+  }
+  html.js:not([data-motion="paused"])
+    [data-reveal-group]:not([data-revealed])
+    .alloc-seg {
+    transform: scaleX(0);
+  }
+}
+
+/* ---------- Live values (components/indices/LivePrice.tsx) ---------------
+   A price that arrives or changes gets one cue, colour only: a leaf tint
+   behind it fading to nothing over 600 ms. No movement, and none with
+   motion off (reduced motion or Pause motion). */
+@media (prefers-reduced-motion: no-preference) {
+  html:not([data-motion="paused"]) .value-tint {
+    animation: valueTint 600ms var(--ease-out);
+  }
+}
+@keyframes valueTint {
+  from {
+    background-color: rgb(var(--leaf) / 0.1);
+  }
+}
+
+/* ---------- Product stack (components/protocol/ProductStack.tsx) ---------
+   Sticky deck on wide screens: as each next card slides up, the one under it
+   eases back. Driven by the next card's view timeline (shared through
+   timeline-scope), so it needs no JS; without scroll timelines the cards
+   still stack, just without the easing back. */
+@supports (animation-timeline: view()) {
+  @media (prefers-reduced-motion: no-preference) and (min-width: 1024px) {
+    .pstack {
+      timeline-scope: --pstack-2, --pstack-3;
+    }
+    .pstack > :nth-child(2) {
+      view-timeline-name: --pstack-2;
+    }
+    .pstack > :nth-child(3) {
+      view-timeline-name: --pstack-3;
+    }
+    html:not([data-motion="paused"]) .pstack > :nth-child(1),
+    html:not([data-motion="paused"]) .pstack > :nth-child(2) {
+      transform-origin: 50% 0;
+      animation: pstackRecede linear both;
+      animation-range: entry 10% entry 100%;
+    }
+    .pstack > :nth-child(1) {
+      animation-timeline: --pstack-2;
+    }
+    .pstack > :nth-child(2) {
+      animation-timeline: --pstack-3;
+    }
+  }
+}
+/* Dim with a filter, not opacity: cards stay opaque, so nothing behind shows through. */
+@keyframes pstackRecede {
+  to {
+    transform: scale(0.94);
+    filter: brightness(0.86);
+  }
+}
+
+/* ---------- Mobile menu (components/nav/MobileMenu.tsx) ------------------
+   Opens as a circle growing from the menu button (top right), while each
+   group eases in on a 20 ms stagger (--i, set inline), so the whole sheet
+   is in by 250 ms (MOT-13). The pinned Launch your Fund bar has no delay: the circle
+   reveals it. Closing shrinks the circle at ~0.75× and visibility flips only
+   once it has gone. Under reduced motion or Pause motion the global
+   contract makes every part instant, delays included. */
+.mobile-sheet {
+  /* The centre of the 44 px menu button: page gutter + 22 px in from the
+     right, half the header row down (64 / 72 / 52 px rows). */
+  --sheet-origin: calc(100% - 42px) 32px;
+  clip-path: circle(0px at var(--sheet-origin));
+  visibility: hidden;
+  transition:
+    clip-path calc(var(--dur-slow) * 0.75) var(--ease-in),
+    visibility 0s linear calc(var(--dur-slow) * 0.75);
+}
+@media (min-width: 640px) {
+  .mobile-sheet {
+    --sheet-origin: calc(100% - 54px) 36px;
+  }
+}
+@media (max-height: 500px) {
+  .mobile-sheet {
+    --sheet-origin: calc(100% - 42px) 26px;
+  }
+}
+@media (min-width: 640px) and (max-height: 500px) {
+  .mobile-sheet {
+    --sheet-origin: calc(100% - 54px) 26px;
+  }
+}
+.mobile-sheet.is-open {
+  clip-path: circle(160% at var(--sheet-origin));
+  visibility: visible;
+  transition: clip-path var(--dur-slow) var(--ease-expo);
+}
+.mobile-sheet .sheet-item {
+  opacity: 0;
+  transform: translate3d(0, var(--move-sm), 0);
+  transition:
+    opacity var(--dur-fast) var(--ease-out),
+    transform var(--dur-base) var(--ease-expo);
+}
+.mobile-sheet.is-open .sheet-item {
+  opacity: 1;
+  transform: none;
+  transition-delay: calc(var(--i, 0) * 20ms);
+}
+
+/* ---------- Drawn marks (components/about/Principles.tsx) ----------------
+   Line icons that draw themselves in when their reveal group enters the
+   viewport, staggered by item (--i, set by RevealScript). Drawn by default:
+   hidden only under html.js with motion allowed and not paused, before the
+   reveal. */
+.draw-path {
+  stroke-dasharray: 1;
+  stroke-dashoffset: 0;
+}
+@media (prefers-reduced-motion: no-preference) {
+  .draw-path {
+    transition: stroke-dashoffset 1.4s var(--ease-expo);
+    transition-delay: calc(250ms + var(--i, 0) * 120ms);
+  }
+  html.js:not([data-motion="paused"])
+    [data-reveal-group]:not([data-revealed])
+    .draw-path {
+    stroke-dashoffset: 1;
+  }
+}
+
+/* ---------- Page changes (app/template.tsx) ------------------------------
+   After a client-side navigation the new page appears at once: no fade, so
+   a click never waits on an animation (it used to ease in over --dur-base,
+   which read as a slow page change). Its hero doesn't replay its own load
+   entrance either; the page simply swaps. */
+.page-enter
+  > section:first-of-type
+  :is(
+    .animate-rise,
+    .animate-fade-in,
+    .animate-enter-up,
+    .animate-enter-fade,
+    .split-load .split-word
+  ) {
+  animation: none;
+}
+
+/* ---------- Page-change progress (components/system/NavProgress.tsx) -----
+   Hidden until a page change has taken 120ms; then it runs most of the way
+   and waits there for the new page. Ease-out, so it moves at once and slows. */
+.nav-progress {
+  opacity: 0;
+  transform: scaleX(0);
+}
+.nav-progress[data-state="loading"] {
+  opacity: 1;
+  animation: navProgress 8s var(--ease-out) forwards;
+}
+@keyframes navProgress {
+  from {
+    transform: scaleX(0.1);
+  }
+  to {
+    transform: scaleX(0.9);
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .nav-progress[data-state="loading"] {
+    animation: none;
+    transform: scaleX(1);
+  }
+}
+html[data-motion="paused"] .nav-progress[data-state="loading"] {
+  animation: none;
+  transform: scaleX(1);
+}
+
+/* ---------- Meters (components/governance/ProposalBoard.tsx) -------------
+   Bars fill from the left when their card reveals (RevealScript), staggered
+   with the card. Full width without JS, with reduced motion or paused. */
+@media (prefers-reduced-motion: no-preference) {
+  .meter-fill {
+    transition: transform 1.1s var(--ease-expo);
+    transition-delay: calc(200ms + var(--i, 0) * 90ms);
+  }
+  html.js:not([data-motion="paused"])
+    [data-reveal-group]:not([data-revealed])
+    .meter-fill {
+    transform: scaleX(0);
   }
 }

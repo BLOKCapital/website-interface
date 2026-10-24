@@ -1,0 +1,202 @@
+import type { CSSProperties } from "react";
+import { Stagger, RevealItem } from "@/components/ui/Reveal";
+import { Badge } from "@/components/ui/Badge";
+import { Button } from "@/components/ui/Button";
+import { ArrowLink } from "@/components/ui/ArrowLink";
+import { ExternalIcon } from "@/components/ui/icons";
+import { CountUp } from "@/components/motion/CountUp";
+import type { GovernanceSnapshot, ProposalView } from "@/lib/data/proposals";
+import { links } from "@/lib/data/socials";
+import { ARBISCAN } from "@/lib/live/rpc";
+import { cn, shortAddress } from "@/lib/utils";
+
+const two = (n: number) => String(n).padStart(2, "0");
+const pctLabel = (n: number) => `${n % 1 === 0 ? n.toFixed(0) : n.toFixed(1)}%`;
+
+/** A labelled meter. The fill grows in when its card reveals (globals.css, "Meters"). */
+function Meter({ label, value, tone = "leaf", large }: { label: string; value: number; tone?: "leaf" | "cobalt"; large?: boolean }) {
+  return (
+    <div>
+      <div className="flex items-baseline justify-between gap-3">
+        <span className="label-caps">{label}</span>
+        <span className={cn("font-mono tabular text-fg", large ? "text-h3" : "text-caption")}>{pctLabel(value)}</span>
+      </div>
+      <div className={cn("mt-2 overflow-hidden rounded-full bg-line/10", large ? "h-2" : "h-1.5")} role="img" aria-label={`${label} ${pctLabel(value)}`}>
+        <div
+          className={cn("meter-fill h-full origin-left rounded-full", tone === "leaf" ? "bg-leaf" : "bg-cobalt")}
+          style={{ width: `${Math.max(0, Math.min(100, value))}%` } as CSSProperties}
+        />
+      </div>
+    </div>
+  );
+}
+
+/**
+ * The one empty state for proposals, everywhere (UX-16): neutral, and
+ * pointing at where the record lives rather than at how the page was built.
+ */
+export function ProposalsOnAragon({ className }: { className?: string }) {
+  return (
+    <p className={cn("rounded-panel border border-dashed border-line/15 p-6 sm:p-8", className)}>
+      <span data-cta="gov_aragon_proposals">
+        <ArrowLink href={links.aragon} className="text-body">
+          Every proposal and vote lives on Aragon
+        </ArrowLink>
+      </span>
+    </p>
+  );
+}
+
+/** One label for an open vote, "Voting open", on every proposal surface (CRO-23). */
+export function ProposalStatus({ p }: { p: ProposalView }) {
+  return p.active ? <Badge status="voting" /> : <Badge tone={p.passing ? "done" : "neutral"}>{p.statusLabel}</Badge>;
+}
+
+const window_ = (p: ProposalView) =>
+  p.startLabel && p.endLabel ? `${p.startLabel} → ${p.endLabel}` : p.endLabel ? `${p.active ? "Ends" : "Ended"} ${p.endLabel}` : "";
+
+/** The newest proposal, in full. */
+function Featured({ p, n }: { p: ProposalView; n: number }) {
+  return (
+    <article className="theme-dark relative flex h-full flex-col overflow-hidden rounded-panel border border-leaf/20 bg-card p-6 sm:p-8 shadow-soft">
+      <div aria-hidden className="glow-leaf pointer-events-none absolute -right-28 -top-28 size-96 opacity-80" />
+      <div aria-hidden className="grid-lines pointer-events-none absolute inset-0 opacity-50 [mask-image:radial-gradient(ellipse_at_85%_0%,black,transparent_65%)]" />
+
+      <div className="relative flex flex-wrap items-center justify-between gap-3">
+        <p className="label-caps">
+          Latest · Proposal <span className="text-leaf">{two(n)}</span>
+        </p>
+        <ProposalStatus p={p} />
+      </div>
+
+      <h3 className="display relative mt-5 text-display-sm leading-tight text-fg">{p.title}</h3>
+      {/* Summaries can hold raw addresses: let them wrap anywhere. */}
+      {p.summary && (
+        <p className="relative mt-3 line-clamp-3 max-w-2xl whitespace-pre-line text-small text-fg-muted [overflow-wrap:anywhere]">{p.summary}</p>
+      )}
+
+      <div className="relative mt-7 grid gap-5 sm:grid-cols-2">
+        <Meter label="Support" value={p.forPct} large />
+        <Meter label="Turnout" value={p.turnoutPct} tone="cobalt" large />
+      </div>
+
+      <dl className="relative mt-7 grid gap-4 border-t border-subtle pt-5 text-small sm:grid-cols-2">
+        {window_(p) && (
+          <div>
+            <dt className="label-caps">Voting window</dt>
+            <dd className="mt-1 text-fg">{window_(p)}</dd>
+          </div>
+        )}
+        {p.creator && (
+          <div>
+            <dt className="label-caps">Proposed by</dt>
+            <dd className="mt-1">
+              <a
+                href={`${ARBISCAN}/address/${p.creator}`}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="inline-flex items-center gap-1 font-mono text-fg transition-colors hover:text-leaf"
+              >
+                {shortAddress(p.creator)} <ExternalIcon size={11} />
+                <span className="sr-only"> (view on Arbiscan, opens in a new tab)</span>
+              </a>
+            </dd>
+          </div>
+        )}
+      </dl>
+
+    </article>
+  );
+}
+
+/** An earlier proposal: the whole card opens Aragon. */
+function Compact({ p, n }: { p: ProposalView; n: number }) {
+  return (
+    <a
+      href={links.aragon}
+      target="_blank"
+      rel="noopener noreferrer"
+      className="group/p flex h-full flex-col rounded-panel border border-subtle bg-card p-5 surface-link sm:p-6 shadow-soft"
+    >
+      <div className="flex items-center justify-between gap-3">
+        <span className="label-caps">Proposal {two(n)}</span>
+        <ProposalStatus p={p} />
+      </div>
+      <h3 className="mt-3 text-body font-medium leading-snug text-fg [overflow-wrap:anywhere]">{p.title}</h3>
+      <div className="mt-4 grid grid-cols-2 gap-4">
+        <Meter label="Support" value={p.forPct} />
+        <Meter label="Turnout" value={p.turnoutPct} tone="cobalt" />
+      </div>
+      <p className="mt-auto flex items-center justify-between gap-3 pt-4 text-caption text-fg-subtle">
+        <span>{window_(p)}</span>
+        <span className="inline-flex items-center gap-1 font-medium text-leaf">
+          Aragon <ExternalIcon size={11} className="transition-transform group-hover/p:-translate-y-0.5 group-hover/p:translate-x-0.5" />
+        </span>
+      </p>
+      <span className="sr-only"> (opens on Aragon in a new tab)</span>
+    </a>
+  );
+}
+
+/**
+ * The DAO's proposals, from the build-time governance snapshot: a summary
+ * strip, the newest proposal in full (support, turnout, voting window, who
+ * proposed it) and the earlier ones as compact cards. Everything opens the
+ * DAO on Aragon, where the votes themselves live. No browser RPC, so it
+ * never shows a failure state to visitors.
+ */
+export function ProposalBoard({ governance }: { governance: GovernanceSnapshot }) {
+  const list = governance.proposals;
+  const total = list.length;
+
+  if (total === 0) return <ProposalsOnAragon />;
+
+  const executed = list.filter((p) => p.statusLabel === "Executed").length;
+  const avg = (k: "forPct" | "turnoutPct") => list.reduce((s, p) => s + p[k], 0) / total;
+  const stats = [
+    { k: "Proposals", v: <CountUp value={total} /> },
+    { k: "Executed", v: <CountUp value={executed} /> },
+    { k: "Avg. support", v: pctLabel(Math.round(avg("forPct") * 10) / 10) },
+    { k: "Avg. turnout", v: pctLabel(Math.round(avg("turnoutPct") * 10) / 10) },
+  ];
+  const [latest, ...earlier] = list;
+
+  return (
+    <div className="space-y-5">
+      {/* Summary strip */}
+      <div className="flex flex-col gap-5 rounded-panel border border-subtle bg-card p-5 sm:p-6 lg:flex-row lg:items-center lg:justify-between shadow-soft">
+        <dl className="grid grid-cols-2 gap-x-8 gap-y-4 sm:grid-cols-4 lg:gap-x-12">
+          {stats.map((s) => (
+            <div key={s.k}>
+              <dt className="label-caps">{s.k}</dt>
+              <dd className="display mt-1 text-display-sm leading-none text-fg tabular">{s.v}</dd>
+            </div>
+          ))}
+        </dl>
+        <div className="flex flex-col items-start gap-2 lg:items-end lg:text-right">
+          <Button href={links.aragon} variant="secondary" data-cta="gov_aragon_proposals">
+            All proposals on Aragon
+          </Button>
+          {/* Build-time data: say when it was read, so a stale "Voting open" can't pass as live (UX-15). */}
+          {governance.syncedLabel && <p className="font-mono text-label text-fg-subtle">As of {governance.syncedLabel}</p>}
+        </div>
+      </div>
+
+      {/* Latest in full, earlier ones beside it */}
+      <Stagger className="grid gap-5 lg:grid-cols-12">
+        <RevealItem className={cn("min-w-0", earlier.length ? "lg:col-span-7" : "lg:col-span-12")}>
+          <Featured p={latest} n={total} />
+        </RevealItem>
+        {earlier.length > 0 && (
+          <div className="grid min-w-0 gap-5 lg:col-span-5">
+            {earlier.map((p, i) => (
+              <RevealItem key={p.id} className="min-w-0">
+                <Compact p={p} n={total - 1 - i} />
+              </RevealItem>
+            ))}
+          </div>
+        )}
+      </Stagger>
+    </div>
+  );
+}

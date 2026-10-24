@@ -1,5 +1,8 @@
 import { siteConfig, BASE } from "./site";
-import { brandFacts } from "./facts";
+import { brandFacts, feeText } from "./facts";
+import { protocolStatus } from "@/lib/data/status";
+import { BLOKC_TOKEN } from "@/lib/data/token";
+import { links } from "@/lib/data/socials";
 
 /**
  * JSON-LD builders. Each returns a plain object that gets serialized into a
@@ -8,34 +11,50 @@ import { brandFacts } from "./facts";
  *
  * The fields here are also what AI agents read to understand the entity:
  * `knowsAbout` declares topical authority, `sameAs` proves identity across
- * platforms, and the Service schema names the actual offering.
+ * platforms, and the Service schema names the actual offering. Every string
+ * must agree with the visible site: no ratings, reviews, prices or dates
+ * that the site doesn't state.
  */
 
 /** Organization: brand identity, logo, topical authority and social profiles. */
 export function organizationSchema() {
+  const { legal } = siteConfig;
   return {
     "@context": "https://schema.org",
     "@type": "Organization",
     "@id": `${BASE}/#organization`,
     name: siteConfig.name,
+    alternateName: siteConfig.alternateNames,
     legalName: siteConfig.legalName,
     url: BASE,
-    logo: siteConfig.logo,
+    // A square mark with its real size (SEO-08).
+    logo: {
+      "@type": "ImageObject",
+      "@id": `${BASE}/#logo`,
+      url: siteConfig.logo.url,
+      contentUrl: siteConfig.logo.url,
+      width: siteConfig.logo.width,
+      height: siteConfig.logo.height,
+      caption: siteConfig.name,
+    },
     description: siteConfig.description,
+    // Who this is, in facts the site states (footer, /token), so answer
+    // engines don't merge it with other "BLOK"/"BLOKC" entities (SEO-13).
+    disambiguatingDescription: `${siteConfig.legalName}, registered in the ${legal.jurisdiction} (reg. ${legal.registration}), operates ${BASE.replace(/^https:\/\//, "")} and the non-custodial BLOK Capital protocol on Arbitrum. Its governance token is $BLOKC on Arbitrum One, contract ${BLOKC_TOKEN}.`,
     slogan: "It's crypto, but different.",
     foundingDate: brandFacts.foundingYear,
     areaServed: "Worldwide",
     knowsAbout: brandFacts.knowsAbout,
-    // Marshall Islands incorporation — disambiguates the entity and feeds the
-    // "who operates this" question answer engines ask before citing.
+    // The registered address exactly as the policies publish it.
     address: {
       "@type": "PostalAddress",
-      addressCountry: siteConfig.legal.addressCountry,
+      ...legal.address,
+      addressCountry: legal.addressCountry,
     },
     identifier: {
       "@type": "PropertyValue",
       name: "Marshall Islands company registration",
-      value: siteConfig.legal.registration,
+      value: legal.registration,
     },
     contactPoint: [
       {
@@ -50,10 +69,12 @@ export function organizationSchema() {
 }
 
 /**
- * WebApplication: declares the product *as software* so answer engines can field
- * "is there an app", "what does it cost", and capability queries. No
- * AggregateRating/Review is emitted — we have no verifiable rating data and
- * fabricating one risks a manual action and erodes trust.
+ * WebApplication: the product *as software*, for "is there an app" and "what
+ * does it cost" questions. It says what the site says: not yet public,
+ * limited availability, and the FAQ's own fee answer (SEO-03). No
+ * AggregateRating/Review or price: there's no verifiable rating, and fees
+ * after launch are set by DAO vote. `isAccessibleForFree` returns at the
+ * public launch.
  */
 export function softwareApplicationSchema() {
   return {
@@ -64,23 +85,20 @@ export function softwareApplicationSchema() {
     applicationCategory: "FinanceApplication",
     operatingSystem: "Web (any modern browser); runs on Arbitrum (EVM)",
     url: BASE,
-    description: brandFacts.oneLiner,
-    browserRequirements:
-      "Sign in with a social login (Web3Auth MPC) or a Web3 wallet. No seed phrase or install required.",
-    isAccessibleForFree: true,
+    description: `A non-custodial wealth-management app on Arbitrum: follow market-cap-weighted on-chain indices from a smart-contract wallet at your own address. ${protocolStatus.access}`,
+    browserRequirements: "A modern web browser. Sign in with Google (Web3Auth MPC, no seed phrase) or your own wallet.",
     offers: {
       "@type": "Offer",
-      price: "0",
-      priceCurrency: "USD",
-      description:
-        "No subscription and no minimum deposit. On-chain gas and protocol fees apply per transaction.",
+      // The FAQ's "What does it cost?" answer, verbatim.
+      description: feeText,
+      availability: "https://schema.org/LimitedAvailability",
     },
     featureList: [
-      "Follow professionally curated, auto-rebalancing on-chain indices (BLOKC2, BLOKC5, BLOKC10)",
-      "Hire an on-chain manager with a verifiable soulbound track record",
-      "Non-custodial smart-contract wallet: assets never leave your address",
-      "Fiat on/off-ramp to USDC via regulated partners",
-      "On-chain DAO governance via $BLOKC",
+      "Market-cap-weighted on-chain indices (BLOKC2, BLOKC5, BLOKC10) that rebalance automatically",
+      `Planned for ${protocolStatus.gardeners}: on-chain managers (Gardeners) with a verifiable soulbound track record`,
+      "Non-custodial smart-contract wallet: assets stay at your own address",
+      "Buy USDC by card or bank through an on-ramp such as Transak, which runs its own KYC",
+      "On-chain DAO governance through Aragon OSx; core members vote until the $BLOKC token launches",
     ],
     provider: { "@id": `${BASE}/#organization` },
   };
@@ -93,7 +111,7 @@ export function serviceSchema() {
     "@type": "Service",
     "@id": `${BASE}/#service`,
     name: "BLOK Capital: Non-custodial wealth management",
-    serviceType: "Decentralized wealth management",
+    serviceType: "Decentralised wealth management",
     description: brandFacts.oneLiner,
     provider: { "@id": `${BASE}/#organization` },
     areaServed: "Worldwide",
@@ -101,20 +119,26 @@ export function serviceSchema() {
   };
 }
 
-/** WebSite: enables brand recognition and the sitelinks search box. */
+/** WebSite: the site name Google shows, its alternates and its language. */
 export function websiteSchema() {
   return {
     "@context": "https://schema.org",
     "@type": "WebSite",
     "@id": `${BASE}/#website`,
     name: siteConfig.name,
+    alternateName: [...siteConfig.alternateNames, BASE.replace(/^https:\/\//, "")],
     url: BASE,
     description: siteConfig.description,
+    inLanguage: "en-GB",
     publisher: { "@id": `${BASE}/#organization` },
   };
 }
 
-/** FAQPage: eligible for expandable FAQ rich results in search. */
+/**
+ * FAQPage: the Q&As exactly as shown on the page. Google limits FAQ rich
+ * results to authoritative government and health sites (since 2023), so
+ * this is for answer engines, not a SERP feature.
+ */
 export function faqSchema(faqs: { question: string; answer: string }[]) {
   return {
     "@context": "https://schema.org",
@@ -124,6 +148,30 @@ export function faqSchema(faqs: { question: string; answer: string }[]) {
       name: f.question,
       acceptedAnswer: { "@type": "Answer", text: f.answer },
     })),
+  };
+}
+
+/**
+ * VideoObject for the /about introduction, which plays behind a click-to-play
+ * facade, so crawlers can't see the embed. Upload date and duration are the
+ * YouTube watch page's own (uploadDate 2024-03-13T10:47:23-07:00, PT4M23S;
+ * read 2026-10-12). The thumbnail is the self-hosted poster.
+ */
+export function videoObjectSchema() {
+  const id = links.video.split("/").pop();
+  return {
+    "@context": "https://schema.org",
+    "@type": "VideoObject",
+    "@id": `${BASE}/about#video`,
+    name: "BLOK Capital DAO",
+    description: "BLOK Capital in a few minutes: an introduction to the non-custodial wealth-management protocol on Arbitrum.",
+    thumbnailUrl: `${BASE}/brand/video-poster.webp`,
+    uploadDate: "2024-03-13T10:47:23-07:00",
+    duration: "PT4M23S",
+    embedUrl: `https://www.youtube-nocookie.com/embed/${id}`,
+    url: links.video,
+    inLanguage: "en",
+    publisher: { "@id": `${BASE}/#organization` },
   };
 }
 
@@ -149,7 +197,7 @@ export function articleSchema(input: {
     mainEntityOfPage: `${BASE}${input.path}`,
     datePublished: input.datePublished,
     dateModified: input.dateModified ?? input.datePublished,
-    inLanguage: "en",
+    inLanguage: "en-GB",
     author: { "@id": `${BASE}/#organization` },
     publisher: { "@id": `${BASE}/#organization` },
   };

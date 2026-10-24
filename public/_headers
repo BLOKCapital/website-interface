@@ -1,10 +1,95 @@
 # Cloudflare Pages headers. Copied verbatim from public/ into the export root.
+#
+# Pages joins the values of a header set by more than one matching rule with
+# a comma, and two comma-joined CSPs are both enforced. So each header below
+# is defined once: security headers only in the /* block, Content-Type and
+# Cache-Control only on paths that don't overlap. X-Robots-Tag rules don't
+# overlap on blokcapital.io; on a *.pages.dev host an RSC payload gets
+# "noindex, noindex", which is still valid. HSTS is set on the Cloudflare
+# zone, not here (SEC-08). Every line stays under Pages' 2,000 characters.
 
-# The social card is exported as an extensionless file (`/opengraph-image`),
-# so Pages cannot infer its type and would serve application/octet-stream.
-# Twitter and Facebook crawlers reject that, which silently kills link previews.
+# Hardening for every response (SEC-06, SEC-07; H §3.1, §3.2).
+# - Permissions-Policy: lock off what the site never uses; the YouTube embed
+#   (youtube-nocookie.com, D-26) keeps what its iframe `allow` asks for.
+# - COOP same-origin: no window.open and every external link is noopener. If
+#   an OAuth or wallet popup is ever added, use same-origin-allow-popups.
+# - CSP is Report-Only for now (Stage 0 of H §3.2), so nothing can break
+#   while it beds in; enforcing the same policy as Content-Security-Policy is
+#   an owner step. Verified enforced, with 0 violations, across home, Accept
+#   GA, /indices/blokc5, /token (live RPC read), /about + Play, /governance,
+#   legal, the 404 and a client-side navigation. data: in img-src is for the
+#   CSS mask images in globals.css. No upgrade-insecure-requests: browsers
+#   ignore it in report-only mode and warn. Any new third party needs a CSP
+#   change in the same PR.
+/*
+  X-Content-Type-Options: nosniff
+  Referrer-Policy: strict-origin-when-cross-origin
+  X-Frame-Options: DENY
+  Cross-Origin-Opener-Policy: same-origin
+  Permissions-Policy: camera=(), microphone=(), geolocation=(), payment=(), usb=(), serial=(), hid=(), bluetooth=(), midi=(), display-capture=(), browsing-topics=(), accelerometer=(self "https://www.youtube-nocookie.com"), gyroscope=(self "https://www.youtube-nocookie.com"), autoplay=(self "https://www.youtube-nocookie.com"), encrypted-media=(self "https://www.youtube-nocookie.com"), picture-in-picture=(self "https://www.youtube-nocookie.com"), fullscreen=(self "https://www.youtube-nocookie.com"), clipboard-write=(self "https://www.youtube-nocookie.com"), web-share=(self "https://www.youtube-nocookie.com")
+  Content-Security-Policy-Report-Only: default-src 'self'; script-src 'self' 'unsafe-inline' https://www.googletagmanager.com; style-src 'self' 'unsafe-inline'; img-src 'self' data: https://*.google-analytics.com https://*.googletagmanager.com; font-src 'self'; connect-src 'self' https://arb1.arbitrum.io https://*.google-analytics.com https://*.analytics.google.com https://*.googletagmanager.com; frame-src https://www.youtube-nocookie.com; object-src 'none'; base-uri 'self'; form-action 'none'; frame-ancestors 'none'
+
+# Preview and *.pages.dev aliases serve real builds (including unreleased
+# branches); keep them out of search (SEO-06). The production domain has
+# its own host, so these never match blokcapital.io.
+https://:project.pages.dev/*
+  X-Robots-Tag: noindex
+https://:version.:project.pages.dev/*
+  X-Robots-Tag: noindex
+
+# RFC 9116 security.txt (SEC-14). A dot-directory: check after deploy that
+# Pages serves it.
+/.well-known/security.txt
+  Content-Type: text/plain; charset=utf-8
+
+# The social cards are exported as extensionless files (`/opengraph-image`
+# and one per section), so Pages cannot infer their type and would serve
+# application/octet-stream. Twitter and Facebook crawlers reject that, which
+# silently kills link previews. Every opengraph-image.tsx needs a line here.
 /opengraph-image
   Content-Type: image/png
+/indices/:id/opengraph-image
+  Content-Type: image/png
+/token/opengraph-image
+  Content-Type: image/png
+/security/opengraph-image
+  Content-Type: image/png
+/protocol/opengraph-image
+  Content-Type: image/png
+
+# The static export's RSC payloads: one .txt per page with its full text,
+# fetched by client-side navigation. Not documents to index or cite (SEO-19).
+# Listed one by one so /llms.txt, /llms-full.txt, /robots.txt and
+# /.well-known/security.txt stay indexable. Add a line for each new page.
+# Cache stays on the Pages default, like the HTML (PERF-11).
+/index.txt
+  X-Robots-Tag: noindex
+/about.txt
+  X-Robots-Tag: noindex
+/protocol.txt
+  X-Robots-Tag: noindex
+/indices.txt
+  X-Robots-Tag: noindex
+/indices/blokc2.txt
+  X-Robots-Tag: noindex
+/indices/blokc5.txt
+  X-Robots-Tag: noindex
+/indices/blokc10.txt
+  X-Robots-Tag: noindex
+/security.txt
+  X-Robots-Tag: noindex
+/token.txt
+  X-Robots-Tag: noindex
+/governance.txt
+  X-Robots-Tag: noindex
+/contact.txt
+  X-Robots-Tag: noindex
+/legal/cookie-policy.txt
+  X-Robots-Tag: noindex
+/legal/acceptable-use.txt
+  X-Robots-Tag: noindex
+/legal/user-agreement.txt
+  X-Robots-Tag: noindex
 
 # Content-addressed by the build — safe to cache forever.
 /_next/static/*
@@ -21,4 +106,7 @@
 /textures/*
   Cache-Control: public, max-age=31536000, immutable
 /Socialtrust/*
+  Cache-Control: public, max-age=31536000, immutable
+# Token logos, on almost every page (PERF-11). Same rule: rename on change.
+/tokens/*
   Cache-Control: public, max-age=31536000, immutable

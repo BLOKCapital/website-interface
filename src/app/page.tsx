@@ -1,49 +1,71 @@
+import type { Metadata } from "next";
 import { Hero } from "@/components/home/Hero";
-import { ProblemComparison } from "@/components/home/ProblemComparison";
-import { GardenMetaphor } from "@/components/home/GardenMetaphor";
+import { AtAGlance } from "@/components/home/AtAGlance";
+import { AppPreview } from "@/components/home/AppPreview";
+import { Problem } from "@/components/home/Problem";
 import { HowItWorks } from "@/components/home/HowItWorks";
-import { WhyItsSafe } from "@/components/home/WhyItsSafe";
-import { TokenTeaser } from "@/components/home/TokenTeaser";
-import { RoadmapTrack } from "@/components/home/RoadmapTrack";
-import { SocialProof } from "@/components/home/SocialProof";
-import { DaoCommunity } from "@/components/home/DaoCommunity";
-import { Reveal } from "@/components/ui/Reveal";
-import { Marquee } from "@/components/ui/Marquee";
+import { Products } from "@/components/home/Products";
+import { SecurityPillars } from "@/components/home/SecurityPillars";
+import { Contribute } from "@/components/home/Contribute";
+import { IndicesSection } from "@/components/home/IndicesSection";
+import { Section } from "@/components/ui/Section";
+import { Button } from "@/components/ui/Button";
+import { FaqList } from "@/components/ui/FaqList";
+import { CtaBand } from "@/components/ui/CtaBand";
 import { JsonLd } from "@/components/seo/JsonLd";
 import { serviceSchema, softwareApplicationSchema } from "@/lib/seo/schema";
-import type { Metadata } from "next";
+import { getGovernance } from "@/lib/data/proposals";
+import { faqs } from "@/lib/data/faqs";
+import { pageMetadata } from "@/lib/seo/metadata";
 
-// Title falls back to the layout's default ("BLOK Capital — It's crypto, but
-// different"); we only add a home-specific description + canonical here.
-export const metadata: Metadata = {
+export const metadata: Metadata = pageMetadata({
+  title: { absolute: "BLOK Capital · Non-custodial wealth management on Arbitrum" },
   description:
-    "Decentralized wealth management on Arbitrum. Follow pro-curated indices or hire an on-chain manager, your assets never leave your wallet.",
-  alternates: { canonical: "/" },
-};
+    "Non-custodial wealth management on Arbitrum: market-cap-weighted on-chain indices (BLOKC2, BLOKC5, BLOKC10) from a smart wallet at your own address.",
+  path: "/",
+  // The root opengraph-image.tsx is this page's own card.
+  ownImage: true,
+});
 
 /**
- * Home composition. The hero animates on its own (no wrap).
- * Each section below fades up on viewport enter — single-shot reveals
- * give the page a felt rhythm without distracting from scroll.
+ * Home, kept to what a first visit needs (one idea per section, the depth on
+ * its own page or in the docs): what it is → the facts → the app → why it
+ * exists → how it works → what you can do → the indices → why it's safe →
+ * how to earn $BLOKC (the Contributor Program) → questions → how to join.
  *
- * Closing CTA is handled by the global FooterBanner ("Everyone deserves a
- * Garden.") in layout.tsx, so a second "Plant your Garden today" panel here
- * would duplicate the same beat.
+ * Moved off home, not deleted: the rules console to /security#rules, the
+ * DAO's proposals to /governance, the ecosystem to /protocol#ecosystem, the
+ * team to /about and the roadmap to /about#roadmap.
  */
-export default function HomePage() {
+export default async function HomePage() {
+  const governance = await getGovernance();
   return (
     <>
       <JsonLd data={[serviceSchema(), softwareApplicationSchema()]} />
       <Hero />
-      <Reveal><ProblemComparison /></Reveal>
-      <Marquee />{/* editorial ticker — the protocol's promises on a loop */}
-      <GardenMetaphor />{/* owns its own scroll-driven motion, don't wrap */}
-      <Reveal><HowItWorks /></Reveal>
-      <Reveal><WhyItsSafe /></Reveal>
-      <Reveal><TokenTeaser /></Reveal>
-      <RoadmapTrack />{/* owns its own scroll-locked motion */}
-      <Reveal><SocialProof /></Reveal>
-      <Reveal><DaoCommunity /></Reveal>
+      <AtAGlance governance={governance} />
+      <AppPreview />
+      <Problem />
+      <HowItWorks />
+      <Products />
+      <IndicesSection />
+      <SecurityPillars />
+      <Contribute />
+      <Section
+        className="paper-ruled"
+        id="faq"
+        tone="surface"
+        eyebrow="FAQ"
+        title="Questions, answered."
+        actions={
+          <Button href="/contact#faq" variant="secondary" data-cta="faq_all_questions">
+            All questions
+          </Button>
+        }
+      >
+        <FaqList items={faqs.slice(0, 5)} />
+      </Section>
+      <CtaBand />
     </>
   );
 }

@@ -1,0 +1,103 @@
+/* Print stylesheet: loaded with media="print" from app/layout.tsx so it never
+   blocks first paint on screen (it used to live in globals.css). Plain CSS
+   only: no Tailwind directives. Uses the same custom properties as the site. */
+
+@media print {
+  html.js [data-reveal],
+  html.js [data-reveal-item] {
+    opacity: 1 !important;
+    transform: none !important;
+  }
+}
+
+@media print {
+  .alloc-seg {
+    transform: none !important;
+  }
+}
+
+/* ---------- Print -----------------------------------------------------------
+   On paper: no screen chrome, nothing floating over the text, everything
+   still and visible, real figures, open disclosures and, on the legal pages,
+   where each external link goes. Dark islands print light (see .theme-dark).
+   Add data-print-hide to anything else that only makes sense on screen. */
+@media print {
+  /* Header and announcement bar, skip link, cookie banner and dialog, the
+     easter-egg layer (fixed, pointer-events-none), canvases. */
+  body > header,
+  #announce,
+  a[href="#main"],
+  [aria-labelledby="cookie-banner-title"],
+  body > :has([aria-labelledby="cookie-panel-title"]),
+  body > .fixed.pointer-events-none,
+  canvas,
+  #mobile-menu,
+  [data-print-hide] {
+    display: none !important;
+  }
+  .fixed,
+  .sticky,
+  [class*=":fixed"],
+  [class*=":sticky"] {
+    position: static !important;
+  }
+  *,
+  *::before,
+  *::after {
+    animation: none !important;
+    transition: none !important;
+  }
+  html.js [data-split] .split-word {
+    color: inherit !important;
+    transform: none !important;
+  }
+  .draw-path {
+    stroke-dashoffset: 0 !important;
+  }
+  .meter-fill {
+    transform: none !important;
+  }
+  /* CountUp keeps the real figure in an sr-only copy next to the animated,
+     aria-hidden one (which still reads 0 if it was never scrolled to):
+     print the real one. */
+  .sr-only:has(+ .tabular[aria-hidden="true"]) {
+    position: static !important;
+    width: auto !important;
+    height: auto !important;
+    margin: 0 !important;
+    overflow: visible !important;
+    clip: auto !important;
+    white-space: inherit !important;
+  }
+  .sr-only + .tabular[aria-hidden="true"] {
+    display: none !important;
+  }
+  .prose-legal a[href^="http"]::after {
+    content: " (" attr(href) ")";
+    color: rgb(var(--fg-muted));
+    font-size: 0.85em;
+    word-break: break-all;
+  }
+  .prose-legal p:has(> strong:only-child),
+  figure,
+  table,
+  pre {
+    break-inside: avoid;
+  }
+  h1,
+  h2,
+  h3 {
+    break-after: avoid;
+  }
+}
+
+/* Closed <details> print open. A rule of its own, so a browser without
+   ::details-content drops only this one. */
+@media print {
+  details::details-content {
+    content-visibility: visible !important;
+    height: auto !important;
+    overflow: visible !important;
+    transition: none !important;
+  }
+}

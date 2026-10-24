@@ -16,24 +16,19 @@ type Props = {
    * call-site if you need to optimize bandwidth.
    */
   quality?: number;
-  /**
-   * Black-background composite mode. The PNGs are on pure black; we drop the
-   * black so the subject sits cleanly on bg-paper.
-   *  - "none" (default): the assets ship as RGBA with alpha — no blend needed
-   *    on cream paper. Use this everywhere.
-   *  - "lighten" / "screen": legacy modes for renders that have a black
-   *    background. Only useful on dark surfaces; will produce black blobs on
-   *    cream so prefer "none".
-   */
-  blend?: "lighten" | "screen" | "none";
-  /** Subtle hover lift / parallax wrap container. Default false. */
-  interactive?: boolean;
+  /** Alt text. Renders are decorative by default (empty alt). */
+  alt?: string;
 };
 
 /**
- * Brand Garden render — drops in any of the 12 photorealistic floating-island
- * assets. Lives inside a relative-positioned container; pass dimensions via
- * the wrapper class.
+ * Brand Garden render — one of the photorealistic floating-island assets.
+ * Lives inside a relative-positioned container; pass dimensions via the
+ * wrapper class.
+ *
+ * Only the renders in use ship in public/gardens: 4 (CtaBand) and 7 (404),
+ * plus garden-06-480 for the easter egg. Any other render must be added to
+ * public/gardens (its master and -480/-720/-960 widths) before passing its
+ * `n`; the unused ones were removed and are in git history.
  *
  * Performance:
  *   - The sources are pre-compressed 1440×1440 WebP (~210-320KB), which is 2×
@@ -53,36 +48,20 @@ export function GardenAsset({
   className,
   priority = false,
   quality = 92,
-  blend = "none",
-  interactive = false,
+  alt = "",
 }: Props) {
   const meta = getGarden(((n - 1) % GARDENS_TOTAL + GARDENS_TOTAL) % GARDENS_TOTAL + 1);
-  const blendClass =
-    blend === "lighten"
-      ? "[mix-blend-mode:lighten]"
-      : blend === "screen"
-        ? "[mix-blend-mode:screen]"
-        : "";
 
   return (
-    <div
-      className={cn(
-        "relative size-full",
-        interactive && "transition-transform duration-700 ease-in-soft hover:-translate-y-1",
-        className,
-      )}
-    >
+    <div className={cn("relative size-full", className)}>
       <Image
         src={meta.src}
-        alt={meta.alt}
+        alt={alt}
         fill
         sizes={sizes}
         priority={priority}
         quality={quality}
-        className={cn(
-          "pointer-events-none select-none object-contain",
-          blendClass,
-        )}
+        className="pointer-events-none select-none object-contain"
         draggable={false}
       />
     </div>

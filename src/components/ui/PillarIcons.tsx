@@ -15,8 +15,8 @@ const stroke = {
 };
 
 const accent = {
-  // Clay highlight reads warmly against the ink outline on cream paper.
-  stroke: "rgb(var(--clay))",
+  // Leaf highlight against the light outline on the dark theme.
+  stroke: "rgb(var(--leaf))",
   strokeWidth: 1.4,
   fill: "none" as const,
   strokeLinecap: "round" as const,
@@ -30,7 +30,7 @@ function Frame({ children, className }: { children: React.ReactNode; className?:
       width="32"
       height="32"
       aria-hidden
-      className={cn("text-ink", className)}
+      className={cn("text-fg", className)}
     >
       {children}
     </svg>
@@ -97,7 +97,12 @@ const map: Record<Pillar["id"], React.FC> = {
   "open-source": OpenSourceIcon,
 };
 
+/** The pillar's icon on a leaf-tinted tile, so its accent reads on either theme. */
 export function PillarIcon({ id }: { id: Pillar["id"] }) {
   const C = map[id];
-  return <C />;
+  return (
+    <span className="grid size-12 shrink-0 place-items-center rounded-card border border-leaf/25 bg-leaf/7 text-fg-muted [&_svg]:text-current">
+      <C />
+    </span>
+  );
 }

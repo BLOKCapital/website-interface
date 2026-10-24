@@ -1,275 +1,280 @@
 "use client";
 
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { m, useScroll, useSpring } from "framer-motion";
 import { Logo } from "@/components/ui/Logo";
 import { Button } from "@/components/ui/Button";
-import { cn } from "@/lib/utils";
+import { AnnouncementBar } from "./AnnouncementBar";
+import { DesktopNav } from "./DesktopNav";
+import { MobileMenu } from "./MobileMenu";
+import { appLink } from "@/lib/nav";
 import { useScrolled } from "@/lib/hooks";
+import { useOverDarkBand } from "@/lib/dark-band";
+import { prefersReducedMotion } from "@/lib/motion";
+import { cn } from "@/lib/utils";
+import { Container } from "@/components/ui/Container";
 
-const links = [
-  { href: "/", label: "Home" },
-  { href: "/about", label: "About" },
-  { href: "/features", label: "Features" },
-  { href: "https://docs.blokcapital.io", label: "Docs", external: true },
-  { href: "https://docsend.com/view/4j6qvvrudyr6izyb", label: "Whitepaper", external: true },
-  { href: "/contact", label: "Contact" },
-] as const;
+const FOCUSABLE = "a[href], button:not([disabled]), [tabindex]:not([tabindex='-1'])";
+/** The desktop nav takes over here; the sheet and its button are hidden. */
+const DESKTOP = "(min-width: 1024px)";
+/** Landscape phones: compact 52 px header that hides on scroll-down. */
+const SHORT = "(max-height: 500px)";
 
-function isCurrent(href: string, pathname: string | null) {
-  if (!pathname) return false;
-  if (href === "/") return pathname === "/";
-  return pathname === href || pathname.startsWith(`${href}/`);
-}
-
+/**
+ * The header. At the top of a page it's a bar sitting on the hero; once you
+ * scroll, a floating frosted pill fades in behind it and the announcement
+ * bar folds away. The row's height never changes (MOT-10): only the pill's
+ * opacity and scale and the logo's scale animate. It sits on the page's
+ * container, so the logo and the app button line up with the content
+ * below. Clicking the logo on the home page glides back to the top. Over a
+ * dark band it turns dark with it. Desktop menus live in DesktopNav.
+ *
+ * Phones (< 640 px) get no announcement bar; a compact "App" button
+ * (44 px tall) sits beside the menu button instead, at every scroll position
+ * (D-05). Short viewports get a 52 px row that hides on scroll-down.
+ *
+ * Below lg the menu button opens MobileMenu, a modal sheet (A11Y-02):
+ * - focus moves to its first link, and Tab cycles between the sheet and the
+ *   menu button (which stays visible above it as the close control);
+ * - #main and the footer are inert and page scroll is locked meanwhile (the
+ *   announcement bar is already inert while folded);
+ * - Escape or either close button closes it and returns focus to the menu
+ *   button; a link tap or navigation closes it;
+ * - it also closes when the viewport reaches lg (a tablet rotated to
+ *   landscape), which releases the scroll lock (MOB-03).
+ */
 export function Nav() {
   const pathname = usePathname();
-  const scrolled = useScrolled(12);
+  const scrolled = useScrolled(8);
+  // Over a dark band, the header turns dark with it (closed menu only).
+  const overDark = useOverDarkBand(40);
   const [open, setOpen] = useState(false);
+  const buttonRef = useRef<HTMLButtonElement>(null);
+  const sheetRef = useRef<HTMLDivElement>(null);
+  const headerRef = useRef<HTMLElement>(null);
+  const logoRef = useRef<HTMLAnchorElement>(null);
 
-  // Reading progress — a clay hairline that draws across the top of the
-  // page as you read, like a bookmark ribbon sliding along the spine.
-  const { scrollYProgress } = useScroll();
-  const progress = useSpring(scrollYProgress, {
-    stiffness: 140,
-    damping: 30,
-    mass: 0.4,
-  });
+  // Short viewports (a phone in landscape): the header slides away on
+  // scroll-down and back on any scroll-up (MOB-13, C-motion §4.4). A
+  // rAF-throttled passive listener sets html[data-header="hidden"] after
+  // more than 8 px of downward travel past 120 px; CSS moves the header with
+  // a transform only, and instantly under motion-off. It never hides while
+  // a menu is open or focus is inside the header.
+  useEffect(() => {
+    const root = document.documentElement;
+    const header = headerRef.current;
+    const short = window.matchMedia(SHORT);
+    let anchor = window.scrollY;
+    let frame = 0;
+    const show = () => root.removeAttribute("data-header");
+    const update = () => {
+      frame = 0;
+      const y = window.scrollY;
+      const pinned = !short.matches || !!header?.querySelector('[aria-expanded="true"]') || !!header?.contains(document.activeElement);
+      if (pinned || y < anchor) {
+        show();
+        anchor = y;
+      } else if (y - anchor > 8) {
+        if (y > 120) root.setAttribute("data-header", "hidden");
+        anchor = y;
+      }
+    };
+    const onScroll = () => {
+      if (!frame) frame = requestAnimationFrame(update);
+    };
+    window.addEventListener("scroll", onScroll, { passive: true });
+    short.addEventListener("change", update);
+    header?.addEventListener("focusin", show);
+    return () => {
+      cancelAnimationFrame(frame);
+      window.removeEventListener("scroll", onScroll);
+      short.removeEventListener("change", update);
+      header?.removeEventListener("focusin", show);
+      show();
+    };
+  }, []);
 
-  // Close the mobile menu on route change by adjusting state during render
-  // (the documented alternative to an effect) — also covers back/forward nav.
-  // Previous path is tracked in a ref since it only gates the reset, never renders.
-  const lastPathRef = useRef(pathname);
-  if (pathname !== lastPathRef.current) {
-    lastPathRef.current = pathname;
+  // Opening a menu always brings the header back.
+  useEffect(() => {
+    if (open) document.documentElement.removeAttribute("data-header");
+  }, [open]);
+
+  // Close on navigation (adjusting state during render, not in an effect).
+  const last = useRef(pathname);
+  if (last.current !== pathname) {
+    last.current = pathname;
     setOpen(false);
   }
 
+  const dismiss = () => {
+    setOpen(false);
+    buttonRef.current?.focus();
+  };
+
+  useEffect(() => {
+    if (!open) return;
+    const sheet = sheetRef.current;
+    const toggle = buttonRef.current;
+
+    // The page behind the sheet: out of the tab order and the accessibility tree.
+    const behind = [...document.querySelectorAll<HTMLElement>("#main, body > footer")].filter((el) => !el.inert);
+    for (const el of behind) el.inert = true;
+    const prevOverflow = document.body.style.overflow;
+    document.body.style.overflow = "hidden";
+
+    // The trap's stops: the menu button, then everything in the sheet.
+    const stops = () =>
+      [toggle, ...(sheet?.querySelectorAll<HTMLElement>(FOCUSABLE) ?? [])].filter(
+        (el): el is HTMLElement => !!el && el.getClientRects().length > 0,
+      );
+    const onKey = (e: KeyboardEvent) => {
+      if (e.key === "Escape") {
+        setOpen(false);
+        toggle?.focus();
+        return;
+      }
+      if (e.key !== "Tab") return;
+      const items = stops();
+      if (!items.length) return;
+      const i = items.indexOf(document.activeElement as HTMLElement);
+      const next = e.shiftKey
+        ? i <= 0
+          ? items[items.length - 1]
+          : null
+        : i === -1
+          ? (items[1] ?? items[0])
+          : i === items.length - 1
+            ? items[0]
+            : null;
+      if (next) {
+        e.preventDefault();
+        next.focus();
+      }
+    };
+    document.addEventListener("keydown", onKey);
+
+    const desktop = window.matchMedia(DESKTOP);
+    const onDesktop = () => desktop.matches && setOpen(false);
+    desktop.addEventListener("change", onDesktop);
+
+    // Into the sheet: it stops being inert in this same commit.
+    const raf = requestAnimationFrame(() => sheet?.querySelector<HTMLElement>(FOCUSABLE)?.focus({ preventScroll: true }));
+
+    return () => {
+      cancelAnimationFrame(raf);
+      document.removeEventListener("keydown", onKey);
+      desktop.removeEventListener("change", onDesktop);
+      document.body.style.overflow = prevOverflow;
+      for (const el of behind) el.inert = false;
+    };
+  }, [open]);
+
+  // Already home: glide to the top instead of re-navigating to the same page.
+  const onLogo = (e: React.MouseEvent) => {
+    if (pathname !== "/" || e.metaKey || e.ctrlKey || e.shiftKey) return;
+    e.preventDefault();
+    setOpen(false);
+    window.scrollTo({ top: 0, behavior: prefersReducedMotion() ? "auto" : "smooth" });
+  };
+
   return (
-    <header
-      className={cn(
-        "fixed inset-x-0 top-0 z-40 transition-[background-color,backdrop-filter,border-color] duration-400 ease-in-soft",
-        scrolled
-          ? "border-b border-ink/8 bg-paper/85 backdrop-blur-md"
-          : "border-b border-transparent bg-transparent",
-      )}
-    >
-      <m.span
-        aria-hidden
-        style={{ scaleX: progress }}
-        className="absolute inset-x-0 top-0 z-10 h-[2px] origin-left bg-gradient-to-r from-moss via-ochre to-clay"
-      />
-      <div className="mx-auto flex h-16 max-w-7xl items-center justify-between gap-6 px-5 sm:h-[68px] sm:px-8">
-        <Link
-          href="/"
-          className="-m-1 inline-flex items-center rounded p-1 text-ink transition-opacity duration-200 hover:opacity-85 focus:outline-none"
-          aria-label="BLOK Capital, Home"
-        >
-          <Logo />
-        </Link>
-
-        <nav aria-label="Primary" className="hidden md:block">
-          <ul className="flex items-center gap-6 lg:gap-8">
-            {links.map((l) => {
-              const external = "external" in l && l.external;
-              const current = isCurrent(l.href, pathname);
-              return (
-                <li key={l.href}>
-                  <Link
-                    href={l.href}
-                    target={external ? "_blank" : undefined}
-                    rel={external ? "noopener noreferrer" : undefined}
-                    aria-current={current ? "page" : undefined}
-                    className={cn(
-                      "group/n relative inline-flex items-center gap-1.5 py-1 text-[14px] font-medium transition-colors duration-200",
-                      current ? "text-ink" : "text-ink-muted hover:text-ink",
-                    )}
-                  >
-                    {l.label}
-                    {external && (
-                      <>
-                        <svg
-                          width="10"
-                          height="10"
-                          viewBox="0 0 10 10"
-                          aria-hidden
-                          className="opacity-60 transition-transform duration-200 group-hover/n:-translate-y-0.5"
-                        >
-                          <path
-                            d="M2 8 L8 2 M3.5 2 L8 2 L8 6.5"
-                            stroke="currentColor"
-                            strokeWidth="1.1"
-                            fill="none"
-                          />
-                        </svg>
-                        <span className="sr-only"> (opens in a new tab)</span>
-                      </>
-                    )}
-                    {/* Active / hover underline, clay hairline that draws in */}
-                    <span
-                      aria-hidden
-                      className={cn(
-                        "absolute -bottom-0.5 left-0 h-px bg-clay transition-[width] duration-300 ease-in-soft",
-                        current ? "w-full" : "w-0 group-hover/n:w-full",
-                      )}
-                    />
-                  </Link>
-                </li>
-              );
-            })}
-          </ul>
-        </nav>
-
-        <div className="hidden items-center gap-3 md:flex">
-          <Button
-            variant="primary"
-            size="sm"
-            href="https://blokc.app/"
-          >
-            Launch App
-            <svg
-              width="12"
-              height="12"
-              viewBox="0 0 14 14"
-              aria-hidden
-              className="transition-transform duration-150 group-hover:translate-x-0.5 motion-reduce:transition-none motion-reduce:group-hover:translate-x-0"
-            >
-              <path
-                d="M2 7 H11 M7 3 L11 7 L7 11"
-                stroke="currentColor"
-                strokeWidth="1.4"
-                fill="none"
-                strokeLinecap="round"
-                strokeLinejoin="round"
-              />
-            </svg>
-          </Button>
-        </div>
-
-        <button
-          type="button"
-          aria-label={open ? "Close menu" : "Open menu"}
-          aria-expanded={open}
-          onClick={() => setOpen((v) => !v)}
-          className="inline-flex size-11 items-center justify-center rounded-full border border-ink/15 bg-paper-warm text-ink transition active:scale-[0.97] md:hidden"
-        >
-          <svg width="14" height="14" viewBox="0 0 14 14" aria-hidden>
-            {open ? (
-              <path
-                d="M2 2 L12 12 M12 2 L2 12"
-                stroke="currentColor"
-                strokeWidth="1.3"
-                strokeLinecap="round"
-              />
-            ) : (
-              <path
-                d="M1.5 4 H12.5 M1.5 10 H12.5"
-                stroke="currentColor"
-                strokeWidth="1.3"
-                strokeLinecap="round"
-              />
-            )}
-          </svg>
-        </button>
-      </div>
-
-      {/* Mobile menu, slides down with a soft fade */}
-      <div
+    <>
+      <header
+        ref={headerRef}
         className={cn(
-          "overflow-hidden border-ink/10 bg-paper/95 backdrop-blur-md transition-[max-height,opacity,border-color] duration-400 ease-in-soft md:hidden",
-          open
-            ? "max-h-[640px] border-t opacity-100"
-            : "max-h-0 border-transparent opacity-0",
+          "fixed inset-x-0 top-0 z-nav transition-transform duration-base ease-out",
+          // Short viewports only (see the effect above): slide away on scroll-down.
+          "[html[data-header=hidden]_&]:-translate-y-full [html[data-header=hidden]_&]:duration-fast [html[data-header=hidden]_&]:ease-in",
+          overDark && !open && "theme-dark",
         )}
-        aria-hidden={!open}
       >
-        <ul className="flex flex-col px-5 pb-5 pt-2">
-          {links.map((l) => {
-            const external = "external" in l && l.external;
-            const current = isCurrent(l.href, pathname);
-            return (
-              <li key={l.href}>
-                <Link
-                  href={l.href}
-                  target={external ? "_blank" : undefined}
-                  rel={external ? "noopener noreferrer" : undefined}
-                  aria-current={current ? "page" : undefined}
-                  onClick={() => setOpen(false)}
-                  className={cn(
-                    "group/m flex items-center justify-between border-b border-ink/8 py-3.5 text-[15px] font-medium transition-colors last:border-b-0",
-                    current ? "text-ink" : "text-ink-muted hover:text-ink",
-                  )}
-                >
-                  <span className="inline-flex items-center gap-2">
-                    {current && (
-                      <span
-                        aria-hidden
-                        className="inline-block size-1.5 rounded-full bg-clay"
-                      />
-                    )}
-                    {l.label}
-                  </span>
-                  {external ? (
-                    <svg width="11" height="11" viewBox="0 0 10 10" aria-hidden>
-                      <path
-                        d="M2 8 L8 2 M3.5 2 L8 2 L8 6.5"
-                        stroke="currentColor"
-                        strokeWidth="1.2"
-                        fill="none"
-                      />
-                    </svg>
-                  ) : (
-                    <svg
-                      width="14"
-                      height="14"
-                      viewBox="0 0 14 14"
-                      aria-hidden
-                      className="opacity-50 transition-transform duration-200 group-hover/m:translate-x-0.5"
-                    >
-                      <path
-                        d="M2 7 H11 M7 3 L11 7 L7 11"
-                        stroke="currentColor"
-                        strokeWidth="1.4"
-                        fill="none"
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                      />
-                    </svg>
-                  )}
-                </Link>
-              </li>
-            );
-          })}
-          <li className="mt-5">
-            <Button
-              variant="primary"
-              size="md"
-              className="w-full"
-              href="https://blokc.app/"
-            >
-              Launch App
-              <svg
-                width="12"
-                height="12"
-                viewBox="0 0 14 14"
-                aria-hidden
-                className="transition-transform duration-150 group-hover:translate-x-0.5 motion-reduce:transition-none motion-reduce:group-hover:translate-x-0"
+        <AnnouncementBar collapsed={scrolled || open} onDismiss={() => logoRef.current?.focus()} />
+
+        <Container>
+          {/* A fixed-height row: scrolling never changes the layout, only the
+              pill surface behind it fades and scales in (MOT-10). */}
+          <div className="relative flex h-16 items-center justify-between gap-2 min-[375px]:gap-4 sm:h-[72px] [@media(max-height:500px)]:h-[52px]">
+            {/* The pill reaches past the content edges, so the logo and the
+                buttons stay exactly on them. */}
+            <div
+              aria-hidden
+              className={cn(
+                "pointer-events-none absolute -inset-x-3 inset-y-1 rounded-lg border border-line/10 bg-canvas/[0.92] shadow-e2 backdrop-blur-xl sm:-inset-x-5 sm:inset-y-2 [@media(max-height:500px)]:inset-y-0",
+                "transition-[opacity,transform] duration-base ease-out",
+                scrolled ? "scale-100 opacity-100" : "scale-[0.98] opacity-0",
+              )}
+            />
+
+            <Link ref={logoRef} href="/" aria-label="BLOK Capital, home" onClick={onLogo} className="relative shrink-0 rounded-md">
+              <span className={cn("block origin-left transition-transform duration-base ease-out", scrolled && "scale-[0.85]")}>
+                {/* The narrowest phones (320 px) need the room for the menu button. */}
+                <Logo className="max-[374px]:h-6" />
+              </span>
+            </Link>
+
+            <DesktopNav pathname={pathname} />
+
+            {/* While the sheet is open its pinned bar carries the app link;
+                these stay in place (invisible) so the close button doesn't move. */}
+            <div className="relative flex items-center gap-2">
+              <Button
+                href={appLink.href}
+                variant="solid"
+                data-cta="nav_launch_app"
+                data-placement="header"
+                size="sm"
+                className={cn("hidden sm:inline-flex", open && "invisible")}
               >
-                <path
-                  d="M2 7 H11 M7 3 L11 7 L7 11"
-                  stroke="currentColor"
-                  strokeWidth="1.4"
-                  fill="none"
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                />
-              </svg>
-            </Button>
-          </li>
-        </ul>
-      </div>
-    </header>
+                {appLink.label}
+              </Button>
+              {/* Phones: the primary action in reach at every scroll position (D-05). */}
+              <a
+                href={appLink.href}
+                data-cta="nav_launch_app"
+                data-placement="header"
+                target="_blank"
+                rel="noopener noreferrer"
+                aria-label={appLink.label}
+                aria-describedby="nav-new-tab"
+                className={cn(
+                  "inline-flex h-11 items-center justify-center gap-1.5 whitespace-nowrap rounded-full bg-fg px-3 text-caption min-[375px]:px-4 font-medium text-canvas shadow-e1 transition-[background-color,color,transform] duration-fast ease-out can-hover:hover:bg-accent can-hover:hover:text-accent-fg active:scale-[0.98] sm:hidden",
+                  open && "invisible",
+                )}
+              >
+                {/* The full label from 430 px; narrower phones, where the logo and the menu button leave no room, get the short one. */}
+                <span className="min-[430px]:hidden">{appLink.short}</span>
+                <span className="hidden min-[430px]:inline">{appLink.label}</span>
+                <svg aria-hidden viewBox="0 0 16 16" className="size-3.5" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
+                  <path d="M5 11 11 5M6 5h5v5" />
+                </svg>
+              </a>
+              <span id="nav-new-tab" hidden>
+                Opens in a new tab
+              </span>
+              <button
+                ref={buttonRef}
+                type="button"
+                aria-expanded={open}
+                aria-controls="mobile-menu"
+                aria-haspopup="dialog"
+                aria-label={open ? "Close menu" : "Open menu"}
+                onClick={() => setOpen((o) => !o)}
+                className="relative inline-flex size-11 items-center justify-center rounded-full border border-line/12 bg-card/60 text-fg lg:hidden"
+              >
+                {/* Two lines that fold into a cross */}
+                <span aria-hidden className="relative block h-3 w-4">
+                  <span className={cn("absolute left-0 block h-px w-4 bg-current transition-transform duration-base ease-expo", open ? "top-1.5 rotate-45" : "top-0.5")} />
+                  <span className={cn("absolute left-0 block h-px w-4 bg-current transition-transform duration-base ease-expo", open ? "top-1.5 -rotate-45" : "top-2.5")} />
+                </span>
+              </button>
+            </div>
+          </div>
+        </Container>
+      </header>
+      {/* After the header, so it follows the menu button in reading order;
+          z-sheet keeps the header row (logo, close button) above it. */}
+      <MobileMenu ref={sheetRef} open={open} pathname={pathname} onClose={() => setOpen(false)} onDismiss={dismiss} />
+    </>
   );
 }

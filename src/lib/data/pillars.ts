@@ -10,6 +10,12 @@ export type Pillar = {
   spec: string;
   description: string;
   href?: string;
+  /**
+   * Set when the property isn't live yet: a short badge label in the
+   * Badge vocabulary, e.g. "Planned · 2027". Its description is written in
+   * the future tense.
+   */
+  planned?: string;
 };
 
 export const pillars: Pillar[] = [
@@ -18,46 +24,50 @@ export const pillars: Pillar[] = [
     label: "Non-custodial by design",
     spec: "Web3Auth · ERC-4337",
     description:
-      "Every Garden lives at your address. Sign in with Google via Web3Auth's MPC, no seed phrase, no custody, no admin key.",
-    href: "https://docs.blokcapital.io/educ/blok-c-overview",
+      "Every Garden lives at your own address. Sign in with Google, no seed phrase, and only you can move your funds.",
+    href: "https://docs.blokcapital.io/en/concepts/blok-c-overview",
   },
   {
     id: "upgradable",
     label: "Upgradable without migration",
     spec: "EIP-2535 Diamond",
     description:
-      "Add facets, swap strategies, integrate new DEXs, all without forcing users into new contracts. Storage stays put.",
-    href: "https://docs.blokcapital.io/v1/introduction",
+      "New features and strategies plug into the Garden you already have, after a DAO vote. You never move to a new wallet.",
+    href: "https://docs.blokcapital.io/en/smart-contracts/introduction",
   },
   {
     id: "reputation",
     label: "On-chain reputation",
     spec: "ERC-5484 soulbound",
     description:
-      "A Gardener's track record writes itself to a non-transferable badge in their wallet, verifiable from any dapp, owned by no platform.",
-    href: "https://docs.blokcapital.io/builders/blok-capital-v1",
+      "Gardeners arrive in 2027. Each one's track record will be kept on-chain, on a badge that can't be transferred, for anyone to check.",
+    href: "https://docs.blokcapital.io/en/builders/blok-capital-v1",
+    // 2027: protocolStatus.gardeners, facts.ts ("Planned: manager (Gardener) track
+    // records will be written to … ERC-5484 soulbound badges"), roadmap "Introduction
+    // of Gardeners" (Q2 '27). Year only, so the roadmap stays the one place for quarters.
+    planned: "Planned · 2027",
   },
   {
     id: "audited",
-    label: "Audited in the open",
-    spec: "CredShields · SolidityScan · Octane",
-    description: "Audited by CredShields, with continuous automated review by SolidityScan and Octane. Every facet ships with receipts.",
-    href: "/features#audits",
+    label: "Audits in the open",
+    spec: "Independent audits",
+    description: "New independent audits are under way. Each report will be published in the docs, so anyone can read it.",
+    href: "/security#audits",
   },
   {
     id: "dao",
     label: "DAO-governed",
-    spec: "Aragon OSX",
+    spec: "Aragon OSx",
     description:
-      "Every protocol change, fees, indices, new facets, routes through on-chain Aragon votes. BLOKC holders decide.",
-    href: "/about#dao",
+      "Fees, indices and new features change only through on-chain votes. Core members vote today; $BLOKC holders after launch.",
+    href: "/governance",
   },
   {
     id: "open-source",
     label: "Open-source",
-    spec: "GitHub · The Graph",
+    spec: "GitHub · Foundry",
     description:
-      "Read the contracts. Run the front-end yourself. Data comes from a public subgraph, no centralized backend to trust.",
+      "The contracts and their tests are public, and every Garden, index and vote is on Arbitrum for anyone to check.",
     href: "https://github.com/BLOKCapital",
   },
 ];
