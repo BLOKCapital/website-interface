@@ -232,7 +232,7 @@ export function CookieConsent() {
 
   // Reject and Accept share one look (D-15, SEC-23); Manage is a ghost of
   // the same height. 44 px everywhere: consent is a key flow.
-  const choice = "h-11 px-2 sm:px-5";
+  const choice = "h-11 px-2";
 
   return (
     <>
@@ -242,37 +242,34 @@ export function CookieConsent() {
           role="region"
           aria-labelledby="cookie-banner-title"
           className={cn(
-            "fixed inset-x-2 bottom-2 z-banner animate-reveal overflow-hidden rounded-card border border-line/12 bg-card/95 p-3 pb-[max(0.75rem,env(safe-area-inset-bottom))] shadow-e3 backdrop-blur-xl",
-            "sm:inset-x-auto sm:bottom-5 sm:right-5 sm:w-[25rem] sm:p-0 sm:pb-0",
-            "[@media(max-height:500px)]:inset-x-0 [@media(max-height:500px)]:bottom-0 [@media(max-height:500px)]:right-0 [@media(max-height:500px)]:w-auto [@media(max-height:500px)]:max-w-none [@media(max-height:500px)]:rounded-none [@media(max-height:500px)]:border-x-0 [@media(max-height:500px)]:border-b-0 [@media(max-height:500px)]:px-5 [@media(max-height:500px)]:py-2.5 [@media(max-height:500px)]:pb-[max(0.625rem,env(safe-area-inset-bottom))]",
+            // Phones: a short sheet on the bottom edge. From sm: a small, short toast
+            // in the bottom-right corner, below the hero readouts and clear of
+            // the hero buttons on the left.
+            "fixed inset-x-0 bottom-0 z-banner animate-reveal overflow-hidden rounded-t-card border-t border-line/12 bg-card/95 px-4 pb-[max(0.75rem,env(safe-area-inset-bottom))] pt-3 shadow-e3 backdrop-blur-xl",
+            "sm:inset-x-auto sm:bottom-4 sm:right-4 sm:w-[22.5rem] sm:rounded-card sm:border sm:p-4",
+            "[@media(max-height:500px)]:inset-x-0 [@media(max-height:500px)]:bottom-0 [@media(max-height:500px)]:left-0 [@media(max-height:500px)]:right-0 [@media(max-height:500px)]:w-auto [@media(max-height:500px)]:max-w-none [@media(max-height:500px)]:rounded-none [@media(max-height:500px)]:border-x-0 [@media(max-height:500px)]:border-b-0 [@media(max-height:500px)]:px-5 [@media(max-height:500px)]:py-2.5 [@media(max-height:500px)]:pb-[max(0.625rem,env(safe-area-inset-bottom))]",
           )}
           style={{ animationDelay: "600ms" }}
         >
-          {/* The ticket's stub (from tablets up; not in the short bar). */}
-          <div aria-hidden className={cn("hidden items-center justify-between gap-3 border-b border-dashed border-line/20 bg-surface/70 px-5 py-2.5 sm:flex", "[@media(max-height:500px)]:hidden")}>
-            <span className="font-mono text-label uppercase tracking-caps text-cobalt">Privacy · cookies</span>
-            <span className="font-mono text-label text-fg-subtle">blokcapital.io</span>
-          </div>
-          <div className={cn("flex flex-col gap-3 sm:gap-4 sm:p-5", "[@media(max-height:500px)]:mx-auto [@media(max-height:500px)]:max-w-page [@media(max-height:500px)]:flex-row [@media(max-height:500px)]:items-center [@media(max-height:500px)]:gap-5 [@media(max-height:500px)]:p-0")}>
-            <div className={cn("text-caption text-fg-muted sm:text-small", "[@media(max-height:500px)]:min-w-0 [@media(max-height:500px)]:flex-1 [@media(max-height:500px)]:text-caption")}>
+          <div className={cn("flex flex-col gap-3", "[@media(max-height:500px)]:mx-auto [@media(max-height:500px)]:max-w-page [@media(max-height:500px)]:flex-row [@media(max-height:500px)]:items-center [@media(max-height:500px)]:gap-5 [@media(max-height:500px)]:p-0")}>
+            <div className={cn("text-caption text-fg-muted", "[@media(max-height:500px)]:min-w-0 [@media(max-height:500px)]:flex-1 [@media(max-height:500px)]:text-caption")}>
               <h2
                 id="cookie-banner-title"
                 className={cn(
-                  "inline font-semibold text-fg sm:mb-1.5 sm:block sm:text-h4 sm:font-extrabold sm:tracking-tight",
+                  "inline font-semibold text-fg",
                   "[@media(max-height:500px)]:mb-0 [@media(max-height:500px)]:inline [@media(max-height:500px)]:text-caption [@media(max-height:500px)]:font-semibold [@media(max-height:500px)]:tracking-normal",
                 )}
               >
-                Cookies, kept to a <span className="sm:hand">minimum.</span>
+                Cookies, kept to a minimum.
               </h2>{" "}
               <p className="inline">
-                <span className={cn("hidden sm:inline", "[@media(max-height:500px)]:hidden")}>Strictly necessary cookies keep the site working. </span>
                 Analytics runs only if you say so.{" "}
                 <Link href="/legal/cookie-policy" className="whitespace-nowrap text-leaf underline underline-offset-2">
                   Cookie Policy
                 </Link>
               </p>
             </div>
-            <div className={cn("grid grid-cols-3 gap-2 sm:flex sm:flex-wrap", "[@media(max-height:500px)]:flex [@media(max-height:500px)]:shrink-0 [@media(max-height:500px)]:flex-nowrap")}>
+            <div className={cn("grid grid-cols-3 gap-2", "[@media(max-height:500px)]:flex [@media(max-height:500px)]:shrink-0 [@media(max-height:500px)]:flex-nowrap")}>
               <Button size="md" variant="solid" className={choice} onClick={() => decideFromBanner(DENY_ALL)}>
                 Reject all
               </Button>
