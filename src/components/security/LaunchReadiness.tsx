@@ -4,7 +4,7 @@ import { Badge } from "@/components/ui/Badge";
 import { Card } from "@/components/ui/Card";
 import { Reveal } from "@/components/ui/Reveal";
 import { Icon } from "@/components/ui/Icon";
-import { readiness, type ReadinessStatus } from "./readiness";
+import { readiness, readinessSummary, type ReadinessStatus } from "./readiness";
 import { cn } from "@/lib/utils";
 
 /** Each status as a shape (here) and a word (the Badge), never colour alone. */
@@ -56,8 +56,7 @@ function Proof({ label, href, cta }: { label: string; href: string; cta?: string
  * only when the site states one, and a link to the proof.
  */
 export function LaunchReadiness() {
-  const count = (s: ReadinessStatus) => readiness.filter((r) => r.status === s).length;
-  const summary = `${count("done")} of ${readiness.length} done · ${count("progress")} in progress · ${count("planned")} planned`;
+  const summary = readinessSummary();
   return (
     <Section
       id="readiness"

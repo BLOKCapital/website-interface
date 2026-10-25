@@ -1,9 +1,8 @@
 import type { ReactNode } from "react";
 import { auditStatus } from "@/lib/data/audits";
 import { cn } from "@/lib/utils";
-import { readiness, type ReadinessStatus } from "./readiness";
+import { readiness, readinessSummary, type ReadinessStatus } from "./readiness";
 
-const count = (s: ReadinessStatus) => readiness.filter((r) => r.status === s).length;
 
 /** A readiness item as a meter segment: shape, not colour alone (as LaunchReadiness). */
 const seg: Record<ReadinessStatus, string> = {
@@ -49,7 +48,7 @@ export function SecurityReadout({ release, className }: { release: string[]; cla
                 ))}
               </span>
               <span className="mt-1.5 block text-caption text-fg-muted">
-                {count("done")} of {readiness.length} done · {count("progress")} in progress · {count("planned")} planned
+                {readinessSummary()}
               </span>
             </dd>
           </div>

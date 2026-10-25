@@ -68,3 +68,19 @@ export const readiness: ReadinessItem[] = [
   // TODO(owner): formal verification, source verification on Arbiscan as a
   // separate row, and any dates for the rows above (D-02, D-04) wait on you.
 ];
+
+/**
+ * The checklist in one line, led by what's moving: "2 in progress · 3 planned
+ * · 5 checks". A status with no rows is left out, so nothing reads "0 done".
+ */
+export function readinessSummary() {
+  const count = (s: ReadinessStatus) => readiness.filter((r) => r.status === s).length;
+  const parts = [
+    [count("done"), "done"],
+    [count("progress"), "in progress"],
+    [count("planned"), "planned"],
+  ]
+    .filter(([n]) => n)
+    .map(([n, label]) => `${n} ${label}`);
+  return [...parts, `${readiness.length} checks`].join(" · ");
+}

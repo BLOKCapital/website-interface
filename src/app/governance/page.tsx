@@ -91,7 +91,7 @@ export default async function GovernancePage() {
             </Card>
           </Reveal>
           <Reveal delay={0.08}>
-            <Card className="h-full border-bloom/25">
+            <Card className="h-full border-progress/25">
               <Badge tone="current">Current phase</Badge>
               <h3 className="mt-4 text-h4 font-bold tracking-tight text-fg">Core members vote until the token launches</h3>
               <p className="mt-2 text-small text-fg-muted">

@@ -41,6 +41,7 @@
   --p-bloom-300: 240 163 180; /* #F0A3B4 */
   --p-cobalt-600: 37 99 196; /* #2563C4 */
   --p-cobalt-300: 125 180 255; /* #7DB4FF */
+  --p-cobalt-800: 31 84 168; /* #1F54A8 */
   --p-ember-700: 190 62 40; /* #BE3E28 */
   --p-ember-300: 242 145 127; /* #F2917F */
   --p-amber-800: 122 85 8; /* #7A5508 */
@@ -78,13 +79,14 @@
   --leaf-deep: var(--p-leaf-800); /* fills behind leaf */
   --leaf-hover: var(--p-leaf-800); /* primary button hover */
   --sand: var(--p-bronze-700); /* warm emphasis (bronze on paper) */
-  --bloom: var(--p-bloom-700); /* "in progress" state */
+  --bloom: var(--p-bloom-700); /* pink accent (social cards); not a status colour */
   --cobalt: var(--p-cobalt-600); /* data / info, echoes the logo */
   --danger: var(--p-ember-700); /* losses, risks */
   --caution: var(--p-amber-700); /* warnings */
   /* Small text on a bloom or caution tint (Badge "current" / "example"):
      >= 5.0:1 on every surface, including under the badge's own 10% tint. */
   --bloom-text: var(--p-bloom-800);
+  --cobalt-text: var(--p-cobalt-800);
   --caution-text: var(--p-amber-800);
 
   /* Borders are --line at a role alpha (Tailwind: border-subtle, border,
@@ -139,6 +141,7 @@
     --danger: var(--p-ember-300);
     --caution: var(--p-amber-300);
     --bloom-text: var(--p-bloom-300);
+    --cobalt-text: var(--p-cobalt-300);
     --caution-text: var(--p-amber-300);
 
     --a-border-subtle: 0.08;
@@ -167,8 +170,10 @@
   --on-accent: var(--canvas);
   --emphasis: var(--sand);
   --data: var(--cobalt);
-  --progress: var(--bloom);
-  --progress-text: var(--bloom-text);
+  /* In progress is information, not a warning: blue, never red or pink.
+     Small text on its tint uses the darker step (5.5:1 or more). */
+  --progress: var(--cobalt);
+  --progress-text: var(--cobalt-text);
   --success: var(--leaf);
   --warning: var(--caution);
   --warning-text: var(--caution-text);

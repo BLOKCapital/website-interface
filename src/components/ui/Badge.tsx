@@ -4,8 +4,8 @@ import { cn } from "@/lib/utils";
 export type Tone = "live" | "current" | "done" | "soon" | "example" | "neutral";
 
 // Text ≥ 4.5:1 on canvas, surface, card and raised, under each tone's own
-// tint (Day, 12px): live 4.59–5.25, current 5.01–5.74 (the darker
-// --bloom-text step), done 4.85–5.56, soon 7.3–8.5, example 5.13–5.86 (the
+// tint (Day, 12px): live 4.59–5.25, current 5.51–6.29 (the darker
+// --cobalt-text step), done 4.85–5.56, soon 7.3–8.5, example 5.13–5.86 (the
 // darker --caution-text step). Night tones are 6.5:1 or more.
 const tones: Record<Tone, string> = {
   live: "border-success/35 bg-success/10 text-success",

@@ -74,7 +74,7 @@ export function RoadmapTimeline() {
                   key={m.id}
                   className={cn(
                     "rounded-2xl border bg-card p-5",
-                    m.status === "current" ? "border-bloom/30" : m.status === "future" ? "border-dashed border-line/15" : "border-line/[0.08]",
+                    m.status === "current" ? "border-progress/30" : m.status === "future" ? "border-dashed border-line/15" : "border-line/[0.08]",
                   )}
                 >
                   <div className="flex items-center justify-between gap-3">
