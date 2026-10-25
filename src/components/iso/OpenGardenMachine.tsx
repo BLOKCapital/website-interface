@@ -5,6 +5,7 @@ import { CoinFace, Cyl, Engrave, Flat, INK, OnFace, Part, Screw, Slab } from "./
 import css from "./iso.module.css";
 import { TokenStack } from "@/components/indices/TokenLogo";
 import { indices, type ComponentSymbol } from "@/lib/data/indices";
+import { cn } from "@/lib/utils";
 
 /*
  * Fig. 5, how a Garden starts, as a machine, for the home "How it works"
@@ -59,7 +60,18 @@ const LABEL = [
   "Illustration, step 3, Choose a strategy: a BLOKC5 cartridge docks on your Garden, and the USDC becomes the index's five tokens.",
 ];
 
-export function OpenGardenMachine({ stage, animate = true, className }: { stage: GardenStage; animate?: boolean; className?: string }) {
+export function OpenGardenMachine({
+  stage,
+  animate = true,
+  steadyCaption = false,
+  className,
+}: {
+  stage: GardenStage;
+  animate?: boolean;
+  /** Keep room for step 3's token line at every step, so a looping figure doesn't change height. */
+  steadyCaption?: boolean;
+  className?: string;
+}) {
   const full = `${VIEW.x} ${VIEW.y} ${VIEW.w} ${VIEW.h}`;
   const k = `s${stage}`;
   // Motion only on the step that's just arrived, and only when asked to animate.
@@ -203,8 +215,8 @@ export function OpenGardenMachine({ stage, animate = true, className }: { stage:
       </IsoScene>
       <figcaption className="mt-2 flex flex-wrap items-center justify-center gap-x-3 gap-y-1.5 font-mono text-label text-fg-subtle">
         {/* At step 3, which tokens the stacks are. */}
-        {stage === 2 && (
-          <span className="inline-flex items-center gap-2 text-fg-muted">
+        {(stage === 2 || steadyCaption) && (
+          <span aria-hidden={stage !== 2 || undefined} className={cn("inline-flex items-center gap-2 text-fg-muted", stage !== 2 && "invisible")}>
             <TokenStack symbols={BASKET} size={18} />
             <span>
               <span className="text-cobalt">BLOKC5</span> · {BASKET.join(" · ")}

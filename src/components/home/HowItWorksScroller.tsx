@@ -1,9 +1,13 @@
 "use client";
 
-import { useEffect, useRef, useState, type ReactNode } from "react";
+import { useEffect, useId, useRef, useState, type ReactNode } from "react";
+import { AutoplayToggle } from "@/components/explore/AutoplayToggle";
 import { OpenGardenMachine } from "@/components/iso/OpenGardenMachine";
+import { useFigureLoop } from "@/components/iso/useFigureLoop";
 import { ArrowLink } from "@/components/ui/ArrowLink";
 import { LG_QUERY, useMediaQuery } from "@/lib/explainers";
+import { useIsClient } from "@/lib/hooks";
+import { useRovingTabs } from "@/lib/useRovingTabs";
 import { cn } from "@/lib/utils";
 
 export type ScrollStep = {
@@ -34,14 +38,91 @@ function Callout({ on, className, children }: { on: boolean; className: string; 
   );
 }
 
+/** How long each step stays up in the small-screen loop: its motion, then a read of the note. */
+const LOOP_DWELL = () => 5500;
+
+/**
+ * Below lg, where there's no room to pin the Garden beside the steps: the
+ * Garden plays Open, Fund, Strategy on a loop (useFigureLoop: never with
+ * reduced motion or Pause motion, off screen or in a hidden tab), with the
+ * step tabs, a Pause button (WCAG 2.2.2) and the step's note under it.
+ * Server HTML, reduced motion and Pause motion show the last step's still
+ * frame until a tab is picked.
+ */
+function GardenLoop({ steps, className }: { steps: ScrollStep[]; className?: string }) {
+  const uid = useId().replace(/:/g, "");
+  const root = useRef<HTMLDivElement>(null);
+  const client = useIsClient();
+  const loop = useFigureLoop(root, steps.length, LOOP_DWELL);
+  const [picked, setPicked] = useState(false);
+  const moving = client && loop.canPlay;
+  const stage = (moving || picked ? loop.step : 2) as Stage;
+  const pick = (i: number) => {
+    setPicked(true);
+    loop.go(i);
+  };
+  const rt = useRovingTabs({ count: steps.length, selected: stage, onSelect: pick });
+
+  return (
+    <div ref={root} className={cn("relative overflow-hidden rounded-panel border border-subtle bg-canvas/70 shadow-soft", className)}>
+      <div aria-hidden className="grid-lines pointer-events-none absolute inset-0 [mask-image:radial-gradient(ellipse_at_center,black,transparent_75%)]" />
+      {/* The steps as the desktop panel's progress bar, here also the tabs. */}
+      <div {...rt.tablist} aria-label="Steps" className="relative grid grid-cols-3 gap-2 px-4 pt-3 sm:gap-3 sm:px-6">
+        {steps.map((s, i) => (
+          <button
+            key={s.tag}
+            {...rt.tab(i)}
+            id={`${uid}-tab-${i}`}
+            aria-controls={`${uid}-panel`}
+            onClick={() => pick(i)}
+            className="group/t min-w-0 py-2 text-left"
+          >
+            <span className="block h-1 overflow-hidden rounded-full bg-line/10">
+              <span
+                className="block h-full origin-left bg-leaf transition-transform duration-slow ease-expo"
+                style={{ transform: `scaleX(${i <= stage ? 1 : 0})` }}
+              />
+            </span>
+            <span
+              className={cn(
+                "mt-2 block truncate font-mono text-label uppercase tracking-eyebrow transition-colors duration-fast",
+                i === stage ? "text-leaf" : "text-fg-muted can-hover:group-hover/t:text-fg",
+              )}
+            >
+              {String(i + 1).padStart(2, "0")} {s.tag}
+            </span>
+          </button>
+        ))}
+      </div>
+      <div role="tabpanel" id={`${uid}-panel`} aria-labelledby={`${uid}-tab-${stage}`} className="relative px-2 pb-4 pt-2 sm:px-8">
+        <OpenGardenMachine stage={stage} animate={moving} steadyCaption />
+      </div>
+      <div className="relative flex items-start gap-4 border-t border-subtle px-4 py-3.5 sm:items-center sm:px-6">
+        {/* Room for the longest note, so the card keeps one height as it loops. */}
+        <p className="grid min-w-0 flex-1 text-small leading-snug text-fg">
+          {steps.map((s, i) => (
+            <span key={s.tag} aria-hidden className={cn("col-start-1 row-start-1", i !== stage && "invisible")}>
+              {s.callout}
+            </span>
+          ))}
+          <span aria-live="polite" className="sr-only">
+            {steps[stage].callout}
+          </span>
+        </p>
+        {moving && <AutoplayToggle on={loop.playing} ended={false} onClick={loop.toggle} what="the illustration" />}
+      </div>
+    </div>
+  );
+}
+
 /**
  * How it works, as a scroll story. The three steps scroll past on the left;
  * on the right a Garden (drawn as the app would show it) stays pinned and
  * changes with them: opened, funded, then following an index that may
- * rebalance but never withdraw. Phones and tablets get one still Garden,
- * full width under the steps, showing where they end up. Only one mock is
- * ever in the page: the server HTML carries the still one, and from lg the
- * pinned one replaces it once hydrated. Nothing depends on the effect.
+ * rebalance but never withdraw. Phones and tablets get the same Garden full
+ * width under the steps, looping through them on its own (GardenLoop). Only
+ * one mock is ever in the page: the server HTML carries the looping one's
+ * still frame, and from lg the pinned one replaces it once hydrated.
  */
 export function HowItWorksScroller({ steps }: { steps: ScrollStep[] }) {
   const [active, setActive] = useState(-1);
@@ -133,8 +214,8 @@ export function HowItWorksScroller({ steps }: { steps: ScrollStep[] }) {
             );
           })}
         </ol>
-        {/* Below lg: one still Garden, full width, where the three steps end up. */}
-        {!wide && <OpenGardenMachine stage={2} animate={false} className="mb-12 lg:hidden" />}
+        {/* Below lg: the same Garden, playing the three steps on a loop. */}
+        {!wide && <GardenLoop steps={steps} className="mb-12 lg:hidden" />}
         <p className="pl-16">
           <ArrowLink href="/protocol">The full protocol</ArrowLink>
         </p>
