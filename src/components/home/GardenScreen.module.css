@@ -10,21 +10,21 @@
   container: app / inline-size;
 }
 .app {
-  --page: #f3eee3;
-  --card: #fffdf8;
-  --side: #f6f1e6;
-  --surface: #f4eee0;
-  --muted: #eae0cc;
-  --border: #d3c8b3;
-  --ink: #1f1a14;
-  --text: #473c30;
-  --subtle: #6d6050;
-  --faint: #756857;
-  --moss: #4f6f4f;
-  --moss-deep: #283e2c;
-  --success: #2f6b3b;
-  --danger: #b23a26;
-  --neg: #b0432f;
+  --page: #f7f8f4;
+  --card: #ffffff;
+  --side: #f7f8f4;
+  --surface: #eff2ec;
+  --muted: #dee4dc;
+  --border: #dbddd9;
+  --border-strong: #b2b6b0;
+  --ink: #111a15;
+  --text: #435049;
+  --subtle: #5c6962;
+  --primary: #217046;
+  --on-primary: #f4f6f1;
+  --success: #217046;
+  --danger: #be3e28;
+  --shadow: 0 1px 2px rgb(17 26 21 / 0.04);
   display: flex;
   min-height: 100%;
   background: var(--page);
@@ -39,11 +39,18 @@
   font-family: var(--font-mono), ui-monospace, monospace;
   font-variant-numeric: tabular-nums;
 }
+.num {
+  font-variant-numeric: tabular-nums;
+}
+.subtle {
+  display: inline-flex;
+  color: var(--subtle);
+}
 
-/* Sidebar (232px in the app; 200px here so the content keeps its room in the frame). */
+/* Sidebar (240px in the app; 220px here so the content keeps its room in the frame). */
 .side {
   display: none;
-  flex: 0 0 200px;
+  flex: 0 0 220px;
   flex-direction: column;
   background: var(--side);
   border-right: 1px solid var(--border);
@@ -56,56 +63,103 @@
 .brand {
   display: flex;
   align-items: center;
-  height: 48px;
-  padding: 0 14px;
+  height: 56px;
+  padding: 0 16px;
   border-bottom: 1px solid var(--border);
 }
 .nav {
   display: flex;
+  flex: 1;
   flex-direction: column;
-  gap: 1px;
-  padding: 8px;
+  gap: 2px;
+  padding: 8px 10px;
 }
 .item {
-  position: relative;
   display: flex;
   align-items: center;
-  gap: 11px;
-  height: 34px;
-  padding: 0 11px;
-  border-radius: 6px;
+  gap: 12px;
+  height: 38px;
+  padding: 0 10px;
+  border-radius: 8px;
   color: var(--text);
+  font-size: 15px;
   font-weight: 500;
 }
 .item svg {
   flex: none;
-  width: 16px;
-  height: 16px;
+  color: var(--subtle);
 }
 .active {
-  background: var(--surface);
+  background: rgb(17 26 21 / 0.07);
+  color: var(--ink);
+  font-weight: 600;
+}
+.active svg {
   color: var(--ink);
 }
-.active::before {
-  content: "";
-  position: absolute;
-  left: -8px;
-  top: 6px;
-  bottom: 6px;
-  width: 2px;
-  border-radius: 2px;
-  background: var(--moss);
-}
 .group {
-  padding: 16px 12px 6px;
-  color: var(--faint);
-  font-size: 12px;
+  padding: 18px 10px 6px;
+  color: var(--subtle);
+  font-size: 13px;
+  font-weight: 500;
+}
+.utility {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  padding: 8px 10px;
+}
+.collapse {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  color: var(--subtle);
+}
+/* The account row at the sidebar's foot, 64px like the page footer. */
+.sideFoot {
+  display: flex;
+  align-items: center;
+  min-height: 64px;
+  padding: 8px 10px;
+  border-top: 1px solid var(--border);
+}
+.accountRow {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  width: 100%;
+  height: 48px;
+  padding: 0 8px 0 6px;
+}
+.accountAvatar {
+  display: inline-flex;
+  flex: none;
+  align-items: center;
+  justify-content: center;
+  width: 36px;
+  height: 36px;
+  border-radius: 9999px;
+  background: var(--muted);
+  color: var(--ink);
+  font-size: 13px;
   font-weight: 600;
-  letter-spacing: 0.07em;
-  text-transform: uppercase;
+}
+.accountName {
+  display: block;
+  font-size: 15px;
+  font-weight: 600;
+  line-height: 1.2;
+}
+.accountAddr {
+  display: block;
+  margin-top: 2px;
+  color: var(--subtle);
+  font-size: 12px;
 }
 
-/* Top bar and content. */
+/* Top bar and content: one 32px side gutter for both, as in the app. */
 .main {
   flex: 1;
   min-width: 0;
@@ -117,10 +171,15 @@
   align-items: center;
   justify-content: space-between;
   gap: 12px;
-  height: 48px;
-  padding: 0 20px;
-  background: rgb(255 253 248 / 0.86);
+  height: 56px;
+  padding: 0 16px;
+  background: var(--page);
   border-bottom: 1px solid var(--border);
+}
+@container app (min-width: 640px) {
+  .top {
+    padding: 0 32px;
+  }
 }
 .crumbs {
   display: flex;
@@ -132,26 +191,31 @@
 }
 .crumbs b {
   color: var(--ink);
-  font-weight: 500;
+  font-weight: 600;
 }
 .tools {
   display: flex;
   align-items: center;
-  gap: 6px;
+  gap: 8px;
 }
 .search {
   display: none;
   align-items: center;
   justify-content: space-between;
-  gap: 8px;
-  height: 28px;
-  min-width: 240px;
-  padding: 0 8px;
+  gap: 10px;
+  height: 36px;
+  min-width: 260px;
+  padding: 0 6px 0 12px;
   border: 1px solid var(--border);
-  border-radius: 6px;
+  border-radius: 8px;
   background: var(--card);
-  color: var(--faint);
-  font-size: 12px;
+  color: var(--subtle);
+  font-size: 14px;
+}
+.searchLeft {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
 }
 @container app (min-width: 1024px) {
   .search {
@@ -159,95 +223,100 @@
   }
 }
 .kbd {
+  display: inline-flex;
+  align-items: center;
+  height: 20px;
   padding: 0 5px;
   border: 1px solid var(--border);
   border-radius: 4px;
-  font-size: 11px;
+  background: var(--page);
+  font-size: 12px;
 }
 .chip {
   display: inline-flex;
   align-items: center;
-  gap: 5px;
-  height: 28px;
-  padding: 0 8px;
+  gap: 6px;
+  height: 36px;
+  padding: 0 10px;
   border: 1px solid var(--border);
-  border-radius: 6px;
+  border-radius: 8px;
   background: var(--card);
   color: var(--text);
   font-size: 12px;
 }
-.avatar {
-  width: 28px;
-  height: 28px;
-  border: 1px solid var(--border);
-  border-radius: 9999px;
-  background: var(--surface);
+.chip .mono {
+  color: var(--ink);
+  letter-spacing: 0.04em;
 }
 .content {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
   padding: 20px 16px 28px;
 }
 @container app (min-width: 640px) {
   .content {
-    padding: 24px 28px 32px;
+    padding: 24px 32px 32px;
   }
 }
 .back {
   display: inline-flex;
   align-items: center;
   gap: 6px;
-  margin-bottom: 14px;
+  margin-bottom: -6px;
   color: var(--subtle);
 }
 
-/* Cards, pills, buttons. */
-.card {
-  background: var(--card);
-  border: 1px solid var(--border);
-  border-radius: 8px;
-}
-.hero {
+/* The page header: name and status left, the garden's facts right, a rule under it. */
+.head {
   display: flex;
   flex-direction: column;
-  gap: 18px;
-  padding: 18px;
-  margin-bottom: 18px;
+  gap: 12px;
+  padding-bottom: 18px;
+  border-bottom: 1px solid var(--border);
 }
 @container app (min-width: 640px) {
-  .hero {
+  .head {
     flex-direction: row;
-    align-items: flex-start;
+    align-items: flex-end;
     justify-content: space-between;
-    padding: 22px;
   }
 }
-.pills {
+.identity {
   display: flex;
-  flex-wrap: wrap;
-  gap: 8px;
-  margin-bottom: 12px;
+  align-items: center;
+  gap: 10px;
+  min-width: 0;
+}
+.thumb {
+  flex: none;
+  width: 40px;
+  height: 40px;
+  border-radius: 8px;
+  background: linear-gradient(135deg, #cfd9cc, #9fb39a);
+}
+.title {
+  font-size: 24px;
+  font-weight: 600;
+  letter-spacing: -0.02em;
+  line-height: 1.2;
 }
 .pill {
   display: inline-flex;
   align-items: center;
-  gap: 6px;
-  height: 20px;
-  padding: 0 8px;
+  gap: 5px;
+  height: 22px;
+  padding: 0 9px;
   border: 1px solid var(--border);
   border-radius: 9999px;
   background: var(--surface);
   color: var(--text);
   font-size: 12px;
   font-weight: 500;
-  letter-spacing: 0.01em;
-}
-.accent {
-  background: rgb(79 111 79 / 0.1);
-  border-color: rgb(79 111 79 / 0.2);
-  color: var(--moss-deep);
 }
 .ok {
-  background: rgb(47 107 59 / 0.1);
-  border-color: rgb(47 107 59 / 0.2);
+  background: rgb(33 112 70 / 0.1);
+  border-color: rgb(33 112 70 / 0.2);
   color: var(--success);
 }
 .dot {
@@ -256,85 +325,215 @@
   border-radius: 9999px;
   background: currentColor;
 }
-.title {
-  font-size: 20px;
-  font-weight: 600;
-  letter-spacing: -0.01em;
-  line-height: 1.2;
-}
 .meta {
   display: flex;
   flex-wrap: wrap;
   align-items: center;
-  gap: 6px;
-  margin-top: 8px;
+  gap: 8px;
+  color: var(--subtle);
+  font-size: 14px;
+}
+.meta > svg {
   color: var(--subtle);
 }
-.tag {
+.sep {
+  color: #8f9a93;
+}
+/* The app's address chip (components/ui/Address.tsx). */
+.addrChip {
   display: inline-flex;
   align-items: center;
-  gap: 4px;
-  height: 22px;
-  padding: 0 7px;
-  border: 1px solid var(--border);
-  border-radius: 6px;
+  gap: 6px;
+  padding: 2px 6px;
+  border-radius: 4px;
+  background: var(--surface);
+  color: var(--text);
+  font-size: 14px;
+  white-space: nowrap;
+}
+.verified {
+  color: var(--success);
   font-size: 12px;
   font-weight: 500;
 }
-.tagOk {
-  border-color: rgb(47 107 59 / 0.3);
-  background: rgb(47 107 59 / 0.1);
-  color: var(--success);
+
+/* Cards. */
+.card {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  box-shadow: var(--shadow);
 }
-.worth {
-  text-align: left;
+
+/* The balance card (components/ui/BalanceHero.tsx). */
+.hero {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  padding: 20px;
 }
-@container app (min-width: 640px) {
-  .worth {
-    text-align: right;
+@container app (min-width: 1024px) {
+  .hero {
+    flex-direction: row;
+    align-items: flex-end;
+    justify-content: space-between;
+    padding: 24px;
   }
 }
 .label {
+  display: flex;
+  align-items: center;
+  gap: 4px;
   color: var(--subtle);
-  font-size: 12px;
+  font-size: 14px;
   font-weight: 500;
-  letter-spacing: 0.05em;
-  text-transform: uppercase;
 }
 .big {
-  font-size: 32px;
+  margin-top: 6px;
+  font-size: 40px;
   font-weight: 600;
-  line-height: 1.1;
+  letter-spacing: -0.03em;
+  line-height: 1;
 }
 .up {
-  color: var(--moss);
-  font-size: 12px;
+  margin-left: 12px;
+  color: var(--success);
+  font-size: 13px;
   font-weight: 500;
+  letter-spacing: 0;
+  vertical-align: middle;
 }
 .spark {
   display: block;
-  width: 140px;
+  width: 100%;
+  max-width: 180px;
   height: 36px;
-  margin-top: 6px;
 }
-@container app (min-width: 640px) {
+/* On the right, above the actions, as in the app's balance card. */
+@container app (min-width: 1024px) {
   .spark {
-    margin-left: auto;
+    align-self: flex-end;
   }
 }
+.actionsCol {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+@container app (min-width: 1024px) {
+  .actionsCol {
+    align-items: flex-end;
+  }
+}
+.actionRow {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+}
+@container app (min-width: 640px) {
+  .actionRow {
+    display: flex;
+  }
+}
+/* The action pill (components/ui/WalletAction.tsx). */
+.action {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  height: 44px;
+  padding: 0 16px 0 6px;
+  border: 1px solid var(--border);
+  border-radius: 9999px;
+  background: var(--card);
+  color: var(--ink);
+  font-weight: 600;
+  white-space: nowrap;
+}
+.actionDisc {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  border-radius: 9999px;
+  background: var(--surface);
+}
+.actionPrimary {
+  border-color: transparent;
+  background: var(--primary);
+  color: var(--on-primary);
+}
+.actionPrimary .actionDisc {
+  background: rgb(244 246 241 / 0.15);
+}
+.actionOff {
+  opacity: 0.5;
+}
+.lockNote {
+  display: inline-flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 6px;
+  color: var(--subtle);
+  font-size: 12px;
+}
+.lockNote b {
+  color: var(--ink);
+  font-weight: 500;
+}
+.stats {
+  display: grid;
+  grid-template-columns: 1fr;
+  border-top: 1px solid var(--border);
+}
+@container app (min-width: 640px) {
+  .stats {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}
+.stat {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  padding: 16px 20px;
+}
+.stat + .stat {
+  border-top: 1px solid var(--border);
+}
+@container app (min-width: 640px) {
+  .stat {
+    padding: 16px 24px;
+  }
+  .stat + .stat {
+    border-top: 0;
+    border-left: 1px solid var(--border);
+  }
+}
+.statLabel {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  color: var(--subtle);
+  font-size: 12px;
+  font-weight: 500;
+}
+.statValue {
+  font-size: 16px;
+  font-weight: 600;
+}
 
-/* Tabs. */
+/* Tabs: a bordered header row, as on the dashboard's tabbed card. */
 .tabs {
   display: flex;
   gap: 2px;
-  padding: 0 16px;
+  padding: 0 12px;
   border-bottom: 1px solid var(--border);
 }
 .tab {
   position: relative;
   display: flex;
   align-items: center;
-  height: 36px;
+  height: 40px;
   padding: 0 12px;
   color: var(--subtle);
   font-weight: 500;
@@ -349,66 +548,46 @@
   right: 8px;
   bottom: -1px;
   height: 2px;
-  background: var(--moss);
-}
-.panel {
-  padding: 16px;
+  border-radius: 1px;
+  background: var(--primary);
 }
 
-/* The Index panel. */
-.box {
-  overflow: hidden;
-  border: 1px solid var(--border);
-  border-radius: 6px;
-  background: var(--card);
+/* The Index panel: sections divided by rules, inside the tab card. */
+.panel > * {
+  padding: 18px 20px;
+}
+.panel > * + * {
+  border-top: 1px solid var(--border);
 }
 .strip {
   display: flex;
   align-items: flex-start;
   justify-content: space-between;
   gap: 12px;
-  padding: 14px 18px;
-  border-bottom: 1px solid var(--border);
-  background: rgb(234 224 204 / 0.3);
 }
-.connected {
-  display: inline-flex;
-  align-items: center;
-  gap: 5px;
-  padding: 2px 8px;
-  border: 1px solid rgb(47 107 59 / 0.3);
-  border-radius: 6px;
-  background: rgb(47 107 59 / 0.1);
-  color: var(--success);
-  font-size: 12px;
-  font-weight: 500;
+.indexName {
+  margin-top: 8px;
+  font-size: 16px;
+  font-weight: 600;
 }
 .addr {
-  display: inline-flex;
-  margin-top: 6px;
-  padding: 2px 8px;
-  border: 1px solid var(--border);
-  border-radius: 6px;
-  background: rgb(243 238 227 / 0.4);
+  display: block;
+  margin-top: 2px;
+  color: var(--subtle);
   font-size: 12px;
 }
 .danger {
   display: inline-flex;
   align-items: center;
-  height: 28px;
-  padding: 0 10px;
-  border-radius: 6px;
-  background: var(--danger);
-  color: var(--card);
+  height: 36px;
+  padding: 0 12px;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  background: var(--card);
+  color: var(--danger);
   font-size: 13px;
   font-weight: 500;
   white-space: nowrap;
-}
-.body {
-  display: flex;
-  flex-direction: column;
-  gap: 16px;
-  padding: 18px;
 }
 .caption {
   color: var(--subtle);
@@ -416,7 +595,7 @@
 }
 .caption b {
   color: var(--ink);
-  font-weight: 500;
+  font-weight: 600;
 }
 .row {
   display: flex;
@@ -424,19 +603,23 @@
   justify-content: space-between;
   gap: 12px;
 }
+.h {
+  font-size: 14px;
+  font-weight: 600;
+}
 .bars {
   display: grid;
   grid-template-columns: 3.5rem 1fr;
   align-items: center;
   gap: 8px 12px;
-  margin-top: 10px;
+  margin-top: 12px;
 }
 .bar {
   display: flex;
   gap: 2px;
   height: 28px;
   overflow: hidden;
-  border-radius: 6px;
+  border-radius: 8px;
   background: var(--muted);
 }
 .seg {
@@ -452,73 +635,194 @@
   opacity: 0.55;
   background-image: repeating-linear-gradient(135deg, rgb(255 255 255 / 0.28) 0 4px, transparent 4px 8px);
 }
+/* Edge to edge inside its section, like the app's tables: plain header, no band. */
+.tableWrap {
+  margin: 14px -20px -18px;
+}
 .table {
   width: 100%;
   border-collapse: collapse;
   font-size: 13px;
 }
 .table th {
-  padding: 9px 12px;
-  background: var(--side);
-  color: var(--faint);
+  padding: 10px 20px;
+  color: var(--subtle);
   font-size: 12px;
   font-weight: 500;
-  letter-spacing: 0.04em;
   text-align: left;
-  text-transform: uppercase;
+  border-top: 1px solid var(--border);
 }
 .table td {
-  padding: 9px 12px;
+  padding: 10px 20px;
   border-top: 1px solid var(--border);
 }
 .table th:not(:first-child),
 .table td:not(:first-child) {
   text-align: right;
 }
-.swatch {
-  display: inline-block;
-  width: 8px;
-  height: 8px;
-  margin-right: 8px;
+/* A token mark inside a ring of its allocation colour. */
+.ring {
+  display: inline-flex;
+  margin-right: 10px;
+  padding: 2px;
   border-radius: 9999px;
+  vertical-align: middle;
+}
+.mark {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 22px;
+  height: 22px;
+  border: 2px solid #fff;
+  border-radius: 9999px;
+  color: #fff;
+  font-size: 10px;
+  font-weight: 700;
 }
 .note {
   display: flex;
   gap: 10px;
-  padding: 10px 12px;
+  margin-top: 10px;
+  padding: 12px 14px;
   border: 1px solid var(--border);
-  border-radius: 6px;
-  background: rgb(234 224 204 / 0.3);
-  color: var(--text);
+  border-radius: 12px;
+  background: rgb(239 242 236 / 0.6);
+  color: var(--ink);
+  font-size: 13px;
 }
 
 /* Phones (the 430px layout): the parts of the screen worth the room. The app's own phone view
-   drops the sidebar too; here the back link, the sparkline and the refresh
-   chip go, so the index (the point of the picture) reaches the frame. */
+   drops the sidebar too; here the back link, the sparkline, the lock note and the
+   garden facts go, so the index (the point of the picture) reaches the frame. */
 @container app (max-width: 639px) {
   .back,
   .spark,
-  .refresh {
+  .lockNote,
+  .meta,
+  .thumb {
     display: none;
   }
-  .big {
-    font-size: 26px;
+  .head {
+    padding-bottom: 12px;
   }
-  .hero {
-    gap: 12px;
+  .big {
+    font-size: 30px;
   }
   .usdc {
     display: none;
   }
-  .connected {
-    white-space: nowrap;
+  .panel > * {
+    padding: 14px;
   }
-  .panel,
-  .strip,
-  .body {
-    padding: 12px;
+  .tableWrap {
+    margin: 12px -14px -14px;
   }
-  .body {
-    gap: 12px;
+  .table th,
+  .table td {
+    padding: 9px 14px;
   }
+  .content {
+    gap: 16px;
+  }
+}
+
+/* ---------- Tour (AppTour): point at one part, replay its motion ----------
+   Only opacity, a ring and small transforms move; the layout never does.
+   Everything here is still under reduced motion or the site's Pause motion
+   switch: the focus still dims and rings, but nothing plays. */
+/* A spotlight: the focused part is ringed, and a light veil (its shadow,
+   spread wide and clipped to the page under the top bar) softens the rest of
+   the page. The sidebar and top bar stay as they are, like the app's fixed
+   chrome. No text changes colour or opacity. */
+.zone {
+  transition: box-shadow 400ms cubic-bezier(0.16, 1, 0.3, 1);
+}
+.zoneRing {
+  position: relative;
+  z-index: 1;
+  border-radius: 12px;
+  box-shadow: 0 0 0 3px rgb(33 112 70 / 0.45), 0 0 0 100vmax rgb(247 248 244 / 0.62);
+}
+@media (prefers-reduced-motion: no-preference) {
+  :global(html:not([data-motion="paused"])) .live {
+    animation: live 2.4s ease-out infinite;
+  }
+  :global(html:not([data-motion="paused"])) .sparkDraw .sparkLine {
+    stroke-dasharray: 1;
+    animation: draw 1100ms cubic-bezier(0.16, 1, 0.3, 1) both;
+  }
+  :global(html:not([data-motion="paused"])) .sparkDraw .sparkArea {
+    animation: fadeIn 900ms 500ms ease-out both;
+  }
+  :global(html:not([data-motion="paused"])) .popIn {
+    display: inline-block;
+    animation: popIn 500ms 700ms cubic-bezier(0.34, 1.56, 0.64, 1) both;
+  }
+  :global(html:not([data-motion="paused"])) .drifting .seg {
+    animation: drift 1400ms calc(var(--i) * 90ms + 200ms) cubic-bezier(0.65, 0, 0.35, 1) both;
+  }
+  :global(html:not([data-motion="paused"])) .flash {
+    animation: flash 1400ms 900ms ease-out both;
+  }
+  :global(html:not([data-motion="paused"])) .turn {
+    animation: turn 1000ms 250ms cubic-bezier(0.65, 0, 0.35, 1) both;
+  }
+}
+@keyframes live {
+  0% { box-shadow: 0 0 0 0 rgb(33 112 70 / 0.45); }
+  70%, 100% { box-shadow: 0 0 0 6px rgb(33 112 70 / 0); }
+}
+@keyframes draw {
+  from { stroke-dashoffset: 1; }
+  to { stroke-dashoffset: 0; }
+}
+@keyframes fadeIn {
+  from { opacity: 0; }
+}
+@keyframes popIn {
+  from { opacity: 0; transform: translateY(6px) scale(0.85); }
+}
+/* From the target weight to the actual one. */
+@keyframes drift {
+  from { width: var(--from); }
+}
+@keyframes flash {
+  0%, 100% { background: transparent; }
+  30% { background: rgb(33 112 70 / 0.12); }
+}
+@keyframes turn {
+  to { transform: rotate(360deg); }
+}
+
+/* A fixed window (the tour): the shell holds still, the page scrolls under the top bar. */
+.app {
+  position: relative;
+}
+.window {
+  overflow: hidden;
+}
+.window .main {
+  min-height: 0;
+  overflow: hidden;
+}
+.window .top {
+  position: relative;
+  z-index: 1;
+}
+.scroller {
+  position: relative;
+}
+@media (prefers-reduced-motion: no-preference) {
+  :global(html:not([data-motion="paused"])) .scroller {
+    transition: transform 700ms cubic-bezier(0.65, 0, 0.35, 1);
+  }
+}
+.viewport {
+  position: relative;
+}
+.window .viewport {
+  flex: 1;
+  min-height: 0;
+  overflow: hidden;
 }
