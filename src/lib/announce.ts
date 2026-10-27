@@ -6,10 +6,10 @@ import { links } from "@/lib/data/socials";
  * one see the new one.
  */
 export const announcement = {
-  id: "contributor-program-2026-10",
+  id: "contributor-quests-2026-10",
   /** The lime tag's label. */
   label: "Earn $BLOKC",
-  text: "Post about BLOK Capital on X, or complete quests, in the Contributor Program.",
+  text: "Complete quests in the Contributor Program: DAO votes, reposts and one-off tasks.",
   /** Where the bar's one link goes: `long` where the bar has room, `short` where it's narrow. */
   cta: { href: links.contribute, short: "Join the program", long: "Join the Contributor Program" },
 } as const;
